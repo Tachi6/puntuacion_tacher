@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="35.601562"
+   viewBox="0 -960 476.64062 712.03125"
+   width="23.832031"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="wine_bar_empty.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="16.625"
+     inkscape:cx="11.909774"
+     inkscape:cy="17.804511"
+     inkscape:window-width="1920"
+     inkscape:window-height="1002"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <path
+     id="path1"
+     d="m 0,-960 v 236.01562 c 0,57.93564 18.87074,109.82396 56.5625,155.625 37.69176,45.80037 88.68862,73.88694 153.04687,84.29688 v 177.69531 H 76.17187 v 58.39843 h 324.29688 v -58.39843 H 268.00781 V -484.0625 c 63.69164,-10.40994 114.37855,-38.46199 152.07031,-84.17969 37.69176,-45.71709 56.5625,-97.63988 56.5625,-155.74219 V -960 Z m 58.39843,58.39843 h 359.84376 v 147.92969 l -2.85145,58.39844 c -4.30794,39.28176 -24.05338,75.22352 -59.25781,107.89062 -35.2051,32.66649 -74.49892,49.02344 -117.89062,49.02344 -43.39176,0 -82.77391,-16.35695 -118.125,-49.02344 -35.35182,-32.6671 -54.65997,-68.60886 -57.89063,-107.89062 l -3.82825,-58.39844 z"
+     sodipodi:nodetypes="csccccccccccscccccccssccc" />
+  <rect
+     style="fill:none;stroke-width:20"
+     id="rect1"
+     width="7.2180452"
+     height="107.06767"
+     x="146.89175"
+     y="-789.24756" />
+</svg>

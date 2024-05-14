@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "141709006930",
+    "firebase_url": "https://puntos-tacher-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "puntos-tacher",
+    "storage_bucket": "puntos-tacher.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:141709006930:android:971dec696e24b95da0a78b",
+        "android_client_info": {
+          "package_name": "com.example.puntuacion_tacher"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQCr9-YWpqa1wpd-priBptGPMwVM2oz6M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
