@@ -20,7 +20,9 @@ class WineSearch extends SearchDelegate{
 
   @override
   ThemeData appBarTheme(BuildContext context) {
+
     final ThemeData theme = Theme.of(context);
+
     return theme.copyWith(
       inputDecorationTheme: theme.inputDecorationTheme.copyWith(
         enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor())),

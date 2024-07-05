@@ -13,7 +13,7 @@ class ListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final winesService = Provider.of<WinesService>(context);
+    final winesService = Provider.of<WinesService>(context, listen: false);
 
     if (winesService.isLoading) return const LoadingScreen();
 
@@ -24,10 +24,11 @@ class ListScreen extends StatelessWidget {
           Builder(
             builder: (context) {
               return IconButton(
-                onPressed: () => showSearch(
-                  context: context, 
-                  delegate: WineSearch(winesService.winesByIndex)
-                ),
+                onPressed: () {
+                  winesService.loadWines();
+                  
+                  showSearch(context: context, delegate: WineSearch(winesService.winesByIndex));
+                },
                 icon: const Icon(Icons.search, color: Colors.white)
               );
             }

@@ -51,8 +51,8 @@ class WinesService extends ChangeNotifier {
 
     // Wines sort by points
     updateWinesByRate();
-
     isLoading = false;
+    
     notifyListeners();
   }
 

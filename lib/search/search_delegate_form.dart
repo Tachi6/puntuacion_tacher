@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/apptheme/colors.dart';
 
+import 'package:provider/provider.dart';
+
+import 'package:puntuacion_tacher/apptheme/colors.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
@@ -18,7 +19,9 @@ class WineSearchForm extends SearchDelegate{
 
   @override
   ThemeData appBarTheme(BuildContext context) {
+    
     final ThemeData theme = Theme.of(context);
+    
     return theme.copyWith(
       inputDecorationTheme: theme.inputDecorationTheme.copyWith(
         enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor())),

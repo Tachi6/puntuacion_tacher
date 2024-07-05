@@ -10,12 +10,24 @@ import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/search/search_delegate_form.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 
+InputDecoration _customInputDecorationText(String label) {
+  return InputDecoration(
+    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor())),
+    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor(), width: 2)),  
+    labelText: label,
+    labelStyle: TextStyle(fontSize: 14, color: redColor()),
+  );
+}
+
 class CreateAddWine extends StatelessWidget {
   
   const CreateAddWine({super.key});
 
   @override
   Widget build(BuildContext context) {
+
+    final winesService = Provider.of<WinesService>(context, listen: false);
+
     return SizedBox(
       width: 96,
       child: Row(
@@ -27,17 +39,13 @@ class CreateAddWine extends StatelessWidget {
               size: 22
             ),
             onPressed: () {
-    
-              final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: false); // TODO listen tru dentro de funcion
-              final winesService = Provider.of<WinesService>(context, listen: false);
-              final taste = Provider.of<VisibleOptionsProvider>(context, listen: false);
               showGeneralDialog(
                 context: context,
                 barrierDismissible: false, 
                 pageBuilder: (context, animation, secondaryAnimation) {
-                  return PopScope(
+                  return const PopScope(
                     canPop: false,
-                    child: _CustomDialog(wineForm: wineForm, winesService: winesService, taste: taste),
+                    child: CustomDialog(),
                   );
                 },
                 transitionDuration: const Duration(milliseconds: 300),
@@ -48,23 +56,12 @@ class CreateAddWine extends StatelessWidget {
                   );
                 },
               );
-              // showDialog(
-              //   barrierDismissible: false,
-              //   context: context,
-              //   builder: (BuildContext context) {
-              //     return PopScope(
-              //       canPop: false,
-              //       child: _CustomDialog(wineForm: wineForm, winesService: winesService, taste: taste),
-              //     );
-              //   },
-              // );
             },
           ),
     
           IconButton(
             onPressed: () {
-              final winesService = Provider.of<WinesService>(context, listen: false);
-              winesService.loadWines;
+              winesService.loadWines();
 
               showSearch(context: context, delegate: WineSearchForm());
             }, 
@@ -80,32 +77,25 @@ class CreateAddWine extends StatelessWidget {
   }
 }
 
-class _CustomDialog extends StatelessWidget {
-  const _CustomDialog({
-    required this.wineForm,
-    required this.winesService,
-    required this.taste,
-  });
-
-  final CreateEditWineFormProvider wineForm;
-  final WinesService winesService;
-  final VisibleOptionsProvider taste;
+class CustomDialog extends StatelessWidget {
+  const CustomDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
+
+    final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: false);
+    final winesService = Provider.of<WinesService>(context, listen: false);
+    final taste = Provider.of<VisibleOptionsProvider>(context, listen: false);
+
     return AlertDialog( // TODO pasar a Dialog??
       backgroundColor: Colors.white,
-      // scrollable: true, // TODO necesario?
       surfaceTintColor: Colors.transparent,
       alignment: Alignment.center,
       shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(20)),
       actionsPadding: const EdgeInsets.all(10),
       insetPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       title: const Text('Añadir vino al listado', style: TextStyle(fontSize: 16, color: Colors.black)),
-      content: ChangeNotifierProvider(
-        create: ( _ ) => ShowMoreFieldsCreateWine(),
-        child: CreateNewWineForm(wineForm)
-        ),
+      content: CreateNewWineForm(wineForm),
       actions: <Widget>[
         TextButton(
           onPressed: () {
@@ -116,11 +106,8 @@ class _CustomDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            
             if (wineForm.isValidForm()) {
-    
               wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
-              
               winesService.selectedWine = wineForm.wine;
               taste.showContinueButton = true;
               Navigator.pop(context, 'Guardar');
@@ -139,10 +126,21 @@ class CreateNewWineForm extends StatelessWidget {
 
   const CreateNewWineForm(this.wineForm, {super.key});
 
+  String? defaultValidator(String? value) => value!.isEmpty ? 'Este campo es obligatorio': null;
+
+  String? anadaValidator(String? value) {
+    if (value!.isEmpty) return 'Este campo es obligatorio';
+
+    final int anada = int.parse(value);
+    final year = DateTime.now().year;
+        
+    if (anada < 1950 || anada > year ) return 'Añada no válida';
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    final moreFields = Provider.of<ShowMoreFieldsCreateWine>(context);
 
     final Wines wine = wineForm.wine;
     final Size size = MediaQuery.of(context).size;
@@ -151,7 +149,6 @@ class CreateNewWineForm extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(0),
         width: size.width * 0.8,
-        // height: 600,
         child: Form(
           key: wineForm.formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -159,121 +156,192 @@ class CreateNewWineForm extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-        
               const Text('Ficha técnica del vino', style: TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis)),
         
-              TextFormField(
-                textCapitalization: TextCapitalization.sentences,
-                initialValue: wine.vino,
-                maxLines: 1,
-                style: const TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),
-                decoration: _customInputDecorationText('Vino'),
-                cursorColor: redColor(),
-                validator: (value) {
-                  if (value == null || value.length < 2) {
-                    return 'Este campo es obligatorio';
-                  }
-                  return null;
-                },
-                onChanged: (value) => wine.vino = value,
-              ),
-        
-              TextFormField(
-                textCapitalization: TextCapitalization.sentences,
-                initialValue: wine.bodega,
-                maxLines: 1,
-                style: const TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),
-                decoration: _customInputDecorationText('Bodega'),
-                cursorColor: redColor(),
-                validator: (value) {
-                  if (value == null || value.length < 2) {
-                    return 'Este campo es obligatorio';
-                  }
-                  return null;
-                },
-                onChanged: (value) => wine.bodega = value,
-              ),
-        
+              TextFormFieldText(label: 'Vino', initialValue: wine.vino, onChanged: (value) => wine.vino = value, validator: defaultValidator),
+
+              TextFormFieldText(label: 'Bodega', initialValue: wine.bodega, onChanged: (value) => wine.bodega = value, validator: defaultValidator),
+               
               TextFormFieldSearch(label: 'Region', wine: wine, autocompleteWidth: size.width * 0.8),
         
               TextFormFieldSearch(label: 'Tipo', wine: wine, autocompleteWidth: size.width * 0.8),
+
+              // TODO Trabajar en este
+              //TextFormFieldText(label: 'Añada', initialValue: wine.anada == -1 ? '' : wine.anada.toString(), onChanged: (value) {if (value != '') wine.anada = int.parse(value);}, validator: anadaValidator),
         
-              TextFormField(
-                initialValue: '',
-                inputFormatters: [ // r'^(\d+)?\.?\d{0,1}'
-                  FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,1}')),
-                ],
-                keyboardType: TextInputType.number,
-                maxLines: 1,
-                style: const TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),
-                decoration: _customInputDecorationText('Añada'),
-                cursorColor: redColor(),
-                validator: (value) {
-        
-                  if (value == '') {
-                    return 'Este campo es obligatorio';
-                  }
-        
-                  final int anada = int.parse(value!);
-                  final date = DateTime.now();
-                  final year = date.year;
-        
-                  if (anada < 1950 || anada > year ) {
-                    return 'Añada no válida';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  if (value != '') { 
-                    final int anada = int.parse(value);
-                    wine.anada = anada;
-                  }
-                },
-              ),
-        
-              Transform.translate(
-                offset: const Offset(-15, 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        if (moreFields.showMoreFieldsCreateWine) {
-                          moreFields.showMoreFieldsCreateWine = false;
-                        }
-                        else {
-                          moreFields.showMoreFieldsCreateWine = true;
-                        }
-                      },
-                      icon: moreFields.showMoreFieldsCreateWine ? const Icon(Icons.remove) : const Icon(Icons.add),
+              TextFormFieldAnada(wine: wine),
+
+              const SizedBox(height: 24),
+
+              const Text('Información opcional', style: TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis)),
+
+              TextFormFieldText(label: 'Variedades', initialValue: wine.variedades, onChanged: (value) => wine.variedades = value, maxLines: 2, validator: null),
+         
+              TextFormFieldGraduacion(wine: wine),
+          
+              TextFormFieldText(label: 'Descripción', initialValue: wine.descripcion, onChanged: (value) => wine.descripcion = value, maxLines: 3, validator: null),
+          
+              const SizedBox(height: 25),
+          
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+          
+                  CircleAvatar(
+                    backgroundColor: redColor(),
+                    child: IconButton(
+                      color: Colors.white,
+                      icon: const Icon(Icons.camera_alt_outlined),
+                      onPressed: () {},
                     ),
-                
-                    const Text('Ampliar información', style: TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis))
-                  ],
-                ),
+                  ),
+          
+                  const SizedBox(width:10),
+          
+                  CircleAvatar(
+                    backgroundColor: redColor(),
+                    child: IconButton(
+                      color: Colors.white,
+                      icon: const Icon(Icons.upload_file_outlined),
+                      onPressed: () {},
+                    ),
+                  ),
+          
+                  const SizedBox(width:10),
+          
+                  Text('Añadir o cargar imagen del vino', style: TextStyle(fontSize: 14, color: redColor())),
+                ],
               ),
-        
-              Visibility(
-                visible: moreFields.showMoreFieldsCreateWine,
-                child: ExtendInformation(wine: wine)
-              ),
-              
             ]
           )
         ),
       ),
     );
   }
+}
 
-  InputDecoration _customInputDecorationText(String label) {
-    return InputDecoration(
-      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor())),
-      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor(), width: 2)),  
-      labelText: label,
-      labelStyle: TextStyle(fontSize: 14, color: redColor()),
+class TextFormFieldGraduacion extends StatelessWidget {
+  const TextFormFieldGraduacion({
+    super.key,
+    required this.wine,
+  });
+
+  final Wines wine;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      initialValue: wine.graduacion == '' ? '' : wine.graduacion.toString(),
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,1}')),
+      ],
+      keyboardType: TextInputType.number,
+      maxLines: 1,
+      style: const TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),
+      decoration: _customInputDecorationText('Graduación'),
+      cursorColor: redColor(),
+      validator: (value) {
+        if (value == '') {
+          return null;
+        }
+        double graduation = double.parse(value!);
+    
+        if (graduation > 28 || graduation < 1) {
+          return 'Valor alcohólico incorrecto';
+        }
+        return null;
+      },
+      onChanged: (value) => wine.graduacion = value,
     );
   }
+}
 
+class TextFormFieldAnada extends StatelessWidget {
+  const TextFormFieldAnada({
+    super.key,
+    required this.wine,
+  });
+
+  final Wines wine;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      initialValue: wine.anada == -1 ? '' : wine.anada.toString(),
+      inputFormatters: [ // r'^(\d+)?\.?\d{0,1}'
+        FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,1}')),
+      ],
+      keyboardType: TextInputType.number,
+      maxLines: 1,
+      style: const TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),
+      decoration: _customInputDecorationText('Añada'),
+      cursorColor: redColor(),
+      validator: (value) {
+            
+        if (value == '') {
+          return 'Este campo es obligatorio';
+        }
+            
+        final int anada = int.parse(value!);
+        final year = DateTime.now().year;
+            
+        if (anada < 1950 || anada > year ) {
+          return 'Añada no válida';
+        }
+        return null;
+      },
+      onChanged: (value) {
+        if (value != '') { 
+          // final int anada = int.parse(value);
+          wine.anada = int.parse(value);
+        }
+      },
+    );
+  }
+}
+
+class TextFormFieldText extends StatelessWidget {
+  const TextFormFieldText({
+    super.key,
+    required this.label, 
+    required this.onChanged, 
+    required this.initialValue, 
+    this.maxLines = 1,
+    this.validator
+  });
+
+  final String label;
+  final Function(String) onChanged;
+  final String initialValue;
+  final int? maxLines;
+  final String? Function(String?)? validator;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      enableSuggestions: false,
+      autocorrect: false,
+      textCapitalization: TextCapitalization.sentences,
+      initialValue: initialValue,
+      minLines: 1,
+      maxLines: maxLines,
+      style: const TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),
+      decoration: _customInputDecorationText(label),
+      cursorColor: redColor(),
+      validator: validator,
+      
+      // validator: (value) {
+      //   if (validator == null) return null;
+
+      //   if (value == null || value.length < 2) {
+      //     return 'Este campo es obligatorio';
+      //   }
+      //   return null;
+      // },
+      onChanged: onChanged,
+      // onChanged: (value) => field = value,
+    );
+  }
 }
 
 class TextFormFieldSearch extends StatelessWidget {
@@ -367,7 +435,7 @@ class TextFormFieldSearch extends StatelessWidget {
             }
             return null;
           },
-          decoration: _cutomInputDecorationAutocomplete(),
+          decoration: _customInputDecorationText(label),
           controller: fieldTextEditingController,
           focusNode: fieldFocusNode,
         );
@@ -398,141 +466,6 @@ class TextFormFieldSearch extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  InputDecoration _cutomInputDecorationAutocomplete() {
-    return InputDecoration(
-          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor())),
-          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor(), width: 2)),  
-          labelText: label,
-          labelStyle: TextStyle(fontSize: 14, color: redColor()),
-        );
-  }
-}
-
-class ExtendInformation extends StatelessWidget {
-
-  final Wines wine;
-
-  const ExtendInformation({super.key, required this.wine});
-
-  InputDecoration _customInputDecorationText(String label) {
-    return InputDecoration(
-      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor())),
-      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor(), width: 2)),  
-      labelText: label,
-      labelStyle: TextStyle(fontSize: 14, color: redColor()),
-    );
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-
-        Column(
-          children: [
-        
-            TextFormField(
-              textCapitalization: TextCapitalization.sentences,
-              initialValue: wine.variedades,
-              minLines: 1,
-              maxLines: 2,
-              style: const TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),
-              decoration: _customInputDecorationText('Variedades'),
-              cursorColor: redColor(),
-              validator: (value) {
-                if (value == '') {
-                  return null;
-                }
-                if (value!.length < 3) {
-                  return 'Descripción demasiado corta';
-                }
-                return null;
-              },
-              onChanged: (value) => wine.variedades = value,
-            ),
-        
-            TextFormField(
-              initialValue: '',
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,1}')),
-              ],
-              keyboardType: TextInputType.number,
-              maxLines: 1,
-              style: const TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),
-              decoration: _customInputDecorationText('Graduación'),
-              cursorColor: redColor(),
-              validator: (value) {
-                if (value == '') {
-                  return null;
-                }
-                double graduation = double.parse(value!);
-
-                if (graduation > 28 || graduation < 1) {
-                  return 'Valor alcohólico incorrecto';
-                }
-                return null;
-              },
-              onChanged: (value) => wine.graduacion = value,
-            ),
-        
-            TextFormField(
-              textCapitalization: TextCapitalization.sentences,
-              initialValue: wine.descripcion,
-              minLines: 1,
-              maxLines: 3,
-              style: const TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),
-              decoration: _customInputDecorationText('Descripcion'),
-              cursorColor: redColor(),
-              validator: (value) {
-                if (value == '') {
-                  return null;
-                }
-                if (value!.length < 3) {
-                  return 'Descripción demasiado corta';
-                }
-                return null;
-              },
-              onChanged: (value) => wine.descripcion = value,
-            ),
-        
-            const SizedBox(height: 25),
-        
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-        
-                CircleAvatar(
-                  backgroundColor: redColor(),
-                  child: IconButton(
-                    color: Colors.white,
-                    icon: const Icon(Icons.camera_alt_outlined),
-                    onPressed: () {},
-                  ),
-                ),
-        
-                const SizedBox(width:10),
-        
-                CircleAvatar(
-                  backgroundColor: redColor(),
-                  child: IconButton(
-                    color: Colors.white,
-                    icon: const Icon(Icons.upload_file_outlined),
-                    onPressed: () {},
-                  ),
-                ),
-        
-                const SizedBox(width:10),
-        
-                Text('Añadir o cargar imagen del vino', style: TextStyle(fontSize: 14, color: redColor())),
-              ],
-            ),
-          ],
-        ),
-      ],
     );
   }
 }
