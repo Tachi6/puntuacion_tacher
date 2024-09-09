@@ -9,7 +9,6 @@ export 'package:puntuacion_tacher/screens/loading_screen.dart';
 export 'package:puntuacion_tacher/screens/login_screen.dart';
 export 'package:puntuacion_tacher/screens/myuser_screen.dart';
 export 'package:puntuacion_tacher/screens/news_screen.dart';
-export 'package:puntuacion_tacher/screens/register_screen.dart';
 export 'package:puntuacion_tacher/screens/tacher_screen.dart';
 export 'package:puntuacion_tacher/screens/taste_screen.dart';
 export 'package:puntuacion_tacher/screens/user_settings_screen.dart';

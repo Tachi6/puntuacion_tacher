@@ -11,17 +11,6 @@ import 'package:puntuacion_tacher/widgets/widgets.dart';
 class RegisterScreen extends StatelessWidget {
    
   const RegisterScreen({super.key});
-  
-  @override
-  Widget build(BuildContext context) {
-    return const LoginBackground(RegisterForm());
-  }
-}
-
-class RegisterForm extends StatelessWidget {
-  const RegisterForm({
-    super.key,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -82,13 +71,15 @@ class CustomRegisterForm extends StatelessWidget {
               
           _PassFieldForm(),
               
-          const SizedBox(height: 30),
+          const SizedBox(height: 40),
               
           _ValidateUserButton(),
 
+          const SizedBox(height: 10),
+
           TextButton(
             style: const ButtonStyle(
-              overlayColor: MaterialStatePropertyAll(Colors.white10),
+              overlayColor: WidgetStatePropertyAll(Colors.white10),
             ),
             onPressed: () {
               final newRoute = MaterialPageRoute(
@@ -264,12 +255,16 @@ class _ValidateUserButton extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final loginForm = Provider.of<LoginProvider>(context);
+    final colors = Theme.of(context).colorScheme;
 
-    return MaterialButton(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      disabledColor: Colors.grey,
-      elevation: 0,
-      color: Colors.white,
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        fixedSize: const Size.fromWidth(150),
+        elevation: 6,
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        backgroundColor: colors.primaryContainer,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      ),
       onPressed: loginForm.isLoading ? null : () async {
 
         FocusScope.of(context).unfocus(); // quitar teclado
@@ -296,16 +291,11 @@ class _ValidateUserButton extends StatelessWidget {
         }
 
       },
-      child: Container(
-        alignment: Alignment.center,
-        width: 160,
-        padding: const EdgeInsets.symmetric(vertical: 15),
-        child: Text(
-          loginForm.isLoading
-          ? 'Registrando'
-          : 'Registrarse',
-          style: TextStyle(color: redColor(), fontSize: 16)
-        ),
+      child: Text(
+        loginForm.isLoading
+        ? 'Registrando'
+        : 'Registrarse',
+        style: TextStyle(color: colors.primary, fontSize: 16)
       ),
     );
   }

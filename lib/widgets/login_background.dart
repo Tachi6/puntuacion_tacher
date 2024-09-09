@@ -7,17 +7,22 @@ import 'package:flutter/material.dart';
 import 'package:puntuacion_tacher/apptheme/colors.dart';
 
 class LoginBackground extends StatelessWidget {
+  const LoginBackground({
+    super.key, 
+    required this.widget, 
+    required this.backgroundColor
+  });
 
   final Widget widget;
-
-  const LoginBackground(this.widget, {super.key});
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: backgroundColor,
       body: Stack(
+        alignment: Alignment.center,
         children: [
           Container(
             width: double.infinity,
@@ -27,7 +32,6 @@ class LoginBackground extends StatelessWidget {
                 opacity: 0.6,
                 fit: BoxFit.fitHeight,
                 alignment: Alignment.topCenter,
-                // TODO poner de nuevo el assets antes del background
                 image: AssetImage('assets/login-background.jpg'),
               ), 
             ),
@@ -49,7 +53,7 @@ class LoginBackground extends StatelessWidget {
             ),
           ),
           
-          widget          
+          widget,          
         ],
       ),
     );

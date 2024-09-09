@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:puntuacion_tacher/apptheme/colors.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 
@@ -19,28 +19,11 @@ class WineSearch extends SearchDelegate{
   TextStyle? get searchFieldStyle => const TextStyle(fontSize: 16, decorationThickness: 0, decoration: TextDecoration.none);
 
   @override
-  ThemeData appBarTheme(BuildContext context) {
-
-    final ThemeData theme = Theme.of(context);
-
-    return theme.copyWith(
-      inputDecorationTheme: theme.inputDecorationTheme.copyWith(
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor())),
-        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor(), width: 2)),        
-      ),
-      appBarTheme: const AppBarTheme(
-        color: Colors.white,
-        elevation: 0,
-      ),
-    );
-  }
-
-  @override
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(
         onPressed: () => query ='', 
-        icon: const Icon(Icons.clear, color: Color.fromARGB(255, 114, 47, 55))
+        icon: const Icon(Icons.clear)
       )
     ];
   }
@@ -51,28 +34,35 @@ class WineSearch extends SearchDelegate{
       onPressed: () {
         close(context, null);
       }, 
-      icon: const Icon(Icons.arrow_back, color: Color.fromARGB(255, 114, 47, 55)),
+      icon: const Icon(Icons.arrow_back),
     );
   }
 
   @override
   Widget buildResults(BuildContext context) {
 
+    final colors = Theme.of(context).colorScheme;
+
     if(_filtro.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             
-            Icon(Icons.wine_bar, color: Color.fromARGB(180, 114, 47, 55), size: 140),
+            SvgPicture.asset(
+              'assets/wine_bar_half.svg',
+              height: 120,
+              colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
+            ),
 
-            SizedBox(height: 10),
+            const SizedBox(height: 20),
 
-            Text('Vino no disponible en nuestra base de datos.', style: TextStyle(fontSize: 16)),
+            const Text('Vino no disponible en nuestra base de datos.', style: TextStyle(fontSize: 16)),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-            Text('Puedes crearlo y para obtener su valoración.', style: TextStyle(fontSize: 16)),
+            const Text('Puedes crearlo y para obtener su valoración.', style: TextStyle(fontSize: 16)),
           ],
         ),
       );
@@ -97,12 +87,18 @@ class WineSearch extends SearchDelegate{
   @override
   Widget buildSuggestions(BuildContext context) {
 
+    final colors = Theme.of(context).colorScheme;
+
     if (query.isEmpty) {
       return Container(
-        color: Colors.white,
+        color: colors.surface,
         width: double.infinity,
-        child: const Center(
-          child: Icon(Icons.wine_bar, color: Color.fromARGB(180, 114, 47, 55), size: 140),
+        child: Center(
+          child: SvgPicture.asset(
+            'assets/wine_bar_half.svg',
+            height: 120,
+            colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
+          ),
         ),
       );
     }
@@ -112,20 +108,25 @@ class WineSearch extends SearchDelegate{
     }).toList();
 
     if(_filtro.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             
-            Icon(Icons.wine_bar, color: Color.fromARGB(180, 114, 47, 55), size: 140),
+            SvgPicture.asset(
+              'assets/wine_bar_half.svg',
+              height: 120,
+              colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
+            ),
 
-            SizedBox(height: 10),
+            const SizedBox(height: 20),
 
-            Text('Vino no disponible en nuestra base de datos.', style: TextStyle(fontSize: 16)),
+            const Text('Vino no disponible en nuestra base de datos.', style: TextStyle(fontSize: 16)),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-            Text('Puedes crearlo para obtener su valoración.', style: TextStyle(fontSize: 16)),
+            const Text('Puedes crearlo para obtener su valoración.', style: TextStyle(fontSize: 16)),
           ],
         ),
       );

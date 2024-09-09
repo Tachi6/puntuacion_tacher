@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/apptheme/colors.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
@@ -28,16 +27,19 @@ class ValorationCard extends StatelessWidget {
               builder: (context) => DetailsScreen(wine: wines[index], email: 'latest', source:'latest'));
             Navigator.push(context, routeDetails);
           },
-          child: Card(
-            elevation: 2,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomLeadingTile(wine: wines[index]),
-          
-                CustomBodyTile(wine: wines[index])
-              ],
-            )
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Card.filled(
+              elevation: 2,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomLeadingTile(wine: wines[index]),
+            
+                  CustomBodyTile(wine: wines[index])
+                ],
+              )
+            ),
           ),
         );
       },
@@ -61,9 +63,8 @@ class CustomLeadingTile extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: LoadWineImage(
         wine: wine, 
-        heightReducer: 0.2, 
-        widthReducer: 0.2,
-        borderRadius: circularRadius,
+        scale: 3/6, 
+        imageWidth: 80,
         source: source,
       ),
     );
@@ -78,9 +79,7 @@ class CustomBodyTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final winesService = Provider.of<WinesService>(context);
-    
+   
     final String user;
 
     wine.displayName == '' || wine.displayName ==  null
@@ -137,40 +136,40 @@ class CustomBodyTile extends StatelessWidget {
                   ),
                 ),
             
-                Container(
-                  // color: Colors.amber,
-                  alignment: Alignment.bottomRight,
-                  child: Transform.translate(
-                    offset: const Offset(4, 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          alignment: Alignment.bottomRight,
-                          iconSize: 24,
-                          onPressed: () {
-                            winesService.likesCount(wine);
-                            // TODO implementar likes en server
-                          },
-                          icon: const Icon(Icons.thumb_up,
-                            color: Color.fromARGB(255, 114, 47, 55)
-                          )
-                        ),
-                        Transform.translate(
-                          offset: const Offset(-4, 6),
-                          child: Container(
-                            alignment: Alignment.bottomLeft,
-                            width: 16,
-                            child: Text(
-                              wine.likes == null ? '' : wine.likes.toString(),
-                              style: TextStyle(color: redColor(), fontSize: 8),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                // Container(
+                //   // color: Colors.amber,
+                //   alignment: Alignment.bottomRight,
+                //   child: Transform.translate(
+                //     offset: const Offset(4, 8),
+                //     child: Row(
+                //       crossAxisAlignment: CrossAxisAlignment.center,
+                //       children: [
+                //         IconButton(
+                //           alignment: Alignment.bottomRight,
+                //           iconSize: 24,
+                //           onPressed: () {
+                //             winesService.likesCount(wine);
+                //             // TODO implementar likes en server
+                //           },
+                //           icon: const Icon(Icons.thumb_up,
+                //             color: Color.fromARGB(255, 114, 47, 55)
+                //           )
+                //         ),
+                //         Transform.translate(
+                //           offset: const Offset(-4, 6),
+                //           child: Container(
+                //             alignment: Alignment.bottomLeft,
+                //             width: 16,
+                //             child: Text(
+                //               wine.likes == null ? '' : wine.likes.toString(),
+                //               style: TextStyle(color: redColor(), fontSize: 8),
+                //             ),
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
               ],
             ),     
           ],

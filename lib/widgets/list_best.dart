@@ -12,22 +12,25 @@ class ListBestScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    final colors = Theme.of(context).colorScheme;
 
     return Container(
-      color: Colors.white,
+      color: colors.surface,
       width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.265,
+      height: 240,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start, 
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 16, bottom: 4),
+            padding: const EdgeInsets.only(left: 20, bottom: 4),
             child: Text(
               category,
               style: const TextStyle(
                 fontSize: 16, 
-                fontWeight: FontWeight.bold)
-            )
+                fontWeight: FontWeight.bold
+              ),
+            ),
           ),
           Expanded(
             child: ListView.builder(
@@ -62,9 +65,8 @@ class _WinePoster extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    
+    final colors = Theme.of(context).colorScheme;
 
     String wineNameTwoLines() { // TODO entender esta funcion
 
@@ -86,20 +88,23 @@ class _WinePoster extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.only(left: 20, top: 5, bottom: 5),
-      height: height * 0.25,
-      width: width * 0.25, 
+      height: 150,
+      width: 105, 
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           LoadWineImage(
-            wine: wine, 
-            heightReducer: 0.16, 
-            widthReducer: 0.25,
-            borderRadius: circularRadius,
+            wine: wine,
+            scale: 0.5,
+            imageWidth: 105,
+            // imageHeight: height * 0.16,
+            // imageWidth: width * 0.25,
+            // heightReducer: 0.16, 
+            // widthReducer: 0.25,
             source: 'best',
           ),
 
-          SizedBox(height: height * 0.004),
+          const SizedBox(height: 5),
 
           Container(
             padding: const EdgeInsets.only(left: 2, right: 2,),
@@ -121,7 +126,7 @@ class _WinePoster extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade800)
+                    color: colors.outline)
                 ),
               ]
             ),

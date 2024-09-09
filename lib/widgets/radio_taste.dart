@@ -1,10 +1,7 @@
-
-
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:puntuacion_tacher/apptheme/colors.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 
 
@@ -19,8 +16,6 @@ class RadioTaste extends StatelessWidget {
   }
 }
 
-
-
 class RadioWidget extends StatefulWidget {
   const RadioWidget({super.key});
 
@@ -33,7 +28,9 @@ class _RadioWidgetState extends State<RadioWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     final taste = Provider.of<VisibleOptionsProvider>(context);
+    final colors = Theme.of(context).colorScheme;
         
     return Container(
       padding: const EdgeInsets.only(right: 10),
@@ -48,8 +45,7 @@ class _RadioWidgetState extends State<RadioWidget> {
             child: RadioListTile(
               dense: true,
               contentPadding: const EdgeInsets.all(0),
-              subtitle: Text('Catar un único vino', style: TextStyle(fontSize:12, color: Colors.grey[600])),
-              activeColor: redColor(),
+              subtitle: Text('Catar un único vino', style: TextStyle(fontSize:12, color: colors.outline)),
               title: const Text('Cata única', style: TextStyle(fontSize: 14)),
               value: TasteOptions.unica, 
               groupValue: _taste, 
@@ -65,8 +61,7 @@ class _RadioWidgetState extends State<RadioWidget> {
             child: RadioListTile(
               dense: true,
               contentPadding: const EdgeInsets.all(0),
-              subtitle: Text('Catar varios vinos', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-              activeColor: redColor(),
+              subtitle: Text('Catar varios vinos', style: TextStyle(fontSize: 12, color: colors.outline)),
               title: const Text('Cata múltiple', style: TextStyle(fontSize: 14)),
               value: TasteOptions.multiple, 
               groupValue: _taste, 

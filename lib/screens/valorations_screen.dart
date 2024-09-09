@@ -10,7 +10,7 @@ class ValorationsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Valoraciones', style: TextStyle(fontSize: 18, color: Colors.white)),
+        automaticallyImplyLeading: false,
       ),
       body: const ValorationCard(),
     );

@@ -19,31 +19,32 @@ class PointsBox extends StatelessWidget {
 
     final taste = Provider.of<VisibleOptionsProvider>(context);
     final winesService = Provider.of<WinesService>(context);
+    final styles = Theme.of(context).textTheme;
 
     return PopScope(
       canPop: false,
       child: AlertDialog(
-        insetPadding: const EdgeInsets.symmetric(vertical: 20),
-        shadowColor:const Color.fromARGB(255, 114, 47, 55),
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(20)),
+        insetPadding: const EdgeInsets.symmetric(vertical: 20),       
         title: const Text('Tacher'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Has catado:'),
-      
-            const SizedBox(height: 16,width: 250,),
-      
-            Text(wine!.nombre, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            Text(wine!.tipo, style: const TextStyle(fontSize: 14, color: Colors.black87)),
-      
-            const SizedBox(height: 16),
-      
-            const Text('Tu puntuación:'),
-      
-            Text('$puntuacionFinal', style: const TextStyle(fontSize: 100))
-          ]
+        content: SizedBox(
+          width: 250,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Has catado:', style: styles.bodyLarge),
+                
+              const SizedBox(height: 16),
+                
+              Text(wine!.nombre, style: styles.titleLarge),
+              Text(wine!.tipo, style: styles.bodyMedium),
+                
+              const SizedBox(height: 16),
+                
+              Text('Tu puntuación:', style: styles.bodyLarge),
+                
+              Text('$puntuacionFinal', style: styles.displayLarge)
+            ]
+          ),
         ),
         actions: [
           TextButton(
@@ -54,7 +55,7 @@ class PointsBox extends StatelessWidget {
       
               Navigator.pushNamed(context, 'home');
             },
-            child: const Text('Cerrar', style: TextStyle(color: Colors.black))
+            child: const Text('Cerrar')
           )
         ],
       ),

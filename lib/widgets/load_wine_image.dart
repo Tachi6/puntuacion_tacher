@@ -8,136 +8,185 @@ import 'package:puntuacion_tacher/models/models.dart';
 class LoadWineImage extends StatelessWidget {
 
   final Wines wine;
-  final double heightReducer;
-  final double widthReducer;
-  final double borderRadius;
+  final double scale;
+  final double imageWidth;
   final String source;
 
   const LoadWineImage({
     super.key, 
     required this.wine, 
-    required this.heightReducer, 
-    required this.widthReducer, 
-    required this.borderRadius, 
+    required this.scale, 
+    required this.imageWidth, 
     required this.source, 
   });
 
   @override
   Widget build(BuildContext context) {
 
-    final Size size = MediaQuery.of(context).size;
-    final double height = size.height;
-    final double width = size.width;
+    final double borderRadius = 15 * scale;
+    final colors = Theme.of(context).colorScheme;
 
-    if (wine.imagenVino != null) {
-      return Container(
-        height: height * heightReducer,
-        width: width * widthReducer,
-        decoration: BoxDecoration(
-          color: Colors.grey.shade50,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(borderRadius),
-              topRight: Radius.circular(borderRadius),
-              bottomLeft: Radius.circular(borderRadius),
-              bottomRight: Radius.circular(borderRadius)
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: const Offset(1, 1), // changes position of shadow
-            ),
-          ],
+    BoxDecoration imageDecoration(ColorScheme colors) {
+      return BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(borderRadius),
+            topRight: Radius.circular(borderRadius),
+            bottomLeft: Radius.circular(borderRadius),
+            bottomRight: Radius.circular(borderRadius)
         ),
-        child: Hero(
-          tag: '$source-${wine.id}',
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(borderRadius),
-            child: CachedNetworkImage(
-              imageUrl: wine.imagenVino!,
-              placeholder: (context, url) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: redColor(),
-                  ),
-                );
-              },
-              fit: BoxFit.fitHeight,
-            ),
+        boxShadow: [
+          BoxShadow(
+            color: colors.outline,
+            blurRadius: (1 / scale),
           ),
-        ),
+        ],
       );
     }
+
+    if (wine.imagenVino != null) {
+      return UrlImagePoster(
+        source: source, 
+        wine: wine,
+        scale: scale, 
+        imageWidth: imageWidth, 
+        borderRadius: borderRadius,
+        imageDecoration: imageDecoration(colors),
+      );
+    }
+
     else {
-      return Hero(
+      return NoImagePoster(
+        source: source, 
+        wine: wine, 
+        scale: scale, 
+        imageWidth: imageWidth,
+        borderRadius: borderRadius,
+        imageDecoration: imageDecoration(colors),
+      );
+    }
+  }
+}
+
+class UrlImagePoster extends StatelessWidget {
+  const UrlImagePoster({
+    super.key,
+    required this.scale,
+    required this.imageWidth,
+    required this.borderRadius,
+    required this.source,
+    required this.wine,
+    required this.imageDecoration,
+  });
+
+  final double scale;
+  final double imageWidth;
+  final double borderRadius;
+  final String source;
+  final Wines wine;
+  final BoxDecoration imageDecoration;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: scale * 300,
+      width: imageWidth,
+      decoration: imageDecoration,
+      child: Hero(
         tag: '$source-${wine.id}',
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(borderRadius),
+          child: CachedNetworkImage(
+            imageUrl: wine.imagenVino!,
+            placeholder: (context, url) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: redColor(),
+                ),
+              );
+            },
+            fit: BoxFit.fitHeight,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class NoImagePoster extends StatelessWidget {
+  const NoImagePoster({
+    super.key,
+    required this.source,
+    required this.wine,
+    required this.scale,
+    required this.imageWidth,
+    required this.borderRadius,
+    required this.imageDecoration,
+  });
+
+  final String source;
+  final Wines wine;
+  final double scale;
+  final double imageWidth;
+  final double borderRadius;
+  final BoxDecoration imageDecoration;
+
+  @override
+  Widget build(BuildContext context) {
+    return Hero(
+      tag: '$source-${wine.id}',
+      child: Material(
+        type: MaterialType.transparency,
         child: Stack(
           alignment: Alignment.center,
           children: [
             Container(
-              height: height * heightReducer,
-              width: width * widthReducer,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade50,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(borderRadius),
-                    topRight: Radius.circular(borderRadius),
-                    bottomLeft: Radius.circular(borderRadius),
-                    bottomRight: Radius.circular(borderRadius)
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.5),
-                    spreadRadius: 1,
-                    blurRadius: 1,
-                    offset: const Offset(1, 1), // changes position of shadow
-                  ),
-                ],
-              ),
+              height: scale * 300,
+              width: imageWidth,
+              decoration: imageDecoration,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(borderRadius),
                 child: const Image(
-                  image: AssetImage('assets/wine_bottle_noimage.jpg'),
+                  image: AssetImage('assets/bottle_noimage.jpg'),
                   fit: BoxFit.fitHeight,
                 ),
               ),
             ),
             
-            Opacity(
-              opacity: 0.95,
-              child: Container(
-                color: Colors.white,
-                margin: EdgeInsets.only(top: height * heightReducer * 0.20, right: height * heightReducer * 0.01),
-                alignment: Alignment.center,
-                height: height * heightReducer * 0.25,
-                width: height * heightReducer * 0.19,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      wine.vino,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: height * heightReducer * 0.02, color: Colors.black),
-                      maxLines: 3,
-                    ),
-                              
-                    SizedBox(
-                      height: height * heightReducer * 0.05,
-                    ),
-                    
-                    Text(
-                      wine.anada.toString(),
-                      style: TextStyle(fontSize: height * heightReducer * 0.02, color: Colors.black),
-                    ),
-                  ],
-                ),
+            Container(
+              height: 72 * scale,
+              width: 60 * scale,
+              margin: EdgeInsets.only(right: 3 * scale, top: 72 * scale),
+              padding: EdgeInsets.symmetric(horizontal: 6 * scale),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 12 * scale),
+              
+                  Text(
+                    wine.vino,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color:Colors.black, fontSize: 6 * scale, fontWeight: FontWeight.bold),
+                    maxLines: 3,
+                  ),
+                            
+                  const Spacer(),
+                  
+                  Text(
+                    wine.anada.toString(),
+                    style: TextStyle(color:Colors.black, fontSize: 6 * scale, fontWeight: FontWeight.bold),
+                  ),
+              
+                  SizedBox(height: 12 * scale),
+                  
+                  SizedBox(height: 3 * scale),
+                ],
               ),
             )
           ],
         ),
-      );
-    }
+      ),
+    );
   }
 }

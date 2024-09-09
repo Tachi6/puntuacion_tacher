@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:puntuacion_tacher/apptheme/colors.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -15,30 +14,20 @@ class MyUserScreen extends StatelessWidget {
 
     final authService = Provider.of<AuthService>(context, listen: true);
     final winesService = Provider.of<WinesService>(context);
-
-    final String user;
-    authService.userDisplayName == ''
-      ? user = authService.userEmail
-      : user = authService.userDisplayName; // TODO ver si no peta porque wine puede recibir nulo
-
     final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(user, style: const TextStyle(fontSize: 18, color: Colors.white)),
-        actions: [
-          IconButton(
-            onPressed: () {
-              final routeDetails = MaterialPageRoute(
-                builder: (context) => const UserSettingsScreen());
-              Navigator.push(context, routeDetails);
-            }, 
-            icon: const Icon(Icons.settings, color: Colors.white)
-          )
-        ],
+        automaticallyImplyLeading: false,
       ),
-      body: MyUserBody(size: size, winesService: winesService, email: authService.userEmail)
+      body: MyUserBody(
+        size: size, 
+        winesService: winesService, 
+        email: authService.userEmail, 
+        user: authService.userDisplayName == ''
+          ? authService.userEmail
+          : authService.userDisplayName // TODO ver si no peta porque wine puede recibir nulo???
+      ),
     );
   }
 }
@@ -49,128 +38,163 @@ class MyUserBody extends StatelessWidget {
     super.key,
     required this.size,
     required this.winesService,
-    required this.email,
+    required this.email, 
+    required this.user,
   });
 
   final Size size;
   final WinesService winesService;
   final String email;
+  final String user;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-    
-          CircleAvatar(
-            backgroundColor: redColor(),
-            radius: 50,
-            child: const Icon(Icons.person, color: Colors.white, size: 60),
-            // Text(initials, style: const TextStyle(fontSize: 60, fontWeight: FontWeight.bold, color: Colors.white)),
-          ),
-    
-          const SizedBox(
-            height: 10,
-          ),
-    
-          const Text('Vinos catados por puntuación', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-    
-          const SizedBox(
-            height: 10,
-          ),
-    
-          Expanded(
-            child: Container(
-              alignment: Alignment.topCenter,
-              width: size.width * 0.9,
-              child: ListView.separated(
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                    tileColor: Colors.transparent,
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        LoadWineImage(
-                          wine: winesService.userTastedWines(email)[index],
-                          heightReducer: 0.08,
-                          widthReducer: 0.08,
-                          borderRadius: 5,
-                          source: 'email',
-                        ),
 
-                        const SizedBox(width: 20),
+    final styles = Theme.of(context).textTheme;
+    final colors = Theme.of(context).colorScheme;
+    final authService = Provider.of<AuthService>(context, listen: true);
 
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                winesService.userTastedWines(email)[index].nombre, 
-                                style: const TextStyle(fontSize: 14),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-
-                              Text(
-                                winesService.userTastedWines(email)[index].bodega, 
-                                style: const TextStyle(fontSize: 14),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-
-                              Text(
-                                winesService.userTastedWines(email)[index].region, 
-                                style: const TextStyle(fontSize: 14),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-
-                          
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(width: 20),
-
-                        Column(
-                          children: [
-                            Text(
-                                winesService.userTastedWines(email)[index].puntuaciones[winesService.userTastedWines(email)[index].usuarios.indexOf(email)].toString(), 
-                                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.grey.shade700)
-                              ),
-                            
-                            Text(
-                              'Puntos', 
-                              style: TextStyle(fontSize: 12, color: Colors.grey.shade700)
-                            ),
-
-                          ],
-                        )
-                      ],
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          toolbarHeight: 200,
+          floating: true,
+          automaticallyImplyLeading: false,
+          flexibleSpace: FlexibleSpaceBar(
+            centerTitle: true,
+            title: Container(
+              width: double.infinity,
+              alignment: Alignment.center,
+              child: Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 48,
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      onPressed: () {
+                        final routeDetails = MaterialPageRoute(
+                          builder: (context) => const UserSettingsScreen());
+                        Navigator.push(context, routeDetails);
+                      }, 
+                      icon: Icon(Icons.settings, color: colors.onSurface)
                     ),
-                    onTap: () {
-                      final routeDetails = MaterialPageRoute(
-                        builder: (context) => DetailsScreen(wine: winesService.userTastedWines(email)[index], email: email, source: 'email'));
-                      Navigator.push(context, routeDetails);
-                    },
-                  );
-                }, 
-                separatorBuilder: (context, index) => Divider(color: redColor()),
-                itemCount: winesService.userTastedWines(email).length,
+                  ),
+
+                  Hero(
+                    tag: 'image_profile',
+                    child: Material(
+                      type: MaterialType.transparency,
+                      child: CircleAvatar(
+                        backgroundColor: colors.onPrimaryFixedVariant,
+                        radius: 48,
+                        child: Text(authService.userDisplayName[0].toUpperCase(), style: TextStyle(color: colors.surface, fontSize: 60)),
+                      ),
+                    ),
+                  ),
+                  
+                  const SizedBox(
+                    height: 10,
+                  ),          
+            
+                  Text(user, style: styles.titleLarge),
+                  
+                  // const SizedBox(
+                  //   height: 10,
+                  // ),
+                ],
               ),
             ),
           ),
-        ],
-      ),
+        ),
+
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              return ListTile(
+                minVerticalPadding: 6,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    LoadWineImage(
+                      wine: winesService.userTastedWines(email)[index],
+                      scale: 2/6,
+                      imageWidth: 60,
+                      source: 'email',
+                    ),
+                              
+                    const SizedBox(width: 20),
+                              
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            winesService.userTastedWines(email)[index].nombre, 
+                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                              
+                          Text(
+                            winesService.userTastedWines(email)[index].bodega, 
+                            style: const TextStyle(fontSize: 14),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                              
+                          Text(
+                            winesService.userTastedWines(email)[index].tipo, 
+                            style: const TextStyle(fontSize: 14),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                              
+                          Text(
+                            winesService.userTastedWines(email)[index].region, 
+                            style: const TextStyle(fontSize: 14),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                              
+                      
+                        ],
+                      ),
+                    ),
+                              
+                    const SizedBox(width: 20),
+                              
+                    Column(
+                      children: [
+                        Text(
+                            winesService.userTastedWines(email)[index].puntuaciones[winesService.userTastedWines(email)[index].usuarios.indexOf(email)].toString(), 
+                            style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: colors.outline)
+                          ),
+                        
+                        Text(
+                          'Puntos', 
+                          style: TextStyle(fontSize: 14, color: colors.outline)
+                        ),
+                              
+                      ],
+                    )
+                  ],
+                ),
+                onTap: () {
+                  final routeDetails = MaterialPageRoute(
+                    builder: (context) => DetailsScreen(wine: winesService.userTastedWines(email)[index], email: email, source: 'email'));
+                  Navigator.push(context, routeDetails);
+                },
+              );
+            },
+            childCount: winesService.userTastedWines(email).length,
+          )
+        )
+      ],
     );
   }
 }
+

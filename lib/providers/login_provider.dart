@@ -11,11 +11,18 @@ class LoginProvider extends ChangeNotifier {
   String password = '';
 
   bool _isLoading = false;
+  bool _isRegister = false;
 
   bool get isLoading => _isLoading;
+  bool get isRegister => _isRegister;
 
   set isLoading( bool value ) {
     _isLoading = value;
+    notifyListeners();
+  }
+
+  set isRegister( bool value ) {
+    _isRegister = value;
     notifyListeners();
   }
 

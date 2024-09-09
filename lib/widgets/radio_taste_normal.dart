@@ -1,10 +1,7 @@
-
-
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:puntuacion_tacher/apptheme/colors.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 
 
@@ -18,8 +15,6 @@ class RadioTasteNormal extends StatelessWidget {
     return const RadioWidgetNormal();
   }
 }
-
-
 
 class RadioWidgetNormal extends StatefulWidget {
   const RadioWidgetNormal({super.key});
@@ -35,6 +30,7 @@ class _RadioWidgetNormalState extends State<RadioWidgetNormal> {
   Widget build(BuildContext context) {
 
     final taste = Provider.of<VisibleOptionsProvider>(context);
+    final colors = Theme.of(context).colorScheme;
 
     return Container(
       padding: const EdgeInsets.only(left: 20),
@@ -49,8 +45,7 @@ class _RadioWidgetNormalState extends State<RadioWidgetNormal> {
             child: RadioListTile(
               dense: true,
               contentPadding: const EdgeInsets.all(0),
-              subtitle: Text('Catar vino del listado o añadirlo', style: TextStyle(fontSize:12, color: Colors.grey[600])),
-              activeColor: redColor(),
+              subtitle: Text('Catar vino del listado o añadirlo', style: TextStyle(fontSize:12, color: colors.outline)),
               title: const Text('Cata con referencia', style: TextStyle(fontSize: 14)),
               value: TasteOptionsNormal.vino, 
               groupValue: _taste, 
@@ -68,8 +63,7 @@ class _RadioWidgetNormalState extends State<RadioWidgetNormal> {
             child: RadioListTile(
               dense: true,
               contentPadding: const EdgeInsets.all(0),
-              subtitle: Text('Catar sin referencias del vino', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-              activeColor: redColor(),
+              subtitle: Text('Catar sin referencias del vino', style: TextStyle(fontSize: 12, color: colors.outline)),
               title: const Text('Cata a ciegas individual', style: TextStyle(fontSize: 14)),
               value: TasteOptionsNormal.ciega, 
               groupValue: _taste, 

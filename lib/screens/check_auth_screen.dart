@@ -4,7 +4,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:puntuacion_tacher/apptheme/colors.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 
@@ -17,6 +16,7 @@ class CheckAuthScreen extends StatelessWidget {
 
     final authService = Provider.of<AuthService>(context, listen: false);
     const storage = FlutterSecureStorage();
+    final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: Center(
@@ -26,12 +26,13 @@ class CheckAuthScreen extends StatelessWidget {
             
             if (!snapshot.hasData) {
               return CircularProgressIndicator(
-                color: redColor(),
+                color: colors.primary,
               );
             }
 
             if (snapshot.data == '') {
-              Future.microtask(() {
+              Future.microtask(() async {
+                if (!context.mounted) return;
                 Navigator.pushReplacement(context, PageRouteBuilder(
                   pageBuilder: ( _ , __ , ___ ) => const LoginScreen(),
                   transitionDuration: const Duration(seconds: 0),

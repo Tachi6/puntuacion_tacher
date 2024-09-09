@@ -12,16 +12,21 @@ class RatingDetailsCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final colors = Theme.of(context).colorScheme;
+
     final Widget full = SvgPicture.asset(
       'assets/wine_bar_full.svg',
+      colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
     );
 
     final Widget half = SvgPicture.asset(
       'assets/wine_bar_half.svg',
+      colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
     );
 
     final Widget empty = SvgPicture.asset(
       'assets/wine_bar_empty.svg',
+      colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
     );
 
     return RatingBar(

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
 
-import 'package:puntuacion_tacher/apptheme/colors.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -18,33 +17,25 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        image: DecorationImage(
-          opacity: 0.4,
-          fit: BoxFit.fitWidth,
-          alignment: Alignment.bottomCenter,
-          image: AssetImage('assets/details-background.jpg'),
-        ), 
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: CustomScrollView(
-          slivers: [
-            _CustomAppBar(wine: wine, user: email, source: source),
-            SliverList(
-              delegate: SliverChildListDelegate([
+    return Scaffold(
+      body: Stack(
+        children: [
+          const BottomImageBackground(image: 'assets/details-background.jpg', opacity: 0.4),
 
-                _WinePoster(wine: wine, user: email, source: source)
-              
-              ])           
-            )
-          ],
-        )
-      ),
+          CustomScrollView(
+            slivers: [
+              _CustomAppBar(wine: wine, user: email, source: source),
+              SliverList(
+                delegate: SliverChildListDelegate([
+          
+                  _WinePoster(wine: wine, user: email, source: source)
+                
+                ])           
+              )
+            ],
+          ),
+        ],
+      )
     );
   }
 }
@@ -60,55 +51,66 @@ class _CustomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final statusBarHeight = View.of(context).padding.top / View.of(context).devicePixelRatio;
+    final styles = Theme.of(context).textTheme;
+    final colors = Theme.of(context).colorScheme;
+    
     return SliverAppBar(
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Navigator.pop(context),
-      ),
+      toolbarHeight: 150 + statusBarHeight,
       backgroundColor: Colors.white,
-      expandedHeight: 200,
-      floating: false,
+      surfaceTintColor: Colors.white,
+      automaticallyImplyLeading: false,
       pinned: true,
+      floating: false,
       flexibleSpace: FlexibleSpaceBar(
-        centerTitle: true,
         titlePadding: const EdgeInsets.all(0),
+        centerTitle: true,
         title: Container(
-          padding: const EdgeInsetsDirectional.all(0),
           width: double.infinity,
-          color: Colors.black38,
+          color: Colors.black26,
           alignment: Alignment.center,
           child:Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              SizedBox(
+                height: statusBarHeight
+              ),
 
               Container(
-                height: 61,
-                alignment: Alignment.bottomRight,
-                child: IconButton(
-                  tooltip: 'Editar logo de la bodega',
-                  iconSize: 16,
-                  splashRadius: 16,
-                  color: Colors.white,
-                  onPressed: () {}, 
-                  icon: const Icon(Icons.edit)
+                height: 48,
+                width: double.infinity,
+                alignment: Alignment.center,
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back, color: colors.surface),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+              
+                    const Spacer(),
+              
+                    IconButton(
+                      tooltip: 'Editar logo de la bodega',
+                      onPressed: () {}, 
+                      icon: Icon(Icons.edit, color: colors.surface)
+                    ),
+                  ],
                 ),
               ),
-             
-              Container(
-                height: 91,
-                alignment: Alignment.bottomCenter,
-                child: user == null 
-                  ?
-                  const Text('Ficha técnica global', style: TextStyle(fontSize: 16))
-                  :
-                    source == 'latest' 
-                      ?
-                      const Text('Valoración de la cata', style: TextStyle(fontSize: 16))
-                      :
-                      const Text('Valoración de mi cata', style: TextStyle(fontSize: 16))
-              ),
+
+              const Spacer(),
               
+              user == null // styles.headlineSmall
+                ?
+                Text('Ficha técnica global', style: TextStyle(color: colors.onPrimaryFixed) )
+                :
+                  source == 'latest' 
+                    ?
+                    Text('Valoración de la cata', style: styles.titleLarge)
+                    :
+                    Text('Valoración de mi cata', style: styles.titleLarge),
+
+              const SizedBox(height: 5),             
             ],
           ) 
           
@@ -135,7 +137,8 @@ class _CustomAppBar extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 60,
                   fontWeight: FontWeight.bold, 
-                  color: redColor()
+                  color: colors.onPrimaryFixedVariant,
+                  height: 1
                 ),
               )
             ),
@@ -174,9 +177,8 @@ class _WinePoster extends StatelessWidget {
         children: [
           LoadWineImage(
             wine: wine, 
-            heightReducer: 0.4, 
-            widthReducer: 0.3,
-            borderRadius: circularRadius,
+            scale: 5/6, 
+            imageWidth: 105,
             source: source,
           ),
 
@@ -185,7 +187,7 @@ class _WinePoster extends StatelessWidget {
           ),
 
           SizedBox(
-            width: 210,
+            width: 195,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,

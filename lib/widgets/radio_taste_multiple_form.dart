@@ -1,8 +1,4 @@
-
-
 import 'package:flutter/material.dart';
-
-import 'package:puntuacion_tacher/apptheme/colors.dart';
 
 enum TasteOptionsMultipleForm { empty, acceder, organizar }
 
@@ -14,8 +10,6 @@ class RadioTasteMultipleForm extends StatelessWidget {
     return const RadioWidgetMultipleForm();
   }
 }
-
-
 
 class RadioWidgetMultipleForm extends StatefulWidget {
   const RadioWidgetMultipleForm({super.key});
@@ -29,6 +23,8 @@ class _RadioWidgetMultipleFormState extends State<RadioWidgetMultipleForm> {
 
   @override
   Widget build(BuildContext context) {
+
+    final colors = Theme.of(context).colorScheme;
 
     return SizedBox(
       width: 285,
@@ -48,8 +44,7 @@ class _RadioWidgetMultipleFormState extends State<RadioWidgetMultipleForm> {
                   child: RadioListTile(
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     contentPadding: const EdgeInsets.only(right: 0),
-                    subtitle: Text('Catar vino del listado o añadirlo', style: TextStyle(fontSize:15, color: Colors.grey[600])),
-                    activeColor: redColor(),
+                    subtitle: Text('Catar vino del listado o añadirlo', style: TextStyle(fontSize:15, color: colors.outline)),
                     title: const Text('Cata con referencia', style: TextStyle(fontSize: 20)),
                     value: TasteOptionsMultipleForm.acceder, 
                     groupValue: _taste, 
@@ -63,8 +58,7 @@ class _RadioWidgetMultipleFormState extends State<RadioWidgetMultipleForm> {
                   padding: const EdgeInsets.only(top: 80),
                   child: RadioListTile(
                     contentPadding: const EdgeInsets.only(right: 0),
-                    subtitle: Text('Catar sin referencias del vino', style: TextStyle(fontSize: 15, color: Colors.grey[600])),
-                    activeColor: redColor(),
+                    subtitle: Text('Catar sin referencias del vino', style: TextStyle(fontSize: 15, color: colors.outline)),
                     title: const Text('Cata a ciegas', style: TextStyle(fontSize: 20)),
                     value: TasteOptionsMultipleForm.organizar, 
                     groupValue: _taste, 

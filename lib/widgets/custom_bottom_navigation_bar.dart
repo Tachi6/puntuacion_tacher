@@ -18,28 +18,30 @@ class CustomNavigationBar extends StatelessWidget {
     final taste = Provider.of<VisibleOptionsProvider>(context);
 
     return SizedBox(
-      height: 58, // TO SET THE HEIGHT OF BOTTOMNAVIGATIONBAR
-      child: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
+      // height: 58, // TO SET THE HEIGHT OF BOTTOMNAVIGATIONBAR
+      child: NavigationBar(
+        destinations: const [
+          NavigationDestination(
             icon: Icon(Icons.trending_up_outlined), label: 'Valoraciones'),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.wine_bar), label: 'Catar'),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.list), label: 'Listado'),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.person), label: 'Usuario'),
         ],
-        elevation: 0,
-        backgroundColor: const Color.fromARGB(255, 114, 47, 55),
-        selectedFontSize: 14,
-        unselectedFontSize: 14,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: currentScreen,
-        showUnselectedLabels: true,
-        selectedItemColor: Colors.grey[50],
-        unselectedItemColor: Colors.grey.shade400,
-        onTap: (index) {
+        height: 58,
+        
+        // elevation: 0,
+        // backgroundColor: const Color.fromARGB(255, 114, 47, 55),
+        // selectedFontSize: 14,
+        // unselectedFontSize: 14,
+        // type: BottomNavigationBarType.fixed,
+        selectedIndex: currentScreen,
+        // showUnselectedLabels: true,
+        // selectedItemColor: Colors.grey[50],
+        // unselectedItemColor: Colors.grey.shade400,
+        onDestinationSelected: (index) {
           taste.showSecondWidget = false;
           taste.showThirdWidget = false;
           taste.showContinueButton = false;

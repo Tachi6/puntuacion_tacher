@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:puntuacion_tacher/apptheme/colors.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/search/search_delegate_form.dart';
@@ -12,10 +11,8 @@ import 'package:puntuacion_tacher/services/services.dart';
 
 InputDecoration _customInputDecorationText(String label) {
   return InputDecoration(
-    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor())),
-    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor(), width: 2)),  
     labelText: label,
-    labelStyle: TextStyle(fontSize: 14, color: redColor()),
+    labelStyle: const TextStyle(fontSize: 14),
   );
 }
 
@@ -27,6 +24,7 @@ class CreateAddWine extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final winesService = Provider.of<WinesService>(context, listen: false);
+    final colors = Theme.of(context).colorScheme;
 
     return SizedBox(
       width: 96,
@@ -35,7 +33,7 @@ class CreateAddWine extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.add, 
-              color: redColor(),
+              color: colors.onSurface,
               size: 22
             ),
             onPressed: () {
@@ -67,7 +65,7 @@ class CreateAddWine extends StatelessWidget {
             }, 
             icon: Icon(
               Icons.search, 
-              color: redColor(),
+              color: colors.onSurface,
               size: 22
             ),
           ),
@@ -88,13 +86,10 @@ class CustomDialog extends StatelessWidget {
     final taste = Provider.of<VisibleOptionsProvider>(context, listen: false);
 
     return AlertDialog( // TODO pasar a Dialog??
-      backgroundColor: Colors.white,
-      surfaceTintColor: Colors.transparent,
       alignment: Alignment.center,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(20)),
       actionsPadding: const EdgeInsets.all(10),
       insetPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      title: const Text('Añadir vino al listado', style: TextStyle(fontSize: 16, color: Colors.black)),
+      title: const Text('Añadir vino al listado', style: TextStyle(fontSize: 18)),
       content: CreateNewWineForm(wineForm),
       actions: <Widget>[
         TextButton(
@@ -102,7 +97,7 @@ class CustomDialog extends StatelessWidget {
             wineForm.setDefaultCreateWine();
             Navigator.pop(context, 'Cancelar');
           },
-          child: Text('Cancelar', style: TextStyle(fontSize: 14, color: redColor())),
+          child: const Text('Cancelar', style: TextStyle(fontSize: 16)),
         ),
         TextButton(
           onPressed: () {
@@ -113,7 +108,7 @@ class CustomDialog extends StatelessWidget {
               Navigator.pop(context, 'Guardar');
             }
           },
-          child: Text('Guardar', style: TextStyle(fontSize: 14, color: redColor())),
+          child: const Text('Guardar', style: TextStyle(fontSize: 16)),
         ),
       ],
     );
@@ -156,7 +151,7 @@ class CreateNewWineForm extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Ficha técnica del vino', style: TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis)),
+              const Text('Ficha técnica del vino', style: TextStyle(fontSize: 16, overflow: TextOverflow.ellipsis)),
         
               TextFormFieldText(label: 'Vino', initialValue: wine.vino, onChanged: (value) => wine.vino = value, validator: defaultValidator),
 
@@ -173,7 +168,9 @@ class CreateNewWineForm extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              const Text('Información opcional', style: TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis)),
+              const Text('Información opcional', style: TextStyle(fontSize: 16, overflow: TextOverflow.ellipsis)),
+
+              const SizedBox(height: 5),
 
               TextFormFieldText(label: 'Variedades', initialValue: wine.variedades, onChanged: (value) => wine.variedades = value, maxLines: 2, validator: null),
          
@@ -187,29 +184,21 @@ class CreateNewWineForm extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
           
-                  CircleAvatar(
-                    backgroundColor: redColor(),
-                    child: IconButton(
-                      color: Colors.white,
-                      icon: const Icon(Icons.camera_alt_outlined),
-                      onPressed: () {},
-                    ),
+                  IconButton(
+                    // color: colors.surface,
+                    icon: const Icon(Icons.camera_alt_outlined),
+                    onPressed: () {},
+                  ),
+                   
+                  IconButton(
+                    // color: colors.surface,
+                    icon: const Icon(Icons.upload_file_outlined),
+                    onPressed: () {},
                   ),
           
                   const SizedBox(width:10),
           
-                  CircleAvatar(
-                    backgroundColor: redColor(),
-                    child: IconButton(
-                      color: Colors.white,
-                      icon: const Icon(Icons.upload_file_outlined),
-                      onPressed: () {},
-                    ),
-                  ),
-          
-                  const SizedBox(width:10),
-          
-                  Text('Añadir o cargar imagen del vino', style: TextStyle(fontSize: 14, color: redColor())),
+                  const Text('Añadir imagen del vino', style: TextStyle(fontSize: 14)),
                 ],
               ),
             ]
@@ -239,7 +228,6 @@ class TextFormFieldGraduacion extends StatelessWidget {
       maxLines: 1,
       style: const TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),
       decoration: _customInputDecorationText('Graduación'),
-      cursorColor: redColor(),
       validator: (value) {
         if (value == '') {
           return null;
@@ -275,7 +263,6 @@ class TextFormFieldAnada extends StatelessWidget {
       maxLines: 1,
       style: const TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),
       decoration: _customInputDecorationText('Añada'),
-      cursorColor: redColor(),
       validator: (value) {
             
         if (value == '') {
@@ -325,21 +312,10 @@ class TextFormFieldText extends StatelessWidget {
       initialValue: initialValue,
       minLines: 1,
       maxLines: maxLines,
-      style: const TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),
+      style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
       decoration: _customInputDecorationText(label),
-      cursorColor: redColor(),
       validator: validator,
-      
-      // validator: (value) {
-      //   if (validator == null) return null;
-
-      //   if (value == null || value.length < 2) {
-      //     return 'Este campo es obligatorio';
-      //   }
-      //   return null;
-      // },
       onChanged: onChanged,
-      // onChanged: (value) => field = value,
     );
   }
 }
@@ -373,6 +349,9 @@ class TextFormFieldSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final colors = Theme.of(context).colorScheme;
+
     return Autocomplete<String>(
       optionsBuilder: (TextEditingValue textEditingValue) {
         if (textEditingValue.text == '') {
@@ -421,8 +400,7 @@ class TextFormFieldSearch extends StatelessWidget {
           autocorrect: false,
           textCapitalization: TextCapitalization.sentences,
           maxLines: 1,
-          style: const TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),
-          cursorColor: redColor(),
+          style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Este campo es obligatorio';
@@ -456,9 +434,8 @@ class TextFormFieldSearch extends StatelessWidget {
                   return ListTile(
                     contentPadding: const EdgeInsets.only(left: 20),
                     onTap: () => onSelected(option),
-                    title: Text(option, style: const TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),),
-                    tileColor: Colors.white
-                    // tileColor: Colors.grey.shade100, // todo definir color
+                    title: Text(option, style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),),
+                    tileColor: colors.surface
                   );
                 },
               ),

@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: Stack(
           children: [
-            TasteBackground(),
+            // TasteBackground(),
           
             _HomeScreenBody(),
           ]

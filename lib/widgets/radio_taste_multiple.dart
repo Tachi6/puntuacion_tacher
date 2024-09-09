@@ -1,10 +1,7 @@
-
-
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:puntuacion_tacher/apptheme/colors.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 
 
@@ -18,8 +15,6 @@ class RadioTasteMultiple extends StatelessWidget {
     return const RadioWidgetMultiple();
   }
 }
-
-
 
 class RadioWidgetMultiple extends StatefulWidget {
   const RadioWidgetMultiple({super.key});
@@ -35,6 +30,7 @@ class _RadioWidgetMultipleState extends State<RadioWidgetMultiple> {
   Widget build(BuildContext context) {
 
     final taste = Provider.of<VisibleOptionsProvider>(context);
+    final colors = Theme.of(context).colorScheme;
     
     return Container(
       padding: const EdgeInsets.only(left: 20),
@@ -50,8 +46,7 @@ class _RadioWidgetMultipleState extends State<RadioWidgetMultiple> {
             child: RadioListTile(
               dense: true,
               contentPadding: const EdgeInsets.all(0),
-              subtitle: Text('Accede a una cata múltiple ya creada', style: TextStyle(fontSize:12, color: Colors.grey[600])),
-              activeColor: redColor(),
+              subtitle: Text('Accede a una cata múltiple ya creada', style: TextStyle(fontSize:12, color: colors.outline)),
               title: const Text('Acceder a cata mútiple', style: TextStyle(fontSize: 14)),
               value: TasteOptionsMultiple.acceder, 
               groupValue: _taste, 
@@ -67,8 +62,7 @@ class _RadioWidgetMultipleState extends State<RadioWidgetMultiple> {
             child: RadioListTile(
               dense: true,
               contentPadding: const EdgeInsets.only(right: 0),
-              subtitle: Text('Organiza o crea una cata múltiple', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-              activeColor: redColor(),
+              subtitle: Text('Organiza o crea una cata múltiple', style: TextStyle(fontSize: 12, color: colors.outline)),
               title: const Text('Organizar cata múltiple', style: TextStyle(fontSize: 14)),
               value: TasteOptionsMultiple.organizar, 
               groupValue: _taste, 

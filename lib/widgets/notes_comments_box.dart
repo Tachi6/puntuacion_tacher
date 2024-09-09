@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:puntuacion_tacher/apptheme/colors.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class NotesCommentsBox extends StatelessWidget {
 
@@ -12,18 +12,24 @@ class NotesCommentsBox extends StatelessWidget {
   const NotesCommentsBox({super.key, required this.titulo});
 
   void showBox(BuildContext context, CreateEditWineFormProvider wineForm) {
-
-    showDialog(
-      barrierDismissible: false,
-      context: context, 
-      builder: (context) {
-        if (titulo == 'Notas de Cata') {
-          return NotasCataBox(wineForm);
-        }
-        else {
-          return ComentariosBox(wineForm);
-        }
-      }
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false, 
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return PopScope(
+          canPop: false,
+          child: titulo == 'Notas de Cata'
+            ? NotasCataBox(wineForm)
+            : ComentariosBox(wineForm),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
+          child: child
+        );
+      },
     );
   }
 
@@ -31,23 +37,20 @@ class NotesCommentsBox extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: false);
+    final colors = Theme.of(context).colorScheme;
 
     return Padding(
       padding: const EdgeInsets.only(top: 5),
       child: Container(
         alignment: Alignment.topLeft,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            fixedSize: const Size.fromWidth(160),
-            elevation: 0,
-            padding: const EdgeInsets.symmetric(vertical: 5),
-            backgroundColor: const Color.fromARGB(64, 114, 47, 55),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          ),
-          child: Text(titulo, style: const TextStyle(fontSize: 14, color: Colors.black), maxLines: 2, textAlign: TextAlign.center),
+        child: CustomElevatedButton(
+          width: 150,
+          height: 35,
+          color: colors.surfaceContainerHighest,
           onPressed: () {
             showBox(context, wineForm);
-          }
+          },
+          child: Text(titulo, style: TextStyle(color: colors.onSurface),),
         ),
       ),
     );
@@ -66,98 +69,70 @@ class NotasCataBox extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
 
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(20)),
       insetPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      title: const Text('Notas de Cata', style: TextStyle(fontSize: 16, color: Colors.black)),
+      title: const Text('Notas de Cata'),
       content: SizedBox(
-      width: size.width * 0.8,
-      height: 301,
-      child: SingleChildScrollView(
-        child: Form(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-
-              TextFormField(
-                textCapitalization: TextCapitalization.sentences,
-                initialValue: wineForm.notasVista,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor())),
-                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor(), width: 2)),  
-                  labelText: 'Vista',
-                  labelStyle: TextStyle(color: redColor()),
+        width: size.width * 0.8,
+        child: SingleChildScrollView(
+          child: Form(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _CustomTextFormField(
+                  wineForm: wineForm, 
+                  maxLines: 3, 
+                  label: 'Vista',
+                  onChanged: (value) {
+                    wineForm.editNotasVista = value;
+                  },
                 ),
-                cursorColor: redColor(),
-                onChanged: (value) {
-                  wineForm.editNotasVista = value;
-                },
-              ),
 
-              TextFormField(
-                textCapitalization: TextCapitalization.sentences,
-                initialValue: wineForm.notasNariz,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor())),
-                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor(), width: 2)),  
-                  labelText: 'Nariz',
-                  labelStyle: TextStyle(color: redColor()),
+                _CustomTextFormField(
+                  wineForm: wineForm, 
+                  maxLines: 3, 
+                  label: 'Nariz',
+                  onChanged: (value) {
+                    wineForm.editNotasNariz = value;
+                  },
                 ),
-                cursorColor: redColor(),
-                onChanged: (value) {
-                  wineForm.editNotasNariz = value;
-                },
-              ),
 
-              TextFormField(
-                textCapitalization: TextCapitalization.sentences,
-                initialValue: wineForm.notasBoca,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor())),
-                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor(), width: 2)),  
-                  labelText: 'Boca',
-                  labelStyle: TextStyle(color: redColor()),
+                _CustomTextFormField(
+                  wineForm: wineForm, 
+                  maxLines: 3, 
+                  label: 'Boca',
+                  onChanged: (value) {
+                    wineForm.editNotasBoca = value;
+                  },
                 ),
-                cursorColor: redColor(),
-                onChanged: (value) {
-                  wineForm.editNotasBoca = value;
-                },
-              ),
-
-            ]
+              ]
+            ),
           ),
         ),
       ),
-    ),
     actions: [
-
         TextButton(
           onPressed: () {
             wineForm.clearNotas();
             Navigator.pop(context);
           },
-          child: Text('Descartar',  style: TextStyle(fontSize: 14, color: redColor()))
+          child: const Text('Descartar')
         ),
 
         TextButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('Guardar',  style: TextStyle(fontSize: 14, color: redColor()))
+          child: const Text('Guardar')
         ),
-
       ],
     );
   }
 }
 
 class ComentariosBox extends StatelessWidget {
-
-  final CreateEditWineFormProvider wineForm;
- 
   const ComentariosBox(this.wineForm,{super.key});
+
+  final CreateEditWineFormProvider wineForm; 
   
   @override
   Widget build(BuildContext context) {
@@ -165,24 +140,15 @@ class ComentariosBox extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
 
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(20)),
       insetPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      title: const Text('Añadir comentarios', style: TextStyle(fontSize: 16, color: Colors.black)),
+      title: const Text('Añadir comentarios'),
       content: SizedBox(
         width: size.width * 0.8,
-        height: 101,
         child: Form(
-          child: TextFormField(
-            textCapitalization: TextCapitalization.sentences,
-            initialValue: wineForm.comentarios,
+          child: _CustomTextFormField(
+            wineForm: wineForm, 
             maxLines: 5,
-            decoration: InputDecoration(
-              enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor())),
-              focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor(), width: 2)),  
-              labelText: 'Comentarios',
-              labelStyle: TextStyle(color: redColor()),
-            ),
-            cursorColor: redColor(),
+            label: 'Comentarios',
             onChanged: (value) {
               wineForm.editCommentarios = value;
             },
@@ -190,23 +156,49 @@ class ComentariosBox extends StatelessWidget {
         ),
       ),
       actions: [
-
         TextButton(
           onPressed: () {
             wineForm.clearComentarios();            
             Navigator.pop(context);
           },
-          child: Text('Descartar', style: TextStyle(fontSize: 14, color: redColor()))
+          child: const Text('Descartar')
         ),
-
+    
         TextButton(
           onPressed: () {
             Navigator.pop(context);
           }, 
-          child: Text('Guardar', style: TextStyle(fontSize: 14, color: redColor()))
+          child: const Text('Guardar')
         )
-
       ],
+    );
+  }
+}
+
+class _CustomTextFormField extends StatelessWidget {
+  const _CustomTextFormField({
+    required this.wineForm,
+    required this.maxLines, 
+    required this.label,
+    this.onChanged
+  });
+
+  final CreateEditWineFormProvider wineForm;
+  final int maxLines;
+  final String label;
+  final Function(String)? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      textCapitalization: TextCapitalization.sentences,
+      initialValue: wineForm.comentarios,
+      minLines: 1,
+      maxLines: maxLines,
+      decoration: InputDecoration(
+        labelText: label,
+      ),
+      onChanged: onChanged,
     );
   }
 }

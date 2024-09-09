@@ -18,6 +18,7 @@ class AuthService extends ChangeNotifier {
   String userEmail = '';
   String userDisplayName = '';
   String _tempDisplayName = '';
+  bool _isSavingUser = false;
 
   final storage = const FlutterSecureStorage();
 
@@ -130,6 +131,13 @@ class AuthService extends ChangeNotifier {
 
   set tempDisplayName(String value) {
     _tempDisplayName = value;
+    notifyListeners();
+  }
+
+  bool get isSavingUser => _isSavingUser;
+
+  set isSavingUser(bool isSaving) {
+    _isSavingUser = isSaving;
     notifyListeners();
   }
 }
