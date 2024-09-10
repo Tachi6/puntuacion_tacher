@@ -8,6 +8,7 @@ import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/search/search_delegate_form.dart';
 import 'package:puntuacion_tacher/services/services.dart';
+import 'package:puntuacion_tacher/widgets/custom_alert_dialog.dart';
 
 InputDecoration _customInputDecorationText(String label) {
   return InputDecoration(
@@ -85,33 +86,52 @@ class CustomDialog extends StatelessWidget {
     final winesService = Provider.of<WinesService>(context, listen: false);
     final taste = Provider.of<VisibleOptionsProvider>(context, listen: false);
 
-    return AlertDialog( // TODO pasar a Dialog??
-      alignment: Alignment.center,
-      actionsPadding: const EdgeInsets.all(10),
-      insetPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      title: const Text('Añadir vino al listado', style: TextStyle(fontSize: 18)),
-      content: CreateNewWineForm(wineForm),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () {
-            wineForm.setDefaultCreateWine();
-            Navigator.pop(context, 'Cancelar');
-          },
-          child: const Text('Cancelar', style: TextStyle(fontSize: 16)),
-        ),
-        TextButton(
-          onPressed: () {
-            if (wineForm.isValidForm()) {
-              wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
-              winesService.selectedWine = wineForm.wine;
-              taste.showContinueButton = true;
-              Navigator.pop(context, 'Guardar');
-            }
-          },
-          child: const Text('Guardar', style: TextStyle(fontSize: 16)),
-        ),
-      ],
+    return CustomAlertDialog(
+      title: 'Añadir vino al listado', 
+      content: CreateNewWineForm(wineForm), 
+      cancelText: 'Cancelar', 
+      saveText: 'Guardar',
+      onPressedCancel: () {
+        wineForm.setDefaultCreateWine();
+        Navigator.pop(context, 'Cancelar');
+      },
+      onPressedSave: () {
+        if (wineForm.isValidForm()) {
+          wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
+          winesService.selectedWine = wineForm.wine;
+          taste.showContinueButton = true;
+          Navigator.pop(context, 'Guardar');
+        }
+      },
     );
+    
+    // AlertDialog( // TODO pasar a Dialog??
+    //   alignment: Alignment.center,
+    //   actionsPadding: const EdgeInsets.all(10),
+    //   insetPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+    //   title: const Text('Añadir vino al listado', style: TextStyle(fontSize: 18)),
+    //   content: CreateNewWineForm(wineForm),
+    //   actions: <Widget>[
+    //     TextButton(
+    //       onPressed: () {
+    //         wineForm.setDefaultCreateWine();
+    //         Navigator.pop(context, 'Cancelar');
+    //       },
+    //       child: const Text('Cancelar', style: TextStyle(fontSize: 16)),
+    //     ),
+    //     TextButton(
+    //       onPressed: () {
+    //         if (wineForm.isValidForm()) {
+    //           wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
+    //           winesService.selectedWine = wineForm.wine;
+    //           taste.showContinueButton = true;
+    //           Navigator.pop(context, 'Guardar');
+    //         }
+    //       },
+    //       child: const Text('Guardar', style: TextStyle(fontSize: 16)),
+    //     ),
+    //   ],
+    // );
   }
 }
 
@@ -140,10 +160,9 @@ class CreateNewWineForm extends StatelessWidget {
     final Wines wine = wineForm.wine;
     final Size size = MediaQuery.of(context).size;
 
-    return SingleChildScrollView(
-      child: Container(
-        padding: const EdgeInsets.all(0),
-        width: size.width * 0.8,
+    return SizedBox(
+      width: size.width * 0.8,
+      child: SingleChildScrollView(
         child: Form(
           key: wineForm.formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -154,24 +173,21 @@ class CreateNewWineForm extends StatelessWidget {
               const Text('Ficha técnica del vino', style: TextStyle(fontSize: 16, overflow: TextOverflow.ellipsis)),
         
               TextFormFieldText(label: 'Vino', initialValue: wine.vino, onChanged: (value) => wine.vino = value, validator: defaultValidator),
-
+              
               TextFormFieldText(label: 'Bodega', initialValue: wine.bodega, onChanged: (value) => wine.bodega = value, validator: defaultValidator),
                
               TextFormFieldSearch(label: 'Region', wine: wine, autocompleteWidth: size.width * 0.8),
         
               TextFormFieldSearch(label: 'Tipo', wine: wine, autocompleteWidth: size.width * 0.8),
-
-              // TODO Trabajar en este
-              //TextFormFieldText(label: 'Añada', initialValue: wine.anada == -1 ? '' : wine.anada.toString(), onChanged: (value) {if (value != '') wine.anada = int.parse(value);}, validator: anadaValidator),
+              
+              TextFormFieldText(label: 'Añada', initialValue: wine.anada == -1 ? '' : wine.anada.toString(), onChanged: (value) {if (value != '') wine.anada = int.parse(value);}, validator: anadaValidator, textInputFormatter: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,1}'))], textInputType: TextInputType.number),
         
-              TextFormFieldAnada(wine: wine),
-
               const SizedBox(height: 24),
-
+              
               const Text('Información opcional', style: TextStyle(fontSize: 16, overflow: TextOverflow.ellipsis)),
-
+              
               const SizedBox(height: 5),
-
+              
               TextFormFieldText(label: 'Variedades', initialValue: wine.variedades, onChanged: (value) => wine.variedades = value, maxLines: 2, validator: null),
          
               TextFormFieldGraduacion(wine: wine),
@@ -226,7 +242,7 @@ class TextFormFieldGraduacion extends StatelessWidget {
       ],
       keyboardType: TextInputType.number,
       maxLines: 1,
-      style: const TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),
+      style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
       decoration: _customInputDecorationText('Graduación'),
       validator: (value) {
         if (value == '') {
@@ -261,7 +277,7 @@ class TextFormFieldAnada extends StatelessWidget {
       ],
       keyboardType: TextInputType.number,
       maxLines: 1,
-      style: const TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),
+      style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
       decoration: _customInputDecorationText('Añada'),
       validator: (value) {
             
@@ -294,7 +310,9 @@ class TextFormFieldText extends StatelessWidget {
     required this.onChanged, 
     required this.initialValue, 
     this.maxLines = 1,
-    this.validator
+    this.validator,
+    this.textInputFormatter,
+    this.textInputType,
   });
 
   final String label;
@@ -302,12 +320,16 @@ class TextFormFieldText extends StatelessWidget {
   final String initialValue;
   final int? maxLines;
   final String? Function(String?)? validator;
+  final List<TextInputFormatter>? textInputFormatter;
+  final TextInputType? textInputType;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       enableSuggestions: false,
       autocorrect: false,
+      keyboardType: textInputType,
+      inputFormatters: textInputFormatter,
       textCapitalization: TextCapitalization.sentences,
       initialValue: initialValue,
       minLines: 1,

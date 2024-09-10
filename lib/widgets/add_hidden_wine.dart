@@ -38,55 +38,93 @@ class AddHiddenWine extends StatelessWidget {
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
     final winesService = Provider.of<WinesService>(context);
     final taste = Provider.of<VisibleOptionsProvider>(context);
-    final colors = Theme.of(context).colorScheme;
 
     return PopScope(
       canPop: false,
-      child: AlertDialog(
-        backgroundColor: colors.surfaceContainer,
-        insetPadding: const EdgeInsets.all(20),
-        actionsPadding: const EdgeInsets.only(bottom: 12, right: 16),
-        title: const Text('Añade tu vino valorado', textAlign: TextAlign.center,),
+      child: CustomAlertDialog(
+        title: 'Añade el vino valorado',
         content: _SearchTasteWine(),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              winesService.selectedWine = null;
-              taste.clearWidgets();
-              wineForm.setDefaultCreateWine();
-              Navigator.pushNamed(context, 'home');
-            }, 
-            child: const Text('Cancelar')
-          ),
+        onPressedCancel: () {
+          Navigator.pop(context);
+          winesService.selectedWine = null;
+          // TODO back to tacher or back to home???
+          taste.clearWidgets();
+          wineForm.setDefaultCreateWine();
+          Navigator.pushNamed(context, 'home');
+        },
+        onPressedSave: () async {
+          // Verifico que hay vino añadido
+          if (winesService.selectedWine == null) return;
+          // Mando updates de los diferentes campos al wine
+          wineForm.addUpdatesToWine();
+          // Mando wine al servidor
+          if (wineForm.wine.id == '-1') {
+            await winesService.createWine(winesService.selectedWine!);
+            await winesService.saveDeleteLatestTastedWine(wine:winesService.selectedWine!, email: authService.userEmail, displayName: authService.userDisplayName);
+          }
+          else {
+            await winesService.updateWine(winesService.selectedWine!);
+            await winesService.saveDeleteLatestTastedWine(wine:winesService.selectedWine!, email: authService.userEmail, displayName: authService.userDisplayName);
+          }
+          // Mando wine a la confirmacion
+          if (!context.mounted) return;
+          confirmationDialog(context, child: PointsBox(puntuacionFinal: wineForm.puntosFinal, wine: wineForm.wine));
 
-          TextButton(
-            onPressed: () async {
-              // Mando updates de los diferentes campos al wine
-              wineForm.addUpdatesToWine();
-              // Mando wine al servidor
-              if (wineForm.wine.id == '-1') {
-                await winesService.createWine(winesService.selectedWine!);
-                await winesService.saveDeleteLatestTastedWine(wine:winesService.selectedWine!, email: authService.userEmail, displayName: authService.userDisplayName);
-              }
-              else {
-                await winesService.updateWine(winesService.selectedWine!);
-                await winesService.saveDeleteLatestTastedWine(wine:winesService.selectedWine!, email: authService.userEmail, displayName: authService.userDisplayName);
-              }
-              // Mando wine a la confirmacion
-              if (!context.mounted) return;
-              confirmationDialog(context, child: PointsBox(puntuacionFinal: wineForm.puntosFinal, wine: wineForm.wine));
+          // Elimino registros para poder valorar de nuevo
+          wineForm.clearNotas();
+          wineForm.clearNotas();
+          wineForm.setDefaultRatings();
+          wineForm.setDefaultCreateWine();
+        },
+        cancelText: 'Cancelar', 
+        saveText: 'Enviar',
+      )
+      
+      // AlertDialog(
+      //   backgroundColor: colors.surfaceContainer,
+      //   insetPadding: const EdgeInsets.all(20),
+      //   actionsPadding: const EdgeInsets.only(bottom: 12, right: 16),
+      //   title: const Text('Añade tu vino valorado', textAlign: TextAlign.center,),
+      //   content: _SearchTasteWine(),
+      //   actions: [
+      //     TextButton(
+      //       onPressed: () {
+      //         Navigator.pop(context);
+      //         winesService.selectedWine = null;
+      //         taste.clearWidgets();
+      //         wineForm.setDefaultCreateWine();
+      //         Navigator.pushNamed(context, 'home');
+      //       }, 
+      //       child: const Text('Cancelar')
+      //     ),
 
-              // Elimino registros para poder valorar de nuevo
-              wineForm.clearNotas();
-              wineForm.clearNotas();
-              wineForm.setDefaultRatings();
-              wineForm.setDefaultCreateWine();
-            },
-            child: const Text('Enviar')
-          ),
-        ],
-      ),
+      //     TextButton(
+      //       onPressed: () async {
+      //         // Mando updates de los diferentes campos al wine
+      //         wineForm.addUpdatesToWine();
+      //         // Mando wine al servidor
+      //         if (wineForm.wine.id == '-1') {
+      //           await winesService.createWine(winesService.selectedWine!);
+      //           await winesService.saveDeleteLatestTastedWine(wine:winesService.selectedWine!, email: authService.userEmail, displayName: authService.userDisplayName);
+      //         }
+      //         else {
+      //           await winesService.updateWine(winesService.selectedWine!);
+      //           await winesService.saveDeleteLatestTastedWine(wine:winesService.selectedWine!, email: authService.userEmail, displayName: authService.userDisplayName);
+      //         }
+      //         // Mando wine a la confirmacion
+      //         if (!context.mounted) return;
+      //         confirmationDialog(context, child: PointsBox(puntuacionFinal: wineForm.puntosFinal, wine: wineForm.wine));
+
+      //         // Elimino registros para poder valorar de nuevo
+      //         wineForm.clearNotas();
+      //         wineForm.clearNotas();
+      //         wineForm.setDefaultRatings();
+      //         wineForm.setDefaultCreateWine();
+      //       },
+      //       child: const Text('Enviar')
+      //     ),
+      //   ],
+      // ),
     );
   }
 }
@@ -103,7 +141,7 @@ class _SearchTasteWine extends StatelessWidget {
       final textEditingController = TextEditingController();
 
       if (winesService.selectedWine == null) {
-        textEditingController.text = 'Vino catado a ciegas a añadir';
+        textEditingController.text = '';
       }
       else {
         textEditingController.text = winesService.selectedWine!.nombre;
@@ -119,11 +157,12 @@ class _SearchTasteWine extends StatelessWidget {
         children: [
           const Text('Busca en nuestro listado o añadelo', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
       
-          // const SizedBox(width: 260),
           // TODO theme this
           TextFormField(
               controller: textEditingControllerListener(),
               readOnly: true,
+              canRequestFocus: false,
+              textAlignVertical: TextAlignVertical.center,
               style: const TextStyle(fontSize: 14),
               textAlign: TextAlign.center,
               // decoration: InputDecoration(
@@ -178,6 +217,9 @@ class _SearchTasteWine extends StatelessWidget {
                     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: false); // TODO listen tru dentro de funcion
                     final winesService = Provider.of<WinesService>(context, listen: false);
                     final taste = Provider.of<VisibleOptionsProvider>(context, listen: false);
+
+                    wineForm.setDefaultCreateWine();
+                    winesService.selectedWine = null;
                           
                     showDialog(
                       barrierDismissible: false,

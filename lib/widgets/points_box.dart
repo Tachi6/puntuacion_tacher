@@ -20,12 +20,15 @@ class PointsBox extends StatelessWidget {
     final taste = Provider.of<VisibleOptionsProvider>(context);
     final winesService = Provider.of<WinesService>(context);
     final styles = Theme.of(context).textTheme;
+    final colors = Theme.of(context).colorScheme;
 
     return PopScope(
       canPop: false,
       child: AlertDialog(
-        insetPadding: const EdgeInsets.symmetric(vertical: 20),       
-        title: const Text('Tacher'),
+        backgroundColor: colors.surfaceContainer,
+        insetPadding: const EdgeInsets.all(20),
+        actionsPadding: const EdgeInsets.only(bottom: 12, right: 16),
+        title: const Text('Tacher', textAlign: TextAlign.center),
         content: SizedBox(
           width: 250,
           child: Column(
@@ -35,8 +38,8 @@ class PointsBox extends StatelessWidget {
                 
               const SizedBox(height: 16),
                 
-              Text(wine!.nombre, style: styles.titleLarge),
-              Text(wine!.tipo, style: styles.bodyMedium),
+              Text(wine!.nombre, style: styles.headlineSmall),
+              Text(wine!.tipo, style: styles.bodyLarge),
                 
               const SizedBox(height: 16),
                 

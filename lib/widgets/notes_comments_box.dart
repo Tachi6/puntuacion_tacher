@@ -68,9 +68,8 @@ class NotasCataBox extends StatelessWidget {
 
     final Size size = MediaQuery.of(context).size;
 
-    return AlertDialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      title: const Text('Notas de Cata'),
+    return CustomAlertDialog(
+      title: 'Añadir nota de cata',
       content: SizedBox(
         width: size.width * 0.8,
         child: SingleChildScrollView(
@@ -109,22 +108,15 @@ class NotasCataBox extends StatelessWidget {
           ),
         ),
       ),
-    actions: [
-        TextButton(
-          onPressed: () {
-            wineForm.clearNotas();
-            Navigator.pop(context);
-          },
-          child: const Text('Descartar')
-        ),
-
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('Guardar')
-        ),
-      ],
+      cancelText: 'Descartar',
+      saveText: 'Guardar',
+      onPressedCancel: () {
+        wineForm.clearNotas();
+        Navigator.pop(context);
+      },
+      onPressedSave: () {
+        Navigator.pop(context);
+      },
     );
   }
 }
@@ -139,9 +131,8 @@ class ComentariosBox extends StatelessWidget {
 
     final Size size = MediaQuery.of(context).size;
 
-    return AlertDialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      title: const Text('Añadir comentarios'),
+    return CustomAlertDialog(
+      title: 'Añadir comentarios',
       content: SizedBox(
         width: size.width * 0.8,
         child: Form(
@@ -154,23 +145,16 @@ class ComentariosBox extends StatelessWidget {
             },
           ),
         ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            wineForm.clearComentarios();            
-            Navigator.pop(context);
-          },
-          child: const Text('Descartar')
-        ),
-    
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          }, 
-          child: const Text('Guardar')
-        )
-      ],
+      ), 
+      cancelText: 'Descartar', 
+      saveText: 'Guardar',
+      onPressedCancel: () {
+        wineForm.clearComentarios();            
+        Navigator.pop(context);
+      },
+      onPressedSave: () {
+          Navigator.pop(context);
+        },
     );
   }
 }

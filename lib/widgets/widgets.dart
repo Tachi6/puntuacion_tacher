@@ -1,12 +1,15 @@
 
-export 'package:puntuacion_tacher/widgets/custom_elevated_button.dart';
 export 'package:puntuacion_tacher/screens/screens.dart';
 export 'package:puntuacion_tacher/widgets/add_hidden_wine.dart';
+export 'package:puntuacion_tacher/widgets/bottom_image_background.dart';
 export 'package:puntuacion_tacher/widgets/card_news.dart';
 export 'package:puntuacion_tacher/widgets/coming_soon.dart';
 export 'package:puntuacion_tacher/widgets/create_add_wine.dart';
 export 'package:puntuacion_tacher/widgets/create_multiple_taste.dart';
+export 'package:puntuacion_tacher/widgets/custom_alert_dialog.dart';
 export 'package:puntuacion_tacher/widgets/custom_bottom_navigation_bar.dart';
+export 'package:puntuacion_tacher/widgets/custom_elevated_button.dart';
+export 'package:puntuacion_tacher/widgets/full_screen_background.dart';
 export 'package:puntuacion_tacher/widgets/hidden_taste.dart';
 export 'package:puntuacion_tacher/widgets/list_best.dart';
 export 'package:puntuacion_tacher/widgets/list_top10.dart';
@@ -22,8 +25,6 @@ export 'package:puntuacion_tacher/widgets/radio_taste.dart';
 export 'package:puntuacion_tacher/widgets/rating_box.dart';
 export 'package:puntuacion_tacher/widgets/rating_details_category.dart';
 export 'package:puntuacion_tacher/widgets/search_taste_wine.dart';
-export 'package:puntuacion_tacher/widgets/full_screen_background.dart';
-export 'package:puntuacion_tacher/widgets/bottom_image_background.dart';
 export 'package:puntuacion_tacher/widgets/valoration_card.dart';
 
 
