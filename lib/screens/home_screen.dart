@@ -29,12 +29,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-      // TODO ver si no necesito este MaterialApp como padre del Scaffold
-      // child: MaterialApp(
-      //   debugShowCheckedModeBanner: false,
-      //   theme: AppTheme.lightTheme, // TODO donde aplicar tema? porque si quito de aqui me pone AppBar en blanco o transparente
-      //   home: const Scaffold(
-
   
 class _HomeScreenBody extends StatelessWidget {
 

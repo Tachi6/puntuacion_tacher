@@ -26,7 +26,7 @@ class MyUserScreen extends StatelessWidget {
         email: authService.userEmail, 
         user: authService.userDisplayName == ''
           ? authService.userEmail
-          : authService.userDisplayName // TODO ver si no peta porque wine puede recibir nulo???
+          : authService.userDisplayName
       ),
     );
   }

@@ -9,8 +9,6 @@ import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class UserSettingsScreen extends StatelessWidget {
 
-  // TODO repasar el scroll con la appbar
-
   const UserSettingsScreen({super.key});
 
   @override
@@ -96,7 +94,7 @@ class _UserSettingsBody extends StatelessWidget {
             ),
           ),
        
-          const SizedBox(height: 80),
+          const SizedBox(height: 60),
        
           Material(
             color: colors.onPrimaryFixedVariant.withOpacity(1.0),
@@ -168,7 +166,7 @@ class _UserSettingsBody extends StatelessWidget {
                                     NotificationsService.showSnackbar(error, context);
                                   }
                                   else if (authService.isValidForm()) {
-                                    authService.updateUser(authService.tempDisplayName);
+                                    authService.renameUser(authService.tempDisplayName);
                                     authService.isSavingUser = false;
                                   }
                                 } 
@@ -268,7 +266,7 @@ class _UserSettingsBody extends StatelessWidget {
             ),
           ),
     
-          const SizedBox(height: 15),
+          const SizedBox(height: 20),
     
           const SettingsEndButtons(),
         ],

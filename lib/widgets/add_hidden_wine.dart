@@ -47,10 +47,8 @@ class AddHiddenWine extends StatelessWidget {
         onPressedCancel: () {
           Navigator.pop(context);
           winesService.selectedWine = null;
-          // TODO back to tacher or back to home???
           taste.clearWidgets();
           wineForm.setDefaultCreateWine();
-          Navigator.pushNamed(context, 'home');
         },
         onPressedSave: () async {
           // Verifico que hay vino añadido
@@ -153,26 +151,17 @@ class _SearchTasteWine extends StatelessWidget {
     return SizedBox(
       height: 130,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Busca en nuestro listado o añadelo', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
       
-          // TODO theme this
           TextFormField(
               controller: textEditingControllerListener(),
               readOnly: true,
               canRequestFocus: false,
               textAlignVertical: TextAlignVertical.center,
               style: const TextStyle(fontSize: 14),
-              textAlign: TextAlign.center,
-              // decoration: InputDecoration(
-              //   enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor())),
-              //   focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: redColor(), width: 2)),  
-              //   // labelText: 'Busca tu vino',
-              //   labelStyle: const TextStyle(fontSize: 14),
-              //   floatingLabelStyle: TextStyle(color: Colors.grey[600], fontSize: 14),                     
-              // ),
-              // cursorColor: redColor(),
+              textAlign: TextAlign.left,
             ),          
       
           const SizedBox(
@@ -214,7 +203,7 @@ class _SearchTasteWine extends StatelessWidget {
                   ],
                 ),
                 onPressed: () {
-                    final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: false); // TODO listen tru dentro de funcion
+                    final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: false);
                     final winesService = Provider.of<WinesService>(context, listen: false);
                     final taste = Provider.of<VisibleOptionsProvider>(context, listen: false);
 
@@ -227,7 +216,7 @@ class _SearchTasteWine extends StatelessWidget {
                       builder: (BuildContext context) {
                         return PopScope(
                           canPop: false,
-                          child: AlertDialog( // TODO pasar a Dialog
+                          child: AlertDialog(
                             actionsPadding: const EdgeInsets.all(10),
                             insetPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                             title: const Text('Añadir vino al listado'),
@@ -264,96 +253,8 @@ class _SearchTasteWine extends StatelessWidget {
                 
                 },
               ),
-                
-              // const SizedBox(width: 10),
-                
-              // CircleAvatar(
-              //   backgroundColor: redColor(),
-              //   child: IconButton(
-              //     onPressed: () {
-              //       final winesService = Provider.of<WinesService>(context, listen: false);
-              //       winesService.loadWines;
-                            
-              //       showSearch(context: context, delegate: WineSearchForm());                   
-              //     }, 
-              //     icon: const Icon(
-              //       Icons.search,
-              //       color: Colors.white,
-              //     ) 
-              //   ),
-              // ),
-          
-              // Transform.translate(
-              //   offset: const Offset(12, 0),
-              //   child: const Text('Buscar', style: TextStyle(fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis)))
             ],
           ),
-      
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.start,
-          //   children: [
-          //     CircleAvatar(
-          //       backgroundColor: redColor(),
-          //       child: IconButton(
-          //         onPressed: () {
-                    
-          //           final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: false); // TODO listen tru dentro de funcion
-          //           final winesService = Provider.of<WinesService>(context, listen: false);
-          //           final taste = Provider.of<VisibleOptionsProvider>(context, listen: false);
-                          
-          //           showDialog(
-          //             barrierDismissible: false,
-          //             context: context,
-          //             builder: (BuildContext context) {
-          //               return PopScope(
-          //                 canPop: false,
-          //                 child: AlertDialog( // TODO pasar a Dialog
-          //                   actionsPadding: const EdgeInsets.all(10),
-          //                   insetPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          //                   title: const Text('Añadir vino al listado'),
-          //                   content: ChangeNotifierProvider(
-          //                     create: ( _ ) => ShowMoreFieldsCreateWine(),
-          //                     child: CreateNewWineForm(wineForm)
-          //                     ),
-          //                   actions: <Widget>[
-          //                     TextButton(
-          //                       onPressed: () {
-          //                         wineForm.setDefaultCreateWine();
-          //                         Navigator.pop(context, 'Cancelar');
-          //                       },
-          //                       child: const Text('Cancelar'),
-          //                     ),
-          //                     TextButton(
-          //                       onPressed: () {
-          //                         if (wineForm.isValidForm()) {
-                          
-          //                           wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
-                                    
-          //                           winesService.selectedWine = wineForm.wine;
-          //                           taste.showContinueButton = true;
-          //                           Navigator.pop(context, 'Guardar');
-          //                         }
-          //                       },
-          //                       child: const Text('Guardar'),
-          //                     ),
-          //                   ],
-          //                 ),
-          //               );
-          //             },
-          //           );
-          //         },
-          //         icon: const Icon(
-          //           Icons.add,
-          //           color: Colors.white,
-          //         ),
-          //       ),
-          //     ),
-          
-          //     Transform.translate(
-          //       offset: const Offset(12, 0),
-          //       child: const Text('Añadir', style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis)))
-          //   ],
-          // ),
         ],  
       ),
     );

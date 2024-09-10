@@ -7,8 +7,6 @@ import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-// TODO arreglar colores
-
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -35,8 +33,6 @@ class LoginForm extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        // backgroundColor: Colors.transparent,
-        // systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       backgroundColor: Colors.transparent,
       body: Container(
@@ -154,7 +150,7 @@ class LoginRegisterForm extends StatelessWidget {
               icon: Icon(loginForm.passwordObscure
                 ? Icons.visibility_off_outlined
                 : Icons.visibility_outlined,
-                color: Colors.white, size: 18 // TODO style
+                color: colors.surface, size: 18
               ),
             ),
             onChanged: (value) => loginForm.password = value,
@@ -216,18 +212,19 @@ class LoginTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final colors = Theme.of(context).colorScheme;
+    final TextEditingController textEditingController = TextEditingController();
 
     return Theme(
       data: AppTheme().getTheme(context).copyWith(
         textSelectionTheme: TextSelectionThemeData(
-          selectionHandleColor: colors.onPrimaryFixedVariant, // TODO set color
+          selectionHandleColor: colors.onPrimaryFixedVariant,
         )
       ),
       child: TextFormField(
+        controller: textEditingController,
         autocorrect: false,
-        enableSuggestions: false,
         obscureText: obscureText,
-        cursorErrorColor: colors.onErrorContainer,//setSurfaceColor(context),
+        cursorErrorColor: colors.onErrorContainer,
         cursorColor: colors.surface,
         style: TextStyle(color: colors.surface),
         keyboardType: textInputType,

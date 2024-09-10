@@ -2,7 +2,6 @@
 export 'package:puntuacion_tacher/screens/screens.dart';
 export 'package:puntuacion_tacher/widgets/add_hidden_wine.dart';
 export 'package:puntuacion_tacher/widgets/bottom_image_background.dart';
-export 'package:puntuacion_tacher/widgets/card_news.dart';
 export 'package:puntuacion_tacher/widgets/coming_soon.dart';
 export 'package:puntuacion_tacher/widgets/create_add_wine.dart';
 export 'package:puntuacion_tacher/widgets/create_multiple_taste.dart';

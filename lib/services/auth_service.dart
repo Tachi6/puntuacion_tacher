@@ -89,7 +89,7 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  Future<String?> updateUser(String displayName) async { // TODO ver que nombre ponemos a update
+  Future<String?> renameUser(String displayName) async {
 
     final idToken = await storage.read(key: 'idToken');
 

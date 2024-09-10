@@ -25,7 +25,7 @@ class PointsBox extends StatelessWidget {
     return PopScope(
       canPop: false,
       child: AlertDialog(
-        backgroundColor: colors.surfaceContainer,
+        backgroundColor: colors.surfaceContainerLow,
         insetPadding: const EdgeInsets.all(20),
         actionsPadding: const EdgeInsets.only(bottom: 12, right: 16),
         title: const Text('Tacher', textAlign: TextAlign.center),

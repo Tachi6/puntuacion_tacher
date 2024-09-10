@@ -82,9 +82,9 @@ class CustomBodyTile extends StatelessWidget {
    
     final String user;
 
-    wine.displayName == '' || wine.displayName ==  null
+    wine.displayName == '' || wine.displayName == null
       ? user = wine.usuarios.last
-      : user = wine.displayName!; // TODO ver si no peta porque wine puede recibir nulo
+      : user = wine.displayName!;
 
     return Expanded(
       child: Container(
@@ -93,7 +93,7 @@ class CustomBodyTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '$user valoró ${wine.nombre} con ${wine.puntuaciones.last} puntos',
+              '$user cató ${wine.nombre} y lo valoró con ${wine.puntuaciones.last} puntos',
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
       

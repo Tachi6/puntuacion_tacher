@@ -45,7 +45,6 @@ class _CustomAppBar extends StatelessWidget {
   final Wines wine;
   final String? user;
   final String source;
-  // TODO poner tachi cato y valoro???
 
   const _CustomAppBar({required this.wine, this.user, required this.source});
 

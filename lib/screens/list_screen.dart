@@ -1,6 +1,5 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/search/search_delegate.dart';
@@ -24,7 +23,6 @@ class ListScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       body: CustomScrollView(
-          
         slivers: [
           SliverAppBar(
             toolbarHeight: 48,

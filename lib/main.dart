@@ -73,7 +73,6 @@ class MyApp extends StatelessWidget{
           'home':(context) => const HomeScreen(),
         },
         initialRoute: 'checkingAuth',
-        // scaffoldMessengerKey: NotificationsService.messengerKey, // TODO creo que no es necesario un global key
       );
   }
 }

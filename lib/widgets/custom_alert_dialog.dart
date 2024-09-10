@@ -24,7 +24,7 @@ class CustomAlertDialog extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;    
 
     return AlertDialog(
-      backgroundColor: colors.surfaceContainer,
+      backgroundColor: colors.surfaceContainerLow,
       insetPadding: const EdgeInsets.all(20),
       actionsPadding: const EdgeInsets.only(bottom: 12, right: 16),
       title: Text(title),

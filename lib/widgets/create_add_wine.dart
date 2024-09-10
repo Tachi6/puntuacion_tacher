@@ -104,34 +104,6 @@ class CustomDialog extends StatelessWidget {
         }
       },
     );
-    
-    // AlertDialog( // TODO pasar a Dialog??
-    //   alignment: Alignment.center,
-    //   actionsPadding: const EdgeInsets.all(10),
-    //   insetPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-    //   title: const Text('Añadir vino al listado', style: TextStyle(fontSize: 18)),
-    //   content: CreateNewWineForm(wineForm),
-    //   actions: <Widget>[
-    //     TextButton(
-    //       onPressed: () {
-    //         wineForm.setDefaultCreateWine();
-    //         Navigator.pop(context, 'Cancelar');
-    //       },
-    //       child: const Text('Cancelar', style: TextStyle(fontSize: 16)),
-    //     ),
-    //     TextButton(
-    //       onPressed: () {
-    //         if (wineForm.isValidForm()) {
-    //           wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
-    //           winesService.selectedWine = wineForm.wine;
-    //           taste.showContinueButton = true;
-    //           Navigator.pop(context, 'Guardar');
-    //         }
-    //       },
-    //       child: const Text('Guardar', style: TextStyle(fontSize: 16)),
-    //     ),
-    //   ],
-    // );
   }
 }
 

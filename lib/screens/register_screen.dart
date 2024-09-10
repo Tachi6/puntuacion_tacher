@@ -278,7 +278,7 @@ class _ValidateUserButton extends StatelessWidget {
         final String? errorMessage = await authService.createUser(loginForm.email, loginForm.password);
 
         if (errorMessage == null) {
-          await authService.updateUser(authService.tempDisplayName);
+          await authService.renameUser(authService.tempDisplayName);
           if (!context.mounted) return;
           final newRoute = MaterialPageRoute(
               builder: (context) => const HomeScreen());
