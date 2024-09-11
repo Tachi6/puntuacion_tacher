@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/services/services.dart';
 
 
 enum TasteOptionsNormal { empty, vino, ciega }
@@ -29,8 +30,10 @@ class _RadioWidgetNormalState extends State<RadioWidgetNormal> {
   @override
   Widget build(BuildContext context) {
 
+    final winesService = Provider.of<WinesService>(context, listen: false);
     final taste = Provider.of<VisibleOptionsProvider>(context);
     final colors = Theme.of(context).colorScheme;
+    final wineForm = Provider.of<CreateEditWineFormProvider>(context);
 
     return Container(
       padding: const EdgeInsets.only(left: 20),
@@ -50,6 +53,9 @@ class _RadioWidgetNormalState extends State<RadioWidgetNormal> {
               value: TasteOptionsNormal.vino, 
               groupValue: _taste, 
               onChanged: (TasteOptionsNormal? value) {
+
+                wineForm.setDefaultCreateWine();
+                winesService.selectedWine = wineForm.wine;
                 _taste = value;
                 taste.tasteNormal = value!;
                 taste.showContinueButton = false;

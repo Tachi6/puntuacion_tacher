@@ -146,6 +146,7 @@ class LoginRegisterForm extends StatelessWidget {
             suffixIcon: IconButton(
               onPressed: () {
                 loginForm.passwordObscure = !loginForm.passwordObscure;
+                print(loginForm.passwordObscure);
               }, 
               icon: Icon(loginForm.passwordObscure
                 ? Icons.visibility_off_outlined
@@ -212,7 +213,6 @@ class LoginTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final colors = Theme.of(context).colorScheme;
-    final TextEditingController textEditingController = TextEditingController();
 
     return Theme(
       data: AppTheme().getTheme(context).copyWith(
@@ -221,7 +221,6 @@ class LoginTextFormField extends StatelessWidget {
         )
       ),
       child: TextFormField(
-        controller: textEditingController,
         autocorrect: false,
         obscureText: obscureText,
         cursorErrorColor: colors.onErrorContainer,

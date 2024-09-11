@@ -18,8 +18,8 @@ class CustomNavigationBar extends StatelessWidget {
     final taste = Provider.of<VisibleOptionsProvider>(context);
 
     return SizedBox(
-      // height: 58, // TO SET THE HEIGHT OF BOTTOMNAVIGATIONBAR
       child: NavigationBar(
+        height: 58,
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.trending_up_outlined), label: 'Valoraciones'),
@@ -30,7 +30,6 @@ class CustomNavigationBar extends StatelessWidget {
           NavigationDestination(
             icon: Icon(Icons.person), label: 'Usuario'),
         ],
-        height: 58,
         
         // elevation: 0,
         // backgroundColor: const Color.fromARGB(255, 114, 47, 55),

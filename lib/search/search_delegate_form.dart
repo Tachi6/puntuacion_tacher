@@ -10,6 +10,16 @@ import 'package:puntuacion_tacher/services/services.dart';
 class WineSearchForm extends SearchDelegate{
 
   late List<Wines> _filtro;
+
+  SvgPicture wineIcon(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
+    return SvgPicture.asset(
+      'assets/wine_bar_full.svg',
+      height: 120,
+      colorFilter: ColorFilter.mode(colors.onPrimaryFixedVariant, BlendMode.srcIn),
+    );
+  }
   
   @override
   String? get searchFieldLabel => 'Buscar vino';
@@ -43,7 +53,6 @@ class WineSearchForm extends SearchDelegate{
     final winesService = Provider.of<WinesService>(context);
     final taste = Provider.of<VisibleOptionsProvider>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
-    final colors = Theme.of(context).colorScheme;
 
     if(_filtro.isEmpty) {
       return Center(
@@ -52,11 +61,7 @@ class WineSearchForm extends SearchDelegate{
           children: [
             const SizedBox(height: 20),
             
-            SvgPicture.asset(
-              'assets/wine_bar_half.svg',
-              height: 120,
-              colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
-            ),
+            wineIcon(context),
             
             const SizedBox(height: 20),
 
@@ -101,11 +106,7 @@ class WineSearchForm extends SearchDelegate{
         color: colors.surface,
         width: double.infinity,
         child: Center(
-          child: SvgPicture.asset(
-            'assets/wine_bar_half.svg',
-            height: 120,
-            colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
-          ),
+          child: wineIcon(context),
         ),
       );
     }
@@ -121,11 +122,7 @@ class WineSearchForm extends SearchDelegate{
           children: [
             const SizedBox(height: 20),
             
-            SvgPicture.asset(
-              'assets/wine_bar_half.svg',
-              height: 120,
-              colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
-            ),
+            wineIcon(context),
 
             const SizedBox(height: 20),
 

@@ -12,6 +12,16 @@ class WineSearch extends SearchDelegate{
 
   WineSearch(this.wines);
 
+  SvgPicture wineIcon(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
+    return SvgPicture.asset(
+      'assets/wine_bar_full.svg',
+      height: 120,
+      colorFilter: ColorFilter.mode(colors.onPrimaryFixedVariant, BlendMode.srcIn),
+    );
+  }
+
   @override
   String? get searchFieldLabel => 'Buscar vino';
 
@@ -41,8 +51,6 @@ class WineSearch extends SearchDelegate{
   @override
   Widget buildResults(BuildContext context) {
 
-    final colors = Theme.of(context).colorScheme;
-
     if(_filtro.isEmpty) {
       return Center(
         child: Column(
@@ -50,11 +58,7 @@ class WineSearch extends SearchDelegate{
           children: [
             const SizedBox(height: 20),
             
-            SvgPicture.asset(
-              'assets/wine_bar_half.svg',
-              height: 120,
-              colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
-            ),
+            wineIcon(context),
 
             const SizedBox(height: 20),
 
@@ -94,11 +98,7 @@ class WineSearch extends SearchDelegate{
         color: colors.surface,
         width: double.infinity,
         child: Center(
-          child: SvgPicture.asset(
-            'assets/wine_bar_half.svg',
-            height: 120,
-            colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
-          ),
+          child: wineIcon(context),
         ),
       );
     }
@@ -114,11 +114,7 @@ class WineSearch extends SearchDelegate{
           children: [
             const SizedBox(height: 20),
             
-            SvgPicture.asset(
-              'assets/wine_bar_half.svg',
-              height: 120,
-              colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
-            ),
+            wineIcon(context),
 
             const SizedBox(height: 20),
 

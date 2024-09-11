@@ -26,6 +26,7 @@ class CreateAddWine extends StatelessWidget {
 
     final winesService = Provider.of<WinesService>(context, listen: false);
     final colors = Theme.of(context).colorScheme;
+    final wineForm = Provider.of<CreateEditWineFormProvider>(context);
 
     return SizedBox(
       width: 96,
@@ -38,6 +39,8 @@ class CreateAddWine extends StatelessWidget {
               size: 22
             ),
             onPressed: () {
+              wineForm.setDefaultCreateWine();
+              winesService.selectedWine = wineForm.wine;
               showGeneralDialog(
                 context: context,
                 barrierDismissible: false, 

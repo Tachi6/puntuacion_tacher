@@ -29,6 +29,7 @@ class SearchTasteWine extends StatelessWidget {
     }
 
     return Container(
+      height: 70,
       width: double.infinity,
       padding: const EdgeInsets.only(right: 20, left: 4),
       child: Column(

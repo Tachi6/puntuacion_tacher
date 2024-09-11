@@ -22,13 +22,13 @@ class TasteScreen extends StatelessWidget {
       // HEIGHT OF STATUS 
       final statusBarHeight = View.of(context).padding.top / View.of(context).devicePixelRatio;
       // HEIGHT OF WIDGETS: SIZEDBOX + 1ST WIDGET + 2ND WIDGET + 3RD WIDGET + CONTINUE BUTTON
-      const widgetsHeight = 20 + 150 + 20 + 150 + 20 + 120;
+      const widgetsHeight = 20 + 150 + 20 + 150 + 20 + 70 + 90;
       // SCREEN HEIGHT
       final double screenSize = MediaQuery.of(context).size.height;
       // FILLED SPACE IN SCREEN
       final filledScreen = appBarSize + bottomNavigationBarSize + statusBarHeight + widgetsHeight;
       // EMPTY HEIGHT OF THE SCREEN
-      return screenSize - filledScreen - 25; // 25 is the same padding of right of continue button
+      return screenSize - filledScreen; // 25 is the same padding of right of continue button
     }
 
     return Scaffold(
@@ -39,53 +39,51 @@ class TasteScreen extends StatelessWidget {
         children: [
           const BottomImageBackground(image: 'assets/taste-background.jpg', opacity: 0.8),
 
-          SingleChildScrollView(
-            child:Form(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisSize: MainAxisSize.max,
-                // mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
+          Form(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.max,
+              // mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                    
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: size.width - 240 - 10,
+                    ),
+                    const RadioTaste()
+                  ]
+                ),
           
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: size.width - 240 - 10,
-                      ),
-                      const RadioTaste()
-                    ]
-                  ),
-
-                  const SizedBox(
-                    height: 20,
-                  ),
+                const SizedBox(
+                  height: 20,
+                ),
+                    
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Transform.translate(
+                      offset: const Offset(20, 0),
+                      child: _SecondFormWidget()
+                    )
+                  ]
+                ),
           
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Transform.translate(
-                        offset: const Offset(20, 0),
-                        child: _SecondFormWidget()
-                      )
-                    ]
-                  ),
-
-                  const SizedBox(
-                    height: 20,
-                  ),
-          
-                  _ThirdFormWidget(),
-          
-                  SizedBox(height: innerSizedBox()),
-          
-                  _ContinueButton(),
-                ]
-              ),
-            )
+                const SizedBox(
+                  height: 20,
+                ),
+                    
+                _ThirdFormWidget(),
+                    
+                SizedBox(height: innerSizedBox()),
+                    
+                _ContinueButton(),
+              ]
+            ),
           ),
         ],
       )
@@ -162,23 +160,21 @@ class _ContinueButton extends StatelessWidget {
 
     if (taste.showContinueButton) {
       return Container(
+        alignment: Alignment.bottomRight,
         height: 90,
-        padding: const EdgeInsets.only(right: 25),
-        child: Align(
-          alignment: Alignment.topRight,
-          child: CustomElevatedButton(
-            width: 150, 
-            onPressed: () {
-              if (taste.showThirdWidget) {
-                final newRoute = MaterialPageRoute(
-                  builder: (context) => TacherScreen()
-                );
-          
-                Navigator.push(context, newRoute);
-              }
-            },
-            child: const Text('Continuar'),
-          )
+        padding: const EdgeInsets.only(right: 25, bottom: 25),
+        child: CustomElevatedButton(
+          width: 150, 
+          onPressed: () {
+            if (taste.showThirdWidget) {
+              final newRoute = MaterialPageRoute(
+                builder: (context) => TacherScreen()
+              );
+        
+              Navigator.push(context, newRoute);
+            }
+          },
+          child: const Text('Continuar'),
         ),
       );
     }

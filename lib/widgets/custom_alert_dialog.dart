@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
+import 'package:puntuacion_tacher/apptheme/apptheme.dart';
+
 class CustomAlertDialog extends StatelessWidget {
   const CustomAlertDialog({
     super.key, 
@@ -21,10 +25,13 @@ class CustomAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final colors = Theme.of(context).colorScheme;    
+    final colors = Theme.of(context).colorScheme;
+    final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);   
 
     return AlertDialog(
-      backgroundColor: colors.surfaceContainerLow,
+      backgroundColor: themeColor.isDarkMode
+        ? colors.surfaceContainer
+        : colors.surfaceContainerLow,
       insetPadding: const EdgeInsets.all(20),
       actionsPadding: const EdgeInsets.only(bottom: 12, right: 16),
       title: Text(title),
