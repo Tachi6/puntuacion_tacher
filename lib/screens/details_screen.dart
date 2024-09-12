@@ -53,12 +53,9 @@ class _CustomAppBar extends StatelessWidget {
 
     final statusBarHeight = View.of(context).padding.top / View.of(context).devicePixelRatio;
     final styles = Theme.of(context).textTheme;
-    final colors = Theme.of(context).colorScheme;
     
     return SliverAppBar(
       toolbarHeight: 150 + statusBarHeight,
-      backgroundColor: Colors.white,
-      surfaceTintColor: Colors.white,
       automaticallyImplyLeading: false,
       pinned: true,
       floating: false,
@@ -82,7 +79,7 @@ class _CustomAppBar extends StatelessWidget {
                 child: Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_back, color: colors.surface),
+                      icon: const Icon(Icons.arrow_back),
                       onPressed: () => Navigator.pop(context),
                     ),
               
@@ -91,7 +88,7 @@ class _CustomAppBar extends StatelessWidget {
                     IconButton(
                       tooltip: 'Editar logo de la bodega',
                       onPressed: () {}, 
-                      icon: Icon(Icons.edit, color: colors.surface)
+                      icon: const Icon(Icons.edit)
                     ),
                   ],
                 ),
@@ -101,7 +98,7 @@ class _CustomAppBar extends StatelessWidget {
               
               user == null // styles.headlineSmall
                 ?
-                Text('Ficha técnica global', style: TextStyle(color: colors.onPrimaryFixed) )
+                Text('Ficha técnica global', style: styles.titleLarge)
                 :
                   source == 'latest' 
                     ?
@@ -115,14 +112,15 @@ class _CustomAppBar extends StatelessWidget {
           
         ),
         // TODO ingresar imagen de bodega
-        background: (wine.bodega == 'Valenciso') 
+        // TODO theme background when there are a logo of bodega
+        background: (wine.bodega == 'Prueba') 
           ?
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 0),
             child: FadeInImage(
               placeholder: AssetImage('assets/no_image.jpg'), 
               image: AssetImage('assets/valenciso.jpg'),
-              fit: BoxFit.fitWidth,
+              fit: BoxFit.cover,
             ),
           )
           : 
@@ -132,11 +130,10 @@ class _CustomAppBar extends StatelessWidget {
               child: AutoSizeText(
                 wine.bodega,
                 textAlign: TextAlign.center,
-                maxLines: 2,
-                style: TextStyle(
+                maxLines: wine.bodega.contains(' ') ? 2 : 1,
+                style: const TextStyle(
                   fontSize: 60,
                   fontWeight: FontWeight.bold, 
-                  color: colors.onPrimaryFixedVariant,
                   height: 1
                 ),
               )
@@ -191,7 +188,6 @@ class _WinePoster extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 8),
                 Text(wine.vino, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16), maxLines: 2),
                 Text(wine.anada.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 detectEmptyText(wine.tipo),

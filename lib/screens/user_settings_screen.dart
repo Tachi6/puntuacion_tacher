@@ -82,22 +82,38 @@ class _UserSettingsBody extends StatelessWidget {
        child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Hero(
-            tag: 'image_profile',
-            child: Material(
-              type: MaterialType.transparency,
-              child: CircleAvatar(
-                backgroundColor: colors.onPrimaryFixedVariant,
-                radius: 80,
-                child: Text(authService.userDisplayName[0].toUpperCase(), style: TextStyle(color: colors.surface, fontSize: 100)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 40),
+          
+              Hero(
+                tag: 'image_profile',
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: CircleAvatar(
+                    backgroundColor: colors.onPrimaryFixedVariant,
+                    radius: 80,
+                    child: Text(authService.userDisplayName[0].toUpperCase(), style: TextStyle(color: colors.surface, fontSize: 100)),
+                  ),
+                ),
               ),
-            ),
+          
+              IconButton(
+                onPressed: () {
+                  // TODO change user photo
+                }, 
+                icon: const Icon(Icons.edit_rounded))
+            ],
           ),
        
           const SizedBox(height: 60),
        
           Material(
-            color: colors.onPrimaryFixedVariant.withOpacity(1.0),
+            color: themeColor.isDarkMode
+              ? colors.surfaceContainerHighest
+              : colors.surfaceContainerHighest.withOpacity(0.6),
             shadowColor: colors.shadow,
             elevation: 1,
             borderRadius: BorderRadius.circular(15),
@@ -332,11 +348,11 @@ class SettingsOptions extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(leading, color: colors.primaryFixed),
+            Icon(leading),
       
             const SizedBox(width: 8),
             
-            Text(title, style: TextStyle(fontSize: 16, color: colors.primaryFixed)),
+            Text(title, style: const TextStyle(fontSize: 16)),
           ],
         ),
     
