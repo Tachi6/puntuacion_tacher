@@ -86,7 +86,7 @@ class _UserSettingsBody extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(width: 40),
+              const SizedBox(width: 48),
           
               Hero(
                 tag: 'image_profile',
@@ -99,12 +99,14 @@ class _UserSettingsBody extends StatelessWidget {
                   ),
                 ),
               ),
-          
-              IconButton(
-                onPressed: () {
-                  // TODO change user photo
-                }, 
-                icon: const Icon(Icons.edit_rounded))
+
+              // TODO to change imageprofile???
+              const SizedBox(width: 48),
+              // IconButton(
+              //   onPressed: () {
+              //     // TODO change user photo
+              //   }, 
+              //   icon: const Icon(Icons.edit_rounded))
             ],
           ),
        

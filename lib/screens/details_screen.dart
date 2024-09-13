@@ -1,9 +1,12 @@
 // Photo by <a href="/photographer/muddy-31912">muddy</a> on <a href="/">Freeimages.com</a>
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:image_pixels/image_pixels.dart';
 
+import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -52,7 +55,15 @@ class _CustomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final statusBarHeight = View.of(context).padding.top / View.of(context).devicePixelRatio;
-    final styles = Theme.of(context).textTheme;
+    final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
+    final colors = Theme.of(context).colorScheme;
+    final styles = Theme.of(context).textTheme.titleLarge?.copyWith(
+      color: wine.bodega == 'Valenciso' 
+        ? themeColor.isDarkMode 
+          ? colors.surface
+          : colors.inverseSurface
+        : null // TODO with image
+    );
     
     return SliverAppBar(
       toolbarHeight: 150 + statusBarHeight,
@@ -64,7 +75,7 @@ class _CustomAppBar extends StatelessWidget {
         centerTitle: true,
         title: Container(
           width: double.infinity,
-          color: Colors.black26,
+          color: Colors.black12,
           alignment: Alignment.center,
           child:Column(
             children: [
@@ -79,7 +90,14 @@ class _CustomAppBar extends StatelessWidget {
                 child: Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.arrow_back),
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: wine.bodega == 'Valenciso' 
+                          ? themeColor.isDarkMode 
+                            ? colors.surface
+                            : colors.inverseSurface
+                          : null // TODO with image
+                        ),
                       onPressed: () => Navigator.pop(context),
                     ),
               
@@ -88,7 +106,14 @@ class _CustomAppBar extends StatelessWidget {
                     IconButton(
                       tooltip: 'Editar logo de la bodega',
                       onPressed: () {}, 
-                      icon: const Icon(Icons.edit)
+                      icon: Icon(
+                        Icons.edit,
+                        color: wine.bodega == 'Valenciso' 
+                          ? themeColor.isDarkMode 
+                            ? colors.surface
+                            : colors.inverseSurface
+                          : null // TODO with image
+                      )
                     ),
                   ],
                 ),
@@ -98,13 +123,13 @@ class _CustomAppBar extends StatelessWidget {
               
               user == null // styles.headlineSmall
                 ?
-                Text('Ficha técnica global', style: styles.titleLarge)
+                Text('Ficha técnica global', style: styles)
                 :
                   source == 'latest' 
                     ?
-                    Text('Valoración de la cata', style: styles.titleLarge)
+                    Text('Valoración de la cata', style: styles)
                     :
-                    Text('Valoración de mi cata', style: styles.titleLarge),
+                    Text('Valoración de mi cata', style: styles),
 
               const SizedBox(height: 5),             
             ],
@@ -112,15 +137,19 @@ class _CustomAppBar extends StatelessWidget {
           
         ),
         // TODO ingresar imagen de bodega
-        // TODO theme background when there are a logo of bodega
-        background: (wine.bodega == 'Prueba') 
+        // TODO theme background when there are a logo of bodega with contrast buttons
+        background: (wine.bodega == 'Valenciso') 
           ?
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0),
-            child: FadeInImage(
-              placeholder: AssetImage('assets/no_image.jpg'), 
-              image: AssetImage('assets/valenciso.jpg'),
-              fit: BoxFit.cover,
+          ImagePixels.container(
+            imageProvider: const AssetImage('assets/valenciso.jpg'),
+            colorAlignment: Alignment.bottomLeft,
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: FadeInImage(
+                placeholder: AssetImage('assets/no_image.jpg'), 
+                image: AssetImage('assets/valenciso.jpg'),
+                fit: BoxFit.fitWidth,
+              ),
             ),
           )
           : 

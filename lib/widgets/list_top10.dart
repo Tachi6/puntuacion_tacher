@@ -20,7 +20,8 @@ class ListTop10 extends StatelessWidget {
       width: double.infinity,
       height: 360,
       child: Swiper(
-        loop: false,
+        loop: true,
+        autoplay: true,
         itemCount: wines.length >= 10 ? 10 : wines.length,
         layout: SwiperLayout.STACK,
         axisDirection: AxisDirection.right,
