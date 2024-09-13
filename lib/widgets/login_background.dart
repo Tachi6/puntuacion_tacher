@@ -4,8 +4,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:puntuacion_tacher/apptheme/colors.dart';
-
 class LoginBackground extends StatelessWidget {
   const LoginBackground({
     super.key, 
@@ -18,6 +16,9 @@ class LoginBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final colors = Theme.of(context).colorScheme;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: backgroundColor,
@@ -41,7 +42,7 @@ class LoginBackground extends StatelessWidget {
             top: 60,
             child: Text(
               'TACHER', 
-              style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold, color: redColor()),
+              style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold, color: colors.primary),
             ),
           ),
           Positioned(
@@ -49,7 +50,7 @@ class LoginBackground extends StatelessWidget {
             top: 130,
             child: Text(
               'Tu rincon de amigos y... Vinos', 
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: redColor()),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colors.primary),
             ),
           ),
           

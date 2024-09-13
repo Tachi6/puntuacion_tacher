@@ -258,7 +258,7 @@ class _UserSettingsBody extends StatelessWidget {
                           isDense: true,
                           isCollapsed: false,
                         ),
-                        dropdownMenuEntries: themes,
+                        dropdownMenuEntries: themeColor.dropDownThemeEntries(),
                         menuStyle: MenuStyle(
                           alignment: Alignment.lerp(Alignment.centerLeft, Alignment.centerRight, 0.17)
                         ),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
-import 'package:puntuacion_tacher/screens/register_screen.dart';
 
 
 import 'package:puntuacion_tacher/screens/screens.dart';
@@ -13,7 +12,6 @@ void main(){
   runApp(const AppState());
 }
 
-// TODO falta configurar las imagenes splashscreen de IOS
 class AppState extends StatelessWidget {
   const AppState({super.key});
 
@@ -68,7 +66,6 @@ class MyApp extends StatelessWidget{
           'checkingAuth':(context) => const CheckAuthScreen(),
 
           'login':(context) => const LoginScreen(),
-          'register':(context) => const RegisterScreen(),
 
           'home':(context) => const HomeScreen(),
         },

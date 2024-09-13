@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:puntuacion_tacher/apptheme/colors.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 
 class LoadWineImage extends StatelessWidget {
@@ -88,6 +87,9 @@ class UrlImagePoster extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final colors = Theme.of(context).colorScheme;
+
     return Container(
       height: scale * 300,
       width: imageWidth,
@@ -101,7 +103,7 @@ class UrlImagePoster extends StatelessWidget {
             placeholder: (context, url) {
               return Center(
                 child: CircularProgressIndicator(
-                  color: redColor(),
+                  color: colors.primary,
                 ),
               );
             },
