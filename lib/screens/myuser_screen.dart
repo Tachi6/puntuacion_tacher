@@ -5,12 +5,19 @@ import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-class MyUserScreen extends StatelessWidget {
+class MyUserScreen extends StatefulWidget {
    
   const MyUserScreen({super.key});
+
+  @override
+  State<MyUserScreen> createState() => _MyUserScreenState();
+}
+
+class _MyUserScreenState extends State<MyUserScreen> with AutomaticKeepAliveClientMixin {
   
   @override
   Widget build(BuildContext context) {
+    super.build(context);
 
     final authService = Provider.of<AuthService>(context, listen: true);
     final winesService = Provider.of<WinesService>(context);
@@ -30,6 +37,9 @@ class MyUserScreen extends StatelessWidget {
       ),
     );
   }
+  
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class MyUserBody extends StatelessWidget {
@@ -95,13 +105,9 @@ class MyUserBody extends StatelessWidget {
                   
                   const SizedBox(
                     height: 10,
-                  ),          
+                  ),
             
                   Text(user, style: styles.titleLarge),
-                  
-                  // const SizedBox(
-                  //   height: 10,
-                  // ),
                 ],
               ),
             ),
@@ -159,8 +165,6 @@ class MyUserBody extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                              
-                      
                         ],
                       ),
                     ),

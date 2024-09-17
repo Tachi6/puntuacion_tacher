@@ -6,12 +6,18 @@ import 'package:puntuacion_tacher/search/search_delegate.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-class ListScreen extends StatelessWidget {
+class ListScreen extends StatefulWidget {
   
   const ListScreen({super.key});
-  
+
+  @override
+  State<ListScreen> createState() => _ListScreenState();
+}
+
+class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
 
     final winesService = Provider.of<WinesService>(context, listen: false);
     final colors = Theme.of(context).colorScheme;
@@ -36,6 +42,13 @@ class ListScreen extends StatelessWidget {
                   showSearch(context: context, delegate: WineSearch(winesService.winesByIndex));
                 },
                 icon: const Icon(Icons.search)
+              ),
+
+              IconButton(
+                onPressed: () {
+                  // TODO select best views
+                },
+                icon: const Icon(Icons.tune_rounded)
               ),
               
               const Spacer(),
@@ -119,8 +132,10 @@ class ListScreen extends StatelessWidget {
             )
           )
         ],      
-         
       ),
     );
   }
+  
+  @override
+  bool get wantKeepAlive => true;
 }

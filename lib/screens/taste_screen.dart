@@ -5,12 +5,18 @@ import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-class TasteScreen extends StatelessWidget {
+class TasteScreen extends StatefulWidget {
    
   const TasteScreen({super.key});
-  
+
+  @override
+  State<TasteScreen> createState() => _TasteScreenState();
+}
+
+class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
 
     final Size size = MediaQuery.of(context).size;
     
@@ -89,6 +95,9 @@ class TasteScreen extends StatelessWidget {
       )
     );
   }
+  
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class _ThirdFormWidget extends StatelessWidget {

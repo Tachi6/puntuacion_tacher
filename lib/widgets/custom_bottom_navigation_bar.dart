@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -15,8 +14,6 @@ class CustomNavigationBar extends StatelessWidget {
     final screenProvider = Provider.of<ScreensProvider>(context);
     final int currentScreen = screenProvider.currentScreen;
 
-    final taste = Provider.of<VisibleOptionsProvider>(context);
-
     return SizedBox(
       child: NavigationBar(
         height: 58,
@@ -30,21 +27,9 @@ class CustomNavigationBar extends StatelessWidget {
           NavigationDestination(
             icon: Icon(Icons.person), label: 'Usuario'),
         ],
-        
-        // elevation: 0,
-        // backgroundColor: const Color.fromARGB(255, 114, 47, 55),
-        // selectedFontSize: 14,
-        // unselectedFontSize: 14,
-        // type: BottomNavigationBarType.fixed,
-        selectedIndex: currentScreen,
-        // showUnselectedLabels: true,
-        // selectedItemColor: Colors.grey[50],
-        // unselectedItemColor: Colors.grey.shade400,
-        onDestinationSelected: (index) {
-          taste.showSecondWidget = false;
-          taste.showThirdWidget = false;
-          taste.showContinueButton = false;
 
+        selectedIndex: currentScreen,
+        onDestinationSelected: (index) {
           screenProvider.currentScreenChange(index);
         },
       ),
