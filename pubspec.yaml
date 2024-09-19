@@ -46,7 +46,7 @@ dependencies:
   provider: ^6.0.5
   shared_preferences: ^2.3.2
   source_span: ^1.9.1
-  syncfusion_flutter_gauges: ^26.2.4
+  syncfusion_flutter_gauges: ^27.1.48
   test_api: ^0.7.0
 
 dev_dependencies:
