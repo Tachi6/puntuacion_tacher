@@ -30,7 +30,7 @@ class CustomNavigationBar extends StatelessWidget {
 
         selectedIndex: currentScreen,
         onDestinationSelected: (index) {
-          screenProvider.currentScreenChange(index);
+          screenProvider.currentScreen = index;
         },
       ),
     );

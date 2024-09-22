@@ -2,21 +2,16 @@ import 'package:flutter/material.dart';
 
 class ScreensProvider extends ChangeNotifier {
 
-  int currentScreen = 0;
+  int _currentScreen = 0;
   final PageController pageController = PageController(
     initialPage: 0,
     keepPage: true,
   );
 
-  currentScreenChange(int index) {
-    currentScreen = index;
-    pageController.animateToPage(
-      index, 
-      duration: const Duration(milliseconds: 300), 
-      curve: Curves.easeInOut
-    );
+  int get currentScreen => _currentScreen;
+
+  set currentScreen(int screen) {
+    _currentScreen = screen;
     notifyListeners();
   }
-
-
 }

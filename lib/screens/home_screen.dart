@@ -23,25 +23,56 @@ class HomeScreen extends StatelessWidget {
   }
 }
   
-class _HomeScreenBody extends StatelessWidget {
+class _HomeScreenBody extends StatefulWidget {
 
   const _HomeScreenBody();
 
   @override
-  Widget build(BuildContext context) {
+  State<_HomeScreenBody> createState() => _HomeScreenBodyState();
+}
 
-    final screenProvider = Provider.of<ScreensProvider>(context, listen: true); 
-      
-    const List<Widget> screensList = [
-      ValorationsScreen(),
-      TasteScreen(),
-      ListScreen(),
-      MyUserScreen()
-    ];
+class _HomeScreenBodyState extends State<_HomeScreenBody> {
+
+  late PageController pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    pageController = PageController(
+      keepPage: true
+    );
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
+
+  final List<Widget> screensList = const [
+    ValorationsScreen(),
+    TasteScreen(),
+    ListScreen(),
+    MyUserScreen()
+  ];
+
+
+  @override
+  Widget build(BuildContext context) {
+    
+    final screenProvider = Provider.of<ScreensProvider>(context, listen: true);
+
+    if (pageController.hasClients) {
+      pageController.animateToPage(
+        screenProvider.currentScreen, 
+        duration: const Duration(milliseconds: 300), 
+        curve: Curves.easeInOut
+      );
+    } 
 
     return PageView(
       physics: const NeverScrollableScrollPhysics(),
-      controller: screenProvider.pageController,
+      controller: pageController,
       children: screensList
     );
   }
