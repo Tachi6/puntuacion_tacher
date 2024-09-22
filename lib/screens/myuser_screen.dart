@@ -97,7 +97,7 @@ class MyUserBody extends StatelessWidget {
                       type: MaterialType.transparency,
                       child: CircleAvatar(
                         backgroundColor: colors.onPrimaryFixedVariant,
-                        radius: 48,
+                        radius: 48, // TODO ver como ejecuta el entrar sin username, que peta a veces
                         child: Text(authService.userDisplayName[0].toUpperCase(), style: TextStyle(color: colors.surface, fontSize: 60)),
                       ),
                     ),

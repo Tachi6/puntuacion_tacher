@@ -305,6 +305,7 @@ class ValidateUserButton extends StatelessWidget {
             Navigator.pushReplacement(context, newRoute);
             // FOR NOT VIEW 'ingresar' MESSAGE IF THERE ARE A LOGOUT
             Future.delayed(const Duration(seconds: 3), () => loginForm.isLoading = false);
+            if (loginForm.isRegister) loginForm.isRegister = false;
           }
           else {
             if (!context.mounted) return;
