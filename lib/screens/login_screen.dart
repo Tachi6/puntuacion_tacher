@@ -146,7 +146,6 @@ class LoginRegisterForm extends StatelessWidget {
             suffixIcon: IconButton(
               onPressed: () {
                 loginForm.passwordObscure = !loginForm.passwordObscure;
-                print(loginForm.passwordObscure);
               }, 
               icon: Icon(loginForm.passwordObscure
                 ? Icons.visibility_off_outlined
@@ -288,17 +287,24 @@ class ValidateUserButton extends StatelessWidget {
           if ( !loginForm.isValidForm() ) return;
       
           loginForm.isLoading = true;
-      
-          final String? errorMessage = await authService.loginUser(loginForm.email, loginForm.password);
+
+          final String? errorMessage;
+
+          loginForm.isRegister
+            ? errorMessage = await authService.createUser(loginForm.email, loginForm.password)
+            : errorMessage = await authService.loginUser(loginForm.email, loginForm.password);
       
           if (errorMessage == null) {
+            if (loginForm.isRegister) await authService.renameUser(authService.tempDisplayName);
+
             if (!context.mounted) return;
-              final newRoute = MaterialPageRoute(
-                builder: (context) => const HomeScreen()
-              );
-              Navigator.pushReplacement(context, newRoute);
-              // FOR NOT VIEW 'ingresar' MESSAGE IF THERE ARE A LOGOUT
-              Future.delayed(const Duration(seconds: 3), () => loginForm.isLoading = false);
+
+            final newRoute = MaterialPageRoute(
+              builder: (context) => const HomeScreen()
+            );
+            Navigator.pushReplacement(context, newRoute);
+            // FOR NOT VIEW 'ingresar' MESSAGE IF THERE ARE A LOGOUT
+            Future.delayed(const Duration(seconds: 3), () => loginForm.isLoading = false);
           }
           else {
             if (!context.mounted) return;
