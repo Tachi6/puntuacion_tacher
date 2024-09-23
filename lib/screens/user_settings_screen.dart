@@ -96,7 +96,12 @@ class _UserSettingsBody extends StatelessWidget {
                   child: CircleAvatar(
                     backgroundColor: colors.onPrimaryFixedVariant,
                     radius: 80,
-                    child: Text(authService.userDisplayName[0].toUpperCase(), style: TextStyle(color: colors.surface, fontSize: 100)),
+                    child: Text(
+                      authService.userDisplayName == ''
+                        ? authService.userEmail[0].toUpperCase()
+                        : authService.userDisplayName[0].toUpperCase(),
+                      style: TextStyle(color: colors.surface, fontSize: 100)
+                    ),
                   ),
                 ),
               ),

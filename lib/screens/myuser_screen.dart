@@ -62,7 +62,6 @@ class MyUserBody extends StatelessWidget {
 
     final styles = Theme.of(context).textTheme;
     final colors = Theme.of(context).colorScheme;
-    final authService = Provider.of<AuthService>(context, listen: true);
 
     return CustomScrollView(
       slivers: [
@@ -97,8 +96,8 @@ class MyUserBody extends StatelessWidget {
                       type: MaterialType.transparency,
                       child: CircleAvatar(
                         backgroundColor: colors.onPrimaryFixedVariant,
-                        radius: 48, // TODO ver como ejecuta el entrar sin username, que peta a veces
-                        child: Text(authService.userDisplayName[0].toUpperCase(), style: TextStyle(color: colors.surface, fontSize: 60)),
+                        radius: 48,
+                        child: Text(user[0].toUpperCase(), style: TextStyle(color: colors.surface, fontSize: 60)),
                       ),
                     ),
                   ),
