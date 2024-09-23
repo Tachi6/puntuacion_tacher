@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 
+import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -302,6 +303,7 @@ class SettingsEndButtons extends StatelessWidget {
 
     final authService = Provider.of<AuthService>(context, listen: false);
     final themeColor = Provider.of<ChangeThemeProvider>(context, listen: false);
+    final screenProvider = Provider.of<ScreensProvider>(context, listen: true);
 
     return CustomElevatedButton(
       width: 135,
@@ -317,6 +319,7 @@ class SettingsEndButtons extends StatelessWidget {
       onPressed: () {
         Navigator.pop(context);
         authService.logout();
+        screenProvider.currentScreen = 0;
         themeColor.setDefaultTheme();
         final initialRoute = MaterialPageRoute(
           builder: (context) => const LoginScreen()

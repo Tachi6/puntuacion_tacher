@@ -39,6 +39,7 @@ class _HomeScreenBodyState extends State<_HomeScreenBody> {
   void initState() {
     super.initState();
     pageController = PageController(
+      initialPage: 0,
       keepPage: true
     );
   }
@@ -68,7 +69,7 @@ class _HomeScreenBodyState extends State<_HomeScreenBody> {
         duration: const Duration(milliseconds: 300), 
         curve: Curves.easeInOut
       );
-    } 
+    }
 
     return PageView(
       physics: const NeverScrollableScrollPhysics(),
