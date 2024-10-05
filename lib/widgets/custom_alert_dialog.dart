@@ -12,7 +12,7 @@ class CustomAlertDialog extends StatelessWidget {
     this.onPressedCancel, 
     this.onPressedSave, 
     required this.cancelText, 
-    required this.saveText
+    this.saveText
   });
 
   final String title;
@@ -20,7 +20,7 @@ class CustomAlertDialog extends StatelessWidget {
   final VoidCallback? onPressedCancel;
   final VoidCallback? onPressedSave;
   final String cancelText;
-  final String saveText;
+  final String? saveText;
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +42,9 @@ class CustomAlertDialog extends StatelessWidget {
           child: Text(cancelText),
         ),
 
-        TextButton(
+        if (saveText != null) TextButton(
           onPressed: onPressedSave,
-          child: Text(saveText),
+          child: Text(saveText!),
         ),
       ],
     );

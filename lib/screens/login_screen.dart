@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 
+import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
@@ -42,7 +43,7 @@ class LoginForm extends StatelessWidget {
         height: double.infinity,
         child: SingleChildScrollView(
           child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 250),
             layoutBuilder: (currentChild, previousChildren) {
               return currentChild!;
             },
@@ -299,7 +300,7 @@ class ValidateUserButton extends StatelessWidget {
 
             if (!context.mounted) return;
 
-            final newRoute = MaterialPageRoute(
+            final newRoute = CupertinoPageRoute(
               builder: (context) => const HomeScreen()
             );
             Navigator.pushReplacement(context, newRoute);

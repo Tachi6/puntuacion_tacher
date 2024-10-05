@@ -45,14 +45,15 @@ class _RadioWidgetMultipleState extends State<RadioWidgetMultiple> {
             offset: const Offset(-10, -3),
             child: RadioListTile(
               dense: true,
-              contentPadding: const EdgeInsets.all(0),
-              subtitle: Text('Accede a una cata múltiple ya creada', style: TextStyle(fontSize:12, color: colors.outline)),
-              title: const Text('Acceder a cata mútiple', style: TextStyle(fontSize: 14)),
-              value: TasteOptionsMultiple.acceder, 
+              contentPadding: const EdgeInsets.only(right: 0),
+              subtitle: Text('Crea una nueva cata múltiple', style: TextStyle(fontSize: 12, color: colors.outline)),
+              title: const Text('Crear cata múltiple', style: TextStyle(fontSize: 14)),
+              value: TasteOptionsMultiple.organizar, 
               groupValue: _taste, 
               onChanged: (TasteOptionsMultiple? value) {
                 _taste = value;
                 taste.tasteMultiple = value!;
+                taste.showContinueButton = false;
                 setState(() {});
               },
             ),
@@ -61,10 +62,10 @@ class _RadioWidgetMultipleState extends State<RadioWidgetMultiple> {
             offset: const Offset(-10, -20),
             child: RadioListTile(
               dense: true,
-              contentPadding: const EdgeInsets.only(right: 0),
-              subtitle: Text('Organiza o crea una cata múltiple', style: TextStyle(fontSize: 12, color: colors.outline)),
-              title: const Text('Organizar cata múltiple', style: TextStyle(fontSize: 14)),
-              value: TasteOptionsMultiple.organizar, 
+              contentPadding: const EdgeInsets.all(0),
+              subtitle: Text('Accede a una cata múltiple ya creada', style: TextStyle(fontSize:12, color: colors.outline)),
+              title: const Text('Acceder a cata mútiple', style: TextStyle(fontSize: 14)),
+              value: TasteOptionsMultiple.acceder, 
               groupValue: _taste, 
               onChanged: (TasteOptionsMultiple? value) {
                 _taste = value;

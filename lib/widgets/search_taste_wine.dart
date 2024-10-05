@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/search/search_delegate_wines.dart';
 
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
@@ -13,46 +15,67 @@ class SearchTasteWine extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final winesService = Provider.of<WinesService>(context);
-    final colors = Theme.of(context).colorScheme;
+    final taste = Provider.of<VisibleOptionsProvider>(context);
+    final wineForm = Provider.of<CreateEditWineFormProvider>(context);
 
-    TextEditingController textEditingControllerListener() {
-      final textEditingController = TextEditingController();
-
-      if (winesService.selectedWine == null) {
-        textEditingController.text = 'Pulsa el icono correspondiente';
-      }
-      else {
-        textEditingController.text = winesService.selectedWine!.nombre;
-      }
-
-      return textEditingController;
-    }
+    final textEditingController = TextEditingController(
+      text: winesService.selectedWine?.nombre, 
+    );
 
     return Container(
-      height: 70,
+      height: 85,
       width: double.infinity,
-      padding: const EdgeInsets.only(right: 20, left: 4),
+      padding: const EdgeInsets.only(right: 20, left: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Transform.translate(
-            offset: const Offset(16, 0),
-            child: const Text('Busca el vino en nuestro listado o añadelo', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),)),
-          Padding(
-            padding: const EdgeInsets.only(left: 0),
-            child: TextFormField(
-              controller: textEditingControllerListener(),
-              readOnly: true,
-              style: const TextStyle(fontSize: 14),
-              canRequestFocus: false,
-              decoration: InputDecoration(
-                enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: colors.onSurface)),
-                labelStyle: const TextStyle(fontSize: 14),
-                floatingLabelStyle: TextStyle(color: Colors.grey[600], fontSize: 14),                     
-                icon: const CreateAddWine(),
+          const Text('Busca el vino en nuestro listado o crealo nuevo', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: textEditingController,
+                  readOnly: true,
+                  style: const TextStyle(fontSize: 14),
+                  canRequestFocus: false,
+                  decoration: InputDecoration(
+                    labelText: 'Vino a catar',
+                    isDense: true,
+                    labelStyle: const TextStyle(fontSize: 14),
+                    floatingLabelStyle: TextStyle(color: Colors.grey[600], fontSize: 14),
+                  ),
+                ),
               ),
-              // cursorColor: redColor(),
-            ),
+
+              Row(
+                children: [
+                  SearchWineButton(
+                    onPressed: () async {
+                      winesService.loadWines();
+                      final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
+                        customResultText: 'Vuelve atras y crea tu' '\n' 'vino para catarlo.'
+                      ));
+                      if (wineSearched != null) {
+                        winesService.selectedWine = wineSearched;
+                        wineForm.setWineToEdit(winesService.selectedWine!);
+                        taste.showContinueButton = true;
+                      }
+                    },
+                  ),
+
+                  AddWineButton(
+                    onPressedSave: () {
+                      if (wineForm.isValidForm()) {
+                        wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
+                        winesService.selectedWine = wineForm.wine;
+                        taste.showContinueButton = true;
+                        Navigator.pop(context, 'Guardar');
+                      }
+                    }, 
+                  ),
+                ],
+              ),
+            ],
           ), 
         ],  
       ),

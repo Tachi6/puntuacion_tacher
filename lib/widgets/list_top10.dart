@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
-import 'package:card_swiper/card_swiper.dart';
 import 'package:provider/provider.dart';
+import 'package:card_swiper/card_swiper.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
@@ -30,7 +31,7 @@ class ListTop10 extends StatelessWidget {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              final routeDetails = MaterialPageRoute(
+              final routeDetails = CupertinoPageRoute(
                 builder: (context) => DetailsScreen(wine: wines[index], source: 'top10'));
               Navigator.push(context, routeDetails);
             },

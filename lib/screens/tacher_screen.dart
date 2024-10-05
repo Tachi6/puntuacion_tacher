@@ -117,7 +117,7 @@ class _NotesSendTacher extends StatelessWidget {
 
   const _NotesSendTacher(this.wine);
 
-  void showCustomDialog(BuildContext context,{required Widget child}) {
+  void showCustomDialog(BuildContext context, {required Widget child}) {
     showGeneralDialog(
       context: context,
       barrierDismissible: false, 

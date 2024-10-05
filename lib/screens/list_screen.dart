@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/search/search.dart';
 
-import 'package:puntuacion_tacher/search/search_delegate.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -36,11 +37,21 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
             floating: true,
             actions: [
               IconButton(
-                onPressed: () {
+                onPressed: () async { // TODO probar si brinca pantalla anterior
                   winesService.loadWines();
-                  
-                  showSearch(context: context, delegate: WineSearch(winesService.winesByIndex));
+                  final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
+                    customResultText: '',
+                  ));
+                  final routeDetails = CupertinoPageRoute(
+                    builder: (context) => DetailsScreen(wine:wineSearched, source: 'search')
+                  );
+                  if (wineSearched != null && context.mounted) Navigator.push(context, routeDetails);
                 },
+                // onPressed: () {
+                //   winesService.loadWines();
+                  
+                //   showSearch(context: context, delegate: WineSearch(winesService.winesByIndex));
+                // },
                 icon: const Icon(Icons.search)
               ),
 
@@ -55,7 +66,7 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
               
               TextButton(
                 onPressed: () {
-                  final routeList = MaterialPageRoute(
+                  final routeList = CupertinoPageRoute(
                     builder: (context) => ListAllScreen(winesService.winesByRate)
                   );
                   Navigator.push(context, routeList);

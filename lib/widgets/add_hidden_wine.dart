@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
-import 'package:puntuacion_tacher/search/search_delegate_form.dart';
+import 'package:puntuacion_tacher/search/delete_%20search_delegate_form.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 

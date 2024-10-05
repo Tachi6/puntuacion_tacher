@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -6,7 +5,6 @@ import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
-import 'package:puntuacion_tacher/search/search_delegate_form.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/custom_alert_dialog.dart';
 
@@ -17,9 +15,35 @@ InputDecoration _customInputDecorationText(String label) {
   );
 }
 
-class CreateAddWine extends StatelessWidget {
-  
-  const CreateAddWine({super.key});
+// class CreateWineButton extends StatelessWidget {
+//   const CreateWineButton({super.key, this.onPressed, this.onPressedSave});
+
+//   final void Function()? onPressed;
+//   final void Function()? onPressedSave; // TODO
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return SizedBox(
+//       width: 96,
+//       child: Row(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           SearchWineButton(onPressed: onPressed),
+
+//           AddWineButton(onPressedSave: onPressedSave),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+class AddWineButton extends StatelessWidget {
+  const AddWineButton({
+    super.key,
+    required this.onPressedSave,
+  });
+
+  final void Function()? onPressedSave;
 
   @override
   Widget build(BuildContext context) {
@@ -28,66 +52,46 @@ class CreateAddWine extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
 
-    return SizedBox(
-      width: 96,
-      child: Row(
-        children: [
-          IconButton(
-            icon: Icon(
-              Icons.add, 
-              color: colors.onSurface,
-              size: 22
-            ),
-            onPressed: () {
-              wineForm.setDefaultCreateWine();
-              winesService.selectedWine = wineForm.wine;
-              showGeneralDialog(
-                context: context,
-                barrierDismissible: false, 
-                pageBuilder: (context, animation, secondaryAnimation) {
-                  return const PopScope(
-                    canPop: false,
-                    child: CustomDialog(),
-                  );
-                },
-                transitionDuration: const Duration(milliseconds: 300),
-                transitionBuilder: (context, animation, secondaryAnimation, child) {
-                  return ScaleTransition(
-                    scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
-                    child: child
-                  );
-                },
-              );
-            },
-          ),
-    
-          IconButton(
-            onPressed: () {
-              winesService.loadWines();
-
-              showSearch(context: context, delegate: WineSearchForm());
-            }, 
-            icon: Icon(
-              Icons.search, 
-              color: colors.onSurface,
-              size: 22
-            ),
-          ),
-        ],
+    return IconButton(
+      icon: Icon(
+        Icons.add, 
+        color: colors.onSurface,
+        size: 22
       ),
+      onPressed: () {
+        wineForm.setDefaultCreateWine();
+        winesService.selectedWine = wineForm.wine;
+        showGeneralDialog(
+          context: context,
+          barrierDismissible: false, 
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return PopScope(
+              canPop: false,
+              child: CreateWineDialog(onPressedSave: onPressedSave),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 300),
+          transitionBuilder: (context, animation, secondaryAnimation, child) {
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
+              child: child
+            );
+          },
+        );
+      },
     );
   }
 }
 
-class CustomDialog extends StatelessWidget {
-  const CustomDialog({super.key});
+class CreateWineDialog extends StatelessWidget {
+  const CreateWineDialog({super.key, this.onPressedSave});
+
+  final void Function()? onPressedSave;
 
   @override
   Widget build(BuildContext context) {
 
     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: false);
-    final winesService = Provider.of<WinesService>(context, listen: false);
-    final taste = Provider.of<VisibleOptionsProvider>(context, listen: false);
 
     return CustomAlertDialog(
       title: 'Añadir vino al listado', 
@@ -98,14 +102,7 @@ class CustomDialog extends StatelessWidget {
         wineForm.setDefaultCreateWine();
         Navigator.pop(context, 'Cancelar');
       },
-      onPressedSave: () {
-        if (wineForm.isValidForm()) {
-          wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
-          winesService.selectedWine = wineForm.wine;
-          taste.showContinueButton = true;
-          Navigator.pop(context, 'Guardar');
-        }
-      },
+      onPressedSave: onPressedSave,
     );
   }
 }

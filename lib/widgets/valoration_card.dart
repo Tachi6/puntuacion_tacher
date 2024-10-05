@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,7 @@ class ValorationCard extends StatelessWidget {
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
-            final routeDetails = MaterialPageRoute(
+            final routeDetails = CupertinoPageRoute(
               builder: (context) => DetailsScreen(wine: wines[index], email: 'latest', source:'latest'));
             Navigator.push(context, routeDetails);
           },

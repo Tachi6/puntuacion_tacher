@@ -66,7 +66,7 @@ class _HomeScreenBodyState extends State<_HomeScreenBody> {
     if (pageController.hasClients) {
       pageController.animateToPage(
         screenProvider.currentScreen, 
-        duration: const Duration(milliseconds: 300), 
+        duration: const Duration(milliseconds: 250), 
         curve: Curves.easeInOut
       );
     }

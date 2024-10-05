@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
 
@@ -28,7 +29,7 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
       // HEIGHT OF STATUS 
       final statusBarHeight = View.of(context).padding.top / View.of(context).devicePixelRatio;
       // HEIGHT OF WIDGETS: SIZEDBOX + 1ST WIDGET + 2ND WIDGET + 3RD WIDGET + CONTINUE BUTTON
-      const widgetsHeight = 20 + 150 + 20 + 150 + 20 + 70 + 90;
+      const widgetsHeight = 20 + 150 + 20 + 150 + 20 + 85 + 90;
       // SCREEN HEIGHT
       final double screenSize = MediaQuery.of(context).size.height;
       // FILLED SPACE IN SCREEN
@@ -41,6 +42,7 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
       appBar: AppBar(
         automaticallyImplyLeading: false,
       ),
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           const BottomImageBackground(image: 'assets/taste-background.jpg', opacity: 0.8),
@@ -122,11 +124,11 @@ class _ThirdFormWidget extends StatelessWidget {
           child: const HiddenTaste(),
         ),
         Visibility(
-          visible: taste.showThirdWidget && taste.tasteMultiple == TasteOptionsMultiple.acceder,
-          child: const ComingSoon(),
+          visible: taste.showThirdWidget && taste.tasteMultiple == TasteOptionsMultiple.organizar,
+          child: const MultipleTasteName(),
         ),
         Visibility(
-          visible: taste.showThirdWidget && taste.tasteMultiple == TasteOptionsMultiple.organizar,
+          visible: taste.showThirdWidget && taste.tasteMultiple == TasteOptionsMultiple.acceder,
           child: const ComingSoon(),
         ),
 
@@ -176,7 +178,7 @@ class _ContinueButton extends StatelessWidget {
           width: 150, 
           onPressed: () {
             if (taste.showThirdWidget) {
-              final newRoute = MaterialPageRoute(
+              final newRoute = CupertinoPageRoute(
                 builder: (context) => TacherScreen()
               );
         

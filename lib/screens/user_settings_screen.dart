@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
@@ -326,7 +327,7 @@ class SettingsEndButtons extends StatelessWidget {
         authService.logout();
         screenProvider.currentScreen = 0;
         themeColor.setDefaultTheme();
-        final initialRoute = MaterialPageRoute(
+        final initialRoute = CupertinoPageRoute(
           builder: (context) => const LoginScreen()
         );
         Navigator.push(context, initialRoute);

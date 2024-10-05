@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
@@ -44,7 +45,7 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: ( _ ) => VisibleOptionsProvider()),
         ChangeNotifierProvider(create: ( _ ) => CreateEditWineFormProvider()),
         ChangeNotifierProvider(create: ( _ ) => ChangeThemeProvider()),
-
+        ChangeNotifierProvider(create: ( _ ) => MultipleTasteProvider()),
       ],
       child: const MyApp(),
     );
@@ -58,18 +59,27 @@ class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme().getTheme(context), 
-        // theme: AppTheme.redWineTheme,
-        // home: const LoginScreen(), 
-        routes: {
-          'checkingAuth':(context) => const CheckAuthScreen(),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('es', 'ES'),
+      ],
+      locale: const Locale('es', 'ES'),
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme().getTheme(context), 
+      // theme: AppTheme.redWineTheme,
+      // home: const LoginScreen(), 
+      routes: {
+        'checkingAuth':(context) => const CheckAuthScreen(),
 
-          'login':(context) => const LoginScreen(),
+        'login':(context) => const LoginScreen(),
 
-          'home':(context) => const HomeScreen(),
-        },
-        initialRoute: 'checkingAuth',
-      );
+        'home':(context) => const HomeScreen(),
+      },
+      initialRoute: 'checkingAuth',
+    );
   }
 }

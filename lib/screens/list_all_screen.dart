@@ -2,12 +2,14 @@
 // Link https://unsplash.com/es/fotos/copa-de-vino-transparente-con-vino-tinto-Y4PJ5F_Oskw
 
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 
+import 'package:provider/provider.dart';
+
+import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
-import 'package:puntuacion_tacher/search/search_delegate.dart';
+import 'package:puntuacion_tacher/search/delete_search_delegate.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 
@@ -117,7 +119,7 @@ class _ListAllBody extends StatelessWidget {
             ],
           ),
           onTap: () {
-            final routeDetails = MaterialPageRoute(
+            final routeDetails = CupertinoPageRoute(
               builder: (context) => DetailsScreen(wine: wines[index], source: 'list',));
             Navigator.push(context, routeDetails);
           },

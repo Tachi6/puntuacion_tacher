@@ -9,7 +9,7 @@ class HiddenTaste extends StatelessWidget {
   Widget build(BuildContext context) {
    
     return Container(
-      height: 70,
+      height: 85,
       padding: const EdgeInsets.only(right: 20, left: 20),
       width: double.infinity,
       child: const Column(

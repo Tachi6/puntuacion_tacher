@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -79,7 +80,7 @@ class WineSearch extends SearchDelegate{
           title: Text(_filtro[index].nombre),
           subtitle: Text(_filtro[index].tipo),
           onTap: () {
-            final routeDetails = MaterialPageRoute(
+            final routeDetails = CupertinoPageRoute(
               builder: (context) => DetailsScreen(wine:_filtro[index], source: 'search'));
               Navigator.push(context, routeDetails);
           },
@@ -135,7 +136,7 @@ class WineSearch extends SearchDelegate{
           title: Text(_filtro[index].nombre),
           subtitle: Text(_filtro[index].tipo),
           onTap: () {
-            final routeDetails = MaterialPageRoute(
+            final routeDetails = CupertinoPageRoute(
               builder: (context) => DetailsScreen(wine:_filtro[index], source: 'search'));
               Navigator.push(context, routeDetails);
           },

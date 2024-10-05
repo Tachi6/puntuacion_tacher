@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
 
@@ -82,7 +83,7 @@ class MyUserBody extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: IconButton(
                       onPressed: () {
-                        final routeDetails = MaterialPageRoute(
+                        final routeDetails = CupertinoPageRoute(
                           builder: (context) => const UserSettingsScreen());
                         Navigator.push(context, routeDetails);
                       }, 
@@ -187,7 +188,7 @@ class MyUserBody extends StatelessWidget {
                   ],
                 ),
                 onTap: () {
-                  final routeDetails = MaterialPageRoute(
+                  final routeDetails = CupertinoPageRoute(
                     builder: (context) => DetailsScreen(wine: winesService.userTastedWines(email)[index], email: email, source: 'email'));
                   Navigator.push(context, routeDetails);
                 },

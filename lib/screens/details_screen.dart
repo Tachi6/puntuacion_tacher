@@ -21,6 +21,7 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           const BottomImageBackground(image: 'assets/details-background.jpg', opacity: 0.4),
