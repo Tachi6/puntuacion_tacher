@@ -9,234 +9,186 @@ import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
-import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
+class TacherScreen extends StatefulWidget {
 
-class TacherScreen extends StatelessWidget {
+  final String appBarTitle;
+  final Widget? leading;
+  final Widget? trailing;
+  final Widget? bottomSheet;
+  final void Function()? onPressedConfirm;
+  final void Function()? onPressedBackButon;
+  final int? multiplePage;
 
-  final textos = Textos();
-
-  TacherScreen({super.key});
+  const TacherScreen({
+    super.key, 
+    required this.appBarTitle, 
+    this.leading, 
+    this.trailing, 
+    this.bottomSheet, 
+    this.onPressedConfirm, 
+    this.onPressedBackButon, 
+    this.multiplePage,
+  });
 
   @override
+  State<TacherScreen> createState() => _TacherScreenState();
+}
+
+class _TacherScreenState extends State<TacherScreen> with AutomaticKeepAliveClientMixin {
+  
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
 
     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: true);
     final Wines wine = wineForm.wine;
-    final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
 
     return Stack(
       children: [
         const FullScreenBackground(image: 'assets/tacher-background.jpg', opacity: 0.3),
 
         Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 48,
-            backgroundColor: Colors.transparent,
-            systemOverlayStyle: themeColor.isDarkMode 
-                ? SystemUiOverlayStyle.light
-                : SystemUiOverlayStyle.dark,
-            automaticallyImplyLeading: false, 
-            actions: [
-              IconButton(
-                onPressed: () {
-                  wineForm.clearNotas();
-                  wineForm.clearNotas();
-                  wineForm.setDefaultRatings();
-                  wineForm.setDefaultCreateWine();
-                  Navigator.pop(context);
-                }, 
-                icon: const Icon(Icons.arrow_back_rounded)
-              ),
-              
-              const Spacer(),
-
-              const Text('Valora tu vino catado', style: TextStyle(fontSize: 20)),
-
-              const Spacer(),
-
-              const SizedBox(width: 40),
-            ]
+          appBar: _CustomTacherAppBar(
+            onPressedBackButon: widget.onPressedBackButon, 
+            appBarTitle: widget.appBarTitle
           ),
           backgroundColor: Colors.transparent,
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [          
-                RatingBox(
-                  textoTitulo: textos.vistaTitulo,
-                  textoDescripcion: textos.vistaDescripcion,
-                  initialRating: 5,
-                  itemCount: 7,
-                  minRating: 1,
-                  name: 'vista',
-                ),
-          
-                RatingBox(
-                  textoTitulo: textos.narizTitulo,
-                  textoDescripcion: textos.narizDescripcion,
-                  initialRating: 7,
-                  itemCount: 9,
-                  minRating: 1,
-                  name: 'nariz',
-                ),
-          
-                RatingBox(
-                  textoTitulo: textos.bocaTitulo,
-                  textoDescripcion: textos.bocaDescripcion,
-                  initialRating: 7,
-                  itemCount: 9,
-                  minRating: 1,
-                  name: 'boca',
-                ),
-          
-                RatingBox(
-                  textoTitulo: textos.puntosTitulo,
-                  textoDescripcion: textos.puntosDescripcion,
-                  initialRating: 9,
-                  itemCount: 11,
-                  minRating: 1,
-                  name: 'puntos',
-                ),
-          
-                _NotesSendTacher(wine),
-              ]
-            ),
+          body: _CustomTacherBody(widget.multiplePage),
+          bottomSheet: CustomBottomSheet(
+            wine: wine,
+            buttonText: 'Enviar valoración',
+            leading: widget.leading ?? const SizedBox(),
+            trailing: widget.trailing?? const SizedBox(),
+            onPressed: widget.onPressedConfirm,
           ),
         ),
       ],
     );
   }
+  
+  @override
+  bool get wantKeepAlive => true;
 }
 
-class _NotesSendTacher extends StatelessWidget {
+class _CustomTacherBody extends StatelessWidget {
+  const _CustomTacherBody(this.multiplePage);
 
-  final Wines? wine;
-
-  const _NotesSendTacher(this.wine);
-
-  void showCustomDialog(BuildContext context, {required Widget child}) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: false, 
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return PopScope(
-          canPop: false,
-          child: child,
-        );
-      },
-      transitionDuration: const Duration(milliseconds: 300),
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return ScaleTransition(
-          scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
-          child: child
-        );
-      },
-    );
-  }
+  final int? multiplePage;
 
   @override
   Widget build(BuildContext context) {
 
-    final authService = Provider.of<AuthService>(context, listen: true);
-    final winesService = Provider.of<WinesService>(context);
-    final wineForm = Provider.of<CreateEditWineFormProvider>(context);
+    final textos = Textos();
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        const Column(
-          children: [
-            NotesCommentsBox(titulo: 'Notas de Cata'),
-
-            NotesCommentsBox(titulo: 'Comentarios')
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.all(0),
-          child: Container(
-            alignment: Alignment.topRight,
-            child: CustomElevatedButton(
-              width: 150,
-              height: 50,
-              onPressed: () async {
-                // Verifico si es cata oculta y fuerzo a añadir el vino
-                if (wineForm.wine.nombre == '') {
-                  if (!context.mounted) return;
-                  showCustomDialog(context, child: const AddHiddenWine());     
-                  // addWineToHiddenTaste(context);
-                }
-                else {
-                  // Mando updates de los diferentes campos al wine
-                  wineForm.addUpdatesToWine();
-                  // Mando wine al servidor
-                  if (wineForm.wine.id == '-1') {
-                    await winesService.createWine(winesService.selectedWine!);
-                    await winesService.saveDeleteLatestTastedWine(wine:winesService.selectedWine!, email: authService.userEmail, displayName: authService.userDisplayName);
-                  }
-                  else {
-                    await winesService.updateWine(winesService.selectedWine!);
-                    await winesService.saveDeleteLatestTastedWine(wine:winesService.selectedWine!, email: authService.userEmail, displayName: authService.userDisplayName);
-                  }
-                  // Mando wine a la confirmacion
-                  if (!context.mounted) return;
-                  showCustomDialog(context, child: PointsBox(wine: wineForm.wine, puntuacionFinal: wineForm.puntosFinal));
-                  // confirmationDialog(context, points: wineForm.puntosFinal, wine: wineForm.wine);
-
-                  // Elimino registros para poder valorar de nuevo
-                  wineForm.clearNotas();
-                  wineForm.clearNotas();
-                  wineForm.setDefaultRatings();
-                  wineForm.setDefaultCreateWine();
-                }
-              }, 
-              child: const Text('Valorar Vino'),
-            ),
-            
-            // ElevatedButton(
-            //   style: ElevatedButton.styleFrom(
-            //     fixedSize: const Size.fromWidth(160),
-            //     elevation: 0,
-            //     padding: const EdgeInsets.symmetric(vertical: 15),
-            //     backgroundColor: const Color.fromARGB(255, 114, 47, 55),
-            //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            //   ),
-            //   child: Text('Enviar valoración', style: TextStyle(fontSize: 14, color: colors.surface), textAlign: TextAlign.center),
-            //   onPressed: () async {
-            //     // Verifico si es cata oculta y fuerzo a añadir el vino
-            //     if (wineForm.wine.nombre == '') {
-            //       if (!context.mounted) return;
-            //       addWineToHiddenTaste(context);
-            //     }
-            //     else {
-            //       // Mando updates de los diferentes campos al wine
-            //       wineForm.addUpdatesToWine();
-            //       // Mando wine al servidor
-            //       if (wineForm.wine.id == '-1') {
-            //         await winesService.createWine(winesService.selectedWine!);
-            //         await winesService.saveDeleteLatestTastedWine(wine:winesService.selectedWine!, email: authService.userEmail, displayName: authService.userDisplayName);
-            //       }
-            //       else {
-            //         await winesService.updateWine(winesService.selectedWine!);
-            //         await winesService.saveDeleteLatestTastedWine(wine:winesService.selectedWine!, email: authService.userEmail, displayName: authService.userDisplayName);
-            //       }
-            //       // Mando wine a la confirmacion
-            //       if (!context.mounted) return;
-            //       confirmationDialog(context, points: wineForm.puntosFinal, wine: wineForm.wine);
-
-            //       // Elimino registros para poder valorar de nuevo
-            //       wineForm.clearNotas();
-            //       wineForm.clearNotas();
-            //       wineForm.setDefaultRatings();
-            //       wineForm.setDefaultCreateWine();
-            //     }
-            //   }
-            // ),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [          
+          RatingBox(
+            textoTitulo: textos.vistaTitulo,
+            textoDescripcion: textos.vistaDescripcion,
+            initialRating: 0,
+            itemCount: 7,
+            minRating: 1,
+            name: 'vista',
+            multiplePage: multiplePage,
           ),
-        )
-      ]
+    
+          RatingBox(
+            textoTitulo: textos.narizTitulo,
+            textoDescripcion: textos.narizDescripcion,
+            initialRating: 0,
+            itemCount: 9,
+            minRating: 1,
+            name: 'nariz',
+            multiplePage: multiplePage,
+          ),
+    
+          RatingBox(
+            textoTitulo: textos.bocaTitulo,
+            textoDescripcion: textos.bocaDescripcion,
+            initialRating: 0,
+            itemCount: 9,
+            minRating: 1,
+            name: 'boca',
+            multiplePage: multiplePage,
+          ),
+    
+          RatingBox(
+            textoTitulo: textos.puntosTitulo,
+            textoDescripcion: textos.puntosDescripcion,
+            initialRating: 0,
+            itemCount: 11,
+            minRating: 1,
+            name: 'puntos',
+            multiplePage: multiplePage,
+          ),
+    
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              NotesCommentsBox(titulo: 'Notas de Cata'),
+          
+              NotesCommentsBox(titulo: 'Comentarios')
+            ]
+          ),
+        ]
+      ),
     );
   }
 }
+
+class _CustomTacherAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _CustomTacherAppBar({
+    required this.onPressedBackButon,
+    required this.appBarTitle,
+  });
+
+  final void Function()? onPressedBackButon;
+  final String appBarTitle;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
+    final size = MediaQuery.of(context).size;
+    
+    return AppBar(
+      toolbarHeight: 48,
+      backgroundColor: Colors.transparent,
+      systemOverlayStyle: themeColor.isDarkMode 
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
+      automaticallyImplyLeading: false, 
+      actions: [
+        IconButton(
+          onPressed: onPressedBackButon,
+          icon: const Icon(Icons.arrow_back_rounded)
+        ),
+          
+        Container(
+          height: 48,
+          alignment: Alignment.center,
+          width: size.width - 96,
+          child: Text(
+            appBarTitle,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 20, height: 1.1)
+          ),
+        ),
+    
+        const SizedBox(width: 48),
+      ]
+    );
+  }
+  
+  @override
+  Size get preferredSize => const Size.fromHeight(48);
+}
+
+

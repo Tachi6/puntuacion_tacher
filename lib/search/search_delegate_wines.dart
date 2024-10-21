@@ -23,12 +23,15 @@ class SearchDelegateWines extends SearchDelegate{
     );
   }
 
+  // TODO adaptar estilo de busqueda al de el multiple
   Widget noResultsWine(BuildContext context) {
     return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          const SizedBox(height: 30),  
+
           Text(noResultText, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
           
           const SizedBox(height: 40),

@@ -1,0 +1,222 @@
+import 'package:flutter/material.dart';
+
+import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/services/services.dart';
+import 'package:puntuacion_tacher/widgets/widgets.dart';
+
+class SearchDelegateMultiple extends SearchDelegate{
+  SearchDelegateMultiple();
+
+  late List<Multiple> _filtro;
+  
+  @override
+  String? get searchFieldLabel => 'Buscar vino';
+
+  @override
+  TextStyle? get searchFieldStyle => const TextStyle(fontSize: 18, decorationThickness: 0, decoration: TextDecoration.none);
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        onPressed: () => query ='', 
+        icon: const Icon(Icons.clear)
+      )
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        close(context, null);
+      }, 
+      icon: const Icon(Icons.arrow_back),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+
+    if(_filtro.isEmpty) return const NoResultsMultiple();
+
+    return ListView.builder(
+      itemCount: _filtro.length,
+      itemBuilder: ( _ , index) {
+        return ListTile(
+          title: Text(_filtro[index].name),
+          // subtitle: Text(_filtro[index].tipo), // TODO algun subtitulo?
+          onTap: () {
+            showResults(context);
+            FocusScope.of(context).unfocus();
+            close(context, _filtro[index].copy());
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+
+    final multipleService = Provider.of<MultipleService>(context);
+    final colors = Theme.of(context).colorScheme;
+
+    if (query.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.only(top: 100),
+        alignment: Alignment.topCenter,
+        color: colors.surface,
+        width: double.infinity,
+        child: const MultipleWineImage(),
+      );
+    }
+ 
+    _filtro = multipleService.multipleTasteList.where((multiple) {
+      return multiple.name.toLowerCase().contains(query.trim().toLowerCase());
+    }).toList();
+
+    if(_filtro.isEmpty) return const NoResultsMultiple(); //noResultsMultiple(context);
+
+    return ListView.builder(
+      itemCount: _filtro.length,
+      itemBuilder: ( _ , index) {
+        return ListTile(
+          title: Text(_filtro[index].name),
+          // subtitle: Text(_filtro[index].tipo), // TODO algun subtitulo?
+          onTap: () {
+            showResults(context);
+            FocusScope.of(context).unfocus();
+            close(context, _filtro[index].copy());
+          },
+        );
+      },
+      );
+   }
+}
+
+class MultipleWineImage extends StatelessWidget {
+  const MultipleWineImage({super.key});
+
+  SvgPicture wineIcon(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
+    return SvgPicture.asset(
+      'assets/wine_bar_full.svg',
+      height: 60,
+      colorFilter: ColorFilter.mode(colors.onPrimaryFixedVariant, BlendMode.srcIn),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 240,
+      height: 210,
+      child: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            child: wineIcon(context)
+          ),
+
+          Positioned(
+            top: 20,
+            left: 50,
+            child: wineIcon(context)
+          ),
+
+          Positioned(
+            top: 40,
+            left: 100,
+            child: wineIcon(context)
+          ),
+
+          Positioned(
+            top: 60,
+            left: 150,
+            child: wineIcon(context)
+          ),
+
+          Positioned(
+            top: 80,
+            left: 200,
+            child: wineIcon(context)
+          ),
+
+          Positioned(
+            top: 70,
+            left: 0,
+            child: wineIcon(context)
+          ),
+
+          Positioned(
+            top: 90,
+            left: 50,
+            child: wineIcon(context)
+          ),
+
+          Positioned(
+            top: 110,
+            left: 100,
+            child: wineIcon(context)
+          ),
+
+          Positioned(
+            top: 130,
+            left: 150,
+            child: wineIcon(context)
+          ),
+
+          Positioned(
+            top: 150,
+            left: 200,
+            child: wineIcon(context)
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class NoResultsMultiple extends StatelessWidget {
+  const NoResultsMultiple({super.key});
+
+  @override
+  Widget build(BuildContext context) {   
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 30),
+
+          Container(
+            alignment: Alignment.center,
+            height: 40,
+            child: const Text('Cata múltiple no encontrada', textAlign: TextAlign.center, style: TextStyle(fontSize: 16))
+          ),
+          
+          const SizedBox(height: 30),
+      
+          const MultipleWineImage(),
+      
+          const SizedBox(height: 40),
+      
+          CustomElevatedButton(
+            width: 170,
+            height: 35, 
+            onPressed: () {
+              
+            },
+            child: const Text('Crear cata múltiple'),
+          ),
+        ],
+      ),
+    );
+  }
+}

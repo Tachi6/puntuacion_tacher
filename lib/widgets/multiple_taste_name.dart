@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class MultipleTasteName extends StatelessWidget {
@@ -15,8 +16,9 @@ class MultipleTasteName extends StatelessWidget {
 
     final colors = Theme.of(context).colorScheme;
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final multipleService = Provider.of<MultipleService>(context);
 
-    multipleTaste.textEditingController.text = multipleTaste.multipleName;
+    multipleTaste.nameController.text = multipleTaste.multipleTaste.name;
 
     return Container(
       height: 85,
@@ -34,7 +36,7 @@ class MultipleTasteName extends StatelessWidget {
                 child: Form(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: TextFormField(
-                    controller: multipleTaste.textEditingController,
+                    controller: multipleTaste.nameController,
                     autocorrect: false,
                     enableSuggestions: false,
                     style: const TextStyle(fontSize: 14),
@@ -54,19 +56,24 @@ class MultipleTasteName extends StatelessWidget {
                     onTapOutside: (event) {
                       FocusManager.instance.primaryFocus?.unfocus();
                     },
-                    onChanged: (value) {
-                      multipleTaste.multiplename = value;
-                    },
+                    onChanged: (value) => multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.name = value),
                   ),
                 )
               ),
           
               IconButton(
                 onPressed: () {
-                  if (multipleTaste.multipleName != '') {
-                    final routeList = CupertinoPageRoute(
-                      builder: (context) => const CreateMultipleTaste()
-                    );
+                  final routeList = CupertinoPageRoute(
+                    builder: (context) => const CreateMultipleTaste()
+                  );
+
+                  if (multipleTaste.multipleTaste.name == '') {
+                    NotificationsService.showSnackbar('EL NOMBRE DE LA CATA NO PUEDE ESTAR VACIO', context);
+                  } 
+                  else if (multipleService.isMultipleNameUsed(multipleTaste.multipleTaste.name)) {
+                    NotificationsService.showSnackbar('EL NOMBRE DE LA CATA YA HA SIDO UTILIZADO', context);
+                  } 
+                  else {
                     Navigator.push(context, routeList);
                   }
                 }, 

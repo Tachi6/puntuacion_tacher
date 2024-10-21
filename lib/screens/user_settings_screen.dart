@@ -308,7 +308,7 @@ class SettingsEndButtons extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final authService = Provider.of<AuthService>(context, listen: false);
-    final themeColor = Provider.of<ChangeThemeProvider>(context, listen: false);
+    final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
     final screenProvider = Provider.of<ScreensProvider>(context, listen: true);
 
     return CustomElevatedButton(

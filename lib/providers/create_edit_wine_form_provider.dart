@@ -19,10 +19,10 @@ class CreateEditWineFormProvider extends ChangeNotifier {
   String notasBoca = '';
   String comentarios = '';
 
-  double ratingVista = 5;
-  double ratingNariz = 7;
-  double ratingBoca = 7;
-  double ratingPuntos = 9;
+  double ratingVista = 0;
+  double ratingNariz = 0;
+  double ratingBoca = 0;
+  double ratingPuntos = 0;
   
   int puntosFinal = 0;
 
@@ -72,12 +72,12 @@ class CreateEditWineFormProvider extends ChangeNotifier {
      String? readUser = await storage.read(key: 'email');
      user = readUser!;
   }
+
   void setWineToEdit(Wines wineToEdit) {
     wine = wineToEdit;
     notifyListeners();
   }
-
-
+  
   editRatingVista(double value) {
     ratingVista = value;
     notifyListeners();
@@ -99,12 +99,19 @@ class CreateEditWineFormProvider extends ChangeNotifier {
   }
 
   setDefaultRatings() {
-    ratingVista = 5;
-    ratingNariz = 7;
-    ratingBoca = 7;
-    ratingPuntos = 9;
+    ratingVista = 0;
+    ratingNariz = 0;
+    ratingBoca = 0;
+    ratingPuntos = 0;
     notifyListeners();
   }
+
+  bool isValidRating() {
+    if (ratingVista == 0 || ratingNariz == 0 || ratingBoca == 0 || ratingPuntos == 0) {
+      return false;
+    }
+    return true;
+  }      
 
   bool isValidForm() {
     return formKey.currentState?.validate() ?? false;
@@ -150,8 +157,7 @@ class CreateEditWineFormProvider extends ChangeNotifier {
     puntosFinal = formulas.calculosFinal;
     notifyListeners();
     // Añado fechas y usuario
-    final DateTime datetime = DateTime.now();
-    wine.fechas.add(datetime.toIso8601String());
+    wine.fechas.add(CustomDatetime().toText(DateTime.now()));
     wine.usuarios.add(user);
     // Añado notas de cata y comentarios
     wine.notasVista.add(notasVista);

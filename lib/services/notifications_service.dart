@@ -8,6 +8,8 @@ class NotificationsService {
   static showSnackbar(String message, BuildContext context) {
 
     final snackBar = SnackBar(
+      padding: const EdgeInsets.symmetric(vertical: 19),
+      duration: const Duration(milliseconds: 1000),
       content: Text(
         message.toUpperCase(), 
         textAlign: TextAlign.center,

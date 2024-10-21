@@ -2,8 +2,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:puntuacion_tacher/models/models.dart';
@@ -36,6 +36,8 @@ class WinesService extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
+    List<Wines> tempWinesByIndex = [];
+
     final url = Uri.https(_baseUrl, _jsonType, {
       'auth': await storage.read(key: 'idToken') ?? ''
     });
@@ -46,8 +48,10 @@ class WinesService extends ChangeNotifier {
     winesMap.forEach((key, value) {
       final tempWine = Wines.fromMap(value);
       tempWine.id = key;
-      winesByIndex.add(tempWine);
+      tempWinesByIndex.add(tempWine);
     });
+
+    winesByIndex = tempWinesByIndex;
 
     // Wines sort by points
     updateWinesByRate();
@@ -312,22 +316,24 @@ class WinesService extends ChangeNotifier {
 
     // TODO subir solo datos necesarios. borrar rango del listado???
     // Create String type 2024 12 31 23 59 59 for Firebase Id of wine
-    final DateTime datetime = DateTime.now();
-    final int year = datetime.year * 10000000000;
-    final int month = datetime.month * 100000000;
-    final int day = datetime.day * 1000000;
-    final int hour = datetime.hour * 10000;
-    final int minute = datetime.minute * 100;
-    final int second = datetime.second;
+    // final DateTime datetime = DateTime.now();
+    // final int year = datetime.year * 10000000000;
+    // final int month = datetime.month * 100000000;
+    // final int day = datetime.day * 1000000;
+    // final int hour = datetime.hour * 10000;
+    // final int minute = datetime.minute * 100;
+    // final int second = datetime.second;
 
-    final int idInt = year + month + day + hour + minute + second;
-    final idFirebase = idInt.toString();
+    // final int idInt = year + month + day + hour + minute + second;
+    final String idFirebase =  CustomDatetime().toText(DateTime.now());// datetime.toIso8601String();
+    // TODO final idFirebase = idInt.toString();
     // Subo displayName a Firebase dejo lo necesario
     displayName == ''
       ? wine.displayName = email
       : wine.displayName = displayName;
     // Subo ultimo vino catado a Firebase
-    final String jsonCreateType = 'latest/$idFirebase.json';
+    final String jsonCreateType = 'latest/$idFirebase.json'; // TODO comprobar parse
+    // final String jsonCreateType = 'latest/${idFirebase.('.', ':')}.json'; // TODO comprobar parse
     final url = Uri.https(_baseUrl, jsonCreateType, {
       'auth': await storage.read(key: 'idToken') ?? ''
     });

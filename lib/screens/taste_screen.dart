@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class TasteScreen extends StatefulWidget {
@@ -129,7 +130,7 @@ class _ThirdFormWidget extends StatelessWidget {
         ),
         Visibility(
           visible: taste.showThirdWidget && taste.tasteMultiple == TasteOptionsMultiple.acceder,
-          child: const ComingSoon(),
+          child: const SelectMultipleTaste(),
         ),
 
       ],
@@ -163,11 +164,34 @@ class _SecondFormWidget extends StatelessWidget {
 }
 
 class _ContinueButton extends StatelessWidget {
+
+  void showCustomDialog(BuildContext context, {required Widget child}) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false, 
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return PopScope(
+          canPop: false,
+          child: child,
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
+          child: child
+        );
+      },
+    );
+  }
  
   @override
   Widget build(BuildContext context) {
 
     final taste = Provider.of<VisibleOptionsProvider>(context);
+    final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: true);
+    final winesService = Provider.of<WinesService>(context);
+    final authService = Provider.of<AuthService>(context, listen: true);
 
     if (taste.showContinueButton) {
       return Container(
@@ -177,9 +201,62 @@ class _ContinueButton extends StatelessWidget {
         child: CustomElevatedButton(
           width: 150, 
           onPressed: () {
+            if (taste.tasteMultiple == TasteOptionsMultiple.acceder) {
+              final routeList = CupertinoPageRoute(
+                builder: (context) => const MultipleTasteScreen()
+              );
+              Navigator.push(context, routeList);
+              return;
+            }
+
             if (taste.showThirdWidget) {
               final newRoute = CupertinoPageRoute(
-                builder: (context) => TacherScreen()
+                builder: (context) => TacherScreen(
+                  appBarTitle: wineForm.wine.nombre == '' ? 'Vino catado a ciegas' : wineForm.wine.nombre,
+                  onPressedBackButon: () {
+                    wineForm.clearNotas();
+                    wineForm.clearNotas();
+                    wineForm.setDefaultRatings();
+                    wineForm.setDefaultCreateWine();
+                    Navigator.pop(context);
+                  }, 
+                  onPressedConfirm: () async {
+                    // Verifico si se has rellenado todos los campos del formulario
+                    if (!wineForm.isValidRating()) {
+                      NotificationsService.showSnackbar('RELLENA TODOS LOS CAMPOS', context);
+                      return;
+                    } 
+                    // Verifico si es cata oculta y fuerzo a añadir el vino
+                    if (wineForm.wine.nombre == '') {
+                      if (!context.mounted) return;
+                      showCustomDialog(context, child: const AddHiddenWine());     
+                      // addWineToHiddenTaste(context);
+                    }
+                    else {
+                      // Mando updates de los diferentes campos al wine
+                      wineForm.addUpdatesToWine();
+                      // Mando wine al servidor
+                      if (wineForm.wine.id == '-1') {
+                        await winesService.createWine(winesService.selectedWine!);
+                        await winesService.saveDeleteLatestTastedWine(wine:winesService.selectedWine!, email: authService.userEmail, displayName: authService.userDisplayName);
+                      }
+                      else {
+                        await winesService.updateWine(winesService.selectedWine!);
+                        await winesService.saveDeleteLatestTastedWine(wine:winesService.selectedWine!, email: authService.userEmail, displayName: authService.userDisplayName);
+                      }
+                      // Mando wine a la confirmacion
+                      if (!context.mounted) return;
+                      showCustomDialog(context, child: PointsBox(wine: wineForm.wine, puntuacionFinal: wineForm.puntosFinal));
+                      // confirmationDialog(context, points: wineForm.puntosFinal, wine: wineForm.wine);
+                
+                      // Elimino registros para poder valorar de nuevo
+                      wineForm.clearNotas();
+                      wineForm.clearNotas();
+                      wineForm.setDefaultRatings();
+                      wineForm.setDefaultCreateWine();
+                    }
+                  },
+                )
               );
         
               Navigator.push(context, newRoute);

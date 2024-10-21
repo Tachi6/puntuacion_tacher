@@ -6,6 +6,7 @@ export 'package:puntuacion_tacher/screens/list_all_screen.dart';
 export 'package:puntuacion_tacher/screens/list_screen.dart';
 export 'package:puntuacion_tacher/screens/loading_screen.dart';
 export 'package:puntuacion_tacher/screens/login_screen.dart';
+export 'package:puntuacion_tacher/screens/multiple_taste_screen.dart';
 export 'package:puntuacion_tacher/screens/myuser_screen.dart';
 export 'package:puntuacion_tacher/screens/tacher_screen.dart';
 export 'package:puntuacion_tacher/screens/taste_screen.dart';

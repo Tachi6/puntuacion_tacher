@@ -113,6 +113,7 @@ class CreateNewWineForm extends StatelessWidget {
 
   const CreateNewWineForm(this.wineForm, {super.key});
 
+  // TODO validar duplicidad de vinos
   String? defaultValidator(String? value) => value!.isEmpty ? 'Este campo es obligatorio': null;
 
   String? anadaValidator(String? value) {

@@ -15,6 +15,7 @@ class RatingBox extends StatelessWidget {
   final double? minRating;
   final int? itemCount;
   final String? name;
+  final int? multiplePage;
 
 
   const RatingBox({
@@ -24,7 +25,8 @@ class RatingBox extends StatelessWidget {
     this.initialRating, 
     this.minRating, 
     this.itemCount, 
-    this.name
+    this.name, 
+    this.multiplePage
   });
 
   @override
@@ -65,7 +67,8 @@ class RatingBox extends StatelessWidget {
                   initialRating: initialRating!, 
                   minRating: minRating!, 
                   itemCount: itemCount!, 
-                  name: name!
+                  name: name!,
+                  multiplePage: multiplePage,
                 ),
               ),
             ],
@@ -82,18 +85,21 @@ class _RatingCustomWidget extends StatelessWidget{
   final double minRating;
   final int itemCount;
   final String name;
+  final int? multiplePage;
 
   const _RatingCustomWidget({
     required this.initialRating, 
     required this.minRating, 
     required this.itemCount, 
-    required this.name
+    required this.name, 
+    this.multiplePage
   });
 
   @override
   Widget build(BuildContext context) {
 
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
+    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final colors = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
     final double itemSize = ((size.width * 0.75) / 11).truncateToDouble();
@@ -123,15 +129,36 @@ class _RatingCustomWidget extends StatelessWidget{
       },
       onRatingUpdate: (value) {
         if (name == 'vista') {
+          if (multiplePage != null) {
+            // multipleTaste.editMultipleValues(multiplePage!, 'ratingVista', value);
+            multipleTaste.winesTaste[multiplePage!].ratingVista = value.toInt();
+            multipleTaste.isValidRating();
+            return;
+          }
           wineForm.editRatingVista(value);
         }
         if (name == 'nariz') {
+          if (multiplePage != null) {
+            // multipleTaste.editMultipleValues(multiplePage!, 'ratingNariz', value);
+            multipleTaste.winesTaste[multiplePage!].ratingNariz = value.toInt();
+            return;
+          }
           wineForm.editRatingNariz(value);
         }
         if (name == 'boca') {
+          if (multiplePage != null) {
+            // multipleTaste.editMultipleValues(multiplePage!, 'ratingBoca', value);
+            multipleTaste.winesTaste[multiplePage!].ratingBoca = value.toInt();
+            return;
+          }
           wineForm.editRatingBoca(value);
         }
         if (name == 'puntos') {
+          if (multiplePage != null) {
+            // multipleTaste.editMultipleValues(multiplePage!, 'ratingPuntos', value);
+            multipleTaste.winesTaste[multiplePage!].ratingPuntos = value.toInt();
+            return;
+          }
           wineForm.editRatingPuntos(value);
         }
       },

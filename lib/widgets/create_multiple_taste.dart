@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,7 +13,6 @@ import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 PersistentBottomSheetController viewBottomMenu(BuildContext context) {
   return showBottomSheet(
-    
     builder: (context) {
       return const MultipleActionsButtons();
     },
@@ -30,7 +30,8 @@ class CreateMultipleTaste extends StatelessWidget{
       appBar: AppBar(
         automaticallyImplyLeading: false,
         toolbarHeight: 302,
-        title: _CustomBodyAppBar()
+        titleSpacing: 0,
+        title: _CustomBodyAppBar(),
       ),
       body: const ListViewMultipleWines(),      
     );
@@ -42,30 +43,31 @@ class CreateMultipleTaste extends StatelessWidget{
 class _CustomBodyAppBar extends StatelessWidget {
 
   void showCustomDialog(BuildContext context, {required Widget child}) {
-  showGeneralDialog(
-    context: context,
-    barrierDismissible: false, 
-    pageBuilder: (context, animation, secondaryAnimation) {
-      return PopScope(
-        canPop: false,
-        child: child,
-      );
-    },
-    transitionDuration: const Duration(milliseconds: 300),
-    transitionBuilder: (context, animation, secondaryAnimation, child) {
-      return ScaleTransition(
-        scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
-        child: child
-      );
-    },
-  );
-}
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false, 
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return PopScope(
+          canPop: false,
+          child: child,
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
+          child: child
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final colors = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
 
     return Column(
       children: [
@@ -79,13 +81,19 @@ class _CustomBodyAppBar extends StatelessWidget {
               },
               icon: Icon(Icons.arrow_back_rounded, color: colors.onSurface)
             ),
-      
-            const Spacer(),
-      
-            Text(multipleTaste.multipleName),
-      
-            const Spacer(),
-      
+              
+            Container(
+              height: 48,
+              alignment: Alignment.center,
+              width: size.width - 96,
+              child: Text(
+                multipleTaste.multipleTaste.name,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 20, height: 1.1)),
+            ),
+                 
             IconButton(
               onPressed: () {
                 if (multipleTaste.winesMultipleTaste.length > 1) Navigator.pop(context);
@@ -98,6 +106,7 @@ class _CustomBodyAppBar extends StatelessWidget {
       
         Container(
           height: 84,
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           alignment: Alignment.center,
           child: TextFormField(
             textAlignVertical: TextAlignVertical.top,                 
@@ -116,14 +125,13 @@ class _CustomBodyAppBar extends StatelessWidget {
                 borderSide: const BorderSide(width: 1)
               ),
             ),
-            onChanged: (value) {
-              multipleTaste.decription = value;
-            },
+            onChanged: (value) => multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.description = value),
           ),
         ),
-
+    
         Container(
           alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           height: 42,
           child: TextFormField(    
             textAlignVertical: TextAlignVertical.center,             
@@ -142,21 +150,20 @@ class _CustomBodyAppBar extends StatelessWidget {
                 borderSide: const BorderSide(width: 1)
               ),
             ),
-            onChanged: (value) {
-              multipleTaste.password = value;
-            },
+            onChanged: (value) => multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.password = value),
           ),
         ),
-
+    
         Container(
           alignment: Alignment.center,
+          padding: const EdgeInsets.only(left: 10),
           height: 42,
           child: Row(
             children: [
               const Text('Fecha limite de la cata', style: TextStyle(fontSize: 14)),
-
+    
               const SizedBox(width: 16),
-
+    
               Expanded(
                 child: TextFormField(  
                   controller: multipleTaste.dateController,  
@@ -180,17 +187,18 @@ class _CustomBodyAppBar extends StatelessWidget {
                   ),
                 ),
               ),
-
+    
               IconButton(
                 onPressed: () {
                   showCustomDialog(
                     context, 
                     child: CustomAlertDialog(
                       title: 'Fecha limite de cata',
-                      cancelText: 'Sin limite',
+                      cancelText: 'Cancelar',
                       onPressedCancel: () {
-                        multipleTaste.dateLimit = null;
-                        multipleTaste.dateController.text = 'Sin limite';
+                        // TODO manejar fechas
+                        // multipleTaste.dateLimit = null;
+                        // multipleTaste.dateController.text = 'Sin limite';
                         Navigator.pop(context);
                       },
                       content: SizedBox(
@@ -214,7 +222,7 @@ class _CustomBodyAppBar extends StatelessWidget {
                           selectionShape: DateRangePickerSelectionShape.rectangle,
                           onSelectionChanged: (dateRangePickerSelectionChangedArgs) {
                             final DateTime date = dateRangePickerSelectionChangedArgs.value;
-                            multipleTaste.dateLimit = date;
+                            multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.dateLimit = CustomDatetime().toText(date));
                             multipleTaste.dateController.text = '${date.day}-${date.month}-${date.year}';
                             Navigator.pop(context);
                           },
@@ -229,13 +237,15 @@ class _CustomBodyAppBar extends StatelessWidget {
           ),
         ),
       
-        SizedBox(
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          alignment: Alignment.center,
           height: 42,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Realizar la cata a ciegas', style: TextStyle(fontSize: 14)),
+              const Text('Realizar la cata totalmente a ciegas', style: TextStyle(fontSize: 14)),
           
               const Spacer(),
           
@@ -244,9 +254,9 @@ class _CustomBodyAppBar extends StatelessWidget {
                 child: FittedBox(
                   fit: BoxFit.fitWidth,
                   child: Switch(
-                    value: multipleTaste.hidden,
+                    value: multipleTaste.multipleTaste.hidden,
                     onChanged: (_) {
-                      multipleTaste.hidden = !multipleTaste.hidden;
+                      multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.hidden = !multipleTaste.multipleTaste.hidden);
                       if (multipleTaste.winesMultipleTaste.length > 1) Navigator.pop(context);
                       multipleTaste.clearWines();
                     }
@@ -262,7 +272,7 @@ class _CustomBodyAppBar extends StatelessWidget {
           layoutBuilder: (currentChild, previousChildren) {
             return currentChild!;
           },
-          child: multipleTaste.hidden
+          child: multipleTaste.multipleTaste.hidden
             ? const RowHiddenWines(key: ValueKey<String>('notHidden'))
             : const RowVisibleWines(key: ValueKey<String>('hidden')), 
         ),
@@ -299,7 +309,7 @@ class _ListViewMultipleWinesState extends State<ListViewMultipleWines> {
                 color: colors.surfaceContainerLow,
               );
             },  
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             itemCount: multipleTaste.winesMultipleTaste.length, 
             itemBuilder: (context, index) {
               return CustomMultipleWinesRow(
@@ -351,20 +361,20 @@ class CustomMultipleWinesRow extends StatelessWidget {
       
           const SizedBox(width: 18),
       
-          Text(
-            multipleTaste.winesMultipleTaste[index].nombre, 
-            maxLines: 1, 
-            overflow: TextOverflow.ellipsis, 
-            style: const TextStyle(fontSize: 14)
+          Expanded(
+            child: Text(
+              multipleTaste.winesMultipleTaste[index].nombre, 
+              maxLines: 2, 
+              overflow: TextOverflow.ellipsis, 
+              style: const TextStyle(fontSize: 14)
+            ),
           ),
-      
-          const Spacer(),
-      
-          if (!multipleTaste.hidden) IconButton (
+             
+          if (!multipleTaste.multipleTaste.hidden) IconButton (
             icon: Icon(
               multipleTaste.winesMultipleTaste[index].nombre.contains('Vino a catar a ciegas')
-              ? Icons.visibility_off_rounded
-              : Icons.visibility_rounded
+              ? Icons.visibility_rounded
+              : Icons.visibility_off_rounded
             ),
             onPressed: () => multipleTaste.hideWine(index),
           ),
@@ -389,19 +399,81 @@ class MultipleActionsButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final multipleService = Provider.of<MultipleService>(context);
+
+    Multiple multiple() {
+      // Creo nueva lista con solo el id del vino
+      final List<String> winesIndex = List.from(multipleTaste.winesMultipleTaste.map((e) {
+        if (e.id == '') return e.nombre;
+        return e.id;
+      }));
+      // Creo mapa vacio
+      Map<String, Map<String, WineTaste>> winesMultiple = {};
+      
+      for (var element in winesIndex) {
+        // Mapeo la lista como un mapa, con el primer valor como 'No iniciada'
+        final Map<String, Map<String, WineTaste>> tempMap = {
+          element: {
+            'notStarted': WineTaste(user: '', nombre: '', ratingVista: -1, ratingNariz: -1, ratingBoca: -1, ratingPuntos: -1, puntosFinal: -1),
+          }
+        };
+        // Añado entrada al mapa
+        winesMultiple.addEntries(tempMap.entries);
+      }
+      // Añado vinos a cata multiple
+      multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.wines = winesMultiple);
+      // Creo localmente la cata multiple
+      // final Multiple multiple = Multiple(
+      //   name:multipleTaste.name,
+      //   description: multipleTaste.description ?? '',
+      //   password: multipleTaste.password ?? '',
+      //   hidden: multipleTaste.hidden,
+      //   dateLimit: (multipleTaste.dateLimit != null) ? multipleTaste.dateLimit!.toIso8601String() : '',
+      //   wines: winesMultiple,
+      //   averageRatings: AverageRatings(boca: -1, nariz: -1, puntos: -1, vista: -1),
+      // );
+
+      return multipleTaste.multipleTaste;
+    }
+
     return Container(
       height: 58,
       alignment: Alignment.center,
-      // margin: const EdgeInsets.only(top: 10),
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           CustomElevatedButton(
             width: 100,
             child: const Text('Guardar'),
             onPressed: () {
+              // Subo a Firebase la cata multiple
+              multipleService.createMultiple(multiple());
+
+              // TODO dejo este codigo de abajo que sera util
+              // Actualizar cata multiple
+              // multipleService.updateMultiple(
+              //   multipleName:multipleTaste.name,
+              //   averageRatings: AverageRatings(boca: 3.90, nariz: 3.90, puntos: 70, vista: 3.90)
+              // );
+
+              // Actualizar taste de cata multiple
+              // String dateToString() {
+              //   final date = DateTime.now();
+              //   return date.toIso8601String().replaceAll('.', ':');
+              // }
+
+              // final Map<String, WineTaste> taste = {
+              //   dateToString(): WineTaste(user: 'pepito', ratingVista: 5, ratingNariz: 5, ratingBoca: 6, ratingPuntos: 7, puntosFinal: 70, comentarios: '', id: 'Vino a catar a ciegas 1', notasBoca: '', notasNariz: '', notasVista: ''),
+              //   dateToString(): WineTaste(user: 'pepito', ratingVista: 6, ratingNariz: 7, ratingBoca: 8, ratingPuntos: 7, puntosFinal: 74, comentarios: '', id: 'Vino a catar a ciegas 2', notasBoca: '', notasNariz: '', notasVista: ''),
+              // };
+
+              // multipleService.updateTaste(
+              //   multipleName:multipleTaste.name, 
+              //   wineTaste: taste
+              // );
             },
           ),
 
@@ -409,6 +481,18 @@ class MultipleActionsButtons extends StatelessWidget {
             width: 100,
             child: const Text('Realizar'),
             onPressed: () {
+              // Subo a Firebase la cata multiple
+              multipleService.createMultiple(multiple());
+              // multipleTaste.createMultipleValidation();
+              // multipleTaste.createMultipleValues();
+              multipleTaste.initMultipleTaste();
+
+              // TODO codigo para saber si esta realizada la cata multiple
+
+              final routeList = CupertinoPageRoute(
+                builder: (context) => const MultipleTasteScreen()
+              );
+              Navigator.push(context, routeList);
             },
           ),
 
@@ -430,12 +514,15 @@ class RowVisibleWines extends StatelessWidget {
     final winesService = Provider.of<WinesService>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: false);
     final taste = Provider.of<VisibleOptionsProvider>(context, listen: false);
+    final colors = Theme.of(context).colorScheme;
 
-    return SizedBox(
+    return Container(
+      padding: const EdgeInsets.only(left: 10),
+      alignment: Alignment.center,
       height: 42,
       child: Row(
         children: [
-          const Text('Busca o añade los vinos', style: TextStyle(fontSize: 14)),
+          const Text('Busca, añade u oculta los vinos', style: TextStyle(fontSize: 14)),
                                 
           const Spacer(),
                     
@@ -445,7 +532,8 @@ class RowVisibleWines extends StatelessWidget {
               final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
                 customResultText: 'Vuelve atras y crea tu vino' '\n' 'para añadirlo a la cata.'
               ));
-              if (wineSearched != null) multipleTaste.addWine(wineSearched);
+              
+              if (wineSearched != null) multipleTaste.addWine(wineSearched.copy());
               if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
             },
           ),
@@ -460,6 +548,20 @@ class RowVisibleWines extends StatelessWidget {
                 Navigator.pop(context, 'Guardar');
               }
             },
+          ),
+
+          IconButton(
+            onPressed: () {
+              multipleTaste.hideNames = !multipleTaste.hideNames;
+              multipleTaste.hideAllWines();
+            },
+            icon: Icon(
+              multipleTaste.hideNames
+                ? Icons.visibility_rounded
+                : Icons.visibility_off_rounded,
+              color: colors.onSurface,
+              size: 22
+            ),
           ),
         ],
       ),
@@ -480,10 +582,11 @@ class RowHiddenWines extends StatelessWidget {
 
     return Container(
       alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 10),
       height: 42,
       child: Row(
         children: [
-          const Text('Numero de vinos a catar', style: TextStyle(fontSize: 14)),
+          const Text('Numero de vinos a catar a ciegas', style: TextStyle(fontSize: 14)),
       
           const Spacer(),
       
