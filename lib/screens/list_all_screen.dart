@@ -9,7 +9,9 @@ import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
-import 'package:puntuacion_tacher/search/delete_search_delegate.dart';
+import 'package:puntuacion_tacher/screens/screens.dart';
+import 'package:puntuacion_tacher/search/search.dart';
+import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 
@@ -25,6 +27,7 @@ class ListAllScreen extends StatelessWidget {
 
     final styles = Theme.of(context).textTheme;
     final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
+    final winesService = Provider.of<WinesService>(context, listen: false);
 
     return Stack(
       children: [
@@ -57,10 +60,16 @@ class ListAllScreen extends StatelessWidget {
               ),
           
               IconButton(
-                onPressed: () => showSearch(
-                  context: context, 
-                  delegate: WineSearch(wines)
-                ), 
+                onPressed: () async {
+                  winesService.loadWines();
+                  final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
+                    customResultText: '',
+                  ));
+                  final routeDetails = CupertinoPageRoute(
+                    builder: (context) => DetailsScreen(wine:wineSearched, source: 'search')
+                  );
+                  if (wineSearched != null && context.mounted) Navigator.push(context, routeDetails);
+                },
                 icon: const Icon(Icons.search)
               ),
             ],

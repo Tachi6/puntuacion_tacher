@@ -139,6 +139,7 @@ class NoImagePoster extends StatelessWidget {
       tag: '$source-${wine.id}',
       child: Material(
         type: MaterialType.transparency,
+        color: Colors.transparent,
         child: Stack(
           alignment: Alignment.center,
           children: [

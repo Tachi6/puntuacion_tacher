@@ -183,17 +183,17 @@ class CreateEditWineFormProvider extends ChangeNotifier {
 }
 
 class Formulas {
-
-  final double ratingVista;
-  final double ratingNariz;
-  final double ratingBoca;
-  final double ratingPuntos;
+// TODO REQUERIDO???
+  double? ratingVista;
+  double? ratingNariz;
+  double? ratingBoca;
+  double? ratingPuntos;
 
   Formulas({
-    required this.ratingVista,
-    required this.ratingNariz,
-    required this.ratingBoca,
-    required this.ratingPuntos,
+    this.ratingVista,
+    this.ratingNariz,
+    this.ratingBoca,
+    this.ratingPuntos,
   });
 
   double get calculosVista {
@@ -281,13 +281,13 @@ class Formulas {
   }
 
   double get calculosPuntos {
-    return ratingPuntos - 1;
+    return ratingPuntos!;
   }
 
   int get calculosFinal { 
 
     final double suma = calculosVista + calculosNariz + calculosBoca + calculosPuntos + 50;
-    final double correccion = (calculosPuntos - (((calculosVista + calculosNariz + calculosBoca) * 10) / 40)).abs();
+    final double correccion = (calculosPuntos - (((ratingVista! + ratingNariz! + ratingBoca!) * 10) / 25)).abs();
 
     if ( suma < 80 ){
       return (suma + correccion).ceil();
@@ -298,17 +298,32 @@ class Formulas {
   }
 
   double get puntosVista {
-    final double vista = (ratingVista * 5) / 7;
+    final double vista = (ratingVista! * 5) / 7;
     return double.parse((vista).toStringAsFixed(2));
   }
 
   double get puntosNariz {
-    final double nariz = (ratingNariz * 5) / 9;
+    final double nariz = (ratingNariz! * 5) / 9;
     return double.parse((nariz).toStringAsFixed(2));
   }
 
   double get puntosBoca {
-    final double boca = (ratingBoca * 5) / 9;
+    final double boca = (ratingBoca! * 5) / 9;
+    return double.parse((boca).toStringAsFixed(2));
+  }
+
+  double puntosVistaFunction(double rating) {
+    final double vista = (rating * 5) / 7;
+    return double.parse((vista).toStringAsFixed(2));
+  }
+
+  double puntosNarizFunction(double rating) {
+    final double nariz = (rating * 5) / 9;
+    return double.parse((nariz).toStringAsFixed(2));
+  }
+
+  double puntosBocaFunction(double rating) {
+    final double boca = (rating * 5) / 9;
     return double.parse((boca).toStringAsFixed(2));
   }
 
@@ -345,6 +360,19 @@ class Formulas {
   double puntuacionCategoria(List<double> puntuaciones) {
     final puntuacionesMedia = puntuaciones.average;
     return double.parse((puntuacionesMedia).toStringAsFixed(2));
+  }
+
+  WineTaste calculateWineTaste(WineTaste wineTaste) {
+    ratingVista = wineTaste.ratingVista;
+    ratingNariz = wineTaste.ratingNariz;
+    ratingBoca = wineTaste.ratingBoca;
+    ratingPuntos = wineTaste.ratingPuntos;
+    wineTaste.puntosFinal = calculosFinal;
+    wineTaste.puntosVista = puntosVista;
+    wineTaste.puntosNariz = puntosNariz;
+    wineTaste.puntosBoca = puntosBoca;
+
+    return wineTaste; // TODO mirar si se modifica el objeto recibido
   }
 
 }

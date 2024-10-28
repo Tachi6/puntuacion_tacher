@@ -57,7 +57,6 @@ class SelectMultipleTaste extends StatelessWidget {
                     if (multipleSearched.hidden) {
                       multipleTaste.winesHiddenNumber = multipleSearched.wines.keys.length;
                       multipleTaste.addHiddenWines();
-                      print(multipleTaste.winesMultipleTaste);
                     }
                     else {
                       List<Wines> visibleWines = [];
@@ -65,8 +64,8 @@ class SelectMultipleTaste extends StatelessWidget {
                         visibleWines.add(wineService.winesByIndex[int.parse(key)]);
                       },);
                       multipleTaste.addVisibleWines(visibleWines);
-                      print(multipleTaste.winesMultipleTaste);
                     }
+                    multipleTaste.initUserTaste();
                     // wineForm.setWineToEdit(winesService.selectedWine!);
                     taste.showContinueButton = true;
                   }

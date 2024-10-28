@@ -19,6 +19,7 @@ class _ValorationsScreenState extends State<ValorationsScreen> with AutomaticKee
       appBar: AppBar(
         automaticallyImplyLeading: false,
       ),
+      
       body: const ValorationCard(),
     );
   }

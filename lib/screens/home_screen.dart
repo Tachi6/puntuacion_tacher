@@ -7,32 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
-
-class HomeScreen extends StatelessWidget {
-
+ 
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: _HomeScreenBody(),
-      bottomNavigationBar: CustomNavigationBar(),
-    );
-  }
+  State<HomeScreen> createState() => _HomeScreenState();
 }
+
+class _HomeScreenState extends State<HomeScreen> {
   
-class _HomeScreenBody extends StatefulWidget {
-
-  const _HomeScreenBody();
-
-  @override
-  State<_HomeScreenBody> createState() => _HomeScreenBodyState();
-}
-
-class _HomeScreenBodyState extends State<_HomeScreenBody> {
-
   late PageController pageController;
 
   @override
@@ -40,7 +26,7 @@ class _HomeScreenBodyState extends State<_HomeScreenBody> {
     super.initState();
     pageController = PageController(
       initialPage: 0,
-      keepPage: true
+      keepPage: true,
     );
   }
 
@@ -57,24 +43,20 @@ class _HomeScreenBodyState extends State<_HomeScreenBody> {
     MyUserScreen()
   ];
 
-
   @override
   Widget build(BuildContext context) {
     
     final screenProvider = Provider.of<ScreensProvider>(context, listen: true);
-
-    if (pageController.hasClients) {
-      pageController.animateToPage(
-        screenProvider.currentScreen, 
-        duration: const Duration(milliseconds: 250), 
-        curve: Curves.easeInOut
-      );
-    }
-
-    return PageView(
-      physics: const NeverScrollableScrollPhysics(),
-      controller: pageController,
-      children: screensList
+    
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: PageView(
+        physics: const ClampingScrollPhysics(),
+        controller: pageController,
+        children: screensList,
+        onPageChanged: (value) => screenProvider.currentScreen = value,
+      ),
+      bottomNavigationBar: CustomNavigationBar(pageController: pageController)
     );
   }
 }

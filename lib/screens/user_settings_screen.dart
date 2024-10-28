@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
+import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -326,6 +327,7 @@ class SettingsEndButtons extends StatelessWidget {
         Navigator.pop(context);
         authService.logout();
         screenProvider.currentScreen = 0;
+        screenProvider.multipleScreen = 0;
         themeColor.setDefaultTheme();
         final initialRoute = CupertinoPageRoute(
           builder: (context) => const LoginScreen()

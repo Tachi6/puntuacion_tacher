@@ -98,93 +98,6 @@ class WinesService extends ChangeNotifier {
     return winesCategory;
   }
 
-  // TODO prueba latest
-
-  // Future pruebaLatest() async {
-
-  //   List<Wines> tempWines = [];
-  //   final Map<String, Wines> tempWinesMap = {};
-
-
-  //   final url = Uri.https(_baseUrl, _jsonType, {
-  //     'auth': await storage.read(key: 'idToken') ?? ''
-  //   });
-  //   final resp = await http.get(url);
-
-  //   final Map<String, dynamic> winesMap = json.decode(resp.body);
-
-  //   winesMap.forEach((key, value) {
-  //     final tempWinePre = Wines.fromMap(value);
-  //     tempWinePre.id = key;
-  //     tempWines.add(tempWinePre);
-  //   });
-
-  //   for (Wines element in tempWines) { // TODO comprobar correcto funcionamiento
-  //     // Lista de indices donde ha catado el usuario
-  //     List<int> userIndex = [];
-  //     for (var i = 0; i < element.usuarios.length; i++) {
-  //       userIndex.add(i);
-  //     }
-      
-  //     for (var i = 0; i < userIndex.length; i++) {
-  //       // Creo vino temporal
-  //       Wines tempWine = Wines(
-  //         anada: element.anada, 
-  //         bodega: element.bodega, 
-  //         comentarios: [],
-  //         descripcion: element.descripcion, 
-  //         fechas: [], 
-  //         graduacion: element.graduacion,
-  //         id: element.id,
-  //         nombre: element.nombre, 
-  //         notaBoca: element.notaBoca, 
-  //         notaNariz: element.notaNariz, 
-  //         notaVista: element.notaVista, 
-  //         notasBoca: [], 
-  //         notasNariz: [], 
-  //         notasVista: [], 
-  //         puntuacionBoca: element.puntuacionBoca, 
-  //         puntuacionFinal: element.puntuacionFinal, 
-  //         puntuacionNariz: element.puntuacionNariz, 
-  //         puntuacionVista: element.puntuacionVista, 
-  //         puntuaciones: [], 
-  //         puntuacionesBoca: [], 
-  //         puntuacionesNariz: [], 
-  //         puntuacionesVista: [], 
-  //         region: element.region, 
-  //         tipo: element.tipo, 
-  //         usuarios: [], 
-  //         variedades: element.variedades, 
-  //         vino: element.vino
-  //       );
-
-  //       // Añado a tempWine solo los valores de cada cata de usuario, y si hay mas de una con el ciclo for lo añade
-  //       tempWine.comentarios.add(element.comentarios[userIndex[i]]);
-
-  //       tempWine.fechas.add(element.fechas[userIndex[i]]);
-  //       tempWine.id = element.id! + i.toString();
-  //       tempWine.notasBoca.add(element.notasBoca[userIndex[i]]);
-  //       tempWine.notasNariz.add(element.notasNariz[userIndex[i]]);
-  //       tempWine.notasVista.add(element.notasVista[userIndex[i]]);
-  //       tempWine.puntuaciones.add(element.puntuaciones[userIndex[i]]);
-  //       tempWine.puntuacionesBoca.add(element.puntuacionesBoca[userIndex[i]]);
-  //       tempWine.puntuacionesNariz.add(element.puntuacionesNariz[userIndex[i]]);
-  //       tempWine.puntuacionesVista.add(element.puntuacionesVista[userIndex[i]]);
-  //       tempWine.usuarios.add(element.usuarios[userIndex[i]]);
-        
-  //       if (element.fechas[userIndex[i]] == '') {
-  //         tempWinesMap[element.id! + i.toString()] = tempWine;
-  //       } 
-  //       else {
-  //         tempWinesMap[element.fechas[userIndex[i]]]= tempWine;
-  //       }
-
-  //     }
-  //   }
-  //   print(latest);
-  //   notifyListeners();
-  // } 
-
   List<Wines> userTastedWines(String mail) {
 
     // Creo lista temporal de vinos
@@ -312,28 +225,15 @@ class WinesService extends ChangeNotifier {
     return resp.body;
   }
 
-  Future<String> saveDeleteLatestTastedWine({required Wines wine, required String email, required String displayName}) async {
-
-    // TODO subir solo datos necesarios. borrar rango del listado???
-    // Create String type 2024 12 31 23 59 59 for Firebase Id of wine
-    // final DateTime datetime = DateTime.now();
-    // final int year = datetime.year * 10000000000;
-    // final int month = datetime.month * 100000000;
-    // final int day = datetime.day * 1000000;
-    // final int hour = datetime.hour * 10000;
-    // final int minute = datetime.minute * 100;
-    // final int second = datetime.second;
-
-    // final int idInt = year + month + day + hour + minute + second;
-    final String idFirebase =  CustomDatetime().toText(DateTime.now());// datetime.toIso8601String();
-    // TODO final idFirebase = idInt.toString();
+  Future<String> saveDeleteLatestTastedWine({required Wines wine, required String email, required String displayName}) async {   
+    // Creo id de firebase con la fecha custom
+    final String idFirebase =  CustomDatetime().toText(DateTime.now());
     // Subo displayName a Firebase dejo lo necesario
     displayName == ''
       ? wine.displayName = email
       : wine.displayName = displayName;
     // Subo ultimo vino catado a Firebase
-    final String jsonCreateType = 'latest/$idFirebase.json'; // TODO comprobar parse
-    // final String jsonCreateType = 'latest/${idFirebase.('.', ':')}.json'; // TODO comprobar parse
+    final String jsonCreateType = 'latest/$idFirebase.json'; 
     final url = Uri.https(_baseUrl, jsonCreateType, {
       'auth': await storage.read(key: 'idToken') ?? ''
     });

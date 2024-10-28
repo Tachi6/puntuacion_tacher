@@ -35,6 +35,7 @@ class MultipleTasteName extends StatelessWidget {
               Expanded(
                 child: Form(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
+                  key: multipleTaste.formNameKey,
                   child: TextFormField(
                     controller: multipleTaste.nameController,
                     autocorrect: false,
@@ -51,6 +52,17 @@ class MultipleTasteName extends StatelessWidget {
                       if (value == '') {
                         return 'El nombre de la cata no puede estar vacio';
                       }
+                      const List<String> invalidCharacters = ['.', '\$', '#', '[', ']', '/'];
+                      bool isInvalidName = false; 
+                      for (var character in invalidCharacters) {
+                        if (value!.contains(character)) isInvalidName = true;
+                      }
+                      if (isInvalidName) {
+                        return 'Los caracteres . \$ # [ ] / no son permitidos.';
+                      }
+                      if (multipleService.isMultipleNameUsed(multipleTaste.multipleTaste.name)) {
+                        return 'El nombre de la cata ya ha sido utilizado.';
+                      }
                       return null;
                     },
                     onTapOutside: (event) {
@@ -64,18 +76,15 @@ class MultipleTasteName extends StatelessWidget {
               IconButton(
                 onPressed: () {
                   final routeList = CupertinoPageRoute(
-                    builder: (context) => const CreateMultipleTaste()
+                    builder: (context) => const PopScope(
+                      canPop: false,
+                      child: CreateMultipleTaste(),
+                    ),
                   );
 
-                  if (multipleTaste.multipleTaste.name == '') {
-                    NotificationsService.showSnackbar('EL NOMBRE DE LA CATA NO PUEDE ESTAR VACIO', context);
-                  } 
-                  else if (multipleService.isMultipleNameUsed(multipleTaste.multipleTaste.name)) {
-                    NotificationsService.showSnackbar('EL NOMBRE DE LA CATA YA HA SIDO UTILIZADO', context);
-                  } 
-                  else {
+                  if (multipleTaste.isValidForm()) {
                     Navigator.push(context, routeList);
-                  }
+                  } 
                 }, 
                 icon: Icon(
                   Icons.check, 

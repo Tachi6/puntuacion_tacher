@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
-import 'package:puntuacion_tacher/search/delete_%20search_delegate_form.dart';
+import 'package:puntuacion_tacher/search/search.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -133,6 +134,8 @@ class _SearchTasteWine extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final winesService = Provider.of<WinesService>(context);
+    final taste = Provider.of<VisibleOptionsProvider>(context);
+    final wineForm = Provider.of<CreateEditWineFormProvider>(context);
     final colors = Theme.of(context).colorScheme;
 
     TextEditingController textEditingControllerListener() {
@@ -182,11 +185,16 @@ class _SearchTasteWine extends StatelessWidget {
                     Text('Buscar', style: TextStyle(fontSize: 14, color: colors.outline), textAlign: TextAlign.center),
                   ],
                 ),
-                onPressed: () {
-                  final winesService = Provider.of<WinesService>(context, listen: false);
-                  winesService.loadWines;
-                            
-                  showSearch(context: context, delegate: WineSearchForm());
+                onPressed: () async {
+                  winesService.loadWines();
+                  final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
+                    customResultText: '',
+                  ));
+                  if (wineSearched != null) {
+                    winesService.selectedWine = wineSearched;
+                    wineForm.setWineToEdit(wineSearched);
+                    taste.showContinueButton = true;
+                  }
                 },
               ),
                 

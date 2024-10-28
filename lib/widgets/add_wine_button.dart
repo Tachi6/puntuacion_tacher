@@ -48,7 +48,7 @@ class AddWineButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final winesService = Provider.of<WinesService>(context, listen: false);
+    final winesService = Provider.of<WinesService>(context, listen: true);
     final colors = Theme.of(context).colorScheme;
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
 
@@ -61,6 +61,7 @@ class AddWineButton extends StatelessWidget {
       onPressed: () {
         wineForm.setDefaultCreateWine();
         winesService.selectedWine = wineForm.wine;
+        winesService.loadWines();
         showGeneralDialog(
           context: context,
           barrierDismissible: false, 
@@ -113,29 +114,23 @@ class CreateNewWineForm extends StatelessWidget {
 
   const CreateNewWineForm(this.wineForm, {super.key});
 
-  // TODO validar duplicidad de vinos
-  String? defaultValidator(String? value) => value!.isEmpty ? 'Este campo es obligatorio': null;
-
-  String? anadaValidator(String? value) {
-    if (value!.isEmpty) return 'Este campo es obligatorio';
-
-    final int anada = int.parse(value);
-    final year = DateTime.now().year;
-        
-    if (anada < 1950 || anada > year ) return 'Añada no válida';
-
-    return null;
-  }
+  String? defaultValidator(String? value) {
+    return value!.isEmpty 
+      ? 'Este campo es obligatorio'
+      : null;
+  }  
 
   @override
   Widget build(BuildContext context) {
 
     final Wines wine = wineForm.wine;
     final Size size = MediaQuery.of(context).size;
+    final winesService = Provider.of<WinesService>(context, listen: true);
 
     return SizedBox(
       width: size.width * 0.8,
       child: SingleChildScrollView(
+        reverse: false,
         child: Form(
           key: wineForm.formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -145,15 +140,62 @@ class CreateNewWineForm extends StatelessWidget {
             children: [
               const Text('Ficha técnica del vino', style: TextStyle(fontSize: 16, overflow: TextOverflow.ellipsis)),
         
-              TextFormFieldText(label: 'Vino', initialValue: wine.vino, onChanged: (value) => wine.vino = value, validator: defaultValidator),
+              TextFormFieldText(
+                label: 'Vino', 
+                initialValue: wine.vino, 
+                onChanged: (value) => wine.vino = value, 
+                validator: (value) {
+                  if(value!.isEmpty) return 'Este campo es obligatorio';
+
+                  final String wineCheckname = '${wine.vino.toLowerCase()}${wine.anada}${wine.tipo}${wine.region}';
+                  final bool isWineCreated = winesService.winesByIndex.any((element) {
+                    return '${element.vino.toLowerCase()}${element.anada}${element.tipo}${element.region}' == wineCheckname;
+                  },);
+
+                  if (isWineCreated) return 'El vino ya se encuentra en nuestra base de datos';
+
+                  return null;
+                },
+              ),
               
-              TextFormFieldText(label: 'Bodega', initialValue: wine.bodega, onChanged: (value) => wine.bodega = value, validator: defaultValidator),
+              TextFormFieldText(
+                label: 'Bodega', 
+                initialValue: wine.bodega, 
+                onChanged: (value) => wine.bodega = value, 
+                validator: defaultValidator
+              ),
                
-              TextFormFieldSearch(label: 'Region', wine: wine, autocompleteWidth: size.width * 0.8),
+              TextFormFieldSearch(
+                label: 'Region', 
+                wine: wine, 
+                autocompleteWidth: size.width * 0.8
+              ),
         
-              TextFormFieldSearch(label: 'Tipo', wine: wine, autocompleteWidth: size.width * 0.8),
+              TextFormFieldSearch(
+                label: 'Tipo', 
+                wine: wine, 
+                autocompleteWidth: size.width * 0.8
+              ),
               
-              TextFormFieldText(label: 'Añada', initialValue: wine.anada == -1 ? '' : wine.anada.toString(), onChanged: (value) {if (value != '') wine.anada = int.parse(value);}, validator: anadaValidator, textInputFormatter: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,1}'))], textInputType: TextInputType.number),
+              TextFormFieldText(
+                label: 'Añada', 
+                initialValue: wine.anada == -1 ? '' : wine.anada.toString(), 
+                onChanged: (value) {
+                  if (value != '') wine.anada = int.parse(value);
+                }, 
+                validator: (value) {
+                  if (value!.isEmpty) return 'Este campo es obligatorio';
+
+                  final int anada = int.parse(value);
+                  final year = DateTime.now().year;
+                      
+                  if (anada < 1950 || anada > year ) return 'Añada no válida';
+
+                  return null;                 
+                }, 
+                textInputFormatter: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,1}'))], 
+                textInputType: TextInputType.number,
+              ),
         
               const SizedBox(height: 24),
               
@@ -161,11 +203,21 @@ class CreateNewWineForm extends StatelessWidget {
               
               const SizedBox(height: 5),
               
-              TextFormFieldText(label: 'Variedades', initialValue: wine.variedades, onChanged: (value) => wine.variedades = value, maxLines: 2, validator: null),
+              TextFormFieldText(
+                label: 'Variedades', 
+                initialValue: wine.variedades, 
+                onChanged: (value) => wine.variedades = value, 
+                maxLines: 2, validator: null
+              ),
          
               TextFormFieldGraduacion(wine: wine),
           
-              TextFormFieldText(label: 'Descripción', initialValue: wine.descripcion, onChanged: (value) => wine.descripcion = value, maxLines: 3, validator: null),
+              TextFormFieldText(
+                label: 'Descripción', 
+                initialValue: wine.descripcion, 
+                onChanged: (value) => wine.descripcion = value,
+                maxLines: 3, 
+              validator: null),
           
               const SizedBox(height: 25),
           
@@ -346,6 +398,7 @@ class TextFormFieldSearch extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final colors = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
 
     return Autocomplete<String>(
       optionsBuilder: (TextEditingValue textEditingValue) {
@@ -391,6 +444,7 @@ class TextFormFieldSearch extends StatelessWidget {
         }
 
         return TextFormField(
+          scrollPadding: EdgeInsets.only(bottom: size.height * 0.361), // TODO comprobar que estos valores funcionan bien en todos los dispositivos
           enableSuggestions: false,
           autocorrect: false,
           textCapitalization: TextCapitalization.sentences,
@@ -427,10 +481,10 @@ class TextFormFieldSearch extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   final String option = options.elementAt(index);
                   return ListTile(
-                    contentPadding: const EdgeInsets.only(left: 20),
+                    contentPadding: const EdgeInsets.only(left: 20,right: 20),
                     onTap: () => onSelected(option),
                     title: Text(option, style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),),
-                    tileColor: colors.surface
+                    tileColor: colors.surfaceContainerLow
                   );
                 },
               ),

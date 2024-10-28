@@ -4,32 +4,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/providers/providers.dart';
 
 class MultipleTasteProvider extends ChangeNotifier {
-
-  // String _multipleName = '';
-  // String? _description;
-  // String? _password;
-  // bool _hidden = false;
-  // DateTime? _dateLimit;
 
   Multiple multipleTaste = Multiple(
     name: '',
     hidden: false,
-    dateLimit: '',
     wines: {},
-    averageRatings: AverageRatings(
-      boca: -1,
-      nariz: -1,
-      puntos: -1,
-      vista: -1
-    ),
+    averageRatings: {}
   );
 
+  GlobalKey<FormState> formNameKey = GlobalKey<FormState>();
+  
+  bool _isNameUsed = false;
   int _winesHiddenNumber = 0;
   bool _hideNames = false;
+  List<int> hideIndex = [];
   List<Wines> winesMultipleTaste = [];
-  List<WineTaste> winesTaste = [];
+  List<WineTaste> userMultipleTaste = [];
+
+  int pageIndex = 0;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController dateController = TextEditingController(
@@ -38,121 +33,150 @@ class MultipleTasteProvider extends ChangeNotifier {
 
   final storage = const FlutterSecureStorage();
 
-  // Multiple get multipleTaste => _multipleTaste;
+  bool isValidForm() {
+    return formNameKey.currentState?.validate() ?? false;
+  }
 
-  // set multipleTaste(Multiple multiple) {
-  //   _multipleTaste = multiple;
-  //   notifyListeners();
-  // }
+  Multiple initMultiple() {
+    // Creo nueva lista con solo el id del vino
+    final List<String> winesIndex = List.from(winesMultipleTaste.map((e) {
+      return e.id;
+    }));
+    // Creo mapa vacio
+    Map<String, Map<String, WineTaste>> wines = {};
+    Map<String, AverageRatings> averageRatings = {};
+    // Mapeo la lista como un mapa, con el primer valor como 'No iniciada' solo en el WineTaste
+    for (var wineId in winesIndex) {
+      final Map<String, Map<String, WineTaste>> winesEntry = {
+        wineId: {
+          'notStarted': WineTaste(
+            fecha: '',
+            user: '', 
+            nombre: '',
+            id: wineId,
+            ratingVista: -1, 
+            ratingNariz: -1, 
+            ratingBoca: -1, 
+            ratingPuntos: -1, 
+            puntosFinal: -1,
+            puntosVista: -1, 
+            puntosNariz: -1, 
+            puntosBoca: -1, 
+          ),
+        }
+      };
+      final Map<String, AverageRatings> averageRatingsEntry = {
+        wineId: AverageRatings(
+          vista: -1,
+          nariz: -1, 
+          boca: -1, 
+          puntos: -1, 
+        ),
+      };
+      // Añado entrada al mapa
+      wines = {...wines, ...winesEntry};
+      averageRatings = {...averageRatings, ...averageRatingsEntry};
+    }
+    // Añado vinos a cata multiple
+    multipleTaste.wines = wines;
+    multipleTaste.averageRatings = averageRatings;
+    notifyListeners();
 
-  // final Map<String, List<bool>> isValidMultiple = {
-  //   'vista':[],
-  //   'nariz':[],
-  //   'boca':[],
-  //   'puntos':[],
-  // };
+    return multipleTaste;
+  }
 
-  // Map<String, Multiple> beginMultipleTaste = {};
-
-  // void addMultipleTaste(Map<String, Multiple> multipleTaste) {
-  //   beginMultipleTaste = multipleTaste;
-  //   notifyListeners();
-  // }
-
-  // void clearMultipleTaste() {
-  //   beginMultipleTaste.clear();
-  //   notifyListeners();
-  // }
-
-  // final Map<String, List<dynamic>> multipleTasteValues = {
-  //   'user': [],
-  //   'ratingVista': [],
-  //   'ratingNariz': [],
-  //   'ratingBoca': [],
-  //   'ratingPuntos': [],
-  //   'notasVista': [],
-  //   'notasNariz': [],
-  //   'notasBoca': [],
-  //   'comentarios': [],
-  //   'puntosFinal': [],
-  // };
-
-  Future<void> initMultipleTaste() async {
+  Future<void> initUserTaste() async {
     final user = await storage.read(key: 'email');
 
-    List<WineTaste> tempWinesTaste = [];
+    List<WineTaste> tempUserMultipleTaste = [];
 
     for (var i = 0; i < winesMultipleTaste.length; i++) {
-      final WineTaste tempWineTaste = WineTaste(
+      final WineTaste tempUserTaste = WineTaste(
         user: user!,
         id: winesMultipleTaste[i].id ?? 'Vino a ciegas $i',
         nombre: winesMultipleTaste[i].nombre,
         comentarios: '',
-        fecha: 'Taste date $i',
+        fecha: 'Taste date $i', // Se crea al subirlo al server
         ratingVista: -1,
         ratingNariz: -1,
         ratingBoca: -1,
         ratingPuntos: -1,
+        puntosVista: -1,
+        puntosNariz: -1,
+        puntosBoca: -1,
         puntosFinal: -1,
         notasBoca: '',
         notasNariz: '',
         notasVista: '',
       );
-      tempWinesTaste.add(tempWineTaste);
+      tempUserMultipleTaste.add(tempUserTaste);
     }
 
-    winesTaste = tempWinesTaste;
+    userMultipleTaste = tempUserMultipleTaste;
+
+    notifyListeners();
+  }
+
+  void updateMultipleTaste(Multiple updatedMultipleTaste) {
+    multipleTaste = updatedMultipleTaste;
+    notifyListeners();
+  }
+
+  void updateWineTaste(Function editWineTaste) {
+    editWineTaste();
+    notifyListeners();
+  }
+
+  void calculateValoration() {
+    final Formulas formulas = Formulas();
+
+    for (var wineTaste in userMultipleTaste) {
+      wineTaste = formulas.calculateWineTaste(wineTaste);
+    }
+    notifyListeners();
+
+    
+    // final List<int> puntuaciones = [];
+    // final List<double> puntosVista = [];
+    // final List<double> puntosNariz = [];
+    // final List<double> puntosBoca = [];
+  }
+
+  void calculateAverageRatings() {
+    final Formulas formulas = Formulas();
+    // TODO coger datos del server antes y no local
+    Map<String, AverageRatings> puntuaciones = {};
+    multipleTaste.wines.forEach((key, value) {
+      List <double> tempPuntosVistaList = [];
+      List <double> tempPuntosNarizList = [];
+      List <double> tempPuntosBocaList = [];
+      List <int> tempPuntuacionesList = [];
+      value.forEach((key, value) {
+        if (value.puntosVista != -1) tempPuntosVistaList.add(value.puntosVista);
+        if (value.puntosNariz != -1) tempPuntosNarizList.add(value.puntosNariz);
+        if (value.puntosBoca != -1) tempPuntosBocaList.add(value.puntosBoca);
+        if (value.puntosFinal != -1) tempPuntuacionesList.add(value.puntosFinal);
+      },);
+      puntuaciones[key] = AverageRatings(
+        vista: formulas.puntuacionCategoria(tempPuntosVistaList),
+        nariz: formulas.puntuacionCategoria(tempPuntosNarizList), 
+        boca: formulas.puntuacionCategoria(tempPuntosBocaList),
+        puntos: formulas.puntuacionFinal(tempPuntuacionesList), 
+      );
+    },);
+    multipleTaste.averageRatings = puntuaciones;
 
     notifyListeners();
   }
 
   void clearwinesTaste() {
-    winesTaste.clear();
+    userMultipleTaste.clear();
     notifyListeners();
   }
 
-  // void createMultipleValues() async {
-  //   for (var i = 0; i < winesMultipleTaste.length; i++) {
-  //     final user = await storage.read(key: 'email');
-
-
-  //     multipleTasteValues['user']!.add(user);
-  //     multipleTasteValues['ratingVista']!.add(-1.0);
-  //     multipleTasteValues['ratingNariz']!.add(-1.0);
-  //     multipleTasteValues['ratingBoca']!.add(-1.0);
-  //     multipleTasteValues['ratingPuntos']!.add(-1.0);
-  //     multipleTasteValues['notasVista']!.add('');
-  //     multipleTasteValues['notasNariz']!.add('');
-  //     multipleTasteValues['notasBoca']!.add('');
-  //     multipleTasteValues['comentarios']!.add('');
-  //     multipleTasteValues['puntosFinal']!.add(-1.0);
-  //   }
-  //   notifyListeners();
-  // }
-
-  // void editMultipleValues(int index, String type, dynamic value) {
-  //   multipleTasteValues[type]![index] = value;
-  //   print(multipleTasteValues);
-  //   notifyListeners();
-  // }
-
-  // void createMultipleValidation() {
-  //   for (var i = 0; i < winesMultipleTaste.length; i++) {
-  //     isValidMultiple.forEach((key, value) {
-  //       value.add(false);
-  //     },);
-  //   }
-  //   notifyListeners();
-  // }
-
-  // void editMultipleValidation(int index, String rating) {
-  //   isValidMultiple[rating]![index] = true;
-  //   notifyListeners();
-  // }
-
   bool isValidRating() {
     final validation = [];
-    for (var wineTaste in winesTaste) {
+    for (var wineTaste in userMultipleTaste) {
       validation.add(wineTaste.ratingVista != -1);
       validation.add(wineTaste.ratingNariz != -1);
       validation.add(wineTaste.ratingBoca != -1);
@@ -175,7 +199,7 @@ class MultipleTasteProvider extends ChangeNotifier {
     List<Wines> tempHiddenWines = [];
     for (var i = 1; i <= _winesHiddenNumber; i++) {
       final Wines hiddenWine = Wines(
-        id: '',
+        id: 'Vino a catar a ciegas $i',
         anada: -1,
         bodega: '',
         comentarios: [],
@@ -221,12 +245,11 @@ class MultipleTasteProvider extends ChangeNotifier {
   }
 
   void hideWine(int index) {
-    if (winesMultipleTaste[index].nombre.contains('Vino a catar a ciegas')) {
-      winesMultipleTaste[index].nombre = '${winesMultipleTaste[index].vino} ${winesMultipleTaste[index].anada.toString()}';
-    }
-    else {
-      winesMultipleTaste[index].nombre = 'Vino a catar a ciegas ${index + 1}';
-    }
+    hideIndex.contains(index) 
+      ? hideIndex.remove(index)
+      : hideIndex.add(index);
+    
+    hideIndex.sort((a, b) => a.compareTo(b));
     notifyListeners();
   }
 
@@ -253,20 +276,6 @@ class MultipleTasteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // String get multipleName => _multipleName;
-
-  // set name(String name) {
-  //   multipleTaste.name = name;
-  //   notifyListeners();
-  // }
-
-  // bool get hidden => _hidden;
-
-  // set hidden(bool value) {
-  //   multipleTaste.hidden = value;
-  //   notifyListeners();
-  // }
-
   bool get hideNames => _hideNames;
 
   set hideNames(bool value) {
@@ -274,31 +283,12 @@ class MultipleTasteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // String? get password =>_password;
+  bool get isNameUsed => _isNameUsed;
 
-  // set password(String? value) {
-  //   multipleTaste.password = value;
-  //   notifyListeners();
-  // }
-
-  // String? get description => _description;
-
-  // set description(String? value) {
-  //   multipleTaste.description = value;
-  //   notifyListeners();
-  // }
-
-  // String get dateLimit => _dateLimit;
-
-  // set dateLimit(String value) {
-  //   multipleTaste.dateLimit = value;
-  //   notifyListeners();
-  // }
-
-  // set wines(Map<String, Map<String, WineTaste>> value) {
-  //   multipleTaste.wines = value;
-  //   notifyListeners();
-  // }
+  set isNameUsed(bool value) {
+    _isNameUsed = value;
+    notifyListeners();
+  }
 
   int get winesHiddenNumber => _winesHiddenNumber;
 
@@ -308,15 +298,20 @@ class MultipleTasteProvider extends ChangeNotifier {
   }
 
   void resetSettings() { // TODO ver donde y como utilizo el resetsettings
-    // multipleTaste.name = ''; // TODO al hacer back dejar nombre o no???
+    multipleTaste.name = ''; // TODO al hacer back dejar nombre o no???
     multipleTaste.description = null;
     multipleTaste.password = null;
     multipleTaste.hidden = false;
-    multipleTaste.dateLimit = '';
+    multipleTaste.dateLimit = null;
     multipleTaste.wines = {};
-    multipleTaste.averageRatings = AverageRatings(boca: -1, nariz: -1, puntos: -1, vista: -1);
+    multipleTaste.averageRatings = {};
     winesHiddenNumber = 0;
+    hideNames = false;
+    
     winesMultipleTaste.clear();
+    userMultipleTaste.clear();
+    hideIndex.clear();
+    
     notifyListeners();
   }
 }

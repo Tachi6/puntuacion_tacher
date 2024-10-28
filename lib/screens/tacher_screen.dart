@@ -8,28 +8,19 @@ import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
-import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class TacherScreen extends StatefulWidget {
 
   final String appBarTitle;
-  final Widget? leading;
-  final Widget? trailing;
   final Widget? bottomSheet;
-  final void Function()? onPressedConfirm;
   final void Function()? onPressedBackButon;
-  final int? multiplePage;
 
   const TacherScreen({
     super.key, 
     required this.appBarTitle, 
-    this.leading, 
-    this.trailing, 
     this.bottomSheet, 
-    this.onPressedConfirm, 
     this.onPressedBackButon, 
-    this.multiplePage,
   });
 
   @override
@@ -42,9 +33,6 @@ class _TacherScreenState extends State<TacherScreen> with AutomaticKeepAliveClie
   Widget build(BuildContext context) {
     super.build(context);
 
-    final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: true);
-    final Wines wine = wineForm.wine;
-
     return Stack(
       children: [
         const FullScreenBackground(image: 'assets/tacher-background.jpg', opacity: 0.3),
@@ -55,14 +43,8 @@ class _TacherScreenState extends State<TacherScreen> with AutomaticKeepAliveClie
             appBarTitle: widget.appBarTitle
           ),
           backgroundColor: Colors.transparent,
-          body: _CustomTacherBody(widget.multiplePage),
-          bottomSheet: CustomBottomSheet(
-            wine: wine,
-            buttonText: 'Enviar valoración',
-            leading: widget.leading ?? const SizedBox(),
-            trailing: widget.trailing?? const SizedBox(),
-            onPressed: widget.onPressedConfirm,
-          ),
+          body: const _CustomTacherBody(),
+          bottomSheet: widget.bottomSheet,
         ),
       ],
     );
@@ -73,9 +55,7 @@ class _TacherScreenState extends State<TacherScreen> with AutomaticKeepAliveClie
 }
 
 class _CustomTacherBody extends StatelessWidget {
-  const _CustomTacherBody(this.multiplePage);
-
-  final int? multiplePage;
+  const _CustomTacherBody();
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +74,6 @@ class _CustomTacherBody extends StatelessWidget {
             itemCount: 7,
             minRating: 1,
             name: 'vista',
-            multiplePage: multiplePage,
           ),
     
           RatingBox(
@@ -104,7 +83,6 @@ class _CustomTacherBody extends StatelessWidget {
             itemCount: 9,
             minRating: 1,
             name: 'nariz',
-            multiplePage: multiplePage,
           ),
     
           RatingBox(
@@ -114,7 +92,6 @@ class _CustomTacherBody extends StatelessWidget {
             itemCount: 9,
             minRating: 1,
             name: 'boca',
-            multiplePage: multiplePage,
           ),
     
           RatingBox(
@@ -124,7 +101,6 @@ class _CustomTacherBody extends StatelessWidget {
             itemCount: 11,
             minRating: 1,
             name: 'puntos',
-            multiplePage: multiplePage,
           ),
     
           const Row(

@@ -67,6 +67,10 @@ class NotasCataBox extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final Size size = MediaQuery.of(context).size;
+    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final screenProvider = Provider.of<ScreensProvider>(context);
+    // Resto 1 porque el listado de userMultipleWineTaste empieza en 0, y las paginas tienen la pagina de inicio en el 0
+    final multiplePage = screenProvider.multipleScreen - 1;
 
     return CustomAlertDialog(
       title: 'Añadir nota de cata',
@@ -82,6 +86,10 @@ class NotasCataBox extends StatelessWidget {
                   maxLines: 3, 
                   label: 'Vista',
                   onChanged: (value) {
+                    if (multiplePage != -1) {
+                      multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].notasVista = value); 
+                      return;
+                    }
                     wineForm.editNotasVista = value;
                   },
                 ),
@@ -91,6 +99,10 @@ class NotasCataBox extends StatelessWidget {
                   maxLines: 3, 
                   label: 'Nariz',
                   onChanged: (value) {
+                    if (multiplePage != -1) {
+                      multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].notasNariz = value); 
+                      return;
+                    }
                     wineForm.editNotasNariz = value;
                   },
                 ),
@@ -100,6 +112,10 @@ class NotasCataBox extends StatelessWidget {
                   maxLines: 3, 
                   label: 'Boca',
                   onChanged: (value) {
+                    if (multiplePage != -1) {
+                      multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].notasBoca = value); 
+                      return;
+                    }
                     wineForm.editNotasBoca = value;
                   },
                 ),
@@ -130,6 +146,11 @@ class ComentariosBox extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final Size size = MediaQuery.of(context).size;
+    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final screenProvider = Provider.of<ScreensProvider>(context);
+    // Resto 1 porque el listado de userMultipleWineTaste empieza en 0, y las paginas tienen la pagina de inicio en el 0
+    final multiplePage = screenProvider.multipleScreen - 1;
+
 
     return CustomAlertDialog(
       title: 'Añadir comentarios',
@@ -141,6 +162,10 @@ class ComentariosBox extends StatelessWidget {
             maxLines: 5,
             label: 'Comentarios',
             onChanged: (value) {
+              if (multiplePage != -1) {
+                multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].comentarios = value); 
+                return;
+              }
               wineForm.editCommentarios = value;
             },
           ),

@@ -15,8 +15,6 @@ class RatingBox extends StatelessWidget {
   final double? minRating;
   final int? itemCount;
   final String? name;
-  final int? multiplePage;
-
 
   const RatingBox({
     super.key, 
@@ -26,7 +24,6 @@ class RatingBox extends StatelessWidget {
     this.minRating, 
     this.itemCount, 
     this.name, 
-    this.multiplePage
   });
 
   @override
@@ -68,7 +65,6 @@ class RatingBox extends StatelessWidget {
                   minRating: minRating!, 
                   itemCount: itemCount!, 
                   name: name!,
-                  multiplePage: multiplePage,
                 ),
               ),
             ],
@@ -85,14 +81,12 @@ class _RatingCustomWidget extends StatelessWidget{
   final double minRating;
   final int itemCount;
   final String name;
-  final int? multiplePage;
 
   const _RatingCustomWidget({
     required this.initialRating, 
     required this.minRating, 
     required this.itemCount, 
     required this.name, 
-    this.multiplePage
   });
 
   @override
@@ -100,6 +94,9 @@ class _RatingCustomWidget extends StatelessWidget{
 
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final screenProvider = Provider.of<ScreensProvider>(context);
+    // Resto 1 porque el listado de userMultipleWineTaste empieza en 0, y las paginas tienen la pagina de inicio en el 0
+    final multiplePage = screenProvider.multipleScreen - 1;
     final colors = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
     final double itemSize = ((size.width * 0.75) / 11).truncateToDouble();
@@ -129,37 +126,34 @@ class _RatingCustomWidget extends StatelessWidget{
       },
       onRatingUpdate: (value) {
         if (name == 'vista') {
-          if (multiplePage != null) {
-            // multipleTaste.editMultipleValues(multiplePage!, 'ratingVista', value);
-            multipleTaste.winesTaste[multiplePage!].ratingVista = value.toInt();
-            multipleTaste.isValidRating();
+          if (multiplePage != -1) {
+            multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].ratingVista = value); 
             return;
           }
           wineForm.editRatingVista(value);
         }
         if (name == 'nariz') {
-          if (multiplePage != null) {
-            // multipleTaste.editMultipleValues(multiplePage!, 'ratingNariz', value);
-            multipleTaste.winesTaste[multiplePage!].ratingNariz = value.toInt();
+          if (multiplePage != -1) {
+            multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].ratingNariz = value);
             return;
           }
           wineForm.editRatingNariz(value);
         }
         if (name == 'boca') {
-          if (multiplePage != null) {
-            // multipleTaste.editMultipleValues(multiplePage!, 'ratingBoca', value);
-            multipleTaste.winesTaste[multiplePage!].ratingBoca = value.toInt();
+          if (multiplePage != -1) {
+            multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].ratingBoca = value);
             return;
           }
           wineForm.editRatingBoca(value);
         }
         if (name == 'puntos') {
-          if (multiplePage != null) {
-            // multipleTaste.editMultipleValues(multiplePage!, 'ratingPuntos', value);
-            multipleTaste.winesTaste[multiplePage!].ratingPuntos = value.toInt();
+          if (multiplePage != -1) {
+            // Resto 1 porque quiero valores del 0 al 10 y el rating da valores del 1 al 11
+            multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].ratingPuntos = value - 1);
             return;
           }
-          wineForm.editRatingPuntos(value);
+          // Resto 1 porque quiero valores del 0 al 10 y el rating da valores del 1 al 11
+          wineForm.editRatingPuntos(value - 1);
         }
       },
     );

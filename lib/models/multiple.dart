@@ -7,16 +7,16 @@ class Multiple {
     String? description;
     String? password;
     bool hidden;
-    String dateLimit;
+    String? dateLimit;
     Map<String, Map<String, WineTaste>> wines;
-    AverageRatings averageRatings;
+    Map<String, AverageRatings> averageRatings;
 
     Multiple({
         required this.name,
         this.description,
         this.password,
         required this.hidden,
-        required this.dateLimit,
+        this.dateLimit,
         required this.wines,
         required this.averageRatings,
     });
@@ -27,12 +27,12 @@ class Multiple {
 
     factory Multiple.fromJson(Map<String, dynamic> json) => Multiple(
         name: json["name"],
-        description: json["description"] ?? '',
-        password: json["password"] ?? '',
+        description: json["description"] ?? '', // TODO Manejar como null o como '' ???
+        password: json["password"] ?? '', // TODO Manejar como null o como '' ???
         hidden: json["hidden"],
         dateLimit: json["dateLimit"],
         wines: Map.from(json["wines"]).map((k, v) => MapEntry<String, Map<String, WineTaste>>(k, Map.from(v).map((k, v) => MapEntry<String, WineTaste>(k, WineTaste.fromJson(v))))),
-        averageRatings: AverageRatings.fromJson(json["averageRatings"]),
+        averageRatings: Map.from(json["averageRatings"]).map((k, v) => MapEntry<String, AverageRatings>(k, AverageRatings.fromJson(v))),
     );
 
     Map<String, dynamic> toJson() => {
@@ -42,7 +42,7 @@ class Multiple {
         "hidden": hidden,
         "dateLimit": dateLimit,
         "wines": Map.from(wines).map((k, v) => MapEntry<String, dynamic>(k, Map.from(v).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())))),
-        "averageRatings": averageRatings.toJson(),
+        "averageRatings": Map.from(averageRatings).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
     };
 
   Multiple copy() => Multiple(
@@ -57,10 +57,10 @@ class Multiple {
 }
 
 class AverageRatings {
-    final double boca;
-    final double nariz;
-    final int puntos;
-    final double vista;
+    double boca;
+    double nariz;
+    int puntos;
+    double vista;
 
     AverageRatings({
         required this.boca,

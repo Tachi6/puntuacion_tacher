@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
@@ -196,9 +197,7 @@ class _CustomBodyAppBar extends StatelessWidget {
                       title: 'Fecha limite de cata',
                       cancelText: 'Cancelar',
                       onPressedCancel: () {
-                        // TODO manejar fechas
-                        // multipleTaste.dateLimit = null;
-                        // multipleTaste.dateController.text = 'Sin limite';
+                        multipleTaste.dateController.text = 'Sin limite';
                         Navigator.pop(context);
                       },
                       content: SizedBox(
@@ -348,6 +347,7 @@ class CustomMultipleWinesRow extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final hideIndex = multipleTaste.hideIndex.indexOf(index) + 1;
 
     return Card(
       key: key,
@@ -362,17 +362,38 @@ class CustomMultipleWinesRow extends StatelessWidget {
           const SizedBox(width: 18),
       
           Expanded(
-            child: Text(
-              multipleTaste.winesMultipleTaste[index].nombre, 
-              maxLines: 2, 
-              overflow: TextOverflow.ellipsis, 
-              style: const TextStyle(fontSize: 14)
-            ),
+            child: multipleTaste.hideIndex.contains(index) 
+              ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Vino a catar a ciegas $hideIndex', 
+                    maxLines: 1, 
+                    overflow: TextOverflow.ellipsis, 
+                    style: const TextStyle(fontSize: 14)
+                  ),
+
+                  Text(
+                    '${multipleTaste.winesMultipleTaste[index].vino} ${multipleTaste.winesMultipleTaste[index].anada}', 
+                    maxLines: 1,
+                    textAlign: TextAlign.right,
+                    overflow: TextOverflow.ellipsis, 
+                    style: const TextStyle(fontSize: 10)
+                  ),
+                ],
+              )
+              : Text(
+                multipleTaste.winesMultipleTaste[index].nombre, 
+                maxLines: 2, 
+                overflow: TextOverflow.ellipsis, 
+                style: const TextStyle(fontSize: 14)
+              ),
           ),
              
           if (!multipleTaste.multipleTaste.hidden) IconButton (
             icon: Icon(
-              multipleTaste.winesMultipleTaste[index].nombre.contains('Vino a catar a ciegas')
+              multipleTaste.hideIndex.contains(index)
               ? Icons.visibility_rounded
               : Icons.visibility_off_rounded
             ),
@@ -403,41 +424,6 @@ class MultipleActionsButtons extends StatelessWidget {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleService>(context);
 
-    Multiple multiple() {
-      // Creo nueva lista con solo el id del vino
-      final List<String> winesIndex = List.from(multipleTaste.winesMultipleTaste.map((e) {
-        if (e.id == '') return e.nombre;
-        return e.id;
-      }));
-      // Creo mapa vacio
-      Map<String, Map<String, WineTaste>> winesMultiple = {};
-      
-      for (var element in winesIndex) {
-        // Mapeo la lista como un mapa, con el primer valor como 'No iniciada'
-        final Map<String, Map<String, WineTaste>> tempMap = {
-          element: {
-            'notStarted': WineTaste(user: '', nombre: '', ratingVista: -1, ratingNariz: -1, ratingBoca: -1, ratingPuntos: -1, puntosFinal: -1),
-          }
-        };
-        // Añado entrada al mapa
-        winesMultiple.addEntries(tempMap.entries);
-      }
-      // Añado vinos a cata multiple
-      multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.wines = winesMultiple);
-      // Creo localmente la cata multiple
-      // final Multiple multiple = Multiple(
-      //   name:multipleTaste.name,
-      //   description: multipleTaste.description ?? '',
-      //   password: multipleTaste.password ?? '',
-      //   hidden: multipleTaste.hidden,
-      //   dateLimit: (multipleTaste.dateLimit != null) ? multipleTaste.dateLimit!.toIso8601String() : '',
-      //   wines: winesMultiple,
-      //   averageRatings: AverageRatings(boca: -1, nariz: -1, puntos: -1, vista: -1),
-      // );
-
-      return multipleTaste.multipleTaste;
-    }
-
     return Container(
       height: 58,
       alignment: Alignment.center,
@@ -450,7 +436,7 @@ class MultipleActionsButtons extends StatelessWidget {
             child: const Text('Guardar'),
             onPressed: () {
               // Subo a Firebase la cata multiple
-              multipleService.createMultiple(multiple());
+              multipleService.createMultipleTaste(multipleTaste.initMultiple());
 
               // TODO dejo este codigo de abajo que sera util
               // Actualizar cata multiple
@@ -482,12 +468,9 @@ class MultipleActionsButtons extends StatelessWidget {
             child: const Text('Realizar'),
             onPressed: () {
               // Subo a Firebase la cata multiple
-              multipleService.createMultiple(multiple());
-              // multipleTaste.createMultipleValidation();
-              // multipleTaste.createMultipleValues();
-              multipleTaste.initMultipleTaste();
+              multipleService.createMultipleTaste(multipleTaste.initMultiple());
 
-              // TODO codigo para saber si esta realizada la cata multiple
+              multipleTaste.initUserTaste();
 
               final routeList = CupertinoPageRoute(
                 builder: (context) => const MultipleTasteScreen()
@@ -532,7 +515,11 @@ class RowVisibleWines extends StatelessWidget {
               final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
                 customResultText: 'Vuelve atras y crea tu vino' '\n' 'para añadirlo a la cata.'
               ));
-              
+              // Compruebo si el vino ya esta añadido al listado
+              if (context.mounted && multipleTaste.winesMultipleTaste.any((element) => element.id == wineSearched.id)) {
+                NotificationsService.showSnackbar('Vino duplicado', context);
+                return;
+              }
               if (wineSearched != null) multipleTaste.addWine(wineSearched.copy());
               if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
             },

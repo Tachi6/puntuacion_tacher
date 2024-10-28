@@ -1,34 +1,40 @@
 import 'dart:convert';
 
 class WineTaste {
-  String? fecha;
-  String? id;
-  String? nombre;
+  String fecha;
+  String id;
+  String nombre;
   String user;
-  int ratingVista;
-  int ratingNariz;
-  int ratingBoca;
-  int ratingPuntos;
+  double ratingVista;
+  double ratingNariz;
+  double ratingBoca;
+  double ratingPuntos;
+  double puntosVista;
+  double puntosNariz;
+  double puntosBoca;
+  int puntosFinal;
   String? notasVista;
   String? notasNariz;
   String? notasBoca;
   String? comentarios;
-  int puntosFinal;
 
   WineTaste({
-    this.fecha,
-    this.id,
-    this.nombre,
+    required this.fecha,
+    required this.id,
+    required this.nombre,
     required this.user,
     required this.ratingVista,
     required this.ratingNariz,
     required this.ratingBoca,
     required this.ratingPuntos,
+    required this.puntosVista,
+    required this.puntosNariz,
+    required this.puntosBoca,
+    required this.puntosFinal,
     this.notasVista,
     this.notasNariz,
     this.notasBoca,
     this.comentarios,
-    required this.puntosFinal,
   });
 
   factory WineTaste.fromRawJson(String str) => WineTaste.fromJson(json.decode(str));
@@ -40,15 +46,18 @@ class WineTaste {
     id: json["id"],
     nombre: json["nombre"],
     user: json["user"],
-    ratingVista: json["ratingVista"],
-    ratingNariz: json["ratingNariz"],
-    ratingBoca: json["ratingBoca"],
-    ratingPuntos: json["ratingPuntos"],
+    ratingVista: json["ratingVista"]?.toDouble(),
+    ratingNariz: json["ratingNariz"]?.toDouble(),
+    ratingBoca: json["ratingBoca"]?.toDouble(),
+    ratingPuntos: json["ratingPuntos"]?.toDouble(),
+    puntosVista: json["puntosVista"]?.toDouble(),
+    puntosNariz: json["puntosNariz"]?.toDouble(),
+    puntosBoca: json["puntosBoca"]?.toDouble(),
+    puntosFinal: json["puntosFinal"],
     notasVista: json["notasVista"],
     notasNariz: json["notasNariz"],
     notasBoca: json["notasBoca"],
     comentarios: json["comentarios"],
-    puntosFinal: json["puntosFinal"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -60,10 +69,13 @@ class WineTaste {
     "ratingNariz": ratingNariz,
     "ratingBoca": ratingBoca,
     "ratingPuntos": ratingPuntos,
+    "puntosVista": puntosVista,
+    "puntosNariz": puntosNariz,
+    "puntosBoca": puntosBoca,
+    "puntosFinal": puntosFinal,
     "notasVista": notasVista,
     "notasNariz": notasNariz,
     "notasBoca": notasBoca,
     "comentarios": comentarios,
-    "puntosFinal": puntosFinal,
   };
 }

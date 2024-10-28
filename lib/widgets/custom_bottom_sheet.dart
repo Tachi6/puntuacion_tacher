@@ -8,15 +8,15 @@ class CustomBottomSheet extends StatelessWidget {
     super.key, 
     this.wine, 
     required this.buttonText,
-    required this.leading, 
-    required this.trailing, 
+    this.leading, 
+    this.trailing, 
     this.onPressed, 
   });
 
   final Wines? wine;
   final String buttonText;
-  final Widget leading;
-  final Widget trailing;
+  final Widget? leading;
+  final Widget? trailing;
   final void Function()? onPressed;
 
   @override
@@ -29,7 +29,11 @@ class CustomBottomSheet extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          leading,
+          SizedBox(
+            height: 58, 
+            width: 58, 
+            child: leading
+          ),
 
           CustomElevatedButton(
             width: 160,
@@ -38,7 +42,11 @@ class CustomBottomSheet extends StatelessWidget {
             child: Text(buttonText),
           ),
 
-          trailing,
+          SizedBox(
+            height: 58, 
+            width: 58, 
+            child: trailing
+          ),
         ],
       ),
     );

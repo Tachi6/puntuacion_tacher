@@ -1,5 +1,4 @@
 
-export 'package:puntuacion_tacher/screens/screens.dart';
 export 'package:puntuacion_tacher/widgets/add_hidden_wine.dart';
 export 'package:puntuacion_tacher/widgets/add_wine_button.dart';
 export 'package:puntuacion_tacher/widgets/bottom_image_background.dart';

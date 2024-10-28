@@ -31,47 +31,69 @@ class MultipleService extends ChangeNotifier {
     final Map<String, dynamic> multipleResponse = json.decode(resp.body);
     // Añado al listado cada una de las catas multiples
     multipleResponse.forEach((key, value) {
-      final tempMultiple = Multiple.fromJson(value);
-      tempMultiple.name = key;
-      tempMultipleTasteList.add(tempMultiple);
+      final tempMultipleTaste = Multiple.fromJson(value);
+      tempMultipleTaste.name = key;
+      tempMultipleTasteList.add(tempMultipleTaste);
     });
     // Asigno nuevo listado
     multipleTasteList = tempMultipleTasteList;
 
+    print('catas multiple cargadas');
+
     notifyListeners();
   }
 
-  Future<String> createMultiple(Multiple multiple) async {
+  Future<String> createMultipleTaste(Multiple multipleTaste) async {
     // Creo nueva cata multiple
-    final String jsonCreateType = 'multiple/${multiple.name}.json';
+    final String jsonCreateType = 'multiple/${multipleTaste.name}.json';
     final url = Uri.https(_baseUrl, jsonCreateType, {
       'auth': await storage.read(key: 'idToken') ?? ''
     });
-    final resp = await http.put(url, body: multiple.toRawJson());
+    final resp = await http.put(url, body: multipleTaste.toRawJson());
     notifyListeners();
 
     return resp.body;
   }
 
-  Future<String> updateMultiple({required String multipleName, required AverageRatings averageRatings}) async {
+  Future<void> updateAverageRatings({required String multipleName, required Map<String, AverageRatings> averageRatings}) async {
     // Actualizo resultados de cata multiple
-    final String jsonCreateType = 'multiple/$multipleName/averageRatings.json';
-    final url = Uri.https(_baseUrl, jsonCreateType, {
-      'auth': await storage.read(key: 'idToken') ?? ''
-    });
-    final resp = await http.put(url, body: averageRatings.toRawJson());
-    notifyListeners();
-
-    return resp.body;
+    averageRatings.forEach((key, value) async {
+      final String jsonCreateType = 'multiple/$multipleName/averageRatings/$key.json';
+      final url = Uri.https(_baseUrl, jsonCreateType, {
+        'auth': await storage.read(key: 'idToken') ?? ''
+      });
+      await http.put(url, body: value.toRawJson());
+      
+    },);
   }
 
-  Future<void> updateTaste({required String multipleName, required Map<String, WineTaste> wineTaste}) async {
-    // Cargo cambios en bdd
-    loadMultiple();
-    // Busco indice de mi cata para posteriormente eliminar inicializaciones vacias ('notStarted')
+  Future<void> createUserMultipleTaste({required String multipleName, required List<WineTaste> userMultipleTaste}) async {
+    // Busco indice de la cata multiple para posteriormente eliminar posibles inicializaciones vacias ('notStarted')
     final int index = multipleTasteList.indexWhere((element) => element.name == multipleName);
-
-    wineTaste.forEach((key, value) async {
+    // Creo map temporal para añadir los WineTaste
+    Map<String, WineTaste> userMultipleTasteMap = {};
+    // Paso listado de List<WineTaste> a Map<String, WineTaste>
+    for (var element in userMultipleTaste) {
+      final String date = CustomDatetime().toText(DateTime.now());
+      // Añado fecha de cata al WineTaste
+      element.fecha = date;
+      // Creo nueva entrada para en map
+      final Map<String, WineTaste> newTaste = {
+        date: element,
+      };
+      // Añado al tempMap
+      userMultipleTasteMap = {...userMultipleTasteMap, ...newTaste};
+    }
+    // Mapeo el nuevo tempTasteMap
+    userMultipleTasteMap.forEach((key, value) async {
+      // Para que el key (que es la fecha de la cata) y la fecha del WineTaste sean completamente iguales
+      value.fecha = key;
+      // Creo nueva cata multiple
+      final String jsonUpdateType = 'multiple/$multipleName/wines/${value.id}/$key.json';
+      final url = Uri.https(_baseUrl, jsonUpdateType, {
+        'auth': await storage.read(key: 'idToken') ?? ''
+      });
+      await http.put(url, body: value.toRawJson());
       // Compruebo si la cata esta iniciada
       final bool delete = multipleTasteList[index].wines[value.id]!.containsKey('notStarted');
       // Elimino la inicializacion vacia de la cata si existe
@@ -81,27 +103,17 @@ class MultipleService extends ChangeNotifier {
         });
         await http.delete(urlDelete);
       }
-      // Para que el key (que es la fecha de la cata) y la fecha del WineTaste sean completamente iguales
-      value.fecha = key;
-      // Creo nueva cata multiple
-      final String jsonUpdateType = 'multiple/$multipleName/wines/${value.id}/$key}.json';
-      final url = Uri.https(_baseUrl, jsonUpdateType, {
-        'auth': await storage.read(key: 'idToken') ?? ''
-      });
-      await http.put(url, body: value.toRawJson());
     },);
 
     notifyListeners();   
   }
 
   bool isMultipleNameUsed(String multipleName) {
-    loadMultiple();
     // Evaluo si el nombre del vino ya ha sido usado anteriomente
     return multipleTasteList.any((element) => element.name == multipleName);
   }
 
   bool isMultipleTasted({required String multipleName, required String user}) {
-    loadMultiple();
     // Obtengo el indice de la cata multiple
     final int index = multipleTasteList.indexWhere((element) => element.name == multipleName);
     // Si no obtengo indice, es cata nueva, salgo de la funcion y prosigo
