@@ -98,7 +98,7 @@ class LoginRegisterForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           loginForm.isRegister 
-            ? LoginTextFormField(
+            ? LoginTextFormField( // TODO VER COMO VALIDO ESTE QUE NO EXISTA YA EN LA BDD
               obscureText: false,
               textInputType: TextInputType.text,
               hintText: 'Antonio Gonzalez',

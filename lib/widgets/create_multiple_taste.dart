@@ -30,7 +30,8 @@ class CreateMultipleTaste extends StatelessWidget{
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        toolbarHeight: 302,
+        toolbarHeight: 260,
+        // toolbarHeight: 302,
         titleSpacing: 0,
         title: _CustomBodyAppBar(),
       ),
@@ -236,45 +237,47 @@ class _CustomBodyAppBar extends StatelessWidget {
           ),
         ),
       
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          alignment: Alignment.center,
-          height: 42,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Realizar la cata totalmente a ciegas', style: TextStyle(fontSize: 14)),
+        // Container(
+        //   padding: const EdgeInsets.symmetric(horizontal: 10),
+        //   alignment: Alignment.center,
+        //   height: 42,
+        //   child: Row(
+        //     crossAxisAlignment: CrossAxisAlignment.center,
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: [
+        //       const Text('Realizar la cata totalmente a ciegas', style: TextStyle(fontSize: 14)),
           
-              const Spacer(),
+        //       const Spacer(),
           
-              SizedBox(
-                width: 48,
-                child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Switch(
-                    value: multipleTaste.multipleTaste.hidden,
-                    onChanged: (_) {
-                      multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.hidden = !multipleTaste.multipleTaste.hidden);
-                      if (multipleTaste.winesMultipleTaste.length > 1) Navigator.pop(context);
-                      multipleTaste.clearWines();
-                    }
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
+        //       SizedBox(
+        //         width: 48,
+        //         child: FittedBox(
+        //           fit: BoxFit.fitWidth,
+        //           child: Switch(
+        //             value: multipleTaste.multipleTaste.hidden,
+        //             onChanged: (_) {
+        //               multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.hidden = !multipleTaste.multipleTaste.hidden);
+        //               if (multipleTaste.winesMultipleTaste.length > 1) Navigator.pop(context);
+        //               multipleTaste.clearWines();
+        //             }
+        //           ),
+        //         ),
+        //       )
+        //     ],
+        //   ),
+        // ),
+
+        const RowVisibleWines(),
       
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          layoutBuilder: (currentChild, previousChildren) {
-            return currentChild!;
-          },
-          child: multipleTaste.multipleTaste.hidden
-            ? const RowHiddenWines(key: ValueKey<String>('notHidden'))
-            : const RowVisibleWines(key: ValueKey<String>('hidden')), 
-        ),
+        // AnimatedSwitcher(
+        //   duration: const Duration(milliseconds: 250),
+        //   layoutBuilder: (currentChild, previousChildren) {
+        //     return currentChild!;
+        //   },
+        //   child: multipleTaste.multipleTaste.hidden
+        //     ? const RowHiddenWines(key: ValueKey<String>('notHidden'))
+        //     : const RowVisibleWines(key: ValueKey<String>('hidden')), 
+        // ),
       ],
     );
   }
@@ -423,6 +426,7 @@ class MultipleActionsButtons extends StatelessWidget {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleService>(context);
+    final authService = Provider.of<AuthService>(context);
 
     return Container(
       height: 58,
@@ -466,16 +470,18 @@ class MultipleActionsButtons extends StatelessWidget {
           CustomElevatedButton(
             width: 100,
             child: const Text('Realizar'),
-            onPressed: () {
+            onPressed: () async {
               // Subo a Firebase la cata multiple
-              multipleService.createMultipleTaste(multipleTaste.initMultiple());
+              final Multiple multiple = await multipleService.createMultipleTaste(multipleTaste.initMultiple());
 
-              multipleTaste.initUserTaste();
+              multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste = multiple);
+              multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userDisplayName);
+              multipleTaste.initUserTaste(multipleService.isMultipleTasted);
 
               final routeList = CupertinoPageRoute(
                 builder: (context) => const MultipleTasteScreen()
               );
-              Navigator.push(context, routeList);
+              if (context.mounted) Navigator.push(context, routeList);
             },
           ),
 
@@ -505,7 +511,7 @@ class RowVisibleWines extends StatelessWidget {
       height: 42,
       child: Row(
         children: [
-          const Text('Busca, añade u oculta los vinos', style: TextStyle(fontSize: 14)),
+          const Text('Busca, añade y oculta los vinos', style: TextStyle(fontSize: 14)),
                                 
           const Spacer(),
                     
@@ -526,13 +532,15 @@ class RowVisibleWines extends StatelessWidget {
           ),
                     
           AddWineButton(
-            onPressedSave: () {
+            onPressedSave: () async {
               if (wineForm.isValidForm()) {
                 wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
+                final String wineId = await winesService.createWine(wineForm.wine);
+                wineForm.wine.id = wineId;
                 multipleTaste.addWine(wineForm.wine.copy());
-                if (multipleTaste.winesMultipleTaste.length == 2) viewBottomMenu(context);
+                if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
                 taste.showContinueButton = true;
-                Navigator.pop(context, 'Guardar');
+                if (context.mounted) Navigator.pop(context, 'Guardar');
               }
             },
           ),

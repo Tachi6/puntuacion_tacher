@@ -88,6 +88,8 @@ class WinesService extends ChangeNotifier {
 
   void updateWinesByRate() {
     winesByRate = List.from(winesByIndex);
+    // Elimino vinos sin valoracion
+    winesByRate.removeWhere((element) => element.puntuacionFinal == -1);
     winesByRate.sort((a, b) => b.puntuacionFinal.compareTo(a.puntuacionFinal));
   }
 
@@ -103,15 +105,15 @@ class WinesService extends ChangeNotifier {
     // Creo lista temporal de vinos
     List<Wines> tempTastedWines = List.from(winesByRate);
     // Elimino usuarios que no han catado ese vino
-    tempTastedWines.removeWhere((element) => !element.usuarios.contains(mail));
+    tempTastedWines.removeWhere((element) => !element.usuarios!.contains(mail));
     // Creo nueva lista para vinos catados 2 veces
     List<Wines> userTastedWines = [];
 
     for (Wines element in tempTastedWines) { // TODO comprobar correcto funcionamiento
       // Lista de indices donde ha catado el usuario
       List<int> userIndex = [];
-      for (var i = 0; i < element.usuarios.length; i++) {
-        if (element.usuarios[i] == mail) {
+      for (var i = 0; i < element.usuarios!.length; i++) {
+        if (element.usuarios![i] == mail) {
           userIndex.add(i);
         }
       }
@@ -149,25 +151,25 @@ class WinesService extends ChangeNotifier {
         );
 
         // Añado a tempWine solo los valores de cada cata de usuario, y si hay mas de una con el ciclo for lo añade
-        tempWine.comentarios.add(element.comentarios[userIndex[i]]);
-        tempWine.fechas.add(element.fechas[userIndex[i]]);
+        tempWine.comentarios!.add(element.comentarios![userIndex[i]]);
+        tempWine.fechas!.add(element.fechas![userIndex[i]]);
         if (userIndex.length > 1) {
           tempWine.id = element.id! + i.toString();
         }
-        tempWine.notasBoca.add(element.notasBoca[userIndex[i]]);
-        tempWine.notasNariz.add(element.notasNariz[userIndex[i]]);
-        tempWine.notasVista.add(element.notasVista[userIndex[i]]);
-        tempWine.puntuaciones.add(element.puntuaciones[userIndex[i]]);
-        tempWine.puntuacionesBoca.add(element.puntuacionesBoca[userIndex[i]]);
-        tempWine.puntuacionesNariz.add(element.puntuacionesNariz[userIndex[i]]);
-        tempWine.puntuacionesVista.add(element.puntuacionesVista[userIndex[i]]);
-        tempWine.usuarios.add(element.usuarios[userIndex[i]]);
+        tempWine.notasBoca!.add(element.notasBoca![userIndex[i]]);
+        tempWine.notasNariz!.add(element.notasNariz![userIndex[i]]);
+        tempWine.notasVista!.add(element.notasVista![userIndex[i]]);
+        tempWine.puntuaciones!.add(element.puntuaciones![userIndex[i]]);
+        tempWine.puntuacionesBoca!.add(element.puntuacionesBoca![userIndex[i]]);
+        tempWine.puntuacionesNariz!.add(element.puntuacionesNariz![userIndex[i]]);
+        tempWine.puntuacionesVista!.add(element.puntuacionesVista![userIndex[i]]);
+        tempWine.usuarios!.add(element.usuarios![userIndex[i]]);
 
         userTastedWines.add(tempWine);
       }
     }
     // Ordeno userTastedWines by rate
-    userTastedWines.sort((a, b) => b.puntuaciones[0].compareTo(a.puntuaciones[0]));
+    userTastedWines.sort((a, b) => b.puntuaciones![0].compareTo(a.puntuaciones![0]));
 
     return userTastedWines;
   }
@@ -185,6 +187,7 @@ class WinesService extends ChangeNotifier {
 
     isSaving = true;
     notifyListeners();
+    await loadWines();
 
     final String jsonUpdateType = 'wines/${wine.id}.json';
     final url = Uri.https(_baseUrl, jsonUpdateType, {
@@ -193,8 +196,9 @@ class WinesService extends ChangeNotifier {
     final resp = await http.put(url, body: wine.toJson());
 
     // Actualizar el listado de productos
-    int id =  winesByIndex.indexWhere((element) => element.id == wine.id);
-    winesByIndex[id] = wine;
+    final int wineId = int.parse(wine.id!);
+    // int id =  winesByIndex.indexWhere((element) => element.id == wine.id);
+    winesByIndex[wineId] = wine;
 
     isSaving = false;
     notifyListeners();
@@ -209,12 +213,24 @@ class WinesService extends ChangeNotifier {
     const defaultNewId = "00000000000000000000";
     final newId = defaultNewId.replaceRange(20 - idLenght, 20, lastWineIndex);
     wine.id = newId;
+    // if (wine.puntuacionFinal == -1) {
+    //   wine.comentarios = ['notValorated'];
+    //   wine.fechas = ['notValorated'];
+    //   wine.notasVista = ['notValorated'];
+    //   wine.notasNariz = ['notValorated'];
+    //   wine.notasBoca = ['notValorated'];
+    //   wine.puntuaciones = [-1];
+    //   wine.puntuacionesVista = [-1.0];
+    //   wine.puntuacionesNariz = [-1.0];
+    //   wine.puntuacionesBoca = [-1.0];
+    //   wine.usuarios = ['notValorated'];
+    // }
 
     final String jsonCreateType = 'wines/${wine.id}.json';
     final url = Uri.https(_baseUrl, jsonCreateType, {
       'auth': await storage.read(key: 'idToken') ?? ''
     });
-    final resp = await http.put(url, body: wine.toJson());
+    await http.put(url, body: wine.toJson());
 
     winesByIndex.add(wine);
     updateWinesByRate();
@@ -222,7 +238,8 @@ class WinesService extends ChangeNotifier {
     isSaving = false;
     notifyListeners();
 
-    return resp.body;
+    return newId;
+    // return resp.body;
   }
 
   Future<String> saveDeleteLatestTastedWine({required Wines wine, required String email, required String displayName}) async {   

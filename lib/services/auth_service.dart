@@ -89,6 +89,37 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  Future<bool> isUniqueDisplayName(String newDisplayName) async {
+
+    const String baseUrl = 'puntos-tacher-default-rtdb.europe-west1.firebasedatabase.app';
+    const String jsonUpdateType = 'users.json';
+    final String idToken = await storage.read(key: 'idToken') ?? '';
+    final String oldDisplayName = await storage.read(key: 'displayName') ?? '';
+    final String jsonDeleteType = 'users/$oldDisplayName.json';
+
+    final url = Uri.https(baseUrl, jsonUpdateType, {
+      'auth': idToken,
+    });
+
+    final Map<String, String> data = {
+      newDisplayName: ""
+    };
+
+    final String json = jsonEncode(data);
+
+    final resp = await http.patch(url, body: json);
+
+    final urlDelete = Uri.https(baseUrl, jsonDeleteType, {
+      'auth': idToken,
+    });
+
+    await http.delete(urlDelete);
+
+    if(resp.statusCode == 200) return true;
+
+    return false;
+  }
+
   Future<String?> renameUser(String displayName) async {
 
     final idToken = await storage.read(key: 'idToken');

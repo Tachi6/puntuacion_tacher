@@ -56,6 +56,7 @@ class SearchTasteWine extends StatelessWidget {
                         customResultText: 'Vuelve atras y crea tu' '\n' 'vino para catarlo.'
                       ));
                       if (wineSearched != null) {
+                        print(wineSearched.puntuacionesVista);
                         winesService.selectedWine = wineSearched;
                         wineForm.setWineToEdit(winesService.selectedWine!);
                         taste.showContinueButton = true;
@@ -64,12 +65,14 @@ class SearchTasteWine extends StatelessWidget {
                   ),
 
                   AddWineButton(
-                    onPressedSave: () {
+                    onPressedSave: () async {
                       if (wineForm.isValidForm()) {
                         wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
+                        final String wineId = await winesService.createWine(wineForm.wine);
+                        wineForm.wine.id = wineId;
                         winesService.selectedWine = wineForm.wine;
                         taste.showContinueButton = true;
-                        Navigator.pop(context, 'Guardar');
+                        if (context.mounted) Navigator.pop(context, 'Guardar');
                       }
                     }, 
                   ),

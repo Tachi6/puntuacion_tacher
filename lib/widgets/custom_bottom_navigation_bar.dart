@@ -24,9 +24,9 @@ class CustomNavigationBar extends StatelessWidget {
           NavigationDestination(
             icon: Icon(Icons.trending_up_outlined), label: 'Valoraciones'),
           NavigationDestination(
-            icon: Icon(Icons.wine_bar), label: 'Catar'),
+            icon: Icon(Icons.wine_bar), label: 'Catas'),
           NavigationDestination(
-            icon: Icon(Icons.list), label: 'Listado'),
+            icon: Icon(Icons.list), label: 'Listados'),
           NavigationDestination(
             icon: Icon(Icons.person), label: 'Usuario'),
         ],

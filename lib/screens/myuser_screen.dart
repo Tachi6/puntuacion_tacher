@@ -175,7 +175,7 @@ class MyUserBody extends StatelessWidget {
                     Column(
                       children: [
                         Text(
-                            winesService.userTastedWines(email)[index].puntuaciones[winesService.userTastedWines(email)[index].usuarios.indexOf(email)].toString(), 
+                            winesService.userTastedWines(email)[index].puntuaciones![winesService.userTastedWines(email)[index].usuarios!.indexOf(email)].toString(), 
                             style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: colors.outline)
                           ),
                         

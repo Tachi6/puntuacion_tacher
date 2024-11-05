@@ -1,13 +1,12 @@
 import 'dart:convert';
 
 class Wines {
-
   int anada;
   String bodega;
-  List<String> comentarios;
+  List<String>? comentarios;
   String descripcion;
   String? displayName;
-  List<String> fechas;
+  List<String>? fechas;
   String graduacion;
   String? id;
   String? imagenVino;
@@ -17,30 +16,30 @@ class Wines {
   String notaBoca;
   String notaNariz;
   String notaVista;
-  List<String> notasBoca;
-  List<String> notasNariz;
-  List<String> notasVista;
+  List<String>? notasBoca;
+  List<String>? notasNariz;
+  List<String>? notasVista;
   double puntuacionBoca;
   int puntuacionFinal;
   double puntuacionNariz;
   double puntuacionVista;
-  List<int> puntuaciones;
-  List<double> puntuacionesBoca;
-  List<double> puntuacionesNariz;
-  List<double> puntuacionesVista;
+  List<int>? puntuaciones;
+  List<double>? puntuacionesBoca;
+  List<double>? puntuacionesNariz;
+  List<double>? puntuacionesVista;
   String region;
   String tipo;
-  List<String> usuarios;
+  List<String>? usuarios;
   String variedades;
   String vino;
 
   Wines({
     required this.anada,
     required this.bodega,
-    required this.comentarios,
+    this.comentarios,
     required this.descripcion,
     this.displayName,
-    required this.fechas,
+    this.fechas,
     required this.graduacion,
     this.id,
     this.imagenVino,
@@ -50,20 +49,20 @@ class Wines {
     required this.notaBoca,
     required this.notaNariz,
     required this.notaVista,
-    required this.notasBoca,
-    required this.notasNariz,
-    required this.notasVista,
+    this.notasBoca,
+    this.notasNariz,
+    this.notasVista,
     required this.puntuacionBoca,
     required this.puntuacionFinal,
     required this.puntuacionNariz,
     required this.puntuacionVista,
-    required this.puntuaciones,
-    required this.puntuacionesBoca,
-    required this.puntuacionesNariz,
-    required this.puntuacionesVista,
+    this.puntuaciones,
+    this.puntuacionesBoca,
+    this.puntuacionesNariz,
+    this.puntuacionesVista,
     required this.region,
     required this.tipo,
-    required this.usuarios,
+    this.usuarios,
     required this.variedades,
     required this.vino,
   });
@@ -75,33 +74,33 @@ class Wines {
   factory Wines.fromMap(Map<String, dynamic> json) => Wines(
     anada: json["anada"],
     bodega: json["bodega"],
-    comentarios: List<String>.from(json["comentarios"].map((x) => x)),
+    comentarios: json["comentarios"] == null ? [] : List<String>.from(json["comentarios"].map((x) => x)),
     descripcion: json["descripcion"],
     displayName: json["displayName"],
-    fechas: List<String>.from(json["fechas"].map((x) => x)),
+    fechas: json["fechas"] == null ? [] : List<String>.from(json["fechas"].map((x) => x)),
     graduacion: json["graduacion"],
     id: json["id"],
-    imagenVino: json["imagen_vino"],
+    imagenVino: json["imagenVino"],
     likes: json["likes"],
-    logoBodega: json["logo_bodega"],
+    logoBodega: json["logoBodega"],
     nombre: json["nombre"],
-    notaBoca: json["nota_boca"],
-    notaNariz: json["nota_nariz"],
-    notaVista: json["nota_vista"],
-    notasBoca: List<String>.from(json["notas_boca"].map((x) => x)),
-    notasNariz: List<String>.from(json["notas_nariz"].map((x) => x)),
-    notasVista: List<String>.from(json["notas_vista"].map((x) => x)),
-    puntuacionBoca: json["puntuacion_boca"]?.toDouble(),
-    puntuacionFinal: json["puntuacion_final"],
-    puntuacionNariz: json["puntuacion_nariz"]?.toDouble(),
-    puntuacionVista: json["puntuacion_vista"]?.toDouble(),
-    puntuaciones: List<int>.from(json["puntuaciones"].map((x) => x)),
-    puntuacionesBoca: List<double>.from(json["puntuaciones_boca"].map((x) => x?.toDouble())),
-    puntuacionesNariz: List<double>.from(json["puntuaciones_nariz"].map((x) => x?.toDouble())),
-    puntuacionesVista: List<double>.from(json["puntuaciones_vista"].map((x) => x?.toDouble())),
+    notaBoca: json["notaBoca"],
+    notaNariz: json["notaNariz"],
+    notaVista: json["notaVista"],
+    notasBoca: json["notasBoca"] == null ? [] : List<String>.from(json["notasBoca"].map((x) => x)),
+    notasNariz: json["notasNariz"] == null ? [] : List<String>.from(json["notasNariz"].map((x) => x)),
+    notasVista: json["notasVista"] == null ? [] : List<String>.from(json["notasVista"].map((x) => x)),
+    puntuacionBoca: json["puntuacionBoca"]?.toDouble(),
+    puntuacionFinal: json["puntuacionFinal"],
+    puntuacionNariz: json["puntuacionNariz"]?.toDouble(),
+    puntuacionVista: json["puntuacionVista"]?.toDouble(),
+    puntuaciones: json["puntuaciones"] == null ? [] : List<int>.from(json["puntuaciones"].map((x) => x)),
+    puntuacionesBoca: json["puntuacionesBoca"] == null ? [] : List<double>.from(json["puntuacionesBoca"].map((x) => x?.toDouble())),
+    puntuacionesNariz: json["puntuacionesNariz"] == null ? [] : List<double>.from(json["puntuacionesNariz"].map((x) => x?.toDouble())),
+    puntuacionesVista: json["puntuacionesVista"] == null ? [] : List<double>.from(json["puntuacionesVista"].map((x) => x?.toDouble())),
     region: json["region"],
     tipo: json["tipo"],
-    usuarios: List<String>.from(json["usuarios"].map((x) => x)),
+    usuarios: json["usuarios"] == null ? [] : List<String>.from(json["usuarios"].map((x) => x)),
     variedades: json["variedades"],
     vino: json["vino"],
 );
@@ -109,33 +108,33 @@ class Wines {
   Map<String, dynamic> toMap() => {
     "anada": anada,
     "bodega": bodega,
-    "comentarios": List<dynamic>.from(comentarios.map((x) => x)),
+    "comentarios": comentarios == null ? [] : List<dynamic>.from(comentarios!.map((x) => x)),
     "descripcion": descripcion,
     "displayName": displayName,
-    "fechas": List<dynamic>.from(fechas.map((x) => x)),
+    "fechas": fechas == null ? [] : List<dynamic>.from(fechas!.map((x) => x)),
     "graduacion": graduacion,
     "id": id,
-    "imagen_vino": imagenVino,
+    "imagenVino": imagenVino,
     "likes": likes,
-    "logo_bodega": logoBodega,
+    "logoBodega": logoBodega,
     "nombre": '$vino $anada',
-    "nota_boca": notaBoca,
-    "nota_nariz": notaNariz,
-    "nota_vista": notaVista,
-    "notas_boca": List<dynamic>.from(notasBoca.map((x) => x)),
-    "notas_nariz": List<dynamic>.from(notasNariz.map((x) => x)),
-    "notas_vista": List<dynamic>.from(notasVista.map((x) => x)),
-    "puntuacion_boca": puntuacionBoca,
-    "puntuacion_final": puntuacionFinal,
-    "puntuacion_nariz": puntuacionNariz,
-    "puntuacion_vista": puntuacionVista,
-    "puntuaciones": List<dynamic>.from(puntuaciones.map((x) => x)),
-    "puntuaciones_boca": List<dynamic>.from(puntuacionesBoca.map((x) => x)),
-    "puntuaciones_nariz": List<dynamic>.from(puntuacionesNariz.map((x) => x)),
-    "puntuaciones_vista": List<dynamic>.from(puntuacionesVista.map((x) => x)),
+    "notaBoca": notaBoca,
+    "notaNariz": notaNariz,
+    "notaVista": notaVista,
+    "notasBoca": notasBoca == null ? [] : List<dynamic>.from(notasBoca!.map((x) => x)),
+    "notasNariz": notasNariz == null ? [] : List<dynamic>.from(notasNariz!.map((x) => x)),
+    "notasVista": notasVista == null ? [] : List<dynamic>.from(notasVista!.map((x) => x)),
+    "puntuacionBoca": puntuacionBoca,
+    "puntuacionFinal": puntuacionFinal,
+    "puntuacionNariz": puntuacionNariz,
+    "puntuacionVista": puntuacionVista,
+    "puntuaciones": puntuaciones == null ? [] : List<dynamic>.from(puntuaciones!.map((x) => x)),
+    "puntuacionesBoca": puntuacionesBoca == null ? [] : List<dynamic>.from(puntuacionesBoca!.map((x) => x)),
+    "puntuacionesNariz": puntuacionesNariz == null ? [] : List<dynamic>.from(puntuacionesNariz!.map((x) => x)),
+    "puntuacionesVista": puntuacionesVista == null ? [] : List<dynamic>.from(puntuacionesVista!.map((x) => x)),
     "region": region,
     "tipo": tipo,
-    "usuarios": List<dynamic>.from(usuarios.map((x) => x)),
+    "usuarios": usuarios == null ? [] : List<dynamic>.from(usuarios!.map((x) => x)),
     "variedades": variedades,
     "vino": vino,
   };

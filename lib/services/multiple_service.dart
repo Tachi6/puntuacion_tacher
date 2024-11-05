@@ -13,14 +13,22 @@ class MultipleService extends ChangeNotifier {
   final String _jsonTypeMultiple = 'multiple.json';
 
   List<Multiple> multipleTasteList = [];
+  bool _isMultipleTasted = false;
+
+  MultipleService() {
+    loadMultiples();
+  }
+
+  bool get isMultipleTasted => _isMultipleTasted;
+
+  set isMultipleTasted(bool value) {
+    _isMultipleTasted = value;
+    notifyListeners();
+  }
 
   final storage = const FlutterSecureStorage();
 
-  MultipleService() {
-    loadMultiple();
-  }
-
-  Future loadMultiple() async {
+  Future loadMultiples() async {
     List<Multiple> tempMultipleTasteList = [];
     // Cargo las catas multiples de bdd
     final url = Uri.https(_baseUrl, _jsonTypeMultiple, {
@@ -43,16 +51,39 @@ class MultipleService extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> createMultipleTaste(Multiple multipleTaste) async {
+  Future<Multiple> loadMultipleTaste(String multipleName) async {
+    final String jsonGetMultiple = 'multiple/$multipleName.json';
+    final url = Uri.https(_baseUrl, jsonGetMultiple, {
+      'auth': await storage.read(key: 'idToken') ?? ''
+    });
+    final resp = await http.get(url);
+    // Decodifico en un mapa pa respuesta
+    final Multiple multipleUpdated = Multiple.fromRawJson(resp.body);
+    // Añado al listado cada una de las catas multiples
+    // Asigno nuevo listado
+    multipleTasteList = [...multipleTasteList, multipleUpdated];
+
+    print('catas multiple unica cargada');
+
+    notifyListeners();
+    
+     return multipleUpdated;
+  }
+
+  Future<Multiple> createMultipleTaste(Multiple multipleTaste) async {
     // Creo nueva cata multiple
     final String jsonCreateType = 'multiple/${multipleTaste.name}.json';
     final url = Uri.https(_baseUrl, jsonCreateType, {
       'auth': await storage.read(key: 'idToken') ?? ''
     });
     final resp = await http.put(url, body: multipleTaste.toRawJson());
+
+    final Multiple newMultiple = Multiple.fromRawJson(resp.body);
+
+    multipleTasteList.add(newMultiple); 
     notifyListeners();
 
-    return resp.body;
+    return newMultiple;
   }
 
   Future<void> updateAverageRatings({required String multipleName, required Map<String, AverageRatings> averageRatings}) async {
@@ -113,14 +144,18 @@ class MultipleService extends ChangeNotifier {
     return multipleTasteList.any((element) => element.name == multipleName);
   }
 
-  bool isMultipleTasted({required String multipleName, required String user}) {
+  void checkIsMultipleTasted({required String multipleName, required String user}) {
     // Obtengo el indice de la cata multiple
     final int index = multipleTasteList.indexWhere((element) => element.name == multipleName);
     // Si no obtengo indice, es cata nueva, salgo de la funcion y prosigo
-    if (index == -1) return false;
+    if (index == -1) {
+      isMultipleTasted = false;
+      return;
+    }
     // Obtengo en id del primer vino
     final String firstWine = multipleTasteList[index].wines.keys.toList().first;
     // Evaluo si el primer vino ha sido catado, porque solo se sube a firebase si todos los vinos estan catados
-    return multipleTasteList[index].wines[firstWine]!.entries.any((element) => element.value.user == user);
+    isMultipleTasted = multipleTasteList[index].wines[firstWine]!.entries.any((element) => element.value.user == user);
+    notifyListeners();
   }
 }

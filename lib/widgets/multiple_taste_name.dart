@@ -18,7 +18,7 @@ class MultipleTasteName extends StatelessWidget {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleService>(context);
 
-    multipleTaste.nameController.text = multipleTaste.multipleTaste.name;
+    multipleTaste.nameController.text = multipleTaste.multipleTaste.name; // TODO da error el controller
 
     return Container(
       height: 85,
@@ -84,7 +84,7 @@ class MultipleTasteName extends StatelessWidget {
 
                   if (multipleTaste.isValidForm()) {
                     Navigator.push(context, routeList);
-                  } 
+                  }
                 }, 
                 icon: Icon(
                   Icons.check, 

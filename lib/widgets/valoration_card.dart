@@ -84,7 +84,7 @@ class CustomBodyTile extends StatelessWidget {
     final String user;
 
     wine.displayName == '' || wine.displayName == null
-      ? user = wine.usuarios.last
+      ? user = wine.usuarios!.last
       : user = wine.displayName!;
 
     return Expanded(
@@ -94,7 +94,7 @@ class CustomBodyTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '$user cató ${wine.nombre} y lo valoró con ${wine.puntuaciones.last} puntos',
+              '$user cató ${wine.nombre} y lo valoró con ${wine.puntuaciones!.last} puntos',
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
       
@@ -112,21 +112,21 @@ class CustomBodyTile extends StatelessWidget {
                     Row(
                       children: [
                         const SizedBox(width: 44 ,child: Text('Vista', style: TextStyle(fontSize: 14),)),
-                        RatingDetailsCategory(ratingCategory: wine.puntuacionesVista.last)
+                        RatingDetailsCategory(ratingCategory: wine.puntuacionesVista!.last)
                       ],
                     ),
                                 
                     Row(
                       children: [
                         const SizedBox(width: 44 ,child: Text('Nariz', style: TextStyle(fontSize: 14),)),
-                        RatingDetailsCategory(ratingCategory: wine.puntuacionesNariz.last)
+                        RatingDetailsCategory(ratingCategory: wine.puntuacionesNariz!.last)
                       ],
                     ),
                                 
                     Row(
                       children: [
                         const SizedBox(width: 44 ,child: Text('Boca', style: TextStyle(fontSize: 14),)),
-                        RatingDetailsCategory(ratingCategory: wine.puntuacionesBoca.last)
+                        RatingDetailsCategory(ratingCategory: wine.puntuacionesBoca!.last)
                       ],
                     ),
                   ],

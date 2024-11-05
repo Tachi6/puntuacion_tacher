@@ -6,8 +6,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 class RatingDetailsCategory extends StatelessWidget {
 
   final double ratingCategory;
+  final double itemSize;
 
-  const RatingDetailsCategory({required this.ratingCategory, super.key});
+  const RatingDetailsCategory({
+    required this.ratingCategory, 
+    this.itemSize = 14, 
+    super.key
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +35,7 @@ class RatingDetailsCategory extends StatelessWidget {
     );
 
     return RatingBar(
-      itemSize: 14,
+      itemSize: itemSize,
       ratingWidget: RatingWidget(
         full: full,// const Icon(customicon.FontAwesome5.wine_glass, color: Colors.black,), 
         half: half, // const Icon(customicon.FontAwesome5.wine_glass_alt, color: Colors.black,), 

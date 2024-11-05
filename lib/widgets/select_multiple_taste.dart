@@ -15,6 +15,7 @@ class SelectMultipleTaste extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final taste = Provider.of<VisibleOptionsProvider>(context);
+    final authService = Provider.of<AuthService>(context);
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleService>(context);
     final wineService = Provider.of<WinesService>(context);
@@ -50,7 +51,7 @@ class SelectMultipleTaste extends StatelessWidget {
 
               SearchWineButton(
                 onPressed: () async {
-                  multipleService.loadMultiple();
+                  multipleService.loadMultiples();
                   final multipleSearched = await showSearch(context: context, delegate: SearchDelegateMultiple());
                   if (multipleSearched != null) {
                     multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste = multipleSearched);
@@ -65,7 +66,8 @@ class SelectMultipleTaste extends StatelessWidget {
                       },);
                       multipleTaste.addVisibleWines(visibleWines);
                     }
-                    multipleTaste.initUserTaste();
+                    multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userDisplayName);
+                    multipleTaste.initUserTaste(multipleService.isMultipleTasted);
                     // wineForm.setWineToEdit(winesService.selectedWine!);
                     taste.showContinueButton = true;
                   }

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -7,6 +6,9 @@ import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 
 class MultipleTasteProvider extends ChangeNotifier {
+  MultipleTasteProvider(){
+    obtainUser();
+  }
 
   Multiple multipleTaste = Multiple(
     name: '',
@@ -17,12 +19,14 @@ class MultipleTasteProvider extends ChangeNotifier {
 
   GlobalKey<FormState> formNameKey = GlobalKey<FormState>();
   
+  late final String userDisplayName;
   bool _isNameUsed = false;
   int _winesHiddenNumber = 0;
   bool _hideNames = false;
   List<int> hideIndex = [];
   List<Wines> winesMultipleTaste = [];
   List<WineTaste> userMultipleTaste = [];
+  String _userView = '';
 
   int pageIndex = 0;
 
@@ -31,7 +35,12 @@ class MultipleTasteProvider extends ChangeNotifier {
     text: 'Sin limite',
   );
 
-  final storage = const FlutterSecureStorage();
+  Future<void> obtainUser() async {
+    const storage = FlutterSecureStorage();
+    userDisplayName = await storage.read(key: 'displayName') ?? '';
+    print(userDisplayName);
+    notifyListeners();
+  }
 
   bool isValidForm() {
     return formNameKey.currentState?.validate() ?? false;
@@ -85,31 +94,41 @@ class MultipleTasteProvider extends ChangeNotifier {
     return multipleTaste;
   }
 
-  Future<void> initUserTaste() async {
-    final user = await storage.read(key: 'email');
-
+  Future<void> initUserTaste(bool isTasted) async {
+    
     List<WineTaste> tempUserMultipleTaste = [];
 
-    for (var i = 0; i < winesMultipleTaste.length; i++) {
-      final WineTaste tempUserTaste = WineTaste(
-        user: user!,
-        id: winesMultipleTaste[i].id ?? 'Vino a ciegas $i',
-        nombre: winesMultipleTaste[i].nombre,
-        comentarios: '',
-        fecha: 'Taste date $i', // Se crea al subirlo al server
-        ratingVista: -1,
-        ratingNariz: -1,
-        ratingBoca: -1,
-        ratingPuntos: -1,
-        puntosVista: -1,
-        puntosNariz: -1,
-        puntosBoca: -1,
-        puntosFinal: -1,
-        notasBoca: '',
-        notasNariz: '',
-        notasVista: '',
-      );
-      tempUserMultipleTaste.add(tempUserTaste);
+    if (isTasted) {
+      multipleTaste.wines.forEach((key, value) {
+        value.forEach((key, value) {
+          if (value.user.contains(userDisplayName)) {
+            tempUserMultipleTaste.add(value);
+          }
+        },);
+      },);
+    }
+    else {
+      for (var i = 0; i < winesMultipleTaste.length; i++) {
+        final WineTaste tempUserTaste = WineTaste(
+          user: userDisplayName,
+          id: winesMultipleTaste[i].id ?? 'Vino a ciegas $i',
+          nombre: winesMultipleTaste[i].nombre,
+          comentarios: '',
+          fecha: 'Taste date $i', // Se crea al subirlo al server
+          ratingVista: -1,
+          ratingNariz: -1,
+          ratingBoca: -1,
+          ratingPuntos: -1,
+          puntosVista: -1,
+          puntosNariz: -1,
+          puntosBoca: -1,
+          puntosFinal: -1,
+          notasBoca: '',
+          notasNariz: '',
+          notasVista: '',
+        );
+        tempUserMultipleTaste.add(tempUserTaste);
+      }
     }
 
     userMultipleTaste = tempUserMultipleTaste;
@@ -133,30 +152,42 @@ class MultipleTasteProvider extends ChangeNotifier {
     for (var wineTaste in userMultipleTaste) {
       wineTaste = formulas.calculateWineTaste(wineTaste);
     }
-    notifyListeners();
 
-    
-    // final List<int> puntuaciones = [];
-    // final List<double> puntosVista = [];
-    // final List<double> puntosNariz = [];
-    // final List<double> puntosBoca = [];
+    notifyListeners();
   }
 
   void calculateAverageRatings() {
     final Formulas formulas = Formulas();
-    // TODO coger datos del server antes y no local
+
     Map<String, AverageRatings> puntuaciones = {};
+    print(multipleTaste.wines.length);
     multipleTaste.wines.forEach((key, value) {
+
       List <double> tempPuntosVistaList = [];
       List <double> tempPuntosNarizList = [];
       List <double> tempPuntosBocaList = [];
       List <int> tempPuntuacionesList = [];
+
+      for (var element in userMultipleTaste) {
+        if (element.id == key) {
+          tempPuntosVistaList.add(element.puntosVista);
+          tempPuntosNarizList.add(element.puntosNariz);
+          tempPuntosBocaList.add(element.puntosBoca);
+          tempPuntuacionesList.add(element.puntosFinal);
+        }
+      }
+
       value.forEach((key, value) {
         if (value.puntosVista != -1) tempPuntosVistaList.add(value.puntosVista);
         if (value.puntosNariz != -1) tempPuntosNarizList.add(value.puntosNariz);
         if (value.puntosBoca != -1) tempPuntosBocaList.add(value.puntosBoca);
         if (value.puntosFinal != -1) tempPuntuacionesList.add(value.puntosFinal);
       },);
+
+        print(tempPuntosVistaList);
+        print(tempPuntosNarizList);
+        print(tempPuntosBocaList);
+        print(tempPuntuacionesList);
       puntuaciones[key] = AverageRatings(
         vista: formulas.puntuacionCategoria(tempPuntosVistaList),
         nariz: formulas.puntuacionCategoria(tempPuntosNarizList), 
@@ -172,6 +203,40 @@ class MultipleTasteProvider extends ChangeNotifier {
   void clearwinesTaste() {
     userMultipleTaste.clear();
     notifyListeners();
+  }
+
+  List<String> otherUsersTaste() {
+    Map<String, Map<String, WineTaste>> othersUsersTaste = {...multipleTaste.wines};
+
+    othersUsersTaste.forEach((key, value) {
+      value.removeWhere((key, value) => value.user == userDisplayName && value.puntosFinal == -1);
+    },);
+
+    final Set<String> otherUsers = {};
+
+    othersUsersTaste.forEach((key, value) {
+      value.forEach((key, value) {
+        otherUsers.add(value.user);
+      },);
+    },);
+
+    return otherUsers.toList();
+  }
+
+  List<WineTaste> anotherUserMultipleTaste(String user) {
+    Map<String, Map<String, WineTaste>> multipleTasteWinesCopy = {...multipleTaste.wines};
+
+    List<WineTaste> wineTasteList = [];
+      
+    multipleTasteWinesCopy.forEach((key, value) {
+      value.forEach((key, value) {
+        if (value.user == user && value.puntosFinal != -1) {
+          wineTasteList.add(value);
+        }
+      },);      
+    },);
+
+    return wineTasteList;
   }
 
   bool isValidRating() {
@@ -283,6 +348,13 @@ class MultipleTasteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String get userView => _userView;
+
+  set userView(String value) {
+    _userView = value;
+    notifyListeners();
+  }
+
   bool get isNameUsed => _isNameUsed;
 
   set isNameUsed(bool value) {
@@ -298,7 +370,7 @@ class MultipleTasteProvider extends ChangeNotifier {
   }
 
   void resetSettings() { // TODO ver donde y como utilizo el resetsettings
-    multipleTaste.name = ''; // TODO al hacer back dejar nombre o no???
+    // multipleTaste.name = ''; // TODO al hacer back dejar nombre o no???
     multipleTaste.description = null;
     multipleTaste.password = null;
     multipleTaste.hidden = false;

@@ -186,14 +186,18 @@ class _UserSettingsBody extends StatelessWidget {
                               padding: const EdgeInsets.all(0),
                               onPressed: 
                                 authService.isSavingUser  
-                                ? () {
+                                ? () async {
                                   if (authService.tempDisplayName.length < 4) {
                                     String error = 'NOMBRE DE USUARIO MUY CORTO';
                                     NotificationsService.showSnackbar(error, context);
                                   }
-                                  else if (authService.isValidForm()) {
+                                  else if (await authService.isUniqueDisplayName(authService.tempDisplayName) && authService.isValidForm()) {
                                     authService.renameUser(authService.tempDisplayName);
                                     authService.isSavingUser = false;
+                                  }
+                                  else if (context.mounted) {
+                                    String error = 'NOMBRE DE USUARIO YA UTILIZADO';
+                                    NotificationsService.showSnackbar(error, context);
                                   }
                                 } 
                                 : null,

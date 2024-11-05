@@ -267,33 +267,33 @@ class _WinePoster extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${wine.puntuaciones.last} puntos Tacher', style: const TextStyle(fontSize: 14)),
+                      Text('${wine.puntuaciones!.last} puntos Tacher', style: const TextStyle(fontSize: 14)),
 
                       Row(
                         children: [
                           const SizedBox(width: 44 ,child: Text('Vista', style: TextStyle(fontSize: 14),)),
-                          RatingDetailsCategory(ratingCategory: wine.puntuacionesVista.last),
+                          RatingDetailsCategory(ratingCategory: wine.puntuacionesVista!.last),
                         ],
                       ),
-                      detectEmptyText(wine.notasVista.last),
+                      detectEmptyText(wine.notasVista!.last),
                       
                       Row(
                         children: [
                           const SizedBox(width: 44 ,child: Text('Nariz', style: TextStyle(fontSize: 14),)),
-                          RatingDetailsCategory(ratingCategory: wine.puntuacionesNariz.last),
+                          RatingDetailsCategory(ratingCategory: wine.puntuacionesNariz!.last),
                         ],
                       ),
-                      detectEmptyText(wine.notasNariz.last),
+                      detectEmptyText(wine.notasNariz!.last),
 
                       Row(
                         children: [
                           const SizedBox(width: 44 ,child: Text('Boca', style: TextStyle(fontSize: 14),)),
-                          RatingDetailsCategory(ratingCategory: wine.puntuacionesBoca.last),
+                          RatingDetailsCategory(ratingCategory: wine.puntuacionesBoca!.last),
                         ],
                       ),
-                      detectEmptyText(wine.notasBoca.last),
+                      detectEmptyText(wine.notasBoca!.last),
 
-                      Text(wine.comentarios.last, style: const TextStyle(fontSize: 14)),
+                      Text(wine.comentarios!.last, style: const TextStyle(fontSize: 14)),
                     ]
                   )
                   :
@@ -301,33 +301,33 @@ class _WinePoster extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${wine.puntuaciones[wine.usuarios.indexOf(user!)]} puntos Tacher', style: const TextStyle(fontSize: 14)),
+                      Text('${wine.puntuaciones![wine.usuarios!.indexOf(user!)]} puntos Tacher', style: const TextStyle(fontSize: 14)),
 
                       Row(
                         children: [
                           const SizedBox(width: 44 ,child: Text('Vista', style: TextStyle(fontSize: 14),)),
-                          RatingDetailsCategory(ratingCategory: wine.puntuacionesVista[wine.usuarios.indexOf(user!)]),
+                          RatingDetailsCategory(ratingCategory: wine.puntuacionesVista![wine.usuarios!.indexOf(user!)]),
                         ],
                       ),
-                      detectEmptyText(wine.notasVista[wine.usuarios.indexOf(user!)]),
+                      detectEmptyText(wine.notasVista![wine.usuarios!.indexOf(user!)]),
                       
                       Row(
                         children: [
                           const SizedBox(width: 44 ,child: Text('Nariz', style: TextStyle(fontSize: 14),)),
-                          RatingDetailsCategory(ratingCategory: wine.puntuacionesNariz[wine.usuarios.indexOf(user!)]),
+                          RatingDetailsCategory(ratingCategory: wine.puntuacionesNariz![wine.usuarios!.indexOf(user!)]),
                         ],
                       ),
-                      detectEmptyText(wine.notasNariz[wine.usuarios.indexOf(user!)]),
+                      detectEmptyText(wine.notasNariz![wine.usuarios!.indexOf(user!)]),
 
                       Row(
                         children: [
                           const SizedBox(width: 44 ,child: Text('Boca', style: TextStyle(fontSize: 14),)),
-                          RatingDetailsCategory(ratingCategory: wine.puntuacionesBoca[wine.usuarios.indexOf(user!)]),
+                          RatingDetailsCategory(ratingCategory: wine.puntuacionesBoca![wine.usuarios!.indexOf(user!)]),
                         ],
                       ),
-                      detectEmptyText(wine.notasBoca[wine.usuarios.indexOf(user!)]),
+                      detectEmptyText(wine.notasBoca![wine.usuarios!.indexOf(user!)]),
 
-                      Text(wine.comentarios[wine.usuarios.indexOf(user!)], style: const TextStyle(fontSize: 14)),
+                      Text(wine.comentarios![wine.usuarios!.indexOf(user!)], style: const TextStyle(fontSize: 14)),
                     ]
                   )
               ],

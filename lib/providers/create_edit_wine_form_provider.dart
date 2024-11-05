@@ -157,24 +157,24 @@ class CreateEditWineFormProvider extends ChangeNotifier {
     puntosFinal = formulas.calculosFinal;
     notifyListeners();
     // Añado fechas y usuario
-    wine.fechas.add(CustomDatetime().toText(DateTime.now()));
-    wine.usuarios.add(user);
+    wine.fechas!.add(CustomDatetime().toText(DateTime.now()));
+    wine.usuarios!.add(user);
     // Añado notas de cata y comentarios
-    wine.notasVista.add(notasVista);
-    wine.notasNariz.add(notasNariz);
-    wine.notasBoca.add(notasBoca);
-    wine.comentarios.add(comentarios);
+    wine.notasVista!.add(notasVista);
+    wine.notasNariz!.add(notasNariz);
+    wine.notasBoca!.add(notasBoca);
+    wine.comentarios!.add(comentarios);
     // Añado puntuaciones globales
-    wine.puntuacionesVista.add(formulas.puntosVista);
-    wine.puntuacionesNariz.add(formulas.puntosNariz);
-    wine.puntuacionesBoca.add(formulas.puntosBoca);
-    wine.puntuaciones.add(puntosFinal);
+    wine.puntuacionesVista!.add(formulas.puntosVista);
+    wine.puntuacionesNariz!.add(formulas.puntosNariz);
+    wine.puntuacionesBoca!.add(formulas.puntosBoca);
+    wine.puntuaciones!.add(puntosFinal);
     notifyListeners();
     // Añado puntuaciones finales
-    wine.puntuacionFinal = formulas.puntuacionFinal(wine.puntuaciones);
-    wine.puntuacionVista = formulas.puntuacionCategoria(wine.puntuacionesVista);
-    wine.puntuacionNariz = formulas.puntuacionCategoria(wine.puntuacionesNariz);
-    wine.puntuacionBoca = formulas.puntuacionCategoria(wine.puntuacionesBoca);
+    wine.puntuacionFinal = formulas.puntuacionFinal(wine.puntuaciones!);
+    wine.puntuacionVista = formulas.puntuacionCategoria(wine.puntuacionesVista!);
+    wine.puntuacionNariz = formulas.puntuacionCategoria(wine.puntuacionesNariz!);
+    wine.puntuacionBoca = formulas.puntuacionCategoria(wine.puntuacionesBoca!);
 
     notifyListeners();
 
@@ -372,7 +372,7 @@ class Formulas {
     wineTaste.puntosNariz = puntosNariz;
     wineTaste.puntosBoca = puntosBoca;
 
-    return wineTaste; // TODO mirar si se modifica el objeto recibido
+    return wineTaste;
   }
 
 }
