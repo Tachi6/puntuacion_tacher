@@ -85,12 +85,12 @@ class VisibleOptionsProvider extends ChangeNotifier {
   }
 
   void clearWidgets() {
-    _taste = TasteOptions.empty;
-    _tasteNormal = TasteOptionsNormal.empty;
-    _tasteMultiple = TasteOptionsMultiple.empty;
-    _showSecondWidget = false;
-    _showThirdWidget = false;
     _showContinueButton = false;
+    _showThirdWidget = false;
+    _tasteMultiple = TasteOptionsMultiple.empty;
+    _tasteNormal = TasteOptionsNormal.empty;
+    _showSecondWidget = false;
+    _taste = TasteOptions.empty;
 
     notifyListeners();
   }

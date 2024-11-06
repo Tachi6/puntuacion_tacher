@@ -20,6 +20,7 @@ class MultipleTasteProvider extends ChangeNotifier {
   GlobalKey<FormState> formNameKey = GlobalKey<FormState>();
   
   late final String userDisplayName;
+  AutovalidateMode _autovalidateName = AutovalidateMode.disabled;
   bool _isNameUsed = false;
   int _winesHiddenNumber = 0;
   bool _hideNames = false;
@@ -38,7 +39,7 @@ class MultipleTasteProvider extends ChangeNotifier {
   Future<void> obtainUser() async {
     const storage = FlutterSecureStorage();
     userDisplayName = await storage.read(key: 'displayName') ?? '';
-    print(userDisplayName);
+    userView = userDisplayName;
     notifyListeners();
   }
 
@@ -60,7 +61,7 @@ class MultipleTasteProvider extends ChangeNotifier {
         wineId: {
           'notStarted': WineTaste(
             fecha: '',
-            user: '', 
+            user: 'not', 
             nombre: '',
             id: wineId,
             ratingVista: -1, 
@@ -209,18 +210,25 @@ class MultipleTasteProvider extends ChangeNotifier {
     Map<String, Map<String, WineTaste>> othersUsersTaste = {...multipleTaste.wines};
 
     othersUsersTaste.forEach((key, value) {
-      value.removeWhere((key, value) => value.user == userDisplayName && value.puntosFinal == -1);
+      value.removeWhere((key, value) => value.puntosFinal == -1);
     },);
 
-    final Set<String> otherUsers = {};
+    List<String> otherUsers = [];
+    if (userMultipleTaste.isNotEmpty && userMultipleTaste.first.puntosFinal != -1) otherUsers.add(userDisplayName);
 
     othersUsersTaste.forEach((key, value) {
       value.forEach((key, value) {
-        otherUsers.add(value.user);
+        if (value.user == userDisplayName) {
+          otherUsers[0] = userDisplayName;
+        }
+        else {
+          otherUsers.add(value.user);
+        }
       },);
     },);
+    // If is a direct create + MultipleTaste to load user. But when close i need to not load this
 
-    return otherUsers.toList();
+    return otherUsers.toSet().toList();
   }
 
   List<WineTaste> anotherUserMultipleTaste(String user) {
@@ -235,6 +243,8 @@ class MultipleTasteProvider extends ChangeNotifier {
         }
       },);      
     },);
+
+    if (wineTasteList.isEmpty) return userMultipleTaste;
 
     return wineTasteList;
   }
@@ -341,6 +351,13 @@ class MultipleTasteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  AutovalidateMode get autovalidateMode => _autovalidateName;
+
+  set autovalidateMode(AutovalidateMode mode) {
+    _autovalidateName = mode;
+    notifyListeners();
+  }
+
   bool get hideNames => _hideNames;
 
   set hideNames(bool value) {
@@ -370,7 +387,7 @@ class MultipleTasteProvider extends ChangeNotifier {
   }
 
   void resetSettings() { // TODO ver donde y como utilizo el resetsettings
-    // multipleTaste.name = ''; // TODO al hacer back dejar nombre o no???
+    multipleTaste.name = ''; // TODO al hacer back dejar nombre o no???
     multipleTaste.description = null;
     multipleTaste.password = null;
     multipleTaste.hidden = false;

@@ -139,7 +139,8 @@ class MultipleService extends ChangeNotifier {
     notifyListeners();   
   }
 
-  bool isMultipleNameUsed(String multipleName) {
+  Future<bool> isMultipleNameUsed(String multipleName) async {
+    await loadMultiples();
     // Evaluo si el nombre del vino ya ha sido usado anteriomente
     return multipleTasteList.any((element) => element.name == multipleName);
   }

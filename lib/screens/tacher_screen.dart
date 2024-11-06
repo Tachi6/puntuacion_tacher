@@ -12,13 +12,13 @@ import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class TacherScreen extends StatefulWidget {
 
-  final String appBarTitle;
+  final String? appBarTitle;
   final Widget? bottomSheet;
   final void Function()? onPressedBackButon;
 
   const TacherScreen({
     super.key, 
-    required this.appBarTitle, 
+    this.appBarTitle, 
     this.bottomSheet, 
     this.onPressedBackButon, 
   });
@@ -38,10 +38,12 @@ class _TacherScreenState extends State<TacherScreen> with AutomaticKeepAliveClie
         const FullScreenBackground(image: 'assets/tacher-background.jpg', opacity: 0.3),
 
         Scaffold(
-          appBar: _CustomTacherAppBar(
-            onPressedBackButon: widget.onPressedBackButon, 
-            appBarTitle: widget.appBarTitle
-          ),
+          appBar: widget.appBarTitle == null 
+            ? null
+            : _CustomTacherAppBar(
+              onPressedBackButon: widget.onPressedBackButon, 
+              appBarTitle: widget.appBarTitle!
+            ),
           backgroundColor: Colors.transparent,
           body: const _CustomTacherBody(),
           bottomSheet: widget.bottomSheet,

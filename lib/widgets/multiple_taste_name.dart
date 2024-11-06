@@ -34,7 +34,7 @@ class MultipleTasteName extends StatelessWidget {
             children: [
               Expanded(
                 child: Form(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  autovalidateMode: multipleTaste.autovalidateMode,
                   key: multipleTaste.formNameKey,
                   child: TextFormField(
                     controller: multipleTaste.nameController,
@@ -60,11 +60,9 @@ class MultipleTasteName extends StatelessWidget {
                       if (isInvalidName) {
                         return 'Los caracteres . \$ # [ ] / no son permitidos.';
                       }
-                      if (multipleService.isMultipleNameUsed(multipleTaste.multipleTaste.name)) {
-                        return 'El nombre de la cata ya ha sido utilizado.';
-                      }
                       return null;
                     },
+                    onTap: () => multipleTaste.autovalidateMode = AutovalidateMode.onUserInteraction,
                     onTapOutside: (event) {
                       FocusManager.instance.primaryFocus?.unfocus();
                     },
@@ -74,7 +72,11 @@ class MultipleTasteName extends StatelessWidget {
               ),
           
               IconButton(
-                onPressed: () {
+                onPressed: () async {
+                  if (await multipleService.isMultipleNameUsed(multipleTaste.multipleTaste.name) && context.mounted) {
+                    NotificationsService.showSnackbar('El nombre de la cata ya ha sido utilizado.', context);
+                    return;
+                  }
                   final routeList = CupertinoPageRoute(
                     builder: (context) => const PopScope(
                       canPop: false,

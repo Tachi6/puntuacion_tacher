@@ -77,9 +77,11 @@ class _CustomBodyAppBar extends StatelessWidget {
           children: [
             IconButton(
               onPressed: () {
+                // To close bottomsheet
                 if (multipleTaste.winesMultipleTaste.length > 1) Navigator.pop(context);
-                Navigator.pop(context);
                 multipleTaste.resetSettings();
+                multipleTaste.autovalidateMode = AutovalidateMode.disabled;
+                Navigator.pop(context);
               },
               icon: Icon(Icons.arrow_back_rounded, color: colors.onSurface)
             ),
@@ -98,6 +100,7 @@ class _CustomBodyAppBar extends StatelessWidget {
                  
             IconButton(
               onPressed: () {
+                // To close bottomsheet
                 if (multipleTaste.winesMultipleTaste.length > 1) Navigator.pop(context);
                 multipleTaste.clearWines();
               },
@@ -128,6 +131,7 @@ class _CustomBodyAppBar extends StatelessWidget {
               ),
             ),
             onChanged: (value) => multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.description = value),
+            onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
           ),
         ),
     
@@ -153,6 +157,7 @@ class _CustomBodyAppBar extends StatelessWidget {
               ),
             ),
             onChanged: (value) => multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.password = value),
+            onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
           ),
         ),
     
@@ -175,6 +180,7 @@ class _CustomBodyAppBar extends StatelessWidget {
                   minLines: 1,
                   readOnly: true,
                   canRequestFocus: false,
+                  autofocus: false,
                   style: const TextStyle(fontSize: 14),
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -438,32 +444,14 @@ class MultipleActionsButtons extends StatelessWidget {
           CustomElevatedButton(
             width: 100,
             child: const Text('Guardar'),
-            onPressed: () {
+            onPressed: () async {
               // Subo a Firebase la cata multiple
-              multipleService.createMultipleTaste(multipleTaste.initMultiple());
-
-              // TODO dejo este codigo de abajo que sera util
-              // Actualizar cata multiple
-              // multipleService.updateMultiple(
-              //   multipleName:multipleTaste.name,
-              //   averageRatings: AverageRatings(boca: 3.90, nariz: 3.90, puntos: 70, vista: 3.90)
-              // );
-
-              // Actualizar taste de cata multiple
-              // String dateToString() {
-              //   final date = DateTime.now();
-              //   return date.toIso8601String().replaceAll('.', ':');
-              // }
-
-              // final Map<String, WineTaste> taste = {
-              //   dateToString(): WineTaste(user: 'pepito', ratingVista: 5, ratingNariz: 5, ratingBoca: 6, ratingPuntos: 7, puntosFinal: 70, comentarios: '', id: 'Vino a catar a ciegas 1', notasBoca: '', notasNariz: '', notasVista: ''),
-              //   dateToString(): WineTaste(user: 'pepito', ratingVista: 6, ratingNariz: 7, ratingBoca: 8, ratingPuntos: 7, puntosFinal: 74, comentarios: '', id: 'Vino a catar a ciegas 2', notasBoca: '', notasNariz: '', notasVista: ''),
-              // };
-
-              // multipleService.updateTaste(
-              //   multipleName:multipleTaste.name, 
-              //   wineTaste: taste
-              // );
+              await multipleService.createMultipleTaste(multipleTaste.initMultiple());
+              // Cierro bottomsheet
+              if (multipleTaste.winesMultipleTaste.length > 1 && context.mounted) Navigator.pop(context);
+              multipleTaste.resetSettings();
+              multipleTaste.autovalidateMode = AutovalidateMode.disabled;
+              if (context.mounted) Navigator.pop(context);
             },
           ),
 
@@ -477,11 +465,12 @@ class MultipleActionsButtons extends StatelessWidget {
               multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste = multiple);
               multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userDisplayName);
               multipleTaste.initUserTaste(multipleService.isMultipleTasted);
+              multipleTaste.autovalidateMode = AutovalidateMode.disabled;
 
               final routeList = CupertinoPageRoute(
                 builder: (context) => const MultipleTasteScreen()
               );
-              if (context.mounted) Navigator.push(context, routeList);
+              if (context.mounted) Navigator.pushReplacement(context, routeList);
             },
           ),
 
