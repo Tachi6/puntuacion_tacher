@@ -75,9 +75,9 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
           curve: Curves.easeInOut,           
         );
       }
-      // Desactivar que vuelvan a catar
+      // Desactivar que vuelvan a catar, retraso para la animacion
       await Future.delayed(
-        const Duration(milliseconds: 350),
+        const Duration(milliseconds: 250),
         () => multipleService.isMultipleTasted = true,
       );
       // Subo WineTaste del usuario

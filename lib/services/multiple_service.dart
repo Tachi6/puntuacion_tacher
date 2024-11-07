@@ -80,7 +80,7 @@ class MultipleService extends ChangeNotifier {
 
     final Multiple newMultiple = Multiple.fromRawJson(resp.body);
 
-    multipleTasteList.add(newMultiple); 
+    multipleTasteList = [...multipleTasteList, newMultiple];
     notifyListeners();
 
     return newMultiple;

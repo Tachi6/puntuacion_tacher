@@ -62,7 +62,7 @@ class SelectMultipleTaste extends StatelessWidget {
                     else {
                       List<Wines> visibleWines = [];
                       multipleSearched.wines.forEach((key, value) {
-                        visibleWines.add(wineService.winesByIndex[int.parse(key)]);
+                        visibleWines.add(wineService.winesByIndex[int.parse(key)].copy());
                       },);
                       multipleTaste.addVisibleWines(visibleWines);
                     }

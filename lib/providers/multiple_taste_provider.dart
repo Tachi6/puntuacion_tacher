@@ -138,7 +138,7 @@ class MultipleTasteProvider extends ChangeNotifier {
   }
 
   void updateMultipleTaste(Multiple updatedMultipleTaste) {
-    multipleTaste = updatedMultipleTaste;
+    multipleTaste = updatedMultipleTaste.copy();
     notifyListeners();
   }
 

@@ -8,6 +8,9 @@ import 'package:http/http.dart' as http;
 
 import 'package:puntuacion_tacher/models/models.dart';
 
+
+//TODO repasar que no pase objetos por referencia
+
 class WinesService extends ChangeNotifier {
 
   final String _baseUrl = 'puntos-tacher-default-rtdb.europe-west1.firebasedatabase.app';
