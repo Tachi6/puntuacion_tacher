@@ -21,10 +21,68 @@ class MultipleOverviewPage extends StatelessWidget {
     // Height of StatusBar, AppBar, BottomSheet, 4 x Normal Row, 2 x Thin Row 
     final newHeight = size.height - statusBarHeight - 48 - 58 - 160 - 40;
 
-    return Scaffold(
+    return Scaffold( // TODO animated switcher and change view button
       appBar: const CustomMultipleAppBar(),
-      body: PreviewMultipleTaste(newWidth: newWidth),
+      body: UserMultipleTasteDetails(newWidth: newWidth),
       // body: OverviewMultipleTaste(newWidth: newWidth, newHeight: newHeight),
+    );
+  }
+}
+
+class UserMultipleTasteDetails extends StatelessWidget {
+  const UserMultipleTasteDetails({
+    super.key, 
+    required this.newWidth
+  });
+
+  final double newWidth;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final wineTasteList = multipleTaste.userMultipleTaste;
+    final Formulas formulas = Formulas();
+
+    return SizedBox(
+      width: double.infinity,
+      height: double.infinity,
+      child: Column(
+        children: [
+          const _OutsideTitle(label: 'Resumen de mi cata'),
+
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(0),
+              itemCount: multipleTaste.winesMultipleTaste.length,
+              itemBuilder: (context, index) {
+                return _CustomListItem(
+                  index: index,
+                  wineName: wineTasteList[index].nombre, 
+                  data1: formulas.puntosVistaFunction(wineTasteList[index].ratingVista),
+                  data2: formulas.puntosNarizFunction(wineTasteList[index].ratingNariz),
+                  data3: formulas.puntosBocaFunction(wineTasteList[index].ratingBoca),
+                  data4: wineTasteList[index].ratingPuntos.toInt() == -1 ? 0 : wineTasteList[index].ratingPuntos.toInt(),
+                  newWidth: newWidth,
+                  tasteHeader: _TasteHeader(newWidth: newWidth, lastLabel: 'Final'),
+                  itemsDetailsNotes: (wineTasteList[index].notasVista != '' || wineTasteList[index].notasNariz != '' || wineTasteList[index].notasBoca != '')
+                    ? _ItemDetailsNotes(
+                      notesVista: wineTasteList[index].notasVista!,
+                      notesNariz: wineTasteList[index].notasNariz!,
+                      notesBoca: wineTasteList[index].notasBoca!,
+                    )
+                    : null,
+                  itemsDetailsComments: (wineTasteList[index].comentarios != '')
+                    ? _ItemDetailsComments(comments: wineTasteList[index].comentarios!)
+                    : null,
+                );
+              },
+            ),
+          ),             
+          // Height of BottomSHeet
+          const SizedBox(height: 58),
+        ]
+      ),
     );
   }
 }
@@ -42,7 +100,6 @@ class OverviewMultipleTaste extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final styles = Theme.of(context).textTheme;
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final wineTasteList = multipleTaste.anotherUserMultipleTaste(multipleTaste.userView);
 
@@ -51,259 +108,55 @@ class OverviewMultipleTaste extends StatelessWidget {
       width: double.infinity,
       child: Column(
         children: [           
-          Container(
-            alignment: Alignment.center,
-            height: 40,
-            child: Text('Resultados de cata', style: styles.titleMedium)
-          ),
-             
-          SizedBox(
-            height: 20,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: newWidth * 0.28,
-                  alignment: Alignment.bottomCenter,
-                  child: Text('Vista', style: styles.bodyMedium),
-                ),
-                    
-                Container(
-                  width: newWidth * 0.28,
-                  alignment: Alignment.bottomCenter,                         
-                  child: Text('Nariz', style: styles.bodyMedium),
-                ),
-                    
-                Container(
-                  width: newWidth * 0.28,
-                  alignment: Alignment.bottomCenter,
-                  child: Text('Boca', style: styles.bodyMedium),
-                ),
-                    
-                Container(
-                  width: newWidth * 0.16,
-                  alignment: Alignment.bottomCenter,
-                  child: Text('Puntos', style: styles.bodyMedium),
-                ),
-              ],
-            ),
-          ),
-      
+          const _OutsideTitle(label: 'Resultado de cata'),
+
+          _TasteHeader(newWidth: newWidth, lastLabel: 'Puntos'),
+
           SizedBox(
             height: newHeight / 2,
             child: ListView.builder(
               padding: const EdgeInsets.all(0),
-              itemCount: multipleTaste.winesMultipleTaste.length,
+              itemCount: wineTasteList.length,
               itemBuilder: (context, index) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [   
-                    if (index == 0) const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Divider(
-                      ),
-                    ),
-      
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.only(top: 0, bottom: 8, left: 10, right: 10),
-                      alignment: Alignment.center,
-                      child: Text(
-                        multipleTaste.userMultipleTaste[index].nombre,
-                        style: styles.bodyMedium
-                      ),
-                    ),
-            
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: newWidth * 0.28,
-                          alignment: Alignment.center,
-                          child: RatingDetailsCategory(
-                            ratingCategory: wineTasteList[index].puntosVista,
-                            itemSize: 14,
-                          ),
-                        ),
-      
-                        Container(
-                          width: newWidth * 0.28,
-                          alignment: Alignment.center,                         
-                          child: RatingDetailsCategory(
-                            ratingCategory: wineTasteList[index].puntosNariz,
-                            itemSize: 14,
-                          ),
-                        ),
-      
-                        Container(
-                          width: newWidth * 0.28,
-                          alignment: Alignment.center,
-                          child: RatingDetailsCategory(
-                            ratingCategory: wineTasteList[index].puntosBoca,
-                            itemSize: 14,
-                          ),
-                        ),
-      
-                       Container(
-                          width: newWidth * 0.16,
-                          alignment: Alignment.center,
-                          child: Text(
-                            wineTasteList[index].puntosFinal.toInt().toString(), 
-                            style: styles.bodyLarge
-                          ),
-                        ),
-                      ],
-                    ),
-     
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Divider(),
-                    ),
-                  ],
+                return _CustomListItem(
+                  index: index,
+                  wineName: wineTasteList[index].nombre, 
+                  data1: wineTasteList[index].puntosVista,
+                  data2: wineTasteList[index].puntosNariz,
+                  data3: wineTasteList[index].puntosBoca,
+                  data4: wineTasteList[index].puntosFinal,
+                  newWidth: newWidth,
                 );
               },
             ),
           ),
-      
-          Container(
-            height: 40,
-            alignment: Alignment.center,
-            child: Text('Catas realizadas', style: styles.titleMedium)
-          ),
+
+          const _OutsideTitle(label: 'Catas Realizadas'),
              
-          Container(
-            margin: const EdgeInsets.only(left: 10),
-            height: 40,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: multipleTaste.otherUsersTaste().length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: FilterChip.elevated(
-                    showCheckmark: false,
-                    label: Text(multipleTaste.otherUsersTaste()[index]),
-                    labelStyle: styles.bodySmall,
-                    selected: multipleTaste.userView == multipleTaste.otherUsersTaste()[index],
-                    onSelected: (value) => multipleTaste.userView = multipleTaste.otherUsersTaste()[index],
-                  ),
-                );
-              },
-            ),
-          ),
-             
-          Container(
-            height: 40,
-            alignment: Alignment.center,
-            child: Text('Valoraciones medias de cata', style: styles.titleMedium)),
-             
-          SizedBox(
-            height: 20,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: newWidth * 0.28,
-                  alignment: Alignment.bottomCenter,
-                  child: Text('Vista', style: styles.bodyMedium),
-                ),
-                    
-                Container(
-                  width: newWidth * 0.28,
-                  alignment: Alignment.bottomCenter,                         
-                  child: Text('Nariz', style: styles.bodyMedium),
-                ),
-                    
-                Container(
-                  width: newWidth * 0.28,
-                  alignment: Alignment.bottomCenter,
-                  child: Text('Boca', style: styles.bodyMedium),
-                ),
-                    
-                Container(
-                  width: newWidth * 0.16,
-                  alignment: Alignment.bottomCenter,
-                  child: Text('Puntos', style: styles.bodyMedium),
-                ),
-              ],
-            ),
-          ),
+          const _OtherUsersTaste(),
+
+          const _OutsideTitle(label: 'Valoraciones medias de cata'),  
+
+          _TasteHeader(newWidth: newWidth, lastLabel: 'Puntos'),   
           
           SizedBox(
             height: newHeight / 2,
             child: ListView.builder(
               padding: const EdgeInsets.all(0),
-              itemCount: multipleTaste.winesMultipleTaste.length,
+              itemCount: wineTasteList.length,
               itemBuilder: (context, index) {
       
                 final List<AverageRatings> averageRatings = [];
                 multipleTaste.multipleTaste.averageRatings.forEach((key, value) => averageRatings.add(value));
-      
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [   
-                    if (index == 0) const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Divider(
-                      ),
-                    ),
-      
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.only(top: 0, bottom: 8, left: 10, right: 10),
-                      alignment: Alignment.center,
-                      child: Text(
-                        multipleTaste.userMultipleTaste[index].nombre,
-                        style: styles.bodyMedium
-                      ),
-                    ),
-            
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: newWidth * 0.28,
-                          alignment: Alignment.center,
-                          child: RatingDetailsCategory(
-                            ratingCategory: averageRatings[index].vista,
-                            itemSize: 14,
-                          ),
-                        ),
-      
-                        Container(
-                          width: newWidth * 0.28,
-                          alignment: Alignment.center,                         
-                          child: RatingDetailsCategory(
-                            ratingCategory: averageRatings[index].nariz,
-                            itemSize: 14,
-                          ),
-                        ),
-      
-                        Container(
-                          width: newWidth * 0.28,
-                          alignment: Alignment.center,
-                          child: RatingDetailsCategory(
-                            ratingCategory: averageRatings[index].boca,
-                            itemSize: 14,
-                          ),
-                        ),
-      
-                        Container(
-                          width: newWidth * 0.16,
-                          alignment: Alignment.center,
-                          child: Text(
-                            averageRatings[index].puntos.toString(), 
-                            style: styles.bodyLarge
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Divider(),
-                    ),
-                  ],
+                
+                return _CustomListItem(
+                  index: index,
+                  wineName: wineTasteList[index].nombre, 
+                  data1: averageRatings[index].vista,
+                  data2: averageRatings[index].nariz,
+                  data3: averageRatings[index].boca,
+                  data4: averageRatings[index].puntos,
+                  newWidth: newWidth,
                 );
               },
             ),
@@ -316,181 +169,267 @@ class OverviewMultipleTaste extends StatelessWidget {
   }
 }
 
-class PreviewMultipleTaste extends StatelessWidget {
-  const PreviewMultipleTaste({
-    super.key, 
-    required this.newWidth
-  });
-
-  final double newWidth;
+class _OtherUsersTaste extends StatelessWidget {
+  const _OtherUsersTaste();
 
   @override
   Widget build(BuildContext context) {
 
     final styles = Theme.of(context).textTheme;
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final wineTasteList = multipleTaste.userMultipleTaste;
-    final Formulas formulas = Formulas();
+
+    return Container(
+      margin: const EdgeInsets.only(left: 10),
+      height: 40,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: multipleTaste.otherUsersTaste().length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: FilterChip.elevated(
+              showCheckmark: false,
+              label: Text(multipleTaste.otherUsersTaste()[index]),
+              labelStyle: styles.bodySmall,
+              selected: multipleTaste.userView == multipleTaste.otherUsersTaste()[index],
+              onSelected: (value) => multipleTaste.userView = multipleTaste.otherUsersTaste()[index],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _CustomListItem extends StatelessWidget {
+  const _CustomListItem({
+    required this.index,
+    required this.wineName, 
+    required this.data1, 
+    required this.data2, 
+    required this.data3, 
+    required this.data4,
+    required this.newWidth,
+    this.tasteHeader,
+    this.itemsDetailsNotes,
+    this.itemsDetailsComments,
+  });
+
+  final int index;
+  final String wineName;
+  final double data1;
+  final double data2;
+  final double data3;
+  final int data4;
+  final double newWidth;
+  final Widget? tasteHeader;
+  final Widget? itemsDetailsNotes;
+  final Widget? itemsDetailsComments;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final styles = Theme.of(context).textTheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [   
+        if (index == 0) const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Divider(
+          ),
+        ),
+    
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.only(top: 0, bottom: 8, left: 10, right: 10),
+          alignment: Alignment.center,
+          child: Text(
+            wineName,
+            style: styles.bodyMedium
+          ),
+        ),
+
+        if (tasteHeader != null) tasteHeader!,
+                
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: newWidth * 0.28,
+              alignment: Alignment.center,
+              child: RatingDetailsCategory(
+                ratingCategory: data1,
+                itemSize: 14,
+              ),
+            ),
+    
+            Container(
+              width: newWidth * 0.28,
+              alignment: Alignment.center,                         
+              child: RatingDetailsCategory(
+                ratingCategory: data2,
+                itemSize: 14,
+              ),
+            ),
+    
+            Container(
+              width: newWidth * 0.28,
+              alignment: Alignment.center,
+              child: RatingDetailsCategory(
+                ratingCategory: data3,
+                itemSize: 14,
+              ),
+            ),
+    
+          Container(
+              width: newWidth * 0.16,
+              alignment: Alignment.center,
+              child: Text(
+                data4.toString(), 
+                style: styles.bodyLarge
+              ),
+            ),
+          ],
+        ),
+
+        if (itemsDetailsNotes != null) itemsDetailsNotes!,
+
+        if (itemsDetailsComments != null) itemsDetailsComments!,
+                  
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Divider(),
+        ),
+      ],
+    );
+  }
+}
+
+class _ItemDetailsNotes extends StatelessWidget {
+  const _ItemDetailsNotes({
+    required this.notesVista, 
+    required this.notesNariz, 
+    required this.notesBoca
+  });
+
+  final String notesVista;
+  final String notesNariz;
+  final String notesBoca;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(height: 10),
+
+        const _InsideListViewText(label: 'Notas de cata'),
+        
+        const SizedBox(height: 5),
+
+        _InsideListViewText(label: 'Vista: ', content: notesVista),
+        
+        const SizedBox(height: 5),
+        
+        _InsideListViewText(label: 'Nariz: ', content: notesNariz),
+        
+        const SizedBox(height: 5),
+        
+        _InsideListViewText(label: 'Boca: ', content: notesBoca),
+        
+        const SizedBox(height: 5),
+      ],
+    );
+  }
+}
+
+class _ItemDetailsComments extends StatelessWidget {
+  const _ItemDetailsComments({
+    required this.comments, 
+  });
+
+  final String comments;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const _InsideListViewText(label: 'Comentarios'),
+      
+        const SizedBox(height: 5),
+        
+        _InsideListViewText(label: '', content: comments),
+        
+        const SizedBox(height: 5),
+      ],
+    );
+  }
+}
+
+class _TasteHeader extends StatelessWidget {
+  const _TasteHeader({
+    required this.newWidth,
+    required this.lastLabel,
+  });
+
+  final double newWidth;
+  final String lastLabel;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final styles = Theme.of(context).textTheme;
 
     return SizedBox(
-      width: double.infinity,
-      height: double.infinity,
-      child: Column(
+      height: 20,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            alignment: Alignment.center,
-            height: 40,
-            child: Text('Resumen de mi cata', style: styles.titleMedium),
+            width: newWidth * 0.28,
+            alignment: Alignment.bottomCenter,
+            child: Text('Vista', style: styles.bodyMedium),
           ),
-
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(0),
-              itemCount: multipleTaste.winesMultipleTaste.length,
-              itemBuilder: (context, index) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (index == 0) const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Divider(
-                      ),
-                    ),
-                  
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.only(top: 0, bottom: 8, left: 10, right: 10),
-                      alignment: Alignment.center,
-                      child: Text(
-                        multipleTaste.userMultipleTaste[index].nombre,
-                        style: styles.bodyMedium
-                      ),
-                    ),
-
-                    SizedBox(
-                      height: 20,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: newWidth * 0.28,
-                            alignment: Alignment.bottomCenter,
-                            child: Text('Vista', style: styles.bodyMedium),
-                          ),
-                              
-                          Container(
-                            width: newWidth * 0.28,
-                            alignment: Alignment.bottomCenter,                         
-                            child: Text('Nariz', style: styles.bodyMedium),
-                          ),
-                              
-                          Container(
-                            width: newWidth * 0.28,
-                            alignment: Alignment.bottomCenter,
-                            child: Text('Boca', style: styles.bodyMedium),
-                          ),
-                              
-                          Container(
-                            width: newWidth * 0.16,
-                            alignment: Alignment.bottomCenter,
-                            child: Text('Final', style: styles.bodyMedium),
-                          ),
-                        ],
-                      ),
-                    ),
-
-            
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: newWidth * 0.28,
-                          alignment: Alignment.center,
-                          child: RatingDetailsCategory(
-                            ratingCategory: formulas.puntosVistaFunction(wineTasteList[index].ratingVista),
-                            itemSize: 14,
-                          ),
-                        ),
-                  
-                        Container(
-                          width: newWidth * 0.28,
-                          alignment: Alignment.center,                         
-                          child: RatingDetailsCategory(
-                            ratingCategory: formulas.puntosNarizFunction(wineTasteList[index].ratingNariz),
-                            itemSize: 14,
-                          ),
-                        ),
-                  
-                        Container(
-                          width: newWidth * 0.28,
-                          alignment: Alignment.center,
-                          child: RatingDetailsCategory(
-                            ratingCategory: formulas.puntosBocaFunction(wineTasteList[index].ratingBoca),
-                            itemSize: 14,
-                          ),
-                        ),
-                  
-                       Container(
-                          width: newWidth * 0.16,
-                          alignment: Alignment.center,
-                          child: Text(
-                            wineTasteList[index].ratingPuntos.toInt() == -1 ? '0' : wineTasteList[index].ratingPuntos.toInt().toString(), 
-                            style: styles.bodyLarge
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    if (wineTasteList[index].notasVista != '' || wineTasteList[index].notasNariz != '' || wineTasteList[index].notasBoca != '') Column(
-                      children: [
-                        const SizedBox(height: 10),
-
-                        const _InsideListViewText(label: 'Notas de cata'),
-                        
-                        const SizedBox(height: 5),
-
-                        _InsideListViewText(label: 'Vista: ', content: wineTasteList[index].notasVista),
-                        
-                        const SizedBox(height: 5),
-                        
-                        _InsideListViewText(label: 'Nariz: ', content: wineTasteList[index].notasNariz),
-                        
-                        const SizedBox(height: 5),
-                        
-                        _InsideListViewText(label: 'Boca: ', content: wineTasteList[index].notasBoca),
-                        
-                        const SizedBox(height: 5),
-                      ],
-                    ),
-                    
-                    const SizedBox(height: 5),
-
-                    if (wineTasteList[index].comentarios != '') Column(
-                      children: [
-
-                        const _InsideListViewText(label: 'Comentarios'),
-                      
-                        const SizedBox(height: 5),
-                        
-                        _InsideListViewText(label: '', content: wineTasteList[index].comentarios),
-                        
-                        const SizedBox(height: 5),
-                      ],
-                    ),
-                  
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Divider(),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),             
-          // Height of BottomSHeet
-          const SizedBox(height: 58),
-        ]
+              
+          Container(
+            width: newWidth * 0.28,
+            alignment: Alignment.bottomCenter,                         
+            child: Text('Nariz', style: styles.bodyMedium),
+          ),
+              
+          Container(
+            width: newWidth * 0.28,
+            alignment: Alignment.bottomCenter,
+            child: Text('Boca', style: styles.bodyMedium),
+          ),
+              
+          Container(
+            width: newWidth * 0.16,
+            alignment: Alignment.bottomCenter,
+            child: Text(lastLabel, style: styles.bodyMedium),
+          ),
+        ],
       ),
+    );
+  }
+}
+
+class _OutsideTitle extends StatelessWidget {
+  const _OutsideTitle({
+    required this.label,
+  });
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final styles = Theme.of(context).textTheme;
+
+    return Container(
+      alignment: Alignment.center,
+      height: 40,
+      child: Text(label, style: styles.titleMedium)
     );
   }
 }
