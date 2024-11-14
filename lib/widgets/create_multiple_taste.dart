@@ -1,3 +1,5 @@
+// Image credit https://www.freepik.es/foto-gratis/copas-png-bebida-vino-aislada-sobre-fondo-blanco_314264077.htm?log-in=google#fromView=image_search_similar&page=1&position=1&uuid=bc65a2d4-8962-482e-9323-663bcedacd7d
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,19 +32,77 @@ class CreateMultipleTaste extends StatelessWidget{
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        toolbarHeight: 260,
-        // toolbarHeight: 302,
+        toolbarHeight: 48,
         titleSpacing: 0,
-        title: _CustomBodyAppBar(),
+        title: _CustomAppBar(),
       ),
-      body: const ListViewMultipleWines(),      
+      body: const Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(bottom: 58),
+            child: BottomImageBackground(image: 'assets/initial-multiple-background.jpg', opacity: 0.8),
+          ),
+
+          _CustomBody(),
+          // ListViewMultipleWines(),
+        ],
+      ),      
     );
   }
 
 
 }
 
-class _CustomBodyAppBar extends StatelessWidget {
+class _CustomAppBar extends StatelessWidget {
+  const _CustomAppBar();
+
+  @override
+  Widget build(BuildContext context) {
+
+    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final colors = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
+
+    return Row(
+      children: [
+        IconButton(
+          onPressed: () {
+            // To close bottomsheet
+            if (multipleTaste.winesMultipleTaste.length > 1) Navigator.pop(context);
+            multipleTaste.resetSettings();
+            multipleTaste.autovalidateMode = AutovalidateMode.disabled;
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_rounded, color: colors.onSurface)
+        ),
+          
+        Container(
+          height: 48,
+          alignment: Alignment.center,
+          width: size.width - 96,
+          child: Text(
+            multipleTaste.multipleTaste.name,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 20, height: 1.1)),
+        ),
+              
+        IconButton(
+          onPressed: () {
+            // To close bottomsheet
+            if (multipleTaste.winesMultipleTaste.length > 1) Navigator.pop(context);
+            multipleTaste.clearWines();
+          },
+          icon: Icon(Icons.clear_all_rounded, color: colors.onSurface)
+        ),
+      ],
+    );
+  }
+}
+
+class _CustomBody extends StatelessWidget {
+  const _CustomBody();
 
   void showCustomDialog(BuildContext context, {required Widget child}) {
     showGeneralDialog(
@@ -68,89 +128,44 @@ class _CustomBodyAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final colors = Theme.of(context).colorScheme;
-    final size = MediaQuery.of(context).size;
+    final styles = Theme.of(context).textTheme;
 
-    return Column(
-      children: [
-        Row(
-          children: [
-            IconButton(
-              onPressed: () {
-                // To close bottomsheet
-                if (multipleTaste.winesMultipleTaste.length > 1) Navigator.pop(context);
-                multipleTaste.resetSettings();
-                multipleTaste.autovalidateMode = AutovalidateMode.disabled;
-                Navigator.pop(context);
-              },
-              icon: Icon(Icons.arrow_back_rounded, color: colors.onSurface)
-            ),
-              
-            Container(
-              height: 48,
-              alignment: Alignment.center,
-              width: size.width - 96,
-              child: Text(
-                multipleTaste.multipleTaste.name,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 20, height: 1.1)),
-            ),
-                 
-            IconButton(
-              onPressed: () {
-                // To close bottomsheet
-                if (multipleTaste.winesMultipleTaste.length > 1) Navigator.pop(context);
-                multipleTaste.clearWines();
-              },
-              icon: Icon(Icons.clear_all_rounded, color: colors.onSurface)
-            ),
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      height: double.infinity,
+      width: double.infinity,
+      child: Column(
+        children: [
+          const SizedBox(height: 10),
       
-        Container(
-          height: 84,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          alignment: Alignment.center,
-          child: TextFormField(
-            textAlignVertical: TextAlignVertical.top,                 
-            maxLines: 3,
-            minLines: 3,
-            style: const TextStyle(fontSize: 14),
+          TextFormField( // TODO obligar y validar
+            maxLines: null,
+            style: styles.bodySmall,
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-              isDense: true,
+              contentPadding: EdgeInsets.fromLTRB(16, 16, 12, 10),
               labelText: 'Descripcion de la cata a realizar',
-              alignLabelWithHint: true,
-              labelStyle: const TextStyle(fontSize: 14),
-              floatingLabelStyle: TextStyle(color: Colors.grey[600], fontSize: 14),
+              labelStyle: styles.bodySmall,
+              floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+              floatingLabelBehavior: FloatingLabelBehavior.always,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(width: 1)
               ),
             ),
             onChanged: (value) => multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.description = value),
             onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
           ),
-        ),
-    
-        Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          height: 42,
-          child: TextFormField(    
-            textAlignVertical: TextAlignVertical.center,             
-            maxLines: 1,
-            minLines: 1,
-            style: const TextStyle(fontSize: 14),
+      
+          const SizedBox(height: 20),
+      
+          TextFormField(    
+            style: styles.bodySmall,
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-              isDense: true,
+              contentPadding: EdgeInsets.fromLTRB(16, 16, 12, 10),
               labelText: 'Contraseña de la cata (opcional)',
-              alignLabelWithHint: true,
-              labelStyle: const TextStyle(fontSize: 14),
-              floatingLabelStyle: TextStyle(color: Colors.grey[600], fontSize: 14),
+              labelStyle: styles.bodySmall,
+              floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+              floatingLabelBehavior: FloatingLabelBehavior.always,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(width: 1)
@@ -159,132 +174,225 @@ class _CustomBodyAppBar extends StatelessWidget {
             onChanged: (value) => multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.password = value),
             onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
           ),
-        ),
-    
-        Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.only(left: 10),
-          height: 42,
-          child: Row(
-            children: [
-              const Text('Fecha limite de la cata', style: TextStyle(fontSize: 14)),
-    
-              const SizedBox(width: 16),
-    
-              Expanded(
-                child: TextFormField(  
-                  controller: multipleTaste.dateController,  
-                  textAlignVertical: TextAlignVertical.center,
-                  textAlign: TextAlign.center,             
-                  maxLines: 1,
-                  minLines: 1,
-                  readOnly: true,
-                  canRequestFocus: false,
-                  autofocus: false,
-                  style: const TextStyle(fontSize: 14),
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                    isDense: true,
-                    alignLabelWithHint: true,
-                    labelStyle: const TextStyle(fontSize: 14),
-                    floatingLabelStyle: TextStyle(color: Colors.grey[600], fontSize: 14),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(width: 1)
-                    ),
-                  ),
-                ),
-              ),
-    
-              IconButton(
-                onPressed: () {
-                  showCustomDialog(
-                    context, 
-                    child: CustomAlertDialog(
-                      title: 'Fecha limite de cata',
-                      cancelText: 'Cancelar',
-                      onPressedCancel: () {
-                        multipleTaste.dateController.text = 'Sin limite';
-                        Navigator.pop(context);
-                      },
-                      content: SizedBox(
-                        width: 232,
-                        height: 180,
-                        child: SfDateRangePicker(
-                          monthFormat: 'MMMM',
-                          view: DateRangePickerView.month,
-                          showNavigationArrow: true,
-                          backgroundColor: Colors.transparent,
-                          enablePastDates: false,
-                          headerStyle: const DateRangePickerHeaderStyle(
-                            textAlign: TextAlign.center,
-                            backgroundColor: Colors.transparent,
-                            textStyle: TextStyle(fontFeatures: [FontFeature.alternative(1)])
-                          ),
-                          monthViewSettings: const DateRangePickerMonthViewSettings(
-                            firstDayOfWeek: 1,
-                          ),
-                          selectionMode: DateRangePickerSelectionMode.single,
-                          selectionShape: DateRangePickerSelectionShape.rectangle,
-                          onSelectionChanged: (dateRangePickerSelectionChangedArgs) {
-                            final DateTime date = dateRangePickerSelectionChangedArgs.value;
-                            multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.dateLimit = CustomDatetime().toText(date));
-                            multipleTaste.dateController.text = '${date.day}-${date.month}-${date.year}';
-                            Navigator.pop(context);
-                          },
-                        )
-                      ),
-                    )
-                  );
-                },
-                icon: const Icon(Icons.calendar_month_rounded)
-              ),
-            ],
-          ),
-        ),
-      
-        // Container(
-        //   padding: const EdgeInsets.symmetric(horizontal: 10),
-        //   alignment: Alignment.center,
-        //   height: 42,
-        //   child: Row(
-        //     crossAxisAlignment: CrossAxisAlignment.center,
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     children: [
-        //       const Text('Realizar la cata totalmente a ciegas', style: TextStyle(fontSize: 14)),
-          
-        //       const Spacer(),
-          
-        //       SizedBox(
-        //         width: 48,
-        //         child: FittedBox(
-        //           fit: BoxFit.fitWidth,
-        //           child: Switch(
-        //             value: multipleTaste.multipleTaste.hidden,
-        //             onChanged: (_) {
-        //               multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.hidden = !multipleTaste.multipleTaste.hidden);
-        //               if (multipleTaste.winesMultipleTaste.length > 1) Navigator.pop(context);
-        //               multipleTaste.clearWines();
-        //             }
-        //           ),
-        //         ),
-        //       )
-        //     ],
-        //   ),
-        // ),
 
-        const RowVisibleWines(),
+          const SizedBox(height: 20),
+
+          const DateTextFormField(),
       
-        // AnimatedSwitcher(
-        //   duration: const Duration(milliseconds: 250),
-        //   layoutBuilder: (currentChild, previousChildren) {
-        //     return currentChild!;
-        //   },
-        //   child: multipleTaste.multipleTaste.hidden
-        //     ? const RowHiddenWines(key: ValueKey<String>('notHidden'))
-        //     : const RowVisibleWines(key: ValueKey<String>('hidden')), 
-        // ),
-      ],
+          // TextFormField(
+          //   controller: multipleTaste.dateController,  
+          //   minLines: 1,
+          //   readOnly: true,
+          //   canRequestFocus: false,
+          //   autofocus: false,
+          //   style: styles.bodySmall,
+          //   decoration: InputDecoration(
+          //     isDense: true,
+          //     contentPadding: EdgeInsets.fromLTRB(16, 16, 12, 10),
+          //     labelText: 'Fecha límite de cata (opcional)',
+          //     labelStyle: styles.bodySmall,
+          //     floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+          //     border: OutlineInputBorder(
+          //       borderRadius: BorderRadius.circular(15),
+          //       borderSide: const BorderSide(width: 1)
+          //     ),
+          //     suffixIcon: IconButton(
+          //       onPressed: () {
+          //         showCustomDialog(
+          //           context, 
+          //           child: const CalendarDialog(),
+          //         );
+          //       },
+          //       icon: const Icon(Icons.calendar_month_rounded)
+          //     ),
+          //   ),
+          //   onTap: () {
+          //     showCustomDialog(
+          //       context, 
+          //       child: const CalendarDialog()
+          //     );
+          //   },
+          // ),
+
+          const SizedBox(height: 10),
+
+          const RowVisibleWines(),
+
+          const SizedBox(height: 10),
+
+          const Expanded(
+            child: ListViewMultipleWines()
+          ),
+        
+          // Container(
+          //   padding: const EdgeInsets.symmetric(horizontal: 10),
+          //   alignment: Alignment.center,
+          //   height: 42,
+          //   child: Row(
+          //     crossAxisAlignment: CrossAxisAlignment.center,
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       const Text('Realizar la cata totalmente a ciegas', style: TextStyle(fontSize: 14)),
+            
+          //       const Spacer(),
+            
+          //       SizedBox(
+          //         width: 48,
+          //         child: FittedBox(
+          //           fit: BoxFit.fitWidth,
+          //           child: Switch(
+          //             value: multipleTaste.multipleTaste.hidden,
+          //             onChanged: (_) {
+          //               multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.hidden = !multipleTaste.multipleTaste.hidden);
+          //               if (multipleTaste.winesMultipleTaste.length > 1) Navigator.pop(context);
+          //               multipleTaste.clearWines();
+          //             }
+          //           ),
+          //         ),
+          //       )
+          //     ],
+          //   ),
+          // ),
+             
+          // AnimatedSwitcher(
+          //   duration: const Duration(milliseconds: 250),
+          //   layoutBuilder: (currentChild, previousChildren) {
+          //     return currentChild!;
+          //   },
+          //   child: multipleTaste.multipleTaste.hidden
+          //     ? const RowHiddenWines(key: ValueKey<String>('notHidden'))
+          //     : const RowVisibleWines(key: ValueKey<String>('hidden')), 
+          // ),
+        ],
+      ),
+    );
+  }
+}
+
+class DateTextFormField extends StatefulWidget {
+  const DateTextFormField({super.key});
+
+  @override
+  State<DateTextFormField> createState() => _DateTextFormFieldState();
+}
+
+class _DateTextFormFieldState extends State<DateTextFormField> {
+
+  late TextEditingController dateController;
+
+  @override
+  void initState() {
+    super.initState();
+    dateController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    dateController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    final styles = Theme.of(context).textTheme;
+
+    void showCustomDialog() {
+      showGeneralDialog(
+        context: context,
+        barrierDismissible: false, 
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return PopScope(
+            canPop: false,
+            child: CalendarDialog(dateController: dateController),
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 300),
+        transitionBuilder: (context, animation, secondaryAnimation, child) {
+          return ScaleTransition(
+            scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
+            child: child
+          );
+        },
+      );
+    }
+
+    return TextFormField(
+      controller: dateController,  
+      minLines: 1,
+      readOnly: true,
+      canRequestFocus: false,
+      autofocus: false,
+      style: styles.bodySmall,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.fromLTRB(16, 16, 12, 10),
+        labelText: 'Fecha límite de cata (opcional)',
+        labelStyle: styles.bodySmall,
+        floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(width: 1)
+        ),
+        suffixIcon: IconButton(
+          onPressed: showCustomDialog,
+          icon: const Icon(Icons.calendar_month_rounded)
+        ),
+      ),
+      onTap: showCustomDialog,
+    );
+  }
+}
+
+class CalendarDialog extends StatelessWidget {
+  const CalendarDialog({
+    super.key, 
+    required this.dateController
+  });
+
+  final TextEditingController dateController;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+
+    return CustomAlertDialog(
+      title: 'Fecha limite de cata',
+      cancelText: 'Cancelar',
+      onPressedCancel: () {
+        dateController.text = 'Sin fecha límite de cata';
+        Navigator.pop(context);
+      },
+      content: SizedBox(
+        width: 232,
+        height: 160,
+        child: SfDateRangePicker(
+          monthFormat: 'MMMM',
+          view: DateRangePickerView.month,
+          showNavigationArrow: true,
+          backgroundColor: Colors.transparent,
+          enablePastDates: false,
+          headerStyle: const DateRangePickerHeaderStyle(
+            textAlign: TextAlign.center,
+            backgroundColor: Colors.transparent,
+            textStyle: TextStyle(fontFeatures: [FontFeature.alternative(1)])
+          ),
+          monthViewSettings: const DateRangePickerMonthViewSettings(
+            viewHeaderHeight: 0,
+            firstDayOfWeek: 1,
+          ),
+          selectionMode: DateRangePickerSelectionMode.single,
+          selectionShape: DateRangePickerSelectionShape.rectangle,
+          onSelectionChanged: (dateRangePickerSelectionChangedArgs) {
+            final DateTime date = dateRangePickerSelectionChangedArgs.value;
+            final String dateEndDay = CustomDatetime().toTextToEndOfDay(date);
+            multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.dateLimit = dateEndDay);
+            dateController.text = CustomDatetime().toPlainText(dateEndDay);
+            Navigator.pop(context);
+          },
+        )
+      ),
     );
   }
 }
@@ -357,6 +465,7 @@ class CustomMultipleWinesRow extends StatelessWidget {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final hideIndex = multipleTaste.hideIndex.indexOf(index) + 1;
+    final styles = Theme.of(context).textTheme;
 
     return Card(
       key: key,
@@ -368,7 +477,7 @@ class CustomMultipleWinesRow extends StatelessWidget {
       
           const Icon(Icons.menu),
       
-          const SizedBox(width: 18),
+          const SizedBox(width: 16),
       
           Expanded(
             child: multipleTaste.hideIndex.contains(index) 
@@ -380,7 +489,7 @@ class CustomMultipleWinesRow extends StatelessWidget {
                     'Vino a catar a ciegas $hideIndex', 
                     maxLines: 1, 
                     overflow: TextOverflow.ellipsis, 
-                    style: const TextStyle(fontSize: 14)
+                    style: styles.bodySmall!.copyWith(fontWeight: FontWeight.bold),
                   ),
 
                   Text(
@@ -396,7 +505,7 @@ class CustomMultipleWinesRow extends StatelessWidget {
                 multipleTaste.winesMultipleTaste[index].nombre, 
                 maxLines: 2, 
                 overflow: TextOverflow.ellipsis, 
-                style: const TextStyle(fontSize: 14)
+                style: styles.bodySmall!.copyWith(fontWeight: FontWeight.bold),
               ),
           ),
              
@@ -493,14 +602,14 @@ class RowVisibleWines extends StatelessWidget {
     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: false);
     final taste = Provider.of<VisibleOptionsProvider>(context, listen: false);
     final colors = Theme.of(context).colorScheme;
+    final styles = Theme.of(context).textTheme;
 
     return Container(
-      padding: const EdgeInsets.only(left: 10),
-      alignment: Alignment.center,
-      height: 42,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: 10),
       child: Row(
         children: [
-          const Text('Busca, añade y oculta los vinos', style: TextStyle(fontSize: 14)),
+          Text('Busca, añade y oculta vinos', style: styles.bodyMedium),
                                 
           const Spacer(),
                     

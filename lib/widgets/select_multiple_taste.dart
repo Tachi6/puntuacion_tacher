@@ -24,6 +24,29 @@ class SelectMultipleTaste extends StatelessWidget {
       text: multipleTaste.multipleTaste.name, 
     );
 
+    void onPressed() async {
+      multipleService.loadMultiples();
+      final multipleSearched = await showSearch(context: context, delegate: SearchDelegateMultiple());
+      if (multipleSearched != null) {
+        multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste = multipleSearched);
+        if (multipleSearched.hidden) {
+          multipleTaste.winesHiddenNumber = multipleSearched.wines.keys.length;
+          multipleTaste.addHiddenWines();
+        }
+        else {
+          List<Wines> visibleWines = [];
+          multipleSearched.wines.forEach((key, value) {
+            visibleWines.add(wineService.winesByIndex[int.parse(key)].copy());
+          },);
+          multipleTaste.addVisibleWines(visibleWines);
+        }
+        multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userDisplayName);
+        multipleTaste.initUserTaste(multipleService.isMultipleTasted);
+        // wineForm.setWineToEdit(winesService.selectedWine!);
+        taste.showContinueButton = true;
+      }
+    }
+
     return Container(
       height: 85,
       width: double.infinity,
@@ -46,32 +69,12 @@ class SelectMultipleTaste extends StatelessWidget {
                     labelStyle: const TextStyle(fontSize: 14),
                     floatingLabelStyle: TextStyle(color: Colors.grey[600], fontSize: 14),
                   ),
+                  onTap: onPressed,
                 ),
               ),
 
               SearchWineButton(
-                onPressed: () async {
-                  multipleService.loadMultiples();
-                  final multipleSearched = await showSearch(context: context, delegate: SearchDelegateMultiple());
-                  if (multipleSearched != null) {
-                    multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste = multipleSearched);
-                    if (multipleSearched.hidden) {
-                      multipleTaste.winesHiddenNumber = multipleSearched.wines.keys.length;
-                      multipleTaste.addHiddenWines();
-                    }
-                    else {
-                      List<Wines> visibleWines = [];
-                      multipleSearched.wines.forEach((key, value) {
-                        visibleWines.add(wineService.winesByIndex[int.parse(key)].copy());
-                      },);
-                      multipleTaste.addVisibleWines(visibleWines);
-                    }
-                    multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userDisplayName);
-                    multipleTaste.initUserTaste(multipleService.isMultipleTasted);
-                    // wineForm.setWineToEdit(winesService.selectedWine!);
-                    taste.showContinueButton = true;
-                  }
-                },
+                onPressed: onPressed,
               ),
             ],
           ), 

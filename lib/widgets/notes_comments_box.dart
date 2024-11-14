@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -140,7 +142,7 @@ class NotasCataBox extends StatelessWidget {
 class ComentariosBox extends StatelessWidget {
   const ComentariosBox(this.wineForm,{super.key});
 
-  final CreateEditWineFormProvider wineForm; 
+  final CreateEditWineFormProvider wineForm;
   
   @override
   Widget build(BuildContext context) {
@@ -150,7 +152,6 @@ class ComentariosBox extends StatelessWidget {
     final screenProvider = Provider.of<ScreensProvider>(context);
     // Resto 1 porque el listado de userMultipleWineTaste empieza en 0, y las paginas tienen la pagina de inicio en el 0
     final multiplePage = screenProvider.multipleScreen - 1;
-
 
     return CustomAlertDialog(
       title: 'Añadir comentarios',
@@ -209,5 +210,20 @@ class _CustomTextFormField extends StatelessWidget {
       ),
       onChanged: onChanged,
     );
+  }
+}
+
+// TODO implement debouncer
+class Debouncer {
+  Debouncer();
+
+  final int milliseconds = 500;
+  Timer? _timer;
+
+  run(VoidCallback action) {
+    if (null != _timer) {
+      _timer!.cancel();
+    }
+    _timer = Timer(Duration(milliseconds: milliseconds), action);
   }
 }

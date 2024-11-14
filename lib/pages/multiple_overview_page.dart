@@ -14,17 +14,25 @@ class MultipleOverviewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final size = MediaQuery.of(context).size;
     final statusBarHeight = View.of(context).padding.top / View.of(context).devicePixelRatio;
     // 20 of lateral padding
     final newWidth = size.width - 20;
-    // Height of StatusBar, AppBar, BottomSheet, 4 x Normal Row, 2 x Thin Row 
-    final newHeight = size.height - statusBarHeight - 48 - 58 - 160 - 40;
+    // Height of StatusBar, AppBar, BottomSheet, 4 x Normal Row, 2 x Thin Row, 1 SizedBox 5px 
+    final newHeight = size.height - statusBarHeight - 48 - 58 - 160 - 40 - 5;
 
-    return Scaffold( // TODO animated switcher and change view button
+    return Scaffold(
       appBar: const CustomMultipleAppBar(),
-      body: UserMultipleTasteDetails(newWidth: newWidth),
-      // body: OverviewMultipleTaste(newWidth: newWidth, newHeight: newHeight),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        layoutBuilder: (currentChild, previousChildren) {
+          return currentChild!;
+        },
+        child: multipleTaste.overview // TODO repasar que el overview funcione bien
+          ? OverviewMultipleTaste(key: const ValueKey<String>('overviewMultiple'), newWidth: newWidth, newHeight: newHeight)
+          : UserMultipleTasteDetails(key: const ValueKey<String>('userDetails'), newWidth: newWidth),
+      ), 
     );
   }
 }
@@ -134,6 +142,8 @@ class OverviewMultipleTaste extends StatelessWidget {
           const _OutsideTitle(label: 'Catas Realizadas'),
              
           const _OtherUsersTaste(),
+
+          const SizedBox(height: 5),
 
           const _OutsideTitle(label: 'Valoraciones medias de cata'),  
 

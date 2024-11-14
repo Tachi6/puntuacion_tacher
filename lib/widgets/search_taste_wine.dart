@@ -22,6 +22,18 @@ class SearchTasteWine extends StatelessWidget {
       text: winesService.selectedWine?.nombre, 
     );
 
+    void onPressed() async {
+      winesService.loadWines();
+      final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
+        customResultText: 'Vuelve atras y crea tu' '\n' 'vino para catarlo.'
+      ));
+      if (wineSearched != null) {
+        winesService.selectedWine = wineSearched;
+        wineForm.setWineToEdit(winesService.selectedWine!);
+        taste.showContinueButton = true;
+      }
+    }
+
     return Container(
       height: 85,
       width: double.infinity,
@@ -44,24 +56,14 @@ class SearchTasteWine extends StatelessWidget {
                     labelStyle: const TextStyle(fontSize: 14),
                     floatingLabelStyle: TextStyle(color: Colors.grey[600], fontSize: 14),
                   ),
+                  onTap: onPressed,
                 ),
               ),
 
               Row(
                 children: [
                   SearchWineButton(
-                    onPressed: () async {
-                      winesService.loadWines();
-                      final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
-                        customResultText: 'Vuelve atras y crea tu' '\n' 'vino para catarlo.'
-                      ));
-                      if (wineSearched != null) {
-                        print(wineSearched.puntuacionesVista);
-                        winesService.selectedWine = wineSearched;
-                        wineForm.setWineToEdit(winesService.selectedWine!);
-                        taste.showContinueButton = true;
-                      }
-                    },
+                    onPressed: onPressed,
                   ),
 
                   AddWineButton(

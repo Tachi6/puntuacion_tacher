@@ -51,6 +51,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
         multipleTaste.resetSettings();
         tasteScreenOptions.showContinueButton = false;
         Navigator.pop(context);
+        screenProvider.multipleScreen = 0;
         return;
       }
       if (!multipleTaste.isValidRating()) {
@@ -65,6 +66,8 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       multipleTaste.calculateValoration();
       // Calculo puntuaciones medias
       multipleTaste.calculateAverageRatings();
+      // Activo 2 paginas del overview
+      multipleTaste.overview = true;
       // Moverme a la ultima página // TODO ver que lo hace fluido...
       final int newPageIndex = multipleTaste.winesMultipleTaste.length + 1;
       if (screenProvider.multipleScreen != newPageIndex) {
@@ -95,10 +98,10 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       List<Widget> tastePages = [];
 
       final DateTime datelimit = multipleTaste.multipleTaste.dateLimit == null
-        ? CustomDatetime().toDateTime('2020-01-01T00:00:00.000')
+        ? CustomDatetime().toDateTime('3000-01-01T00:00:00.000')
         : CustomDatetime().toDateTime(multipleTaste.multipleTaste.dateLimit!);
 
-      if (datelimit.isAfter(DateTime.now())) {
+      if (datelimit.isBefore(DateTime.now())) {
         tastePages = [];
       } 
       else {
@@ -107,6 +110,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
             appBarTitle: wine.nombre,
             onPressedBackButon: () {
               Navigator.pop(context);
+              screenProvider.multipleScreen = 0;
               multipleTaste.resetSettings();
             },
           );

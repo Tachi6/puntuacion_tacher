@@ -28,13 +28,11 @@ class MultipleTasteProvider extends ChangeNotifier {
   List<Wines> winesMultipleTaste = [];
   List<WineTaste> userMultipleTaste = [];
   String _userView = '';
+  bool _overview = false;
 
   int pageIndex = 0;
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController dateController = TextEditingController(
-    text: 'Sin limite',
-  );
+  final TextEditingController nameController = TextEditingController(); // TODO sacar de aqui
 
   Future<void> obtainUser() async {
     const storage = FlutterSecureStorage();
@@ -330,18 +328,10 @@ class MultipleTasteProvider extends ChangeNotifier {
 
   void hideAllWines() {
     if (_hideNames) {
-      for (var i = 0; i < winesMultipleTaste.length; i++) {
-        if (!winesMultipleTaste[i].nombre.contains('Vino a catar a ciegas')) {
-          winesMultipleTaste[i].nombre = 'Vino a catar a ciegas ${i + 1}';
-        }
-      }
+      hideIndex = List.generate(winesMultipleTaste.length, (index) => index);
     }
     else {
-      for (var i = 0; i < winesMultipleTaste.length; i++) {
-        if (winesMultipleTaste[i].nombre.contains('Vino a catar a ciegas')) {
-          winesMultipleTaste[i].nombre = '${winesMultipleTaste[i].vino} ${winesMultipleTaste[i].anada.toString()}';
-        }
-      }
+      hideIndex.clear();
     }
     notifyListeners();
   }
@@ -372,6 +362,13 @@ class MultipleTasteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool get overview => _overview;
+
+  set overview(bool value) {
+    _overview = value;
+    notifyListeners();
+  }
+
   bool get isNameUsed => _isNameUsed;
 
   set isNameUsed(bool value) {
@@ -386,8 +383,8 @@ class MultipleTasteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void resetSettings() { // TODO ver donde y como utilizo el resetsettings
-    multipleTaste.name = ''; // TODO al hacer back dejar nombre o no???
+  void resetSettings() {
+    multipleTaste.name = ''; 
     multipleTaste.description = null;
     multipleTaste.password = null;
     multipleTaste.hidden = false;
@@ -396,6 +393,7 @@ class MultipleTasteProvider extends ChangeNotifier {
     multipleTaste.averageRatings = {};
     winesHiddenNumber = 0;
     hideNames = false;
+    overview = false;
     
     winesMultipleTaste.clear();
     userMultipleTaste.clear();
