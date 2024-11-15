@@ -10,15 +10,7 @@ class MultipleTasteProvider extends ChangeNotifier {
     obtainUser();
   }
 
-  Multiple multipleTaste = Multiple(
-    name: '',
-    hidden: false,
-    wines: {},
-    averageRatings: {}
-  );
-
-  GlobalKey<FormState> formNameKey = GlobalKey<FormState>();
-  
+  String _multipleName = '';
   late final String userDisplayName;
   AutovalidateMode _autovalidateName = AutovalidateMode.disabled;
   bool _isNameUsed = false;
@@ -30,10 +22,17 @@ class MultipleTasteProvider extends ChangeNotifier {
   String _userView = '';
   bool _overview = false;
 
+  Multiple multipleTaste = Multiple(
+    name: '',
+    hidden: false,
+    wines: {},
+    averageRatings: {}
+  );
+
   int pageIndex = 0;
 
-  final TextEditingController nameController = TextEditingController(); // TODO sacar de aqui
-
+  GlobalKey<FormState> formNameKey = GlobalKey<FormState>();
+  
   Future<void> obtainUser() async {
     const storage = FlutterSecureStorage();
     userDisplayName = await storage.read(key: 'displayName') ?? '';
@@ -159,7 +158,7 @@ class MultipleTasteProvider extends ChangeNotifier {
     final Formulas formulas = Formulas();
 
     Map<String, AverageRatings> puntuaciones = {};
-    print(multipleTaste.wines.length);
+    
     multipleTaste.wines.forEach((key, value) {
 
       List <double> tempPuntosVistaList = [];
@@ -183,10 +182,6 @@ class MultipleTasteProvider extends ChangeNotifier {
         if (value.puntosFinal != -1) tempPuntuacionesList.add(value.puntosFinal);
       },);
 
-        print(tempPuntosVistaList);
-        print(tempPuntosNarizList);
-        print(tempPuntosBocaList);
-        print(tempPuntuacionesList);
       puntuaciones[key] = AverageRatings(
         vista: formulas.puntuacionCategoria(tempPuntosVistaList),
         nariz: formulas.puntuacionCategoria(tempPuntosNarizList), 
@@ -355,6 +350,13 @@ class MultipleTasteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String get multipleName => _multipleName;
+
+  set multipleName(String value) {
+    _multipleName = value;
+    notifyListeners();
+  }
+
   String get userView => _userView;
 
   set userView(String value) {
@@ -384,6 +386,7 @@ class MultipleTasteProvider extends ChangeNotifier {
   }
 
   void resetSettings() {
+    multipleName = '';
     multipleTaste.name = ''; 
     multipleTaste.description = null;
     multipleTaste.password = null;

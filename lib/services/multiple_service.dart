@@ -51,7 +51,7 @@ class MultipleService extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Multiple> loadMultipleTaste(String multipleName) async {
+  Future<Multiple> loadMultipleToUpdate(String multipleName) async {
     final String jsonGetMultiple = 'multiple/$multipleName.json';
     final url = Uri.https(_baseUrl, jsonGetMultiple, {
       'auth': await storage.read(key: 'idToken') ?? ''
@@ -68,6 +68,10 @@ class MultipleService extends ChangeNotifier {
     notifyListeners();
     
      return multipleUpdated;
+  }
+
+  Multiple loadMultipleTaste(String multipleName) {
+    return multipleTasteList.firstWhere((multiple) => multiple.name == multipleName);
   }
 
   Future<Multiple> createMultipleTaste(Multiple multipleTaste) async {

@@ -7,18 +7,35 @@ import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-class MultipleTasteName extends StatelessWidget {
+class MultipleTasteName extends StatefulWidget {
 
   const MultipleTasteName({super.key});
 
+  @override
+  State<MultipleTasteName> createState() => _MultipleTasteNameState();
+}
+
+class _MultipleTasteNameState extends State<MultipleTasteName> {
+
+  late TextEditingController nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
 
     final colors = Theme.of(context).colorScheme;
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleService>(context);
-
-    multipleTaste.nameController.text = multipleTaste.multipleTaste.name; // TODO da error el controller
 
     return Container(
       height: 85,
@@ -34,10 +51,10 @@ class MultipleTasteName extends StatelessWidget {
             children: [
               Expanded(
                 child: Form(
-                  autovalidateMode: multipleTaste.autovalidateMode,
+                  autovalidateMode: AutovalidateMode.onUnfocus,// multipleTaste.autovalidateMode,
                   key: multipleTaste.formNameKey,
                   child: TextFormField(
-                    controller: multipleTaste.nameController,
+                    controller: nameController,
                     autocorrect: false,
                     enableSuggestions: false,
                     style: const TextStyle(fontSize: 14),
@@ -66,14 +83,14 @@ class MultipleTasteName extends StatelessWidget {
                     onTapOutside: (event) {
                       FocusManager.instance.primaryFocus?.unfocus();
                     },
-                    onChanged: (value) => multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.name = value),
+                    onChanged: (value) => multipleTaste.multipleName = value,
                   ),
                 )
               ),
           
               IconButton(
                 onPressed: () async {
-                  if (await multipleService.isMultipleNameUsed(multipleTaste.multipleTaste.name) && context.mounted) {
+                  if (await multipleService.isMultipleNameUsed(multipleTaste.multipleName) && context.mounted) {
                     NotificationsService.showSnackbar('El nombre de la cata ya ha sido utilizado.', context);
                     return;
                   }
@@ -83,9 +100,9 @@ class MultipleTasteName extends StatelessWidget {
                       child: CreateMultipleTaste(),
                     ),
                   );
-
                   if (multipleTaste.isValidForm()) {
                     Navigator.push(context, routeList);
+                    nameController.clear();
                   }
                 }, 
                 icon: Icon(

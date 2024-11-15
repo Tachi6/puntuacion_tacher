@@ -61,14 +61,17 @@ class ListAllScreen extends StatelessWidget {
           
               IconButton(
                 onPressed: () async {
-                  winesService.loadWines();
-                  final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
-                    customResultText: '',
-                  ));
-                  final routeDetails = CupertinoPageRoute(
-                    builder: (context) => DetailsScreen(wine:wineSearched, source: 'search')
-                  );
-                  if (wineSearched != null && context.mounted) Navigator.push(context, routeDetails);
+                  await winesService.loadWines();
+                  if (context.mounted) {
+                    final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
+                      customResultText: '',
+                    ));
+                    final routeDetails = CupertinoPageRoute(
+                      builder: (context) => DetailsScreen(wine:wineSearched, source: 'search')
+                    );
+                    
+                    if (wineSearched != null && context.mounted) Navigator.push(context, routeDetails);
+                  }
                 },
                 icon: const Icon(Icons.search)
               ),

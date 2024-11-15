@@ -81,7 +81,7 @@ class _CustomAppBar extends StatelessWidget {
           alignment: Alignment.center,
           width: size.width - 96,
           child: Text(
-            multipleTaste.multipleTaste.name,
+            multipleTaste.multipleName,
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -152,7 +152,9 @@ class _CustomBody extends StatelessWidget {
                 borderSide: const BorderSide(width: 1)
               ),
             ),
-            onChanged: (value) => multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.description = value),
+            onChanged: (value) => multipleTaste.multipleTaste.description = value,
+            // TODO creo que no necesito redibujarlo
+            // onChanged: (value) => multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.description = value),
             onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
           ),
       
@@ -171,7 +173,9 @@ class _CustomBody extends StatelessWidget {
                 borderSide: const BorderSide(width: 1)
               ),
             ),
-            onChanged: (value) => multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.password = value),
+            onChanged: (value) => multipleTaste.multipleTaste.password = value,
+            // TODO creo que no necesito redibujarlo
+            // onChanged: (value) => multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.password = value),
             onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
           ),
 
@@ -334,10 +338,7 @@ class _DateTextFormFieldState extends State<DateTextFormField> {
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(width: 1)
         ),
-        suffixIcon: IconButton(
-          onPressed: showCustomDialog,
-          icon: const Icon(Icons.calendar_month_rounded)
-        ),
+        suffixIcon: const Icon(Icons.calendar_month_rounded),
       ),
       onTap: showCustomDialog,
     );
@@ -387,7 +388,9 @@ class CalendarDialog extends StatelessWidget {
           onSelectionChanged: (dateRangePickerSelectionChangedArgs) {
             final DateTime date = dateRangePickerSelectionChangedArgs.value;
             final String dateEndDay = CustomDatetime().toTextToEndOfDay(date);
-            multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.dateLimit = dateEndDay);
+            multipleTaste.multipleTaste.dateLimit = dateEndDay;
+            // TODO creo que no necesito redibujar
+            // multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.dateLimit = dateEndDay);
             dateController.text = CustomDatetime().toPlainText(dateEndDay);
             Navigator.pop(context);
           },
@@ -554,6 +557,8 @@ class MultipleActionsButtons extends StatelessWidget {
             width: 100,
             child: const Text('Guardar'),
             onPressed: () async {
+              // Asigno nombre de cata definitivamente
+              multipleTaste.multipleTaste.name = multipleTaste.multipleName;
               // Subo a Firebase la cata multiple
               await multipleService.createMultipleTaste(multipleTaste.initMultiple());
               // Cierro bottomsheet
@@ -568,10 +573,15 @@ class MultipleActionsButtons extends StatelessWidget {
             width: 100,
             child: const Text('Realizar'),
             onPressed: () async {
-              // Subo a Firebase la cata multiple
-              final Multiple multiple = await multipleService.createMultipleTaste(multipleTaste.initMultiple());
+              // Asigno nombre de cata definitivamente
+              multipleTaste.multipleTaste.name = multipleTaste.multipleName;
 
-              multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste = multiple);
+              // Subo a Firebase la cata multiple
+              await multipleService.createMultipleTaste(multipleTaste.initMultiple());
+              // TODO creo que no es necesario, porque el mismo multiple que subo es el que esta en memoria
+              // final Multiple multiple = await multipleService.createMultipleTaste(multipleTaste.initMultiple());
+              // multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste = multiple);
+
               multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userDisplayName);
               multipleTaste.initUserTaste(multipleService.isMultipleTasted);
               multipleTaste.autovalidateMode = AutovalidateMode.disabled;
@@ -615,17 +625,19 @@ class RowVisibleWines extends StatelessWidget {
                     
           SearchWineButton(
             onPressed: () async {
-              winesService.loadWines();
-              final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
-                customResultText: 'Vuelve atras y crea tu vino' '\n' 'para añadirlo a la cata.'
-              ));
-              // Compruebo si el vino ya esta añadido al listado
-              if (context.mounted && multipleTaste.winesMultipleTaste.any((element) => element.id == wineSearched.id)) {
-                NotificationsService.showSnackbar('Vino duplicado', context);
-                return;
+              await winesService.loadWines();
+              if (context.mounted) {
+                final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
+                  customResultText: 'Vuelve atras y crea tu vino' '\n' 'para añadirlo a la cata.'
+                ));
+                // Compruebo si el vino ya esta añadido al listado
+                if (context.mounted && multipleTaste.winesMultipleTaste.any((element) => element.id == wineSearched.id)) {
+                  NotificationsService.showSnackbar('Vino duplicado', context);
+                  return;
+                }
+                if (wineSearched != null) multipleTaste.addWine(wineSearched);
+                if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
               }
-              if (wineSearched != null) multipleTaste.addWine(wineSearched.copy());
-              if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
             },
           ),
                     

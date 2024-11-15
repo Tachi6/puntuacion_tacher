@@ -185,14 +185,16 @@ class _SearchTasteWine extends StatelessWidget {
                   ],
                 ),
                 onPressed: () async {
-                  winesService.loadWines();
-                  final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
-                    customResultText: '',
-                  ));
-                  if (wineSearched != null) {
-                    winesService.selectedWine = wineSearched;
-                    wineForm.setWineToEdit(wineSearched);
-                    taste.showContinueButton = true;
+                  await winesService.loadWines();
+                  if (context.mounted) {
+                    final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
+                      customResultText: '',
+                    ));
+                    if (wineSearched != null) {
+                      winesService.selectedWine = wineSearched;
+                      wineForm.setWineToEdit(wineSearched);
+                      taste.showContinueButton = true;
+                    }
                   }
                 },
               ),

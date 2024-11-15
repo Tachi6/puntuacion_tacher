@@ -22,8 +22,8 @@ class CustomMultipleAppBar extends StatelessWidget implements PreferredSizeWidge
       actions: [
         IconButton(
           onPressed: () {
-            multipleTaste.resetSettings();            
             Navigator.pop(context);
+            multipleTaste.resetSettings();            
             screenProvider.multipleScreen = 0;
           },
           icon: const Icon(Icons.arrow_back_rounded)

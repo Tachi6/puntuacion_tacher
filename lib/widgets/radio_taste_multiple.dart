@@ -31,6 +31,7 @@ class _RadioWidgetMultipleState extends State<RadioWidgetMultiple> {
 
     final taste = Provider.of<VisibleOptionsProvider>(context);
     final colors = Theme.of(context).colorScheme;
+    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     
     return Container(
       padding: const EdgeInsets.only(left: 20),
@@ -53,6 +54,7 @@ class _RadioWidgetMultipleState extends State<RadioWidgetMultiple> {
               onChanged: (TasteOptionsMultiple? value) {
                 _taste = value;
                 taste.tasteMultiple = value!;
+                multipleTaste.multipleName = '';
                 taste.showContinueButton = false;
                 setState(() {});
               },

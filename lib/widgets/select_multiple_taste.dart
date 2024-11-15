@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/models/models.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/search/search.dart';
@@ -15,35 +14,29 @@ class SelectMultipleTaste extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final taste = Provider.of<VisibleOptionsProvider>(context);
-    final authService = Provider.of<AuthService>(context);
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleService>(context);
-    final wineService = Provider.of<WinesService>(context);
 
-    final textEditingController = TextEditingController(
-      text: multipleTaste.multipleTaste.name, 
+    final nameSearchedController = TextEditingController(
+      text: multipleTaste.multipleName, 
     );
 
     void onPressed() async {
-      multipleService.loadMultiples();
-      final multipleSearched = await showSearch(context: context, delegate: SearchDelegateMultiple());
-      if (multipleSearched != null) {
-        multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste = multipleSearched);
-        if (multipleSearched.hidden) {
-          multipleTaste.winesHiddenNumber = multipleSearched.wines.keys.length;
-          multipleTaste.addHiddenWines();
+      await multipleService.loadMultiples();
+      // Multiple? multipleSearched;
+      if (context.mounted) {
+        final multipleSearched = await showSearch(context: context, delegate: SearchDelegateMultiple());
+
+        if (multipleSearched != null) {
+          multipleTaste.multipleName = multipleSearched.name;
+          nameSearchedController.clear();
+          taste.showContinueButton = true;
         }
         else {
-          List<Wines> visibleWines = [];
-          multipleSearched.wines.forEach((key, value) {
-            visibleWines.add(wineService.winesByIndex[int.parse(key)].copy());
-          },);
-          multipleTaste.addVisibleWines(visibleWines);
+          multipleTaste.multipleName = '';
+          nameSearchedController.clear();
+          taste.showContinueButton = false;
         }
-        multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userDisplayName);
-        multipleTaste.initUserTaste(multipleService.isMultipleTasted);
-        // wineForm.setWineToEdit(winesService.selectedWine!);
-        taste.showContinueButton = true;
       }
     }
 
@@ -59,7 +52,7 @@ class SelectMultipleTaste extends StatelessWidget {
             children: [
               Expanded(
                 child: TextFormField(
-                  controller: textEditingController,
+                  controller: nameSearchedController,
                   readOnly: true,
                   style: const TextStyle(fontSize: 14),
                   canRequestFocus: false,
@@ -72,7 +65,7 @@ class SelectMultipleTaste extends StatelessWidget {
                   onTap: onPressed,
                 ),
               ),
-
+    
               SearchWineButton(
                 onPressed: onPressed,
               ),

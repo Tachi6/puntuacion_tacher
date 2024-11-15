@@ -44,13 +44,11 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
     final multipleService = Provider.of<MultipleService>(context);
     final winesService = Provider.of<WinesService>(context);
     final screenProvider = Provider.of<ScreensProvider>(context);
-    final tasteScreenOptions = Provider.of<VisibleOptionsProvider>(context);
 
     void onPressed() async {
       if (multipleService.isMultipleTasted) {
-        multipleTaste.resetSettings();
-        tasteScreenOptions.showContinueButton = false;
         Navigator.pop(context);
+        multipleTaste.resetSettings();
         screenProvider.multipleScreen = 0;
         return;
       }
@@ -59,7 +57,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
         return;
       }
       // Cargo la cata multiples para tener los ultimos cambios
-      final Multiple multipleUpdated = await multipleService.loadMultipleTaste(multipleTaste.multipleTaste.name);
+      final Multiple multipleUpdated = await multipleService.loadMultipleToUpdate(multipleTaste.multipleTaste.name);
       // Actualizo el multiple local
       multipleTaste.updateMultipleTaste(multipleUpdated);
       // Calculo puntuaciones de Vista, Nariz y Boca

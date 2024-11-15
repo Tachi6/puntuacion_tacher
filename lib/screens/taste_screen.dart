@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/models/models.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
@@ -170,6 +171,11 @@ class _ContinueButton extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final taste = Provider.of<VisibleOptionsProvider>(context);
+    final authService = Provider.of<AuthService>(context);
+    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final multipleService = Provider.of<MultipleService>(context);
+    final wineService = Provider.of<WinesService>(context);
+
     final screenProvider = Provider.of<ScreensProvider>(context, listen: true);
 
     if (taste.showContinueButton) {
@@ -187,7 +193,23 @@ class _ContinueButton extends StatelessWidget {
                   child: MultipleTasteScreen()
                 ),
               );
+              // TODO implements hidden???
+              // if (multipleSearched.hidden) {
+              //   multipleTaste.winesHiddenNumber = multipleSearched.wines.keys.length;
+              //   multipleTaste.addHiddenWines();
+              // }
+              multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste = multipleService.loadMultipleTaste(multipleTaste.multipleName).copy());
+              List<Wines> visibleWines = [];
+              multipleTaste.multipleTaste.wines.forEach((key, value) {
+                visibleWines.add(wineService.winesByIndex[int.parse(key)].copy());
+              },);
+              multipleTaste.addVisibleWines(visibleWines);
+              
+              multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userDisplayName);
+              multipleTaste.initUserTaste(multipleService.isMultipleTasted);
+
               Navigator.push(context, routeList);
+              taste.showContinueButton = false;
               return;
             }
 
@@ -203,6 +225,8 @@ class _ContinueButton extends StatelessWidget {
               );
         
               Navigator.push(context, newRoute);
+              taste.showContinueButton = false;
+              return;
             }
           },
           child: const Text('Continuar'),
@@ -251,6 +275,7 @@ class _SingleTacherScreen extends StatelessWidget {
         wineForm.clearNotas();
         wineForm.setDefaultRatings();
         wineForm.setDefaultCreateWine();
+        winesService.selectedWine = null;
         Navigator.pop(context);
       }, 
       bottomSheet: CustomBottomSheet(

@@ -29,19 +29,21 @@ class MultipleInitialPage extends StatelessWidget {
           children: [
             const SizedBox(height: 10),
             
-            if (multipleTaste.multipleTaste.description != null) _CustomField(
+           _CustomField(
               label: 'Descripción', 
-              text: multipleTaste.multipleTaste.description!
+              text: multipleTaste.multipleTaste.description ?? ''
             ),
 
             const SizedBox(height: 20),
 
-            if (multipleTaste.multipleTaste.dateLimit != null) _CustomField(
+            _CustomField(
               label: 'Fecha límite de cata', 
-              text: CustomDatetime().toPlainText(multipleTaste.multipleTaste.dateLimit!),
+              text: multipleTaste.multipleTaste.dateLimit != null 
+                ? CustomDatetime().toPlainText(multipleTaste.multipleTaste.dateLimit!)
+                : 'Sin fecha límite de cata',
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 15),
 
             Text('Vinos a catar', textAlign: TextAlign.center, style: styles.titleMedium!.copyWith(fontWeight: FontWeight.bold)),
 
@@ -85,11 +87,14 @@ class _CustomField extends StatelessWidget {
       maxLines: null,
       controller: textEditingController,
       decoration: InputDecoration(
-        labelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+        contentPadding: EdgeInsets.fromLTRB(16, 16, 12, 10),
+        labelStyle: styles.bodySmall,
         labelText: label,
+        floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
         border: OutlineInputBorder(
           borderSide: const BorderSide(width: 1),
-          borderRadius: BorderRadius.circular(15)
+          borderRadius: BorderRadius.circular(12)
         )
       ),
     );
