@@ -616,7 +616,7 @@ class RowVisibleWines extends StatelessWidget {
 
     return Container(
       alignment: Alignment.centerLeft,
-      padding: EdgeInsets.only(left: 10),
+      padding: const EdgeInsets.only(left: 10),
       child: Row(
         children: [
           Text('Busca, añade y oculta vinos', style: styles.bodyMedium),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/models/models.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
@@ -28,11 +29,13 @@ class CustomMultipleAppBar extends StatelessWidget implements PreferredSizeWidge
           },
           icon: const Icon(Icons.arrow_back_rounded)
         ),
+
+        const SizedBox(width: 48),
           
         Container(
           height: 48,
           alignment: Alignment.center,
-          width: size.width - 96,
+          width: size.width - 192,
           child: Text(
             multipleTaste.multipleTaste.name,
             textAlign: TextAlign.center,
@@ -41,7 +44,17 @@ class CustomMultipleAppBar extends StatelessWidget implements PreferredSizeWidge
             style: const TextStyle(fontSize: 20, height: 1.1)
           ),
         ),
-    
+   
+        multipleService.isMultipleTasted && screenProvider.multipleScreen != 0 && multipleTaste.overview
+          ? IconButton(
+            onPressed: () async {
+              final Multiple multipleUpdated = await multipleService.loadMultipleToUpdate(multipleTaste.multipleName);
+              multipleTaste.updateMultipleTaste(multipleUpdated);
+            },
+            icon: const Icon(Icons.refresh_rounded)
+          )
+          : const SizedBox(width: 48),
+
         multipleService.isMultipleTasted && screenProvider.multipleScreen != 0
           ? IconButton(
             onPressed: () => multipleTaste.overview = !multipleTaste.overview,

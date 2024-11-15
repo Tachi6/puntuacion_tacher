@@ -32,7 +32,7 @@ class MultipleOverviewPage extends StatelessWidget {
         child: multipleTaste.overview // TODO repasar que el overview funcione bien
           ? OverviewMultipleTaste(key: const ValueKey<String>('overviewMultiple'), newWidth: newWidth, newHeight: newHeight)
           : UserMultipleTasteDetails(key: const ValueKey<String>('userDetails'), newWidth: newWidth),
-      ), 
+      ),
     );
   }
 }
