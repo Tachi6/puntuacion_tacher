@@ -72,6 +72,8 @@ class AuthService extends ChangeNotifier {
 
     final resp = await http.post(url, body: json.encode(authData));
 
+    print('LOGIN');
+
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
 
     if (decodedResp.containsKey('idToken')) {
@@ -81,6 +83,37 @@ class AuthService extends ChangeNotifier {
       await storage.write(key: 'idToken', value: decodedResp['idToken']);
       await storage.write(key: 'displayName', value: decodedResp['displayName']);
       userDisplayName = decodedResp['displayName'];
+      notifyListeners();
+      return null;
+    } 
+    else {
+      return decodedResp['error']['message'];
+    }
+  }
+
+  Future<String?> refreshUser() async {
+    
+    final String? email = await storage.read(key: 'email');
+    final String? password = await storage.read(key: 'password');
+    
+    final Map<String, dynamic> authData = {
+      'email': email,
+      'password': password,
+      'returnSecureToken': true,
+    };
+
+    final url = Uri.https(_baseUrl, _unencodedPathLogin, {
+      'key': _firebaseToken
+    });
+
+    final resp = await http.post(url, body: json.encode(authData));
+
+    print('REFRESH');
+
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+
+    if (decodedResp.containsKey('idToken')) {
+      await storage.write(key: 'idToken', value: decodedResp['idToken']);
       notifyListeners();
       return null;
     } 
