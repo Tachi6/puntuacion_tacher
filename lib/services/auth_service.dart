@@ -92,34 +92,40 @@ class AuthService extends ChangeNotifier {
   }
 
   Future<String?> refreshUser() async {
-    
-    final String? email = await storage.read(key: 'email');
-    final String? password = await storage.read(key: 'password');
-    
-    final Map<String, dynamic> authData = {
-      'email': email,
-      'password': password,
-      'returnSecureToken': true,
-    };
 
-    final url = Uri.https(_baseUrl, _unencodedPathLogin, {
-      'key': _firebaseToken
-    });
+    while (true) {
+      await Future.delayed(const Duration(seconds: 3300), () async {
 
-    final resp = await http.post(url, body: json.encode(authData));
+        final String? email = await storage.read(key: 'email');
+        final String? password = await storage.read(key: 'password');
+        
+        final Map<String, dynamic> authData = {
+          'email': email,
+          'password': password,
+          'returnSecureToken': true,
+        };
 
-    print('REFRESH');
+        final url = Uri.https(_baseUrl, _unencodedPathLogin, {
+          'key': _firebaseToken
+        });
 
-    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+        final resp = await http.post(url, body: json.encode(authData));
 
-    if (decodedResp.containsKey('idToken')) {
-      await storage.write(key: 'idToken', value: decodedResp['idToken']);
-      notifyListeners();
-      return null;
-    } 
-    else {
-      return decodedResp['error']['message'];
+        print('REFRESH');
+
+        final Map<String, dynamic> decodedResp = json.decode(resp.body);
+
+        if (decodedResp.containsKey('idToken')) {
+          await storage.write(key: 'idToken', value: decodedResp['idToken']);
+          notifyListeners();
+          return null;
+        } 
+        else {
+          return decodedResp['error']['message'];
+        }
+      });
     }
+    
   }
 
   Future<bool> isUniqueDisplayName(String newDisplayName) async {

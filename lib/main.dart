@@ -63,13 +63,13 @@ class MyApp extends StatelessWidget{
     // TODO ver si es eficiente este refresh del user
     final authService = Provider.of<AuthService>(context, listen: false);
 
-    void refreshUser() async {
-      while (true) {
-        await Future.delayed(const Duration(seconds: 3300), () => authService.refreshUser());
-      }
-    }
+    // void refreshUser() async {
+    //   while (true) {
+    //     await Future.delayed(const Duration(seconds: 3300), () => authService.refreshUser());
+    //   }
+    // }
 
-    refreshUser();
+    authService.refreshUser();
 
     return MaterialApp(
       localizationsDelegates: const [
