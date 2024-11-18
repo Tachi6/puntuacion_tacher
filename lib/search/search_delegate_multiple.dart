@@ -11,6 +11,39 @@ class SearchDelegateMultiple extends SearchDelegate{
   SearchDelegateMultiple();
 
   late List<Multiple> _filtro;
+
+  showBox(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false, 
+      pageBuilder: (context, animation, secondaryAnimation) {
+        
+        String? password;
+
+        return PopScope(
+          canPop: false,
+          child: CustomAlertDialog(
+            title: 'Introduce Contraseña',
+            saveText: 'Enviar',
+            cancelText: 'Cancelar',
+            content: TextField(
+              onChanged: (value) => password = value,
+            ),
+            onPressedSave: () => Navigator.pop(context, password), 
+            onPressedCancel: () => Navigator.pop(context),
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
+          child: child
+        );
+      },
+    );
+  }
+
   
   @override
   String? get searchFieldLabel => 'Buscar vino';
@@ -49,9 +82,26 @@ class SearchDelegateMultiple extends SearchDelegate{
         return ListTile(
           title: Text(_filtro[index].name),
           // subtitle: Text(_filtro[index].tipo), // TODO algun subtitulo?
-          onTap: () {
+          onTap: () async {
             showResults(context);
-            FocusScope.of(context).unfocus();
+            FocusManager.instance.primaryFocus?.unfocus();
+            // Para cata con contraseña
+            if (_filtro[index].password != null) {
+              final bool? isCorrectPassword = await enterPasswordBox(context, _filtro[index]);
+              if (isCorrectPassword == null) {
+                return;
+              }
+              if (isCorrectPassword && context.mounted) {
+                close(context, _filtro[index].copy());
+                return;
+              }
+              if (!isCorrectPassword && context.mounted) {
+                NotificationsService.showSnackbar('Contraseña incorrecta', context); 
+                return;
+              }
+              return;
+            }
+            // Para cata sin contraseña
             close(context, _filtro[index].copy());
           },
         );
@@ -87,15 +137,71 @@ class SearchDelegateMultiple extends SearchDelegate{
         return ListTile(
           title: Text(_filtro[index].name),
           // subtitle: Text(_filtro[index].tipo), // TODO algun subtitulo?
-          onTap: () {
+          onTap: () async {
             showResults(context);
-            FocusScope.of(context).unfocus();
+            FocusManager.instance.primaryFocus?.unfocus();
+            // Para cata con contraseña
+            if (_filtro[index].password != null) {
+              final bool? isCorrectPassword = await enterPasswordBox(context, _filtro[index]);
+              if (isCorrectPassword == null) {
+                return;
+              }
+              if (isCorrectPassword && context.mounted) {
+                close(context, _filtro[index].copy());
+                return;
+              }
+              if (!isCorrectPassword && context.mounted) {
+                NotificationsService.showSnackbar('Contraseña incorrecta', context);
+                return;
+              }
+              return;
+            }
+            // Para cata sin contraseña
             close(context, _filtro[index].copy());
           },
         );
       },
       );
    }
+
+  Future<bool?> enterPasswordBox(BuildContext context, Multiple multiple) {
+    return showGeneralDialog(
+      context: context,
+      barrierDismissible: false, 
+      pageBuilder: (context, animation, secondaryAnimation) {
+        
+        String? password;
+
+        return PopScope(
+          canPop: false,
+          child: CustomAlertDialog(
+            title: 'Introduce Contraseña',
+            saveText: 'Enviar',
+            cancelText: 'Cancelar',
+            content: TextField(
+              onChanged: (value) => password = value,
+            ),
+            onPressedSave: () {
+              if (multiple.password == password) {
+                Navigator.pop(context, true);
+                return;
+              }
+              FocusManager.instance.primaryFocus?.unfocus();
+              Navigator.pop(context, false);
+            }, 
+            onPressedCancel: () => Navigator.pop(context),
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
+          child: child
+        );
+      },
+    );
+  }
 }
 
 class MultipleWineImage extends StatelessWidget {

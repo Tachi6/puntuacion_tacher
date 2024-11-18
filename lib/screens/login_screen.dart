@@ -281,8 +281,8 @@ class ValidateUserButton extends StatelessWidget {
       child: CustomElevatedButton(
         width: 150,
         onPressed: loginForm.isLoading ? null : () async {
-      
-          FocusScope.of(context).unfocus(); // quitar teclado
+          
+          FocusManager.instance.primaryFocus?.unfocus(); // quitar teclado
       
           final authService = Provider.of<AuthService>(context, listen: false);
       

@@ -28,7 +28,7 @@ class Multiple {
     factory Multiple.fromJson(Map<String, dynamic> json) => Multiple(
         name: json["name"],
         description: json["description"] ?? '', // TODO Manejar como null o como '' ???
-        password: json["password"] ?? '', // TODO Manejar como null o como '' ???
+        password: json["password"],
         hidden: json["hidden"],
         dateLimit: json["dateLimit"],
         wines: Map.from(json["wines"]).map((k, v) => MapEntry<String, Map<String, WineTaste>>(k, Map.from(v).map((k, v) => MapEntry<String, WineTaste>(k, WineTaste.fromJson(v))))),

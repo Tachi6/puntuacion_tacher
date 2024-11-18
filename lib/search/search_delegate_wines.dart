@@ -89,7 +89,7 @@ class SearchDelegateWines extends SearchDelegate{
           subtitle: Text(_filtro[index].tipo),
           onTap: () {
             showResults(context);
-            FocusScope.of(context).unfocus();
+            FocusManager.instance.primaryFocus?.unfocus();
             close(context, _filtro[index].copy());
           },
         );
@@ -129,7 +129,7 @@ class SearchDelegateWines extends SearchDelegate{
           subtitle: Text(_filtro[index].tipo),
           onTap: () {
             showResults(context);
-            FocusScope.of(context).unfocus();
+            FocusManager.instance.primaryFocus?.unfocus();
             close(context, _filtro[index].copy());
           },
         );
