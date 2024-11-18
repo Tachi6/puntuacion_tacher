@@ -98,7 +98,7 @@ class LoginRegisterForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           loginForm.isRegister 
-            ? LoginTextFormField( // TODO VER COMO VALIDO ESTE QUE NO EXISTA YA EN LA BDD
+            ? LoginTextFormField( // TODO hacer pantalla intermedia para crear nombre de usuario
               obscureText: false,
               textInputType: TextInputType.text,
               hintText: 'Antonio Gonzalez',
@@ -274,6 +274,7 @@ class ValidateUserButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final authService = Provider.of<AuthService>(context, listen: false);
     final loginForm = Provider.of<LoginProvider>(context);
     final colors = Theme.of(context).colorScheme;
 
@@ -283,16 +284,14 @@ class ValidateUserButton extends StatelessWidget {
         onPressed: loginForm.isLoading ? null : () async {
           
           FocusManager.instance.primaryFocus?.unfocus(); // quitar teclado
-      
-          final authService = Provider.of<AuthService>(context, listen: false);
-      
+           
           if ( !loginForm.isValidForm() ) return;
       
           loginForm.isLoading = true;
 
           final String? errorMessage;
-
-          loginForm.isRegister
+          
+          (loginForm.isRegister)
             ? errorMessage = await authService.createUser(loginForm.email, loginForm.password)
             : errorMessage = await authService.loginUser(loginForm.email, loginForm.password);
       
@@ -306,7 +305,7 @@ class ValidateUserButton extends StatelessWidget {
             );
             Navigator.pushReplacement(context, newRoute);
             // FOR NOT VIEW 'ingresar' MESSAGE IF THERE ARE A LOGOUT
-            Future.delayed(const Duration(seconds: 3), () => loginForm.isLoading = false);
+            Future.delayed(const Duration(seconds: 1), () => loginForm.isLoading = false);
             if (loginForm.isRegister) loginForm.isRegister = false;
           }
           else {

@@ -29,7 +29,7 @@ class MultipleInitialPage extends StatelessWidget {
           children: [
             const SizedBox(height: 10),
             
-           _CustomField(
+            _CustomField(
               label: 'Descripción', 
               text: multipleTaste.multipleTaste.description ?? ''
             ),
@@ -87,7 +87,7 @@ class _CustomField extends StatelessWidget {
       maxLines: null,
       controller: textEditingController,
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(16, 16, 12, 10),
+        contentPadding: const EdgeInsets.fromLTRB(16, 16, 12, 10),
         labelStyle: styles.bodySmall,
         labelText: label,
         floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),

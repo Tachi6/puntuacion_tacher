@@ -34,7 +34,7 @@ class CreateMultipleTaste extends StatelessWidget{
         automaticallyImplyLeading: false,
         toolbarHeight: 48,
         titleSpacing: 0,
-        title: _CustomAppBar(),
+        title: const _CustomAppBar(),
       ),
       body: const Stack(
         children: [
@@ -142,7 +142,7 @@ class _CustomBody extends StatelessWidget {
             maxLines: null,
             style: styles.bodySmall,
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.fromLTRB(16, 16, 12, 10),
+              contentPadding: const EdgeInsets.fromLTRB(16, 16, 12, 10),
               labelText: 'Descripcion de la cata a realizar',
               labelStyle: styles.bodySmall,
               floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
@@ -153,8 +153,6 @@ class _CustomBody extends StatelessWidget {
               ),
             ),
             onChanged: (value) => multipleTaste.multipleTaste.description = value,
-            // TODO creo que no necesito redibujarlo
-            // onChanged: (value) => multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.description = value),
             onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
           ),
       
@@ -163,7 +161,7 @@ class _CustomBody extends StatelessWidget {
           TextFormField(    
             style: styles.bodySmall,
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.fromLTRB(16, 16, 12, 10),
+              contentPadding: const EdgeInsets.fromLTRB(16, 16, 12, 10),
               labelText: 'Contraseña de la cata (opcional)',
               labelStyle: styles.bodySmall,
               floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
@@ -174,8 +172,6 @@ class _CustomBody extends StatelessWidget {
               ),
             ),
             onChanged: (value) => multipleTaste.multipleTaste.password = value,
-            // TODO creo que no necesito redibujarlo
-            // onChanged: (value) => multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.password = value),
             onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
           ),
 
@@ -329,7 +325,7 @@ class _DateTextFormFieldState extends State<DateTextFormField> {
       autofocus: false,
       style: styles.bodySmall,
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(16, 16, 12, 10),
+        contentPadding: const EdgeInsets.fromLTRB(16, 16, 12, 10),
         labelText: 'Fecha límite de cata (opcional)',
         labelStyle: styles.bodySmall,
         floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
@@ -389,8 +385,6 @@ class CalendarDialog extends StatelessWidget {
             final DateTime date = dateRangePickerSelectionChangedArgs.value;
             final String dateEndDay = CustomDatetime().toTextToEndOfDay(date);
             multipleTaste.multipleTaste.dateLimit = dateEndDay;
-            // TODO creo que no necesito redibujar
-            // multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.dateLimit = dateEndDay);
             dateController.text = CustomDatetime().toPlainText(dateEndDay);
             Navigator.pop(context);
           },
@@ -578,9 +572,6 @@ class MultipleActionsButtons extends StatelessWidget {
 
               // Subo a Firebase la cata multiple
               await multipleService.createMultipleTaste(multipleTaste.initMultiple());
-              // TODO creo que no es necesario, porque el mismo multiple que subo es el que esta en memoria
-              // final Multiple multiple = await multipleService.createMultipleTaste(multipleTaste.initMultiple());
-              // multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste = multiple);
 
               multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userDisplayName);
               multipleTaste.initUserTaste(multipleService.isMultipleTasted);
