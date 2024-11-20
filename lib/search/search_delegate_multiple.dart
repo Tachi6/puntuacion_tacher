@@ -18,6 +18,7 @@ class SearchDelegateMultiple extends SearchDelegate{
       barrierDismissible: false, 
       pageBuilder: (context, animation, secondaryAnimation) {
         
+        final styles = Theme.of(context).textTheme;
         String? password;
 
         return PopScope(
@@ -26,8 +27,23 @@ class SearchDelegateMultiple extends SearchDelegate{
             title: 'Introduce Contraseña',
             saveText: 'Enviar',
             cancelText: 'Cancelar',
-            content: TextField( // TODO theme TextField!!!
-              onChanged: (value) => password = value,
+            content: Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: TextField(
+                style: styles.bodyLarge,
+                maxLines: 1,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.fromLTRB(16, 16, 12, 10),               
+                  labelText: 'Contraseña',
+                  floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  border: OutlineInputBorder(
+                    borderSide: const BorderSide(width: 1),
+                    borderRadius: BorderRadius.circular(12)
+                  )
+                ),
+                onChanged: (value) => password = value,
+              ),
             ),
             onPressedSave: () {
               if (multiple.password == password) {
