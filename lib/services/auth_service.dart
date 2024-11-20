@@ -19,6 +19,8 @@ class AuthService extends ChangeNotifier {
   String userDisplayName = '';
   String _tempDisplayName = '';
   bool _isSavingUser = false;
+  bool _isUserLogued = false;
+  bool _isDisplayNameGenerated = true;
 
   final storage = const FlutterSecureStorage();
 
@@ -48,7 +50,10 @@ class AuthService extends ChangeNotifier {
       userEmail = email;
       await storage.write(key: 'password', value: password);
       await storage.write(key: 'idToken', value: decodedResp['idToken']);
+      isUserLogued = true;
       notifyListeners();
+      // To refresh user auto every 55 minuts
+      refreshUser();
 
       return null;
     } 
@@ -72,8 +77,6 @@ class AuthService extends ChangeNotifier {
 
     final resp = await http.post(url, body: json.encode(authData));
 
-    print('LOGIN');
-
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
 
     if (decodedResp.containsKey('idToken')) {
@@ -83,7 +86,11 @@ class AuthService extends ChangeNotifier {
       await storage.write(key: 'idToken', value: decodedResp['idToken']);
       await storage.write(key: 'displayName', value: decodedResp['displayName']);
       userDisplayName = decodedResp['displayName'];
+      isUserLogued = true;
       notifyListeners();
+      // To refresh user auto every 55 minuts
+      refreshUser();
+
       return null;
     } 
     else {
@@ -91,9 +98,9 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  Future<String?> refreshUser() async {
+  Future<void> refreshUser() async {
 
-    while (true) {
+    while (isUserLogued) {
       await Future.delayed(const Duration(seconds: 3300), () async {
 
         final String? email = await storage.read(key: 'email');
@@ -111,18 +118,12 @@ class AuthService extends ChangeNotifier {
 
         final resp = await http.post(url, body: json.encode(authData));
 
-        print('REFRESH');
-
         final Map<String, dynamic> decodedResp = json.decode(resp.body);
 
         if (decodedResp.containsKey('idToken')) {
           await storage.write(key: 'idToken', value: decodedResp['idToken']);
           notifyListeners();
-          return null;
         } 
-        else {
-          return decodedResp['error']['message'];
-        }
       });
     }
     
@@ -190,6 +191,10 @@ class AuthService extends ChangeNotifier {
   }
 
   Future logout() async {
+    userDisplayName = '';
+    _tempDisplayName = '';
+    _isSavingUser = false;
+    _isUserLogued = false;
     await storage.deleteAll();
   }
 
@@ -208,6 +213,20 @@ class AuthService extends ChangeNotifier {
 
   set isSavingUser(bool isSaving) {
     _isSavingUser = isSaving;
+    notifyListeners();
+  }
+
+  bool get isUserLogued => _isUserLogued;
+
+  set isUserLogued(bool isUserLogued) {
+    _isUserLogued = isUserLogued;
+    notifyListeners();
+  }
+
+  bool get isDisplayNameGenerated => _isDisplayNameGenerated;
+
+  set isDisplayNameGenerated(bool value) {
+    _isDisplayNameGenerated = value;
     notifyListeners();
   }
 }

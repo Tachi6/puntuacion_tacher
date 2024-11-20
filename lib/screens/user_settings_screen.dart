@@ -17,7 +17,8 @@ class UserSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final authService = Provider.of<AuthService>(context);   
+    final authService = Provider.of<AuthService>(context);  
+    final loginForm = Provider.of<LoginProvider>(context); 
     final Size size = MediaQuery.of(context).size;
     final colors = Theme.of(context).colorScheme;
     final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
@@ -37,9 +38,24 @@ class UserSettingsScreen extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  if (!loginForm.isRegister) {
+                    Navigator.pop(context);
+                    return;
+                  }
+                  if (authService.isDisplayNameGenerated) {
+                    final newRoute = CupertinoPageRoute(
+                      builder: (context) => const HomeScreen()
+                    );
+                    Navigator.pushReplacement(context, newRoute);
+                    loginForm.isRegister = false;
+                    return;
+                  }
+                  if (!authService.isDisplayNameGenerated) {
+                    NotificationsService.showSnackbar('El nombre de usuario es obligatorio', context);
+                    return;
+                  }
                 }, 
-                icon: const Icon(Icons.arrow_back_rounded)
+                icon: Icon(loginForm.isRegister ? Icons.clear_rounded : Icons.arrow_back_rounded),
               ),
               
               const Spacer(),
@@ -171,7 +187,7 @@ class _UserSettingsBody extends StatelessWidget {
                                 if (value == null) {
                                   return '';
                                 }
-                                if (value.length < 3) {
+                                if (value.trim().length < 4) {
                                   return '';
                                 }
                                 return null;
@@ -187,17 +203,17 @@ class _UserSettingsBody extends StatelessWidget {
                               onPressed: 
                                 authService.isSavingUser  
                                 ? () async {
-                                  if (authService.tempDisplayName.length < 4) {
-                                    String error = 'NOMBRE DE USUARIO MUY CORTO';
-                                    NotificationsService.showSnackbar(error, context);
+                                  if (authService.tempDisplayName.trim().length < 4) {
+                                    NotificationsService.showSnackbar('NOMBRE DE USUARIO MUY CORTO', context);
                                   }
                                   else if (await authService.isUniqueDisplayName(authService.tempDisplayName) && authService.isValidForm()) {
-                                    authService.renameUser(authService.tempDisplayName);
+                                    await authService.renameUser(authService.tempDisplayName);
+                                    if (context.mounted) NotificationsService.showSnackbar('NOMBRE DE USUARIO ACTUALIZADO', context);
                                     authService.isSavingUser = false;
+                                    authService.isDisplayNameGenerated = true;
                                   }
                                   else if (context.mounted) {
-                                    String error = 'NOMBRE DE USUARIO YA UTILIZADO';
-                                    NotificationsService.showSnackbar(error, context);
+                                    NotificationsService.showSnackbar('NOMBRE DE USUARIO YA UTILIZADO', context);
                                   }
                                 } 
                                 : null,

@@ -88,7 +88,7 @@ class LoginRegisterForm extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final loginForm = Provider.of<LoginProvider>(context);
-    final authService = Provider.of<AuthService>(context, listen: false);
+    // final authService = Provider.of<AuthService>(context, listen: false);
     final colors = Theme.of(context).colorScheme;
 
     return Form(
@@ -96,30 +96,7 @@ class LoginRegisterForm extends StatelessWidget {
       autovalidateMode: AutovalidateMode.onUnfocus,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          loginForm.isRegister 
-            ? LoginTextFormField( // TODO hacer pantalla intermedia para crear nombre de usuario
-              obscureText: false,
-              textInputType: TextInputType.text,
-              hintText: 'Antonio Gonzalez',
-              labelText: 'Nombre de usuario',
-              icon: Icons.person_outline_outlined,
-              onChanged: (value) => authService.tempDisplayName = value,
-              validator: (value) {
-                if (value!.length < 4) {
-                  return 'El nombre de usuario requiere un mínimo de 3 letras';
-                }
-                else {
-                  return null;
-                } 
-              },
-            ) 
-            : const SizedBox(),
-    
-          loginForm.isRegister 
-            ? const SizedBox(height: 20)
-            : const SizedBox(),
-              
+        children: [              
           LoginTextFormField(
             obscureText: false,
             textInputType: TextInputType.emailAddress,
@@ -294,19 +271,22 @@ class ValidateUserButton extends StatelessWidget {
           (loginForm.isRegister)
             ? errorMessage = await authService.createUser(loginForm.email, loginForm.password)
             : errorMessage = await authService.loginUser(loginForm.email, loginForm.password);
-      
+
           if (errorMessage == null) {
-            if (loginForm.isRegister) await authService.renameUser(authService.tempDisplayName);
 
             if (!context.mounted) return;
 
+            if (authService.userDisplayName == '') {
+              authService.isDisplayNameGenerated = false;
+              loginForm.isRegister = true;
+            }
+            
             final newRoute = CupertinoPageRoute(
-              builder: (context) => const HomeScreen()
+              builder: (context) => loginForm.isRegister ? const UserSettingsScreen() : const HomeScreen()
             );
             Navigator.pushReplacement(context, newRoute);
             // FOR NOT VIEW 'ingresar' MESSAGE IF THERE ARE A LOGOUT
-            Future.delayed(const Duration(seconds: 1), () => loginForm.isLoading = false);
-            if (loginForm.isRegister) loginForm.isRegister = false;
+            await Future.delayed(const Duration(seconds: 2), () => loginForm.isLoading = false);
           }
           else {
             if (!context.mounted) return;

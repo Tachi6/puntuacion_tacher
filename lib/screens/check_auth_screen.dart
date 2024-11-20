@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/providers/providers.dart';
 
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
@@ -15,6 +16,7 @@ class CheckAuthScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final authService = Provider.of<AuthService>(context, listen: false);
+    final loginForm = Provider.of<LoginProvider>(context);
     const storage = FlutterSecureStorage();
     final colors = Theme.of(context).colorScheme;
 
@@ -29,7 +31,7 @@ class CheckAuthScreen extends StatelessWidget {
                 color: colors.primary,
               );
             }
-
+            // TODO pageroutebuilder => cupertino
             if (snapshot.data == '') {
               Future.microtask(() async {
                 if (!context.mounted) return;
@@ -44,17 +46,21 @@ class CheckAuthScreen extends StatelessWidget {
                 final String? email = await storage.read(key: 'email');
                 final String? password = await storage.read(key: 'password');
                 await authService.loginUser(email!, password!);
+
+                if (authService.userDisplayName == '') {
+                  authService.isDisplayNameGenerated = false;
+                  loginForm.isRegister = true;
+                }
                 
                 if (!context.mounted) return;
                 Navigator.pushReplacement(context, PageRouteBuilder(
-                  pageBuilder: ( _ , __ , ___ ) => const HomeScreen(),
+                  pageBuilder: ( _ , __ , ___ ) => loginForm.isRegister ? const UserSettingsScreen() : const HomeScreen(),
                   transitionDuration: const Duration(seconds: 0),
                 ));
               });
             }
 
             return const SizedBox();
-            
           },
         )
       ),

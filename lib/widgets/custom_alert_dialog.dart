@@ -11,7 +11,7 @@ class CustomAlertDialog extends StatelessWidget {
     required this.content, 
     this.onPressedCancel, 
     this.onPressedSave, 
-    required this.cancelText, 
+    this.cancelText, 
     this.saveText
   });
 
@@ -19,7 +19,7 @@ class CustomAlertDialog extends StatelessWidget {
   final Widget content;
   final VoidCallback? onPressedCancel;
   final VoidCallback? onPressedSave;
-  final String cancelText;
+  final String? cancelText;
   final String? saveText;
 
   @override
@@ -37,9 +37,9 @@ class CustomAlertDialog extends StatelessWidget {
       title: Text(title),
       content: content,
       actions: [
-        TextButton(
+        if (cancelText != null) TextButton(
           onPressed: onPressedCancel, 
-          child: Text(cancelText),
+          child: Text(cancelText!),
         ),
 
         if (saveText != null) TextButton(

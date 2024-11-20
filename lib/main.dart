@@ -59,18 +59,6 @@ class MyApp extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-
-    // TODO ver si es eficiente este refresh del user
-    final authService = Provider.of<AuthService>(context, listen: false);
-
-    // void refreshUser() async {
-    //   while (true) {
-    //     await Future.delayed(const Duration(seconds: 3300), () => authService.refreshUser());
-    //   }
-    // }
-
-    authService.refreshUser();
-
     return MaterialApp(
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
@@ -83,8 +71,6 @@ class MyApp extends StatelessWidget{
       locale: const Locale('es', 'ES'),
       debugShowCheckedModeBanner: false,
       theme: AppTheme().getTheme(context), 
-      // theme: AppTheme.redWineTheme,
-      // home: const LoginScreen(), 
       routes: {
         'checkingAuth':(context) => const CheckAuthScreen(),
 

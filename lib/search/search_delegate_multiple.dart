@@ -12,8 +12,8 @@ class SearchDelegateMultiple extends SearchDelegate{
 
   late List<Multiple> _filtro;
 
-  showBox(BuildContext context) {
-    showGeneralDialog(
+  Future<bool?> enterPasswordBox(BuildContext context, Multiple multiple) {
+    return showGeneralDialog(
       context: context,
       barrierDismissible: false, 
       pageBuilder: (context, animation, secondaryAnimation) {
@@ -26,10 +26,17 @@ class SearchDelegateMultiple extends SearchDelegate{
             title: 'Introduce Contraseña',
             saveText: 'Enviar',
             cancelText: 'Cancelar',
-            content: TextField(
+            content: TextField( // TODO theme TextField!!!
               onChanged: (value) => password = value,
             ),
-            onPressedSave: () => Navigator.pop(context, password), 
+            onPressedSave: () {
+              if (multiple.password == password) {
+                Navigator.pop(context, true);
+                return;
+              }
+              FocusManager.instance.primaryFocus?.unfocus();
+              Navigator.pop(context, false);
+            }, 
             onPressedCancel: () => Navigator.pop(context),
           ),
         );
@@ -43,7 +50,6 @@ class SearchDelegateMultiple extends SearchDelegate{
       },
     );
   }
-
   
   @override
   String? get searchFieldLabel => 'Buscar vino';
@@ -159,45 +165,6 @@ class SearchDelegateMultiple extends SearchDelegate{
             // Para cata sin contraseña
             close(context, _filtro[index].copy());
           },
-        );
-      },
-      );
-   }
-
-  Future<bool?> enterPasswordBox(BuildContext context, Multiple multiple) {
-    return showGeneralDialog(
-      context: context,
-      barrierDismissible: false, 
-      pageBuilder: (context, animation, secondaryAnimation) {
-        
-        String? password;
-
-        return PopScope(
-          canPop: false,
-          child: CustomAlertDialog(
-            title: 'Introduce Contraseña',
-            saveText: 'Enviar',
-            cancelText: 'Cancelar',
-            content: TextField(
-              onChanged: (value) => password = value,
-            ),
-            onPressedSave: () {
-              if (multiple.password == password) {
-                Navigator.pop(context, true);
-                return;
-              }
-              FocusManager.instance.primaryFocus?.unfocus();
-              Navigator.pop(context, false);
-            }, 
-            onPressedCancel: () => Navigator.pop(context),
-          ),
-        );
-      },
-      transitionDuration: const Duration(milliseconds: 300),
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return ScaleTransition(
-          scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
-          child: child
         );
       },
     );
