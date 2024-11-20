@@ -66,6 +66,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       multipleTaste.calculateAverageRatings();
       // Activo 2 paginas del overview
       multipleTaste.overview = true;
+      print(multipleTaste.overview);
       // Moverme a la ultima página // TODO ver que lo hace fluido...
       final int newPageIndex = multipleTaste.winesMultipleTaste.length + 1;
       if (screenProvider.multipleScreen != newPageIndex) {

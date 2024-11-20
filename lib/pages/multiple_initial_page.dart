@@ -31,7 +31,7 @@ class MultipleInitialPage extends StatelessWidget {
             
             _CustomField(
               label: 'Descripción', 
-              text: multipleTaste.multipleTaste.description ?? ''
+              text: multipleTaste.multipleTaste.description,
             ),
 
             const SizedBox(height: 20),
@@ -110,32 +110,35 @@ class _WinesListView extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final styles = Theme.of(context).textTheme;
+    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
 
     return ListView.builder(
       itemCount: winesMultipleTaste.length,
       itemBuilder: (context, index) {
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [   
             if (index == 0) const Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Divider(
               ),
             ),
+
+            if (multipleTaste.multipleTaste.hidden) const SizedBox(height: 4),
         
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(top: 0, bottom: 8, left: 10, right: 10),
+              padding: const EdgeInsets.only(top: 0, bottom: 6, left: 10, right: 10),
               alignment: Alignment.centerLeft,
               child: Text(
-                winesMultipleTaste[index].nombre,
+                multipleTaste.multipleTaste.hidden ? 'Vino a catar a ciegas ${index + 1}' : winesMultipleTaste[index].nombre,
                 style: styles.bodyMedium
               ),
             ),
 
-            Container(
+            if (!multipleTaste.multipleTaste.hidden) Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(top: 0, bottom: 8, left: 10, right: 10),
+              padding: const EdgeInsets.only(top: 0, bottom: 6, left: 10, right: 10),
               alignment: Alignment.centerLeft,
               child: Text(
                 winesMultipleTaste[index].tipo,
@@ -143,9 +146,9 @@ class _WinesListView extends StatelessWidget {
               ),
             ),
 
-            Container(
+            if (!multipleTaste.multipleTaste.hidden) Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(top: 0, bottom: 8, left: 10, right: 10),
+              padding: const EdgeInsets.only(top: 0, bottom: 4, left: 10, right: 10),
               alignment: Alignment.centerLeft,
               child: Text(
                 '${winesMultipleTaste[index].bodega}, ${winesMultipleTaste[index].region}',

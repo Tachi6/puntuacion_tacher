@@ -138,7 +138,7 @@ class _CustomBody extends StatelessWidget {
         children: [
           const SizedBox(height: 10),
       
-          TextFormField( // TODO obligar y validar
+          TextFormField(
             maxLines: null,
             style: styles.bodySmall,
             decoration: InputDecoration(
@@ -506,14 +506,14 @@ class CustomMultipleWinesRow extends StatelessWidget {
               ),
           ),
              
-          if (!multipleTaste.multipleTaste.hidden) IconButton (
-            icon: Icon(
-              multipleTaste.hideIndex.contains(index)
-              ? Icons.visibility_rounded
-              : Icons.visibility_off_rounded
-            ),
-            onPressed: () => multipleTaste.hideWine(index),
-          ),
+          // IconButton (
+          //   icon: Icon(
+          //     multipleTaste.hideIndex.contains(index)
+          //     ? Icons.visibility_rounded
+          //     : Icons.visibility_off_rounded
+          //   ),
+          //   onPressed: () => multipleTaste.hideWine(index),
+          // ),
       
           IconButton(
             icon: const Icon(Icons.remove),
@@ -551,6 +551,15 @@ class MultipleActionsButtons extends StatelessWidget {
             width: 100,
             child: const Text('Guardar'),
             onPressed: () async {
+              // Valido campo descripcion
+              if (multipleTaste.multipleTaste.description.isEmpty || multipleTaste.multipleTaste.description.trim().isEmpty) {
+                NotificationsService.showSnackbar('La descripcion de la cata es obligatoria', context);
+                return;
+              }
+              if (multipleTaste.multipleTaste.description.trim().length < 10) {
+                NotificationsService.showSnackbar('La descripcion de la cata muy corta', context);
+                return;
+              }
               // Asigno nombre de cata definitivamente
               multipleTaste.multipleTaste.name = multipleTaste.multipleName;
               // Subo a Firebase la cata multiple
@@ -567,12 +576,21 @@ class MultipleActionsButtons extends StatelessWidget {
             width: 100,
             child: const Text('Realizar'),
             onPressed: () async {
+              // Valido campo descripcion
+              if (multipleTaste.multipleTaste.description.isEmpty || multipleTaste.multipleTaste.description.trim().isEmpty) {
+                NotificationsService.showSnackbar('La descripcion de la cata es obligatoria', context);
+                return;
+              }
+              if (multipleTaste.multipleTaste.description.trim().length < 10) {
+                NotificationsService.showSnackbar('La descripcion de la cata muy corta', context);
+                return;
+              }
               // Asigno nombre de cata definitivamente
               multipleTaste.multipleTaste.name = multipleTaste.multipleName;
 
               // Subo a Firebase la cata multiple
               await multipleService.createMultipleTaste(multipleTaste.initMultiple());
-
+              // Lo comprueblo por si se ha quedado la variable en true antes
               multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userDisplayName);
               multipleTaste.initUserTaste(multipleService.isMultipleTasted);
               multipleTaste.autovalidateMode = AutovalidateMode.disabled;
@@ -648,11 +666,11 @@ class RowVisibleWines extends StatelessWidget {
 
           IconButton(
             onPressed: () {
-              multipleTaste.hideNames = !multipleTaste.hideNames;
+              multipleTaste.multipleTaste.hidden = !multipleTaste.multipleTaste.hidden;
               multipleTaste.hideAllWines();
             },
             icon: Icon(
-              multipleTaste.hideNames
+              multipleTaste.multipleTaste.hidden
                 ? Icons.visibility_rounded
                 : Icons.visibility_off_rounded,
               color: colors.onSurface,

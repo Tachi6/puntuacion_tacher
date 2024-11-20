@@ -4,7 +4,7 @@ import 'package:puntuacion_tacher/models/models.dart';
 
 class Multiple {
     String name;
-    String? description;
+    String description;
     String? password;
     bool hidden;
     String? dateLimit;
@@ -13,7 +13,7 @@ class Multiple {
 
     Multiple({
         required this.name,
-        this.description,
+        required this.description,
         this.password,
         required this.hidden,
         this.dateLimit,
@@ -27,7 +27,7 @@ class Multiple {
 
     factory Multiple.fromJson(Map<String, dynamic> json) => Multiple(
         name: json["name"],
-        description: json["description"] ?? '', // TODO Manejar como null o como '' ???
+        description: json["description"],
         password: json["password"],
         hidden: json["hidden"],
         dateLimit: json["dateLimit"],

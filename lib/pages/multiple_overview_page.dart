@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class MultipleOverviewPage extends StatelessWidget {
@@ -49,6 +50,7 @@ class UserMultipleTasteDetails extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final multipleService = Provider.of<MultipleService>(context);
     final wineTasteList = multipleTaste.userMultipleTaste;
     final Formulas formulas = Formulas();
 
@@ -66,7 +68,9 @@ class UserMultipleTasteDetails extends StatelessWidget {
               itemBuilder: (context, index) {
                 return _CustomListItem(
                   index: index,
-                  wineName: wineTasteList[index].nombre, 
+                  wineName: (multipleTaste.multipleTaste.hidden && !multipleService.isMultipleTasted) 
+                    ? 'Vino a catar a ciegas ${index + 1}' 
+                    : wineTasteList[index].nombre, 
                   data1: formulas.puntosVistaFunction(wineTasteList[index].ratingVista),
                   data2: formulas.puntosNarizFunction(wineTasteList[index].ratingNariz),
                   data3: formulas.puntosBocaFunction(wineTasteList[index].ratingBoca),

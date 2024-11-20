@@ -15,7 +15,6 @@ class MultipleTasteProvider extends ChangeNotifier {
   AutovalidateMode _autovalidateName = AutovalidateMode.disabled;
   bool _isNameUsed = false;
   int _winesHiddenNumber = 0;
-  bool _hideNames = false;
   List<int> hideIndex = [];
   List<Wines> winesMultipleTaste = [];
   List<WineTaste> userMultipleTaste = [];
@@ -24,6 +23,7 @@ class MultipleTasteProvider extends ChangeNotifier {
 
   Multiple multipleTaste = Multiple(
     name: '',
+    description: '',
     hidden: false,
     wines: {},
     averageRatings: {}
@@ -322,7 +322,7 @@ class MultipleTasteProvider extends ChangeNotifier {
   }
 
   void hideAllWines() {
-    if (_hideNames) {
+    if (multipleTaste.hidden) {
       hideIndex = List.generate(winesMultipleTaste.length, (index) => index);
     }
     else {
@@ -340,13 +340,6 @@ class MultipleTasteProvider extends ChangeNotifier {
 
   set autovalidateMode(AutovalidateMode mode) {
     _autovalidateName = mode;
-    notifyListeners();
-  }
-
-  bool get hideNames => _hideNames;
-
-  set hideNames(bool value) {
-    _hideNames = value;
     notifyListeners();
   }
 
@@ -388,14 +381,13 @@ class MultipleTasteProvider extends ChangeNotifier {
   void resetSettings() {
     multipleName = '';
     multipleTaste.name = ''; 
-    multipleTaste.description = null;
+    multipleTaste.description = '';
     multipleTaste.password = null;
     multipleTaste.hidden = false;
     multipleTaste.dateLimit = null;
     multipleTaste.wines = {};
     multipleTaste.averageRatings = {};
     winesHiddenNumber = 0;
-    hideNames = false;
     overview = false;
     
     winesMultipleTaste.clear();
