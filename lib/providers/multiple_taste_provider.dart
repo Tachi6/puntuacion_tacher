@@ -13,9 +13,9 @@ class MultipleTasteProvider extends ChangeNotifier {
   String _multipleName = '';
   late final String userDisplayName;
   AutovalidateMode _autovalidateName = AutovalidateMode.disabled;
-  bool _isNameUsed = false;
+  // bool _isNameUsed = false;
   int _winesHiddenNumber = 0;
-  List<int> hideIndex = [];
+  // List<int> hideIndex = [];
   List<Wines> winesMultipleTaste = [];
   List<WineTaste> userMultipleTaste = [];
   String _userView = '';
@@ -312,22 +312,23 @@ class MultipleTasteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void hideWine(int index) {
-    hideIndex.contains(index) 
-      ? hideIndex.remove(index)
-      : hideIndex.add(index);
+  // void hideWine(int index) {
+  //   hideIndex.contains(index) 
+  //     ? hideIndex.remove(index)
+  //     : hideIndex.add(index);
     
-    hideIndex.sort((a, b) => a.compareTo(b));
-    notifyListeners();
-  }
+  //   hideIndex.sort((a, b) => a.compareTo(b));
+  //   notifyListeners();
+  // }
 
   void hideAllWines() {
-    if (multipleTaste.hidden) {
-      hideIndex = List.generate(winesMultipleTaste.length, (index) => index);
-    }
-    else {
-      hideIndex.clear();
-    }
+    // if (multipleTaste.hidden) {
+    //   hideIndex = List.generate(winesMultipleTaste.length, (index) => index);
+    // }
+    // else {
+    //   hideIndex.clear();
+    // }
+    multipleTaste.hidden = !multipleTaste.hidden;
     notifyListeners();
   }
 
@@ -364,12 +365,12 @@ class MultipleTasteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get isNameUsed => _isNameUsed;
+  // bool get isNameUsed => _isNameUsed;
 
-  set isNameUsed(bool value) {
-    _isNameUsed = value;
-    notifyListeners();
-  }
+  // set isNameUsed(bool value) {
+  //   _isNameUsed = value;
+  //   notifyListeners();
+  // }
 
   int get winesHiddenNumber => _winesHiddenNumber;
 
@@ -392,7 +393,7 @@ class MultipleTasteProvider extends ChangeNotifier {
     
     winesMultipleTaste.clear();
     userMultipleTaste.clear();
-    hideIndex.clear();
+    // hideIndex.clear();
     
     notifyListeners();
   }

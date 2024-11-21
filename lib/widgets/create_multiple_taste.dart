@@ -461,7 +461,7 @@ class CustomMultipleWinesRow extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final hideIndex = multipleTaste.hideIndex.indexOf(index) + 1;
+    // final hideIndex = multipleTaste.hideIndex.indexOf(index) + 1;
     final styles = Theme.of(context).textTheme;
 
     return Card(
@@ -477,13 +477,14 @@ class CustomMultipleWinesRow extends StatelessWidget {
           const SizedBox(width: 16),
       
           Expanded(
-            child: multipleTaste.hideIndex.contains(index) 
+            child: multipleTaste.multipleTaste.hidden // multipleTaste.hideIndex.contains(index) 
               ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Vino a catar a ciegas $hideIndex', 
+                    // 'Vino a catar a ciegas $hideIndex', 
+                    'Vino a catar a ciegas ${index + 1}', 
                     maxLines: 1, 
                     overflow: TextOverflow.ellipsis, 
                     style: styles.bodySmall!.copyWith(fontWeight: FontWeight.bold),
@@ -666,13 +667,13 @@ class RowVisibleWines extends StatelessWidget {
 
           IconButton(
             onPressed: () {
-              multipleTaste.multipleTaste.hidden = !multipleTaste.multipleTaste.hidden;
+              // multipleTaste.multipleTaste.hidden = !multipleTaste.multipleTaste.hidden;
               multipleTaste.hideAllWines();
             },
             icon: Icon(
               multipleTaste.multipleTaste.hidden
-                ? Icons.visibility_rounded
-                : Icons.visibility_off_rounded,
+                ? Icons.visibility_off_rounded
+                : Icons.visibility_rounded,
               color: colors.onSurface,
               size: 22
             ),
