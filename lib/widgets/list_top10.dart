@@ -32,7 +32,7 @@ class ListTop10 extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               final routeDetails = CupertinoPageRoute(
-                builder: (context) => DetailsScreen(wine: wines[index], source: 'top10'));
+                builder: (context) => DetailsScreen(wine: wines[index], source: 'top10-$index'));
               Navigator.push(context, routeDetails);
             },
             child: _WinePosterTop10(wine: wines[index], index: index),
@@ -98,7 +98,7 @@ class _WinePosterTop10 extends StatelessWidget {
                   wine: wine,
                   scale: 1,
                   imageWidth: 240,
-                  source: 'top10',
+                  source: 'top10-$index',
                 ),
               ),
                 

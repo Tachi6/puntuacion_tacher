@@ -1,10 +1,10 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:puntuacion_tacher/mappers/wines_to_winetaste.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
 
@@ -21,7 +21,7 @@ class WinesService extends ChangeNotifier {
 
   List<Wines> winesByIndex = [];
   List<Wines> winesByRate = [];
-  List<Wines> winesLatestTasted = [];
+  List<WineTaste> winesTaste = [];
   Wines? _selectedWine;
   List<Wines> latest = [];
 
@@ -30,7 +30,7 @@ class WinesService extends ChangeNotifier {
 
   WinesService() {
     loadWines();
-    loadLatestWines();
+    loadWinesTaste();
     // pruebaLatest();
   }
 
@@ -63,9 +63,8 @@ class WinesService extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future loadLatestWines() async {
-
-    List<Wines> tempLatestTasted = [];
+  Future loadWinesTaste() async {
+    List<WineTaste> tempLatestTasted = [];
 
     isLoading = true;
     notifyListeners();
@@ -78,15 +77,23 @@ class WinesService extends ChangeNotifier {
     final Map<String, dynamic> latestMap = json.decode(resp.body);
 
     latestMap.forEach((key, value) {
-      final latestWine = Wines.fromMap(value);
-      latestWine.id = key;
+      final latestWine = WineTaste.fromJson(value);
+      // latestWine.id = key;
       tempLatestTasted.add(latestWine);
     });
 
-    winesLatestTasted = tempLatestTasted.reversed.toList();  
+    winesTaste = tempLatestTasted.reversed.toList();  
 
     isLoading = false;
     notifyListeners();
+  }
+
+  Future<bool> isDataLoaded() async {
+    await Future.doWhile(() async {
+      await Future.delayed(const Duration(milliseconds: 100));
+      return winesByIndex.isEmpty;      
+    },);
+    return false;
   }
 
   void updateWinesByRate() {
@@ -247,17 +254,21 @@ class WinesService extends ChangeNotifier {
 
   Future<String> saveDeleteLatestTastedWine({required Wines wine, required String email, required String displayName}) async {   
     // Creo id de firebase con la fecha custom
-    final String idFirebase =  CustomDatetime().toText(DateTime.now());
+    final String idFirebase =  wine.fechas!.last;
     // Subo displayName a Firebase dejo lo necesario
-    displayName == ''
-      ? wine.displayName = email
-      : wine.displayName = displayName;
+    // displayName == ''
+    //   ? wine.displayName = email
+    //   : wine.displayName = displayName;
     // Subo ultimo vino catado a Firebase
+
+    final WineTaste wineTaste = WinesToWinetaste.winesToWinesTaste(wine);
+
     final String jsonCreateType = 'latest/$idFirebase.json'; 
     final url = Uri.https(_baseUrl, jsonCreateType, {
       'auth': await storage.read(key: 'idToken') ?? ''
     });
-    final resp = await http.put(url, body: wine.toJson());
+    // final resp = await http.put(url, body: wine.toJson());
+    final resp = await http.put(url, body: wineTaste.toRawJson());
 
     // TODO de momento no limito los maximos vinos
     // if (winesLatestTasted.length > 100) {
@@ -271,14 +282,19 @@ class WinesService extends ChangeNotifier {
 
     // }
 
-    winesLatestTasted.insert(0, wine);
+    winesTaste.insert(0, wineTaste);
 
     return resp.body;
   }
 
+  Wines obtainWine(String id) {
+    final wineIndex = int.parse(id);    
+    return winesByIndex[wineIndex];
+  }
+
   Future<String> likesCount(Wines wine) async {
 
-    loadLatestWines();
+    loadWinesTaste();
 
     if (wine.likes == null) {
       wine.likes = 1;

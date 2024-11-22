@@ -9,39 +9,55 @@ import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/load_wine_image.dart';
 import 'package:puntuacion_tacher/widgets/rating_details_category.dart';
 
-class ValorationCard extends StatelessWidget {
+class ValorationCards extends StatelessWidget {
  
-  const ValorationCard({super.key});
+  const ValorationCards({super.key});
 
   @override
   Widget build(BuildContext context) {
 
     final winesService = Provider.of<WinesService>(context);
-    final List<Wines> wines = winesService.winesLatestTasted;
+    // final List<Wines> wines = winesService.winesLatestTasted;
+    final List<WineTaste> winesTasteLatest = winesService.winesTaste;
 
-    return ListView.builder(
-      itemCount: wines.length,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            final routeDetails = CupertinoPageRoute(
-              builder: (context) => DetailsScreen(wine: wines[index], email: 'latest', source:'latest'));
-            Navigator.push(context, routeDetails);
+    return FutureBuilder(
+      future: winesService.isDataLoaded(),
+      builder: (context, snapshot) {
+        if (snapshot.data == null) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        return ListView.builder(
+          itemCount: winesTasteLatest.length,
+          itemBuilder: (context, index) {
+        
+            final WineTaste wineTaste = winesTasteLatest[index];
+            final wine = winesService.obtainWine(wineTaste.id);
+        
+            return GestureDetector(
+              onTap: () {
+                final routeDetails = CupertinoPageRoute(
+                  builder: (context) => DetailsScreen(wine: wine, wineTaste: wineTaste, email: 'latest', source:'latest-$index'));
+                Navigator.push(context, routeDetails);
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Card.filled(
+                  elevation: 2,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomLeadingTile(wine: wine, index: index),
+                
+                      CustomBodyTile(wine: wine, wineTaste: wineTaste)
+                    ],
+                  )
+                ),
+              ),
+            );
           },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            child: Card.filled(
-              elevation: 2,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomLeadingTile(wine: wines[index]),
-            
-                  CustomBodyTile(wine: wines[index])
-                ],
-              )
-            ),
-          ),
         );
       },
     );
@@ -51,14 +67,14 @@ class ValorationCard extends StatelessWidget {
 class CustomLeadingTile extends StatelessWidget {
 
   final Wines wine;
-  final double circularRadius = 10;
+  final int index;
 
-  const CustomLeadingTile({super.key, required this.wine});
+  const CustomLeadingTile({super.key, required this.wine, required this.index});
 
   @override
   Widget build(BuildContext context) {
 
-    const String source = 'latest';
+    final String source = 'latest-$index';
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -75,17 +91,23 @@ class CustomLeadingTile extends StatelessWidget {
 class CustomBodyTile extends StatelessWidget {
 
   final Wines wine;
+  final WineTaste wineTaste;
 
-  const CustomBodyTile({super.key, required this.wine});
+  const CustomBodyTile({
+    super.key, 
+    required this.wineTaste,
+    required this.wine, 
+  });
 
   @override
   Widget build(BuildContext context) {
-   
-    final String user;
 
-    wine.displayName == '' || wine.displayName == null
-      ? user = wine.usuarios!.last
-      : user = wine.displayName!;
+    // TODO siempre va a tener usuario
+    // final String user;
+
+    // wine.displayName == '' || wine.displayName == null
+    //   ? user = wine.usuarios!.last
+    //   : user = wine.displayName!;
 
     return Expanded(
       child: Container(
@@ -94,16 +116,16 @@ class CustomBodyTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '$user cató ${wine.nombre} y lo valoró con ${wine.puntuaciones!.last} puntos',
+              '${wineTaste.user} cató ${wineTaste.nombre} y lo valoró con ${wineTaste.puntosFinal} puntos',
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
       
             Text(wine.bodega, style: const TextStyle(fontSize: 14)),
-
+    
             Text(wine.region, style: const TextStyle(fontSize: 14)),
             
             Text(wine.tipo, style: const TextStyle(fontSize: 14)),
-
+    
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [

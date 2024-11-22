@@ -129,7 +129,7 @@ class MyUserBody extends StatelessWidget {
                       wine: winesService.userTastedWines(email)[index],
                       scale: 2/6,
                       imageWidth: 60,
-                      source: 'email',
+                      source: 'email-$index',
                     ),
                               
                     const SizedBox(width: 20),
@@ -190,7 +190,7 @@ class MyUserBody extends StatelessWidget {
                 ),
                 onTap: () {
                   final routeDetails = CupertinoPageRoute(
-                    builder: (context) => DetailsScreen(wine: winesService.userTastedWines(email)[index], email: email, source: 'email'));
+                    builder: (context) => DetailsScreen(wine: winesService.userTastedWines(email)[index], email: email, source: 'email-$index'));
                   Navigator.push(context, routeDetails);
                 },
               );

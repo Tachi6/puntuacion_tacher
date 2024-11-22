@@ -20,7 +20,7 @@ class _ValorationsScreenState extends State<ValorationsScreen> with AutomaticKee
         automaticallyImplyLeading: false,
       ),
       
-      body: const ValorationCard(),
+      body: const ValorationCards(),
     );
   }
   

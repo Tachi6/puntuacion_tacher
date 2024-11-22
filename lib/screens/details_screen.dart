@@ -13,10 +13,17 @@ import 'package:puntuacion_tacher/widgets/widgets.dart';
 class DetailsScreen extends StatelessWidget {
 
   final Wines wine;
+  final WineTaste? wineTaste;
   final String? email;
   final String source;
 
-  const DetailsScreen({super.key, required this.wine, this.email, required this.source});
+  const DetailsScreen({
+    super.key, 
+    required this.wine, 
+    this.wineTaste,
+    this.email, 
+    required this.source
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +39,7 @@ class DetailsScreen extends StatelessWidget {
               SliverList(
                 delegate: SliverChildListDelegate([
           
-                  _WinePoster(wine: wine, user: email, source: source)
+                  _WinePoster(wine: wine, wineTaste: wineTaste, user: email, source: source)
                 
                 ])           
               )
@@ -179,11 +186,16 @@ class _WinePoster extends StatelessWidget {
   // TODO refactorizar mas limpio
 
   final Wines wine;
+  final WineTaste? wineTaste;
   final String? user;
   final String source;
-  final double circularRadius = 20;
 
-  const _WinePoster({required this.wine, this.user, required this.source});
+  const _WinePoster({
+    required this.wine, 
+    this.wineTaste,
+    this.user, 
+    required this.source
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -267,33 +279,33 @@ class _WinePoster extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${wine.puntuaciones!.last} puntos Tacher', style: const TextStyle(fontSize: 14)),
+                      Text('${wineTaste!.puntosFinal} puntos Tacher', style: const TextStyle(fontSize: 14)),
 
                       Row(
                         children: [
                           const SizedBox(width: 44 ,child: Text('Vista', style: TextStyle(fontSize: 14),)),
-                          RatingDetailsCategory(ratingCategory: wine.puntuacionesVista!.last),
+                          RatingDetailsCategory(ratingCategory: wineTaste!.puntosVista),
                         ],
                       ),
-                      detectEmptyText(wine.notasVista!.last),
+                      detectEmptyText(wineTaste!.notasVista!),
                       
                       Row(
                         children: [
                           const SizedBox(width: 44 ,child: Text('Nariz', style: TextStyle(fontSize: 14),)),
-                          RatingDetailsCategory(ratingCategory: wine.puntuacionesNariz!.last),
+                          RatingDetailsCategory(ratingCategory: wineTaste!.puntosNariz),
                         ],
                       ),
-                      detectEmptyText(wine.notasNariz!.last),
+                      detectEmptyText(wineTaste!.notasNariz!),
 
                       Row(
                         children: [
                           const SizedBox(width: 44 ,child: Text('Boca', style: TextStyle(fontSize: 14),)),
-                          RatingDetailsCategory(ratingCategory: wine.puntuacionesBoca!.last),
+                          RatingDetailsCategory(ratingCategory: wineTaste!.puntosBoca),
                         ],
                       ),
-                      detectEmptyText(wine.notasBoca!.last),
+                      detectEmptyText(wineTaste!.notasBoca!),
 
-                      Text(wine.comentarios!.last, style: const TextStyle(fontSize: 14)),
+                      detectEmptyText(wineTaste!.comentarios!),
                     ]
                   )
                   :

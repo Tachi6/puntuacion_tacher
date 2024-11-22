@@ -42,7 +42,7 @@ class ListBestScreen extends StatelessWidget {
                 return GestureDetector(
                   onTap: () {
                     final routeDetails = CupertinoPageRoute(
-                      builder: (context) => DetailsScreen(wine: wines[index], source: 'best')
+                      builder: (context) => DetailsScreen(wine: wines[index], source: 'best-$index')
                     );
                     Navigator.push(context, routeDetails);
                   },
@@ -103,7 +103,7 @@ class _WinePoster extends StatelessWidget {
             // imageWidth: width * 0.25,
             // heightReducer: 0.16, 
             // widthReducer: 0.25,
-            source: 'best',
+            source: 'best-$index',
           ),
 
           const SizedBox(height: 5),

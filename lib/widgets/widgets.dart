@@ -29,7 +29,7 @@ export 'package:puntuacion_tacher/widgets/rating_details_category.dart';
 export 'package:puntuacion_tacher/widgets/search_taste_wine.dart';
 export 'package:puntuacion_tacher/widgets/search_wine_button.dart';
 export 'package:puntuacion_tacher/widgets/select_multiple_taste.dart';
-export 'package:puntuacion_tacher/widgets/valoration_card.dart';
+export 'package:puntuacion_tacher/widgets/valoration_cards.dart';
 
 
 
