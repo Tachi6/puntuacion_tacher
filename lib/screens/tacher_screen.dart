@@ -1,6 +1,7 @@
 // Image of https://unsplash.com/es/@edge2edgemedia
 // Link https://unsplash.com/es/fotos/IhOamKjNWwI
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -56,65 +57,93 @@ class _TacherScreenState extends State<TacherScreen> with AutomaticKeepAliveClie
   bool get wantKeepAlive => true;
 }
 
-class _CustomTacherBody extends StatelessWidget {
+class _CustomTacherBody extends StatefulWidget {
   const _CustomTacherBody();
+
+  @override
+  State<_CustomTacherBody> createState() => _CustomTacherBodyState();
+}
+
+class _CustomTacherBodyState extends State<_CustomTacherBody> {
+
 
   @override
   Widget build(BuildContext context) {
 
-    final textos = Textos();
+    final Textos textos = Textos();
+    var titleGroup = AutoSizeGroup();
+    var bodyGroup = AutoSizeGroup();
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [          
-          RatingBox(
-            textoTitulo: textos.vistaTitulo,
-            textoDescripcion: textos.vistaDescripcion,
-            initialRating: 0,
-            itemCount: 7,
-            minRating: 1,
-            name: 'vista',
-          ),
-    
-          RatingBox(
-            textoTitulo: textos.narizTitulo,
-            textoDescripcion: textos.narizDescripcion,
-            initialRating: 0,
-            itemCount: 9,
-            minRating: 1,
-            name: 'nariz',
-          ),
-    
-          RatingBox(
-            textoTitulo: textos.bocaTitulo,
-            textoDescripcion: textos.bocaDescripcion,
-            initialRating: 0,
-            itemCount: 9,
-            minRating: 1,
-            name: 'boca',
-          ),
-    
-          RatingBox(
-            textoTitulo: textos.puntosTitulo,
-            textoDescripcion: textos.puntosDescripcion,
-            initialRating: 0,
-            itemCount: 11,
-            minRating: 1,
-            name: 'puntos',
-          ),
-    
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              NotesCommentsBox(titulo: 'Notas de Cata'),
-          
-              NotesCommentsBox(titulo: 'Comentarios')
-            ]
-          ),
-        ]
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [          
+        RatingBox(
+          titleText: textos.vistaTitulo,
+          bodyText: textos.vistaDescripcion,
+          initialRating: 0,
+          titleGroup: titleGroup,
+          bodyGroup: bodyGroup,
+          itemCount: 7,
+          minRating: 1,
+          name: 'vista',
+        ),
+
+        const Spacer(flex: 1),
+        
+        RatingBox(
+          titleText: textos.narizTitulo,
+          bodyText: textos.narizDescripcion,
+          initialRating: 0,
+          titleGroup: titleGroup,
+          bodyGroup: bodyGroup,
+          itemCount: 9,
+          minRating: 1,
+          name: 'nariz',
+        ),
+
+        const Spacer(flex: 1),
+        
+        RatingBox(
+          titleText: textos.bocaTitulo,
+          bodyText: textos.bocaDescripcion,
+          initialRating: 0,
+          titleGroup: titleGroup,
+          bodyGroup: bodyGroup,
+          itemCount: 9,
+          minRating: 1,
+          name: 'boca',
+        ),
+
+        const Spacer(flex: 1),
+        
+        RatingBox(
+          titleText: textos.puntosTitulo,
+          bodyText: textos.puntosDescripcion,
+          initialRating: 0,
+          titleGroup: titleGroup,
+          bodyGroup: bodyGroup,
+          itemCount: 11,
+          minRating: 1,
+          name: 'puntos',
+        ),
+
+        const Spacer(flex: 2),
+        
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            NotesCommentsBox(titulo: 'Notas de Cata'),
+        
+            NotesCommentsBox(titulo: 'Comentarios')
+          ]
+        ),
+
+        const Spacer(flex: 2),
+        // Height of BottomSheet + Rating Box Bottom Padding
+        const SizedBox(height: 68),
+      ]
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -9,8 +10,10 @@ import 'package:puntuacion_tacher/providers/providers.dart';
 
 class RatingBox extends StatelessWidget {
 
-  final String textoTitulo;
-  final String textoDescripcion;
+  final String titleText;
+  final String bodyText;
+  final AutoSizeGroup titleGroup;
+  final AutoSizeGroup bodyGroup;
   final double? initialRating;
   final double? minRating;
   final int? itemCount;
@@ -18,8 +21,10 @@ class RatingBox extends StatelessWidget {
 
   const RatingBox({
     super.key, 
-    required this.textoTitulo, 
-    required this.textoDescripcion,
+    required this.titleText, 
+    required this.bodyText,
+    required this.titleGroup,
+    required this.bodyGroup,
     this.initialRating, 
     this.minRating, 
     this.itemCount, 
@@ -33,7 +38,7 @@ class RatingBox extends StatelessWidget {
     final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
 
     return Padding(
-      padding: const EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
+      padding: const EdgeInsets.only(top: 5, bottom: 10, left: 10, right: 10),
       child: Material(
         elevation: 1,
         shadowColor: colors.shadow,
@@ -47,25 +52,37 @@ class RatingBox extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-        
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Text(textoTitulo, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold))),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: AutoSizeText(
+                  titleText,
+                  group: titleGroup,
+                  minFontSize: 15,
+                  maxLines: 1,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+
               const SizedBox(height:5),
         
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Text(textoDescripcion, style: const TextStyle(fontSize: 12), textAlign: TextAlign.justify)),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: AutoSizeText(
+                  bodyText,
+                  minFontSize: 11,
+                  group: bodyGroup,
+                  maxLines: 3,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+
               const SizedBox(height: 5),
         
-              if (name != null) Transform.translate(
-                offset: const Offset(-2, 0),
-                child: _RatingCustomWidget(
-                  initialRating: initialRating!, 
-                  minRating: minRating!, 
-                  itemCount: itemCount!, 
-                  name: name!,
-                ),
+              if (name != null) _RatingCustomWidget(
+                initialRating: initialRating!, 
+                minRating: minRating!, 
+                itemCount: itemCount!, 
+                name: name!,
               ),
             ],
           ),
@@ -99,7 +116,7 @@ class _RatingCustomWidget extends StatelessWidget{
     final multiplePage = screenProvider.multipleScreen - 1;
     final colors = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
-    final double itemSize = ((size.width * 0.75) / 11).truncateToDouble();
+    final double itemSize = ((size.width * 0.90) / 11).truncateToDouble();
 
     return RatingBar.builder(
       initialRating: initialRating,
@@ -109,18 +126,27 @@ class _RatingCustomWidget extends StatelessWidget{
       allowHalfRating: false,
       glow: false,
       itemSize: itemSize,
-      itemPadding: const EdgeInsets.only(top: 6, bottom: 6, left: 4, right: 0), 
+      itemPadding: const EdgeInsets.only(top: 6, bottom: 6, left: 0, right: 0), 
       itemBuilder: (context, index) {
         if (name == 'puntos') {
-          return SvgPicture.asset(
-            'assets/wine_bar_$index.svg',
-            colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
+          return SizedBox(
+            width: itemSize,
+            height: itemSize,
+            child: SvgPicture.asset(
+              'assets/wine_bar_$index.svg',
+              colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
+            ),
           );
         } 
         else {
-          return SvgPicture.asset(
-            'assets/wine_bar_full.svg',
-            colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
+          return SizedBox(
+            width: itemSize,
+            height: itemSize,
+            child: SvgPicture.asset(
+              'assets/wine_bar_full.svg',
+              fit: BoxFit.fitHeight,
+              colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
+            ),
           );
         }
       },

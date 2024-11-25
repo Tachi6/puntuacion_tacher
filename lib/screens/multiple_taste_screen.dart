@@ -56,6 +56,15 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
         NotificationsService.showSnackbar('RELLENA TODOS LOS CAMPOS', context);
         return;
       }
+
+      // TODO hacer animacion a la ultima pagina cuando envio multiple
+      final int newPageIndex = multipleTaste.winesMultipleTaste.length + 1;
+      screenProvider.multipleScreen = newPageIndex;
+      pageController.animateToPage(
+        newPageIndex, 
+        duration: const Duration(milliseconds: 250), 
+        curve: Curves.easeInOut,           
+      );
       // Cargo la cata multiples para tener los ultimos cambios
       final Multiple multipleUpdated = await multipleService.loadMultipleToUpdate(multipleTaste.multipleTaste.name);
       // Actualizo el multiple local
@@ -66,31 +75,22 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       multipleTaste.calculateAverageRatings();
       // Activo 2 paginas del overview
       multipleTaste.overview = true;
-      print(multipleTaste.overview);
-      // Moverme a la ultima página // TODO ver que lo hace fluido...
-      final int newPageIndex = multipleTaste.winesMultipleTaste.length + 1;
-      if (screenProvider.multipleScreen != newPageIndex) {
-        screenProvider.multipleScreen = newPageIndex;
-        pageController.animateToPage(
-          newPageIndex, 
-          duration: const Duration(milliseconds: 250), 
-          curve: Curves.easeInOut,           
-        );
-      }
-      // Desactivar que vuelvan a catar, retraso para la animacion
-      await Future.delayed(
-        const Duration(milliseconds: 250),
-        () => multipleService.isMultipleTasted = true,
-      );
+      // Desactivar que vuelvan a catar y moverme a la nueva ultima pagina
+      multipleService.isMultipleTasted = true;
+      pageController.jumpToPage(1);
+      screenProvider.multipleScreen = 1;
       // Subo WineTaste del usuario
       await multipleService.createUserMultipleTaste(multipleName: multipleTaste.multipleTaste.name, userMultipleTaste: multipleTaste.userMultipleTaste);
       // Subo AverageRatings
       await multipleService.updateAverageRatings(multipleName: multipleTaste.multipleTaste.name, averageRatings: multipleTaste.multipleTaste.averageRatings);
       // Mapear todos los vinos y subir los cambios a firebase
-      for (var wineTaste in multipleTaste.userMultipleTaste) {
-        final wineId = int.parse(wineTaste.id);
-        await winesService.updateWine(WinesMapper.wineTasteToWines(wineTaste, winesService.winesByIndex[wineId]));
-      }
+      // TODO habilitar subir cambios de vino y crear el wineTaste latest, ver que hacer con los vinos con 0 catas, puntuacion -1
+      // for (var wineTaste in multipleTaste.userMultipleTaste) {
+      //   final wineId = int.parse(wineTaste.id);
+      //   await winesService.updateWine(WinesMapper.wineTasteToWines(wineTaste, winesService.winesByIndex[wineId]));
+      //   await winesService.saveDeleteLatestTastedWine(wineTaste); // TODO probar que manda bien las ultimas catas
+      // }
+      if (context.mounted) NotificationsService.showSnackbar('Cata múltiple enviada', context);
     }
 
     List<Widget> tastePages() {
@@ -135,7 +135,9 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
           physics: const ClampingScrollPhysics(),
           controller: pageController,
           children: tastePages(),
-          onPageChanged: (value) => screenProvider.multipleScreen = value,
+          onPageChanged: (value) {
+            screenProvider.multipleScreen = value;
+          }
         ),
       ),
       bottomSheet: CustomMultipleBottomSheet(

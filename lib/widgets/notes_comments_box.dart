@@ -47,7 +47,7 @@ class NotesCommentsBox extends StatelessWidget {
         alignment: Alignment.topLeft,
         child: CustomElevatedButton(
           width: 150,
-          height: 35,
+          height: 42.5,
           color: colors.surfaceContainerHighest,
           onPressed: () {
             showBox(context, wineForm);

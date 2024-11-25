@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:puntuacion_tacher/mappers/wines_to_winetaste.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
 
@@ -252,16 +251,15 @@ class WinesService extends ChangeNotifier {
     // return resp.body;
   }
 
-  Future<String> saveDeleteLatestTastedWine({required Wines wine, required String email, required String displayName}) async {   
+  Future<String> saveDeleteLatestTastedWine(WineTaste wineTaste) async {
+    // TODO upload only user name???
+    // Cambio email por displayName cuando viene mapeado wine a wineTaste
+    if (wineTaste.user.contains('@')) {
+      final displayName = await storage.read(key: 'displayName');
+      wineTaste.user = displayName!;
+    }
     // Creo id de firebase con la fecha custom
-    final String idFirebase =  wine.fechas!.last;
-    // Subo displayName a Firebase dejo lo necesario
-    // displayName == ''
-    //   ? wine.displayName = email
-    //   : wine.displayName = displayName;
-    // Subo ultimo vino catado a Firebase
-
-    final WineTaste wineTaste = WinesToWinetaste.winesToWinesTaste(wine);
+    final String idFirebase = wineTaste.fecha;
 
     final String jsonCreateType = 'latest/$idFirebase.json'; 
     final url = Uri.https(_baseUrl, jsonCreateType, {

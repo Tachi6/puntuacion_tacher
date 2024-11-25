@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -25,20 +26,23 @@ class CheckAuthScreen extends StatelessWidget {
          child: FutureBuilder(
           future: authService.readIdToken(), 
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-            
             if (!snapshot.hasData) {
               return CircularProgressIndicator(
                 color: colors.primary,
               );
             }
-            // TODO pageroutebuilder => cupertino
             if (snapshot.data == '') {
               Future.microtask(() async {
                 if (!context.mounted) return;
-                Navigator.pushReplacement(context, PageRouteBuilder(
-                  pageBuilder: ( _ , __ , ___ ) => const LoginScreen(),
-                  transitionDuration: const Duration(seconds: 0),
-                ));
+                final routeDetails = CupertinoPageRoute(
+                  builder: (context) => const LoginScreen()
+                );
+                Navigator.pushReplacement(context, routeDetails);
+
+                // Navigator.pushReplacement(context, PageRouteBuilder(
+                //   pageBuilder: ( _ , __ , ___ ) => const LoginScreen(),
+                //   transitionDuration: const Duration(seconds: 0),
+                // ));
               });
             }
             else {
@@ -53,13 +57,17 @@ class CheckAuthScreen extends StatelessWidget {
                 }
                 
                 if (!context.mounted) return;
-                Navigator.pushReplacement(context, PageRouteBuilder(
-                  pageBuilder: ( _ , __ , ___ ) => loginForm.isRegister ? const UserSettingsScreen() : const HomeScreen(),
-                  transitionDuration: const Duration(seconds: 0),
-                ));
+                final routeDetails = CupertinoPageRoute(
+                  builder: (context) => loginForm.isRegister ? const UserSettingsScreen() : const HomeScreen(),
+                );
+                Navigator.pushReplacement(context, routeDetails);
+
+                // Navigator.pushReplacement(context, PageRouteBuilder(
+                //   pageBuilder: ( _ , __ , ___ ) => loginForm.isRegister ? const UserSettingsScreen() : const HomeScreen(),
+                //   transitionDuration: const Duration(seconds: 0),
+                // ));
               });
             }
-
             return const SizedBox();
           },
         )

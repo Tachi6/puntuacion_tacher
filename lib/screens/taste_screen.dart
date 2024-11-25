@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/mappers/mappers.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
@@ -266,7 +267,6 @@ class _SingleTacherScreen extends StatelessWidget {
 
     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: true);
     final winesService = Provider.of<WinesService>(context);
-    final authService = Provider.of<AuthService>(context, listen: true);
 
     return TacherScreen(
       appBarTitle: wineForm.wine.nombre == '' ? 'Vino catado a ciegas' : wineForm.wine.nombre,
@@ -296,13 +296,14 @@ class _SingleTacherScreen extends StatelessWidget {
             // Mando updates de los diferentes campos al wine
             wineForm.addUpdatesToWine();
             // Mando wine al servidor
+            final wineTaste = WineTasteMapper.winesToWinesTaste(winesService.selectedWine!);
             if (wineForm.wine.id == '-1') {
               await winesService.createWine(winesService.selectedWine!);
-              await winesService.saveDeleteLatestTastedWine(wine:winesService.selectedWine!, email: authService.userEmail, displayName: authService.userDisplayName);
+              await winesService.saveDeleteLatestTastedWine(wineTaste);
             }
             else {
               await winesService.updateWine(winesService.selectedWine!);
-              await winesService.saveDeleteLatestTastedWine(wine:winesService.selectedWine!, email: authService.userEmail, displayName: authService.userDisplayName);
+              await winesService.saveDeleteLatestTastedWine(wineTaste);
             }
             // Mando wine a la confirmacion
             if (!context.mounted) return;

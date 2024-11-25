@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/mappers/mappers.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/search/search.dart';
@@ -34,7 +35,6 @@ class AddHiddenWine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final authService = Provider.of<AuthService>(context, listen: true);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
     final winesService = Provider.of<WinesService>(context);
     final taste = Provider.of<VisibleOptionsProvider>(context);
@@ -56,13 +56,14 @@ class AddHiddenWine extends StatelessWidget {
           // Mando updates de los diferentes campos al wine
           wineForm.addUpdatesToWine();
           // Mando wine al servidor
+          final wineTaste = WineTasteMapper.winesToWinesTaste(winesService.selectedWine!);
           if (wineForm.wine.id == '-1') {
             await winesService.createWine(winesService.selectedWine!);
-            await winesService.saveDeleteLatestTastedWine(wine:winesService.selectedWine!, email: authService.userEmail, displayName: authService.userDisplayName);
+            await winesService.saveDeleteLatestTastedWine(wineTaste);
           }
           else {
             await winesService.updateWine(winesService.selectedWine!);
-            await winesService.saveDeleteLatestTastedWine(wine:winesService.selectedWine!, email: authService.userEmail, displayName: authService.userDisplayName);
+            await winesService.saveDeleteLatestTastedWine(wineTaste);
           }
           // Mando wine a la confirmacion
           if (!context.mounted) return;
