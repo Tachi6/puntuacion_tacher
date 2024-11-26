@@ -99,7 +99,7 @@ class MultipleTasteProvider extends ChangeNotifier {
     if (isTasted) {
       multipleTaste.wines.forEach((key, value) {
         value.forEach((key, value) {
-          if (value.user.contains(userDisplayName)) {
+          if (value.user == userDisplayName) {
             tempUserMultipleTaste.add(value);
           }
         },);

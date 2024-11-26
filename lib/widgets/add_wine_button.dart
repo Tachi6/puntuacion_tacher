@@ -407,8 +407,8 @@ class TextFormFieldSearch extends StatelessWidget {
         }
         return selectList.where((String option) {
           return option
-          .toLowerCase()
-          .contains(textEditingValue.text.toLowerCase());
+            .toLowerCase()
+            .contains(textEditingValue.text.toLowerCase());
         });
       },
       onSelected: (String selection) {

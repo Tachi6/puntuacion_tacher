@@ -196,6 +196,9 @@ class WinesService extends ChangeNotifier {
 
     isSaving = true;
     notifyListeners();
+    // Cambio displayName por email
+    final email = await storage.read(key: 'email');
+    wine.usuarios![wine.usuarios!.length - 1] = email!;
     await loadWines();
 
     final String jsonUpdateType = 'wines/${wine.id}.json';

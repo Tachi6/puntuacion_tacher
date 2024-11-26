@@ -57,7 +57,6 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
         return;
       }
 
-      // TODO hacer animacion a la ultima pagina cuando envio multiple
       final int newPageIndex = multipleTaste.winesMultipleTaste.length + 1;
       screenProvider.multipleScreen = newPageIndex;
       pageController.animateToPage(
@@ -65,6 +64,8 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
         duration: const Duration(milliseconds: 250), 
         curve: Curves.easeInOut,           
       );
+      // Mando aviso de cata enviada
+      NotificationsService.showSnackbar('Cata múltiple enviada', context);
       // Cargo la cata multiples para tener los ultimos cambios
       final Multiple multipleUpdated = await multipleService.loadMultipleToUpdate(multipleTaste.multipleTaste.name);
       // Actualizo el multiple local
@@ -88,9 +89,8 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       // for (var wineTaste in multipleTaste.userMultipleTaste) {
       //   final wineId = int.parse(wineTaste.id);
       //   await winesService.updateWine(WinesMapper.wineTasteToWines(wineTaste, winesService.winesByIndex[wineId]));
-      //   await winesService.saveDeleteLatestTastedWine(wineTaste); // TODO probar que manda bien las ultimas catas
+      //   await winesService.saveDeleteLatestTastedWine(wineTaste);
       // }
-      if (context.mounted) NotificationsService.showSnackbar('Cata múltiple enviada', context);
     }
 
     List<Widget> tastePages() {
