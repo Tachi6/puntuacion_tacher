@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import 'package:puntuacion_tacher/helpers/helpers.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
@@ -30,7 +31,7 @@ class MultipleOverviewPage extends StatelessWidget {
         layoutBuilder: (currentChild, previousChildren) {
           return currentChild!;
         },
-        child: multipleTaste.overview // TODO repasar que el overview funcione bien
+        child: multipleTaste.overview
           ? OverviewMultipleTaste(key: const ValueKey<String>('overviewMultiple'), newWidth: newWidth, newHeight: newHeight)
           : UserMultipleTasteDetails(key: const ValueKey<String>('userDetails'), newWidth: newWidth),
       ),
@@ -52,7 +53,6 @@ class UserMultipleTasteDetails extends StatelessWidget {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleService>(context);
     final wineTasteList = multipleTaste.userMultipleTaste;
-    final Formulas formulas = Formulas();
 
     return SizedBox(
       width: double.infinity,
@@ -66,15 +66,23 @@ class UserMultipleTasteDetails extends StatelessWidget {
               padding: const EdgeInsets.all(0),
               itemCount: multipleTaste.winesMultipleTaste.length,
               itemBuilder: (context, index) {
+
+                final Formulas formulas = Formulas(
+                  ratingVista: wineTasteList[index].ratingVista,
+                  ratingNariz: wineTasteList[index].ratingNariz,
+                  ratingBoca: wineTasteList[index].ratingBoca,
+                  ratingPuntos: wineTasteList[index].ratingPuntos,
+                );
+
                 return _CustomListItem(
                   index: index,
                   wineName: (multipleTaste.multipleTaste.hidden && !multipleService.isMultipleTasted) 
                     ? 'Vino a catar a ciegas ${index + 1}' 
                     : wineTasteList[index].nombre, 
-                  data1: formulas.puntosVistaFunction(wineTasteList[index].ratingVista),
-                  data2: formulas.puntosNarizFunction(wineTasteList[index].ratingNariz),
-                  data3: formulas.puntosBocaFunction(wineTasteList[index].ratingBoca),
-                  data4: wineTasteList[index].ratingPuntos.toInt() == -1 ? 0 : wineTasteList[index].ratingPuntos.toInt(),
+                  vista: formulas.puntosVista,
+                  nariz: formulas.puntosNariz,
+                  boca: formulas.puntosBoca,
+                  puntosOrFinal: wineTasteList[index].ratingPuntos == -1 ? 0 : wineTasteList[index].ratingPuntos.toInt(),
                   newWidth: newWidth,
                   tasteHeader: _TasteHeader(newWidth: newWidth, lastLabel: 'Final'),
                   itemsDetailsNotes: (wineTasteList[index].notasVista != '' || wineTasteList[index].notasNariz != '' || wineTasteList[index].notasBoca != '')
@@ -133,10 +141,10 @@ class OverviewMultipleTaste extends StatelessWidget {
                 return _CustomListItem(
                   index: index,
                   wineName: wineTasteList[index].nombre, 
-                  data1: wineTasteList[index].puntosVista,
-                  data2: wineTasteList[index].puntosNariz,
-                  data3: wineTasteList[index].puntosBoca,
-                  data4: wineTasteList[index].puntosFinal,
+                  vista: wineTasteList[index].puntosVista,
+                  nariz: wineTasteList[index].puntosNariz,
+                  boca: wineTasteList[index].puntosBoca,
+                  puntosOrFinal: wineTasteList[index].puntosFinal,
                   newWidth: newWidth,
                 );
               },
@@ -166,10 +174,10 @@ class OverviewMultipleTaste extends StatelessWidget {
                 return _CustomListItem(
                   index: index,
                   wineName: wineTasteList[index].nombre, 
-                  data1: averageRatings[index].vista,
-                  data2: averageRatings[index].nariz,
-                  data3: averageRatings[index].boca,
-                  data4: averageRatings[index].puntos,
+                  vista: averageRatings[index].vista,
+                  nariz: averageRatings[index].nariz,
+                  boca: averageRatings[index].boca,
+                  puntosOrFinal: averageRatings[index].puntos,
                   newWidth: newWidth,
                 );
               },
@@ -219,10 +227,10 @@ class _CustomListItem extends StatelessWidget {
   const _CustomListItem({
     required this.index,
     required this.wineName, 
-    required this.data1, 
-    required this.data2, 
-    required this.data3, 
-    required this.data4,
+    required this.vista, 
+    required this.nariz, 
+    required this.boca, 
+    required this.puntosOrFinal,
     required this.newWidth,
     this.tasteHeader,
     this.itemsDetailsNotes,
@@ -231,10 +239,10 @@ class _CustomListItem extends StatelessWidget {
 
   final int index;
   final String wineName;
-  final double data1;
-  final double data2;
-  final double data3;
-  final int data4;
+  final double vista;
+  final double nariz;
+  final double boca;
+  final int puntosOrFinal;
   final double newWidth;
   final Widget? tasteHeader;
   final Widget? itemsDetailsNotes;
@@ -273,7 +281,7 @@ class _CustomListItem extends StatelessWidget {
               width: newWidth * 0.28,
               alignment: Alignment.center,
               child: RatingDetailsCategory(
-                ratingCategory: data1,
+                ratingCategory: vista,
                 itemSize: 14,
               ),
             ),
@@ -282,7 +290,7 @@ class _CustomListItem extends StatelessWidget {
               width: newWidth * 0.28,
               alignment: Alignment.center,                         
               child: RatingDetailsCategory(
-                ratingCategory: data2,
+                ratingCategory: nariz,
                 itemSize: 14,
               ),
             ),
@@ -291,7 +299,7 @@ class _CustomListItem extends StatelessWidget {
               width: newWidth * 0.28,
               alignment: Alignment.center,
               child: RatingDetailsCategory(
-                ratingCategory: data3,
+                ratingCategory: boca,
                 itemSize: 14,
               ),
             ),
@@ -300,7 +308,7 @@ class _CustomListItem extends StatelessWidget {
               width: newWidth * 0.16,
               alignment: Alignment.center,
               child: Text(
-                data4.toString(), 
+                puntosOrFinal.toString(), 
                 style: styles.bodyLarge
               ),
             ),

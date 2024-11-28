@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'package:puntuacion_tacher/helpers/helpers.dart';
 import 'package:puntuacion_tacher/models/models.dart';
-import 'package:puntuacion_tacher/providers/providers.dart';
 
 class MultipleTasteProvider extends ChangeNotifier {
   MultipleTasteProvider(){
@@ -145,18 +145,24 @@ class MultipleTasteProvider extends ChangeNotifier {
   }
 
   void calculateValoration() {
-    final Formulas formulas = Formulas();
-
     for (var wineTaste in userMultipleTaste) {
-      wineTaste = formulas.calculateWineTaste(wineTaste);
+      final Formulas formulas = Formulas(
+        ratingVista: wineTaste.ratingVista,
+        ratingNariz: wineTaste.ratingNariz,
+        ratingBoca: wineTaste.ratingBoca,
+        ratingPuntos: wineTaste.ratingPuntos
+      );
+
+      wineTaste.puntosVista = formulas.puntosVista;
+      wineTaste.puntosNariz = formulas.puntosNariz;
+      wineTaste.puntosBoca = formulas.puntosBoca;
+      wineTaste.puntosFinal = formulas.calculosFinal;
     }
 
     notifyListeners();
   }
 
   void calculateAverageRatings() {
-    final Formulas formulas = Formulas();
-
     Map<String, AverageRatings> puntuaciones = {};
     
     multipleTaste.wines.forEach((key, value) {
@@ -183,10 +189,10 @@ class MultipleTasteProvider extends ChangeNotifier {
       },);
 
       puntuaciones[key] = AverageRatings(
-        vista: formulas.puntuacionCategoria(tempPuntosVistaList),
-        nariz: formulas.puntuacionCategoria(tempPuntosNarizList), 
-        boca: formulas.puntuacionCategoria(tempPuntosBocaList),
-        puntos: formulas.puntuacionFinal(tempPuntuacionesList), 
+        vista: Formulas.puntuacionCategoria(tempPuntosVistaList),
+        nariz: Formulas.puntuacionCategoria(tempPuntosNarizList), 
+        boca: Formulas.puntuacionCategoria(tempPuntosBocaList),
+        puntos: Formulas.puntuacionFinal(tempPuntuacionesList), 
       );
     },);
     multipleTaste.averageRatings = puntuaciones;

@@ -50,6 +50,7 @@ class AuthService extends ChangeNotifier {
       userEmail = email;
       await storage.write(key: 'password', value: password);
       await storage.write(key: 'idToken', value: decodedResp['idToken']);
+      await storage.write(key: 'localId', value: decodedResp['localId']); // TODO trabajar con localId en vez que con email en app y en bd
       isUserLogued = true;
       notifyListeners();
       // To refresh user auto every 55 minuts
@@ -79,12 +80,15 @@ class AuthService extends ChangeNotifier {
 
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
 
+    print(decodedResp);
+
     if (decodedResp.containsKey('idToken')) {
       await storage.write(key: 'email', value: email);
       userEmail = email;
       await storage.write(key: 'password', value: password);
       await storage.write(key: 'idToken', value: decodedResp['idToken']);
       await storage.write(key: 'displayName', value: decodedResp['displayName']);
+      await storage.write(key: 'localId', value: decodedResp['localId']);
       userDisplayName = decodedResp['displayName'];
       isUserLogued = true;
       notifyListeners();

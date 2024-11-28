@@ -1,17 +1,21 @@
 import 'package:puntuacion_tacher/models/models.dart';
 
 class WineTasteMapper {
-  static winesToWinesTaste(Wines wine) => WineTaste(
+  static winesToWinesTaste({
+    required Wines wine,
+    required double ratingVista,
+    required double ratingNariz,
+    required double ratingBoca,
+    required double ratingPuntos,
+  }) => WineTaste(
     fecha: wine.fechas!.last, 
     id: wine.id!, 
     nombre: wine.nombre, 
     user: wine.usuarios!.last, 
-    ratingVista: ((wine.puntuacionesVista!.last * 7) / 5).roundToDouble(),
-    ratingNariz: ((wine.puntuacionesNariz!.last * 9) / 5).roundToDouble(), 
-    ratingBoca: ((wine.puntuacionesBoca!.last * 9) / 5).roundToDouble(), 
-    ratingPuntos: wine.puntuaciones!.last >= 80 
-      ? ((wine.puntuacionesVista!.last + wine.puntuacionesNariz!.last + wine.puntuacionesBoca!.last + 50) - wine.puntuaciones!.last).ceilToDouble()
-      : 0, // TODO obtener este valor 
+    ratingVista: ratingVista,
+    ratingNariz: ratingNariz, 
+    ratingBoca: ratingBoca,
+    ratingPuntos: ratingPuntos,
     puntosVista: wine.puntuacionesVista!.last, 
     puntosNariz: wine.puntuacionesNariz!.last, 
     puntosBoca: wine.puntuacionesBoca!.last, 

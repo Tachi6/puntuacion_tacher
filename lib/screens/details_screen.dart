@@ -239,15 +239,20 @@ class _WinePoster extends StatelessWidget {
                 wine.graduacion != '' ? Text('${wine.graduacion}%', style: const TextStyle(fontSize: 14)) : const SizedBox(),
                 detectEmptyText(wine.descripcion),
 
-                user == null
+                user == null // TODO refactorizar
                   ? 
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${wine.puntuacionFinal} puntos Tacher', style: const TextStyle(fontSize: 14)),
+                      Text(
+                        wine.puntuacionFinal != -1 
+                          ? '${wine.puntuacionFinal} puntos Tacher'
+                          : '\nSin valoraciones',
+                          style: const TextStyle(fontSize: 14)
+                        ),
 
-                      Row(
+                      if (wine.puntuacionFinal != -1) Row(
                         children: [
                           const SizedBox(width: 44 ,child: Text('Vista', style: TextStyle(fontSize: 14),)),
                           RatingDetailsCategory(ratingCategory: wine.puntuacionVista)
@@ -255,7 +260,7 @@ class _WinePoster extends StatelessWidget {
                       ),
                       detectEmptyText(wine.notaVista),
                       
-                      Row(
+                      if (wine.puntuacionFinal != -1) Row(
                         children: [
                           const SizedBox(width: 44 ,child: Text('Nariz', style: TextStyle(fontSize: 14),)),
                           RatingDetailsCategory(ratingCategory: wine.puntuacionNariz)
@@ -263,7 +268,7 @@ class _WinePoster extends StatelessWidget {
                       ),
                       detectEmptyText(wine.notaNariz),
 
-                      Row(
+                      if (wine.puntuacionFinal != -1) Row(
                         children: [
                           const SizedBox(width: 44 ,child: Text('Boca', style: TextStyle(fontSize: 14),)),
                           RatingDetailsCategory(ratingCategory: wine.puntuacionBoca)

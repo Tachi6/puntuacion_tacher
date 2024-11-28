@@ -55,8 +55,6 @@ class _MultipleTasteNameState extends State<MultipleTasteName> {
                   key: multipleTaste.formNameKey,
                   child: TextFormField(
                     controller: nameController,
-                    autocorrect: false,
-                    enableSuggestions: false,
                     style: const TextStyle(fontSize: 14),
                     decoration: InputDecoration(
                       isDense: true,

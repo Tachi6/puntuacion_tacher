@@ -296,7 +296,13 @@ class _SingleTacherScreen extends StatelessWidget {
             // Mando updates de los diferentes campos al wine
             wineForm.addUpdatesToWine();
             // Mando wine al servidor
-            final wineTaste = WineTasteMapper.winesToWinesTaste(winesService.selectedWine!);
+            final wineTaste = WineTasteMapper.winesToWinesTaste(
+              wine: winesService.selectedWine!,
+              ratingVista: wineForm.ratingVista,
+              ratingNariz: wineForm.ratingNariz,
+              ratingBoca: wineForm.ratingBoca,
+              ratingPuntos: wineForm.ratingPuntos,              
+            );
             if (wineForm.wine.id == '-1') {
               await winesService.createWine(winesService.selectedWine!);
               await winesService.saveDeleteLatestTastedWine(wineTaste);

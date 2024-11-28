@@ -169,8 +169,6 @@ class _UserSettingsBody extends StatelessWidget {
                               initialValue: authService.userDisplayName,
                               enableInteractiveSelection: false,
                               textAlign: TextAlign.center,
-                              autocorrect: false,
-                              enableSuggestions: false,
                               style: const TextStyle(fontSize: 14),
                               decoration: const InputDecoration(
                                 isCollapsed: true,
@@ -240,8 +238,6 @@ class _UserSettingsBody extends StatelessWidget {
                               readOnly: true,
                               enableInteractiveSelection: false,
                               textAlign: TextAlign.center,
-                              autocorrect: false,
-                              enableSuggestions: false,
                               style: TextStyle(fontSize: 14, color: colors.outline),
                               decoration: const InputDecoration(
                                 isCollapsed: true,

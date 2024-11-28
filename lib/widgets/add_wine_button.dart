@@ -351,8 +351,6 @@ class TextFormFieldText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      enableSuggestions: false,
-      autocorrect: false,
       keyboardType: textInputType,
       inputFormatters: textInputFormatter,
       textCapitalization: TextCapitalization.sentences,
@@ -445,8 +443,6 @@ class TextFormFieldSearch extends StatelessWidget {
 
         return TextFormField(
           scrollPadding: EdgeInsets.only(bottom: size.height * 0.361), // TODO comprobar que estos valores funcionan bien en todos los dispositivos
-          enableSuggestions: false,
-          autocorrect: false,
           textCapitalization: TextCapitalization.sentences,
           maxLines: 1,
           style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),

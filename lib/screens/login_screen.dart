@@ -199,6 +199,7 @@ class LoginTextFormField extends StatelessWidget {
         )
       ),
       child: TextFormField(
+        enableSuggestions: false,
         autocorrect: false,
         obscureText: obscureText,
         cursorErrorColor: colors.onErrorContainer,

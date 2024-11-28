@@ -85,7 +85,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       // Subo AverageRatings
       await multipleService.updateAverageRatings(multipleName: multipleTaste.multipleTaste.name, averageRatings: multipleTaste.multipleTaste.averageRatings);
       // Mapear todos los vinos y subir los cambios a firebase
-      // TODO habilitar subir cambios de vino y crear el wineTaste latest, ver que hacer con los vinos con 0 catas, puntuacion -1
+      // TODO habilitar subir cambios de vino y crear el wineTaste latest
       // for (var wineTaste in multipleTaste.userMultipleTaste) {
       //   final wineId = int.parse(wineTaste.id);
       //   await winesService.updateWine(WinesMapper.wineTasteToWines(wineTaste, winesService.winesByIndex[wineId]));
