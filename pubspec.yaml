@@ -34,15 +34,18 @@ dependencies:
   card_swiper: ^3.0.1
   collection: ^1.17.1
   cupertino_icons: ^1.0.2
-  flutter_localizations:
-    sdk: flutter
+  encrypt: ^5.0.3
   flutter:
+    sdk: flutter
+  flutter_dotenv: ^5.2.1
+  flutter_localizations:
     sdk: flutter
   flutter_rating_bar: ^4.0.1
   flutter_secure_storage: ^9.0.0
   flutter_svg: ^2.0.9
   http: ^1.1.0
   image_pixels: ^4.0.0
+  intl: ^0.19.0
   matcher: ^0.12.15
   material_color_utilities: 0.11.1
   provider: ^6.0.5
@@ -51,7 +54,6 @@ dependencies:
   syncfusion_flutter_datepicker: ^27.1.51
   syncfusion_flutter_gauges: ^27.1.48
   test_api: ^0.7.0
-  intl: ^0.19.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.1
@@ -85,6 +87,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - .env
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

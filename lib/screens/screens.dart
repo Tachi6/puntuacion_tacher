@@ -1,4 +1,5 @@
 
+export 'package:puntuacion_tacher/screens/create_multiple_taste_screen.dart';
 export 'package:puntuacion_tacher/screens/check_auth_screen.dart';
 export 'package:puntuacion_tacher/screens/details_screen.dart';
 export 'package:puntuacion_tacher/screens/home_screen.dart';

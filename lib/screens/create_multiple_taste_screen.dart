@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/helpers/encryption_service.dart';
+
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -23,8 +25,8 @@ PersistentBottomSheetController viewBottomMenu(BuildContext context) {
   );
 }
 
-class CreateMultipleTaste extends StatelessWidget{
-  const CreateMultipleTaste({super.key});
+class CreateMultipleTasteScreen extends StatelessWidget{
+  const CreateMultipleTasteScreen({super.key});
     
   @override
   Widget build(BuildContext context) {
@@ -171,7 +173,11 @@ class _CustomBody extends StatelessWidget {
                 borderSide: const BorderSide(width: 1)
               ),
             ),
-            onChanged: (value) => multipleTaste.multipleTaste.password = value,
+            onChanged: (value) {
+              final String encryptedPassword = EncryptionService().encryptData(value);
+              
+              multipleTaste.multipleTaste.password = encryptedPassword;
+            },
             onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
           ),
 

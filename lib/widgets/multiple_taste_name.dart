@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
-import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class MultipleTasteName extends StatefulWidget {
 
@@ -97,7 +97,7 @@ class _MultipleTasteNameState extends State<MultipleTasteName> {
                   final routeList = CupertinoPageRoute(
                     builder: (context) => const PopScope(
                       canPop: false,
-                      child: CreateMultipleTaste(),
+                      child: CreateMultipleTasteScreen(),
                     ),
                   );
                   if (multipleTaste.isValidForm()) {

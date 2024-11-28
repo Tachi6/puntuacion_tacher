@@ -9,7 +9,7 @@ class NotificationsService {
 
     final snackBar = SnackBar(
       padding: const EdgeInsets.symmetric(vertical: 19),
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 2500),
       content: Text(
         message.toUpperCase(), 
         textAlign: TextAlign.center,
