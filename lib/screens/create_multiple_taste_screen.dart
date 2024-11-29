@@ -1,5 +1,7 @@
 // Image credit https://www.freepik.es/foto-gratis/copas-png-bebida-vino-aislada-sobre-fondo-blanco_314264077.htm?log-in=google#fromView=image_search_similar&page=1&position=1&uuid=bc65a2d4-8962-482e-9323-663bcedacd7d
 
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -132,6 +134,8 @@ class _CustomBody extends StatelessWidget {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final styles = Theme.of(context).textTheme;
 
+    Timer? timer;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       height: double.infinity,
@@ -154,7 +158,12 @@ class _CustomBody extends StatelessWidget {
                 borderSide: const BorderSide(width: 1)
               ),
             ),
-            onChanged: (value) => multipleTaste.multipleTaste.description = value,
+            onChanged: (value) {
+              timer?.cancel();
+              timer = Timer(const Duration(milliseconds: 500), () {
+                multipleTaste.multipleTaste.description = value;
+              },);
+            },
             onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
           ),
       

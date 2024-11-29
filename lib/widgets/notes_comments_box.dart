@@ -74,6 +74,10 @@ class NotasCataBox extends StatelessWidget {
     // Resto 1 porque el listado de userMultipleWineTaste empieza en 0, y las paginas tienen la pagina de inicio en el 0
     final multiplePage = screenProvider.multipleScreen - 1;
 
+    Timer? timerVista;
+    Timer? timerNariz;
+    Timer? timerBoca;
+
     return CustomAlertDialog(
       title: 'Añadir nota de cata',
       content: SizedBox(
@@ -88,11 +92,14 @@ class NotasCataBox extends StatelessWidget {
                   maxLines: 3, 
                   label: 'Vista',
                   onChanged: (value) {
-                    if (multiplePage != -1) {
-                      multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].notasVista = value); 
-                      return;
-                    }
-                    wineForm.editNotasVista = value;
+                    timerVista?.cancel();
+                    timerVista = Timer(const Duration(milliseconds: 500), () {
+                      if (multiplePage != -1) {
+                        multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].notasVista = value); 
+                        return;
+                      }
+                      wineForm.editNotasVista = value;
+                    },);
                   },
                 ),
 
@@ -101,11 +108,14 @@ class NotasCataBox extends StatelessWidget {
                   maxLines: 3, 
                   label: 'Nariz',
                   onChanged: (value) {
-                    if (multiplePage != -1) {
-                      multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].notasNariz = value); 
-                      return;
-                    }
-                    wineForm.editNotasNariz = value;
+                    timerNariz?.cancel();
+                    timerNariz = Timer(const Duration(milliseconds: 500), () {
+                      if (multiplePage != -1) {
+                        multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].notasNariz = value); 
+                        return;
+                      }
+                      wineForm.editNotasNariz = value;
+                    },);
                   },
                 ),
 
@@ -114,11 +124,14 @@ class NotasCataBox extends StatelessWidget {
                   maxLines: 3, 
                   label: 'Boca',
                   onChanged: (value) {
-                    if (multiplePage != -1) {
-                      multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].notasBoca = value); 
-                      return;
-                    }
-                    wineForm.editNotasBoca = value;
+                    timerBoca?.cancel();
+                    timerBoca = Timer(const Duration(milliseconds: 500), () {
+                      if (multiplePage != -1) {
+                        multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].notasBoca = value); 
+                        return;
+                      }
+                      wineForm.editNotasBoca = value;
+                    },);
                   },
                 ),
               ]
@@ -152,6 +165,8 @@ class ComentariosBox extends StatelessWidget {
     final screenProvider = Provider.of<ScreensProvider>(context);
     // Resto 1 porque el listado de userMultipleWineTaste empieza en 0, y las paginas tienen la pagina de inicio en el 0
     final multiplePage = screenProvider.multipleScreen - 1;
+   
+    Timer? timer;
 
     return CustomAlertDialog(
       title: 'Añadir comentarios',
@@ -163,11 +178,14 @@ class ComentariosBox extends StatelessWidget {
             maxLines: 5,
             label: 'Comentarios',
             onChanged: (value) {
-              if (multiplePage != -1) {
-                multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].comentarios = value); 
-                return;
-              }
-              wineForm.editCommentarios = value;
+              timer?.cancel();
+              timer = Timer(const Duration(milliseconds: 500), () {
+                if (multiplePage != -1) {
+                  multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].comentarios = value); 
+                  return;
+                }
+                wineForm.editCommentarios = value;               
+              },);
             },
           ),
         ),
@@ -210,20 +228,5 @@ class _CustomTextFormField extends StatelessWidget {
       ),
       onChanged: onChanged,
     );
-  }
-}
-
-// TODO implement debouncer
-class Debouncer {
-  Debouncer();
-
-  final int milliseconds = 500;
-  Timer? _timer;
-
-  run(VoidCallback action) {
-    if (null != _timer) {
-      _timer!.cancel();
-    }
-    _timer = Timer(Duration(milliseconds: milliseconds), action);
   }
 }
