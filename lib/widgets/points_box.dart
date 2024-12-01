@@ -1,10 +1,12 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/screens/home_screen.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 
 class PointsBox extends StatelessWidget {
@@ -53,10 +55,14 @@ class PointsBox extends StatelessWidget {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
+              
               taste.clearWidgets();
               winesService.selectedWine = null;
-      
-              Navigator.pushNamed(context, 'home');
+
+              final routeDetails = CupertinoPageRoute(
+                builder: (context) => const HomeScreen()
+              );
+              Navigator.pushReplacement(context, routeDetails);
             },
             child: const Text('Cerrar')
           )

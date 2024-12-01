@@ -33,11 +33,11 @@ class CheckAuthScreen extends StatelessWidget {
             }
             if (snapshot.data == '') {
               Future.microtask(() async {
-                if (!context.mounted) return;
                 final routeDetails = CupertinoPageRoute(
                   builder: (context) => const LoginScreen()
                 );
-                Navigator.pushReplacement(context, routeDetails);
+                await Future.delayed(const Duration(milliseconds: 1000));
+                if (context.mounted) Navigator.pushReplacement(context, routeDetails);
 
                 // Navigator.pushReplacement(context, PageRouteBuilder(
                 //   pageBuilder: ( _ , __ , ___ ) => const LoginScreen(),
@@ -56,11 +56,11 @@ class CheckAuthScreen extends StatelessWidget {
                   loginForm.isRegister = true;
                 }
                 
-                if (!context.mounted) return;
                 final routeDetails = CupertinoPageRoute(
                   builder: (context) => loginForm.isRegister ? const UserSettingsScreen() : const HomeScreen(),
                 );
-                Navigator.pushReplacement(context, routeDetails);
+                await Future.delayed(const Duration(milliseconds: 1000));
+                if (context.mounted) Navigator.pushReplacement(context, routeDetails);
 
                 // Navigator.pushReplacement(context, PageRouteBuilder(
                 //   pageBuilder: ( _ , __ , ___ ) => loginForm.isRegister ? const UserSettingsScreen() : const HomeScreen(),
