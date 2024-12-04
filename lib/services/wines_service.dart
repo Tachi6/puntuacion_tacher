@@ -90,7 +90,7 @@ class WinesService extends ChangeNotifier {
   Future<bool> isDataLoaded() async {
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: 250));
-      return winesByIndex.isEmpty;      
+      return winesByIndex.isEmpty || winesTaste.isEmpty;      
     },);
     return false;
   }
@@ -110,72 +110,23 @@ class WinesService extends ChangeNotifier {
   }
 
   List<Wines> userTastedWines(String mail) {
-
     // Creo lista temporal de vinos
-    List<Wines> tempTastedWines = [...winesByRate];
+    List<Wines> userTastedWines = [...winesByRate];
     // Elimino usuarios que no han catado ese vino
-    tempTastedWines.removeWhere((element) => !element.usuarios!.contains(mail));
-    // Creo nueva lista para vinos catados 2 veces
-    List<Wines> userTastedWines = [];
-
-    for (Wines element in tempTastedWines) { // TODO comprobar correcto funcionamiento
-      // Lista de indices donde ha catado el usuario
-      List<int> userIndex = [];
-      for (var i = 0; i < element.usuarios!.length; i++) {
-        if (element.usuarios![i] == mail) {
-          userIndex.add(i);
-        }
-      }
-      
-      for (var i = 0; i < userIndex.length; i++) {
-        // Creo vino temporal
-        Wines tempWine = Wines(
-          anada: element.anada, 
-          bodega: element.bodega, 
-          comentarios: [],
-          descripcion: element.descripcion, 
-          fechas: [], 
-          graduacion: element.graduacion,
-          id: element.id,
-          nombre: element.nombre, 
-          notaBoca: element.notaBoca, 
-          notaNariz: element.notaNariz, 
-          notaVista: element.notaVista, 
-          notasBoca: [], 
-          notasNariz: [], 
-          notasVista: [], 
-          puntuacionBoca: element.puntuacionBoca, 
-          puntuacionFinal: element.puntuacionFinal, 
-          puntuacionNariz: element.puntuacionNariz, 
-          puntuacionVista: element.puntuacionVista, 
-          puntuaciones: [], 
-          puntuacionesBoca: [], 
-          puntuacionesNariz: [], 
-          puntuacionesVista: [], 
-          region: element.region, 
-          tipo: element.tipo, 
-          usuarios: [], 
-          variedades: element.variedades, 
-          vino: element.vino
-        );
-
-        // Añado a tempWine solo los valores de cada cata de usuario, y si hay mas de una con el ciclo for lo añade
-        tempWine.comentarios!.add(element.comentarios![userIndex[i]]);
-        tempWine.fechas!.add(element.fechas![userIndex[i]]);
-        if (userIndex.length > 1) {
-          tempWine.id = element.id! + i.toString();
-        }
-        tempWine.notasBoca!.add(element.notasBoca![userIndex[i]]);
-        tempWine.notasNariz!.add(element.notasNariz![userIndex[i]]);
-        tempWine.notasVista!.add(element.notasVista![userIndex[i]]);
-        tempWine.puntuaciones!.add(element.puntuaciones![userIndex[i]]);
-        tempWine.puntuacionesBoca!.add(element.puntuacionesBoca![userIndex[i]]);
-        tempWine.puntuacionesNariz!.add(element.puntuacionesNariz![userIndex[i]]);
-        tempWine.puntuacionesVista!.add(element.puntuacionesVista![userIndex[i]]);
-        tempWine.usuarios!.add(element.usuarios![userIndex[i]]);
-
-        userTastedWines.add(tempWine);
-      }
+    userTastedWines.removeWhere((element) => !element.usuarios!.contains(mail));
+    // Elimino todas las catas que no son del usuario
+    for (Wines wine in userTastedWines) {
+      final int userI = wine.usuarios!.indexOf(mail);
+      wine.comentarios = [wine.comentarios![userI]];
+      wine.fechas = [wine.fechas![userI]];
+      wine.notasVista = [wine.notasVista![userI]];
+      wine.notasNariz = [wine.notasNariz![userI]];
+      wine.notasBoca = [wine.notasBoca![userI]];
+      wine.puntuaciones = [wine.puntuaciones![userI]];
+      wine.puntuacionesVista = [wine.puntuacionesVista![userI]];
+      wine.puntuacionesNariz = [wine.puntuacionesNariz![userI]];
+      wine.puntuacionesBoca = [wine.puntuacionesBoca![userI]];
+      wine.usuarios = [wine.usuarios![userI]];
     }
     // Ordeno userTastedWines by rate
     userTastedWines.sort((a, b) => b.puntuaciones![0].compareTo(a.puntuaciones![0]));
@@ -270,18 +221,6 @@ class WinesService extends ChangeNotifier {
     });
     // final resp = await http.put(url, body: wine.toJson());
     final resp = await http.put(url, body: wineTaste.toRawJson());
-
-    // TODO de momento no limito los maximos vinos
-    // if (winesLatestTasted.length > 100) {
-
-    //   loadLatestWines();
-    //   final urlDelete = Uri.https(_baseUrl, 'latest/${winesLatestTasted.last.id}.json', {
-    //     'auth': await storage.read(key: 'idToken') ?? ''
-    //   });
-
-    //   await http.delete(urlDelete);
-
-    // }
 
     winesTaste.insert(0, wineTaste);
 

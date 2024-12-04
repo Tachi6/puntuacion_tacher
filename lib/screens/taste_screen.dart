@@ -109,35 +109,29 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
 
 class _ThirdFormWidget extends StatelessWidget {
 
+
   @override
   Widget build(BuildContext context) {
 
     final taste = Provider.of<VisibleOptionsProvider>(context);
 
-    return Stack(
-      children: [
-        Container(
-          height:70,
-        ),
+    Widget thirdRowWidget() {
+      if (taste.showThirdWidget && taste.tasteNormal == TasteOptionsNormal.vino) return const SearchTasteWine();
+      if (taste.showThirdWidget && taste.tasteNormal == TasteOptionsNormal.ciega) return const HiddenTaste();
+      if (taste.showThirdWidget && taste.tasteMultiple == TasteOptionsMultiple.organizar) return const MultipleTasteName();
+      if(taste.showThirdWidget && taste.tasteMultiple == TasteOptionsMultiple.acceder) return const SelectMultipleTaste();
+      return const SizedBox();
+    }
 
-        Visibility(
-          visible: taste.showThirdWidget && taste.tasteNormal == TasteOptionsNormal.vino,
-          child: const SearchTasteWine(),
-        ),
-        Visibility(
-          visible: taste.showThirdWidget && taste.tasteNormal == TasteOptionsNormal.ciega,
-          child: const HiddenTaste(),
-        ),
-        Visibility(
-          visible: taste.showThirdWidget && taste.tasteMultiple == TasteOptionsMultiple.organizar,
-          child: const MultipleTasteName(),
-        ),
-        Visibility(
-          visible: taste.showThirdWidget && taste.tasteMultiple == TasteOptionsMultiple.acceder,
-          child: const SelectMultipleTaste(),
-        ),
-
-      ],
+    return SizedBox(
+      height:70,
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        layoutBuilder: (currentChild, previousChildren) {
+          return currentChild!;
+        },
+        child: thirdRowWidget(),
+      )
     );
   }
 }
@@ -149,20 +143,21 @@ class _SecondFormWidget extends StatelessWidget {
 
     final taste = Provider.of<VisibleOptionsProvider>(context);
 
-    return Stack(
-      children: [
-        Container(
-          height: 150,
-        ),
-        Visibility(
-          visible: taste.showSecondWidget && taste.taste == TasteOptions.unica,
-          child: const RadioTasteNormal(),
-        ),
-        Visibility(
-          visible: taste.showSecondWidget && taste.taste == TasteOptions.multiple,
-          child: const RadioTasteMultiple(),
-        ),
-      ]
+    Widget secondRowWidget() {
+      if (taste.showSecondWidget && taste.taste == TasteOptions.unica) return const RadioTasteNormal();
+      if (taste.showSecondWidget && taste.taste == TasteOptions.multiple) return const RadioTasteMultiple();
+      return const SizedBox();
+    }
+
+    return SizedBox(
+      height: 150,
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        layoutBuilder: (currentChild, previousChildren) {
+          return currentChild!;
+        },
+        child: secondRowWidget(),
+      ),
     );
   }
 }
@@ -177,15 +172,11 @@ class _ContinueButton extends StatelessWidget {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleService>(context);
     final wineService = Provider.of<WinesService>(context);
-
     final screenProvider = Provider.of<ScreensProvider>(context, listen: true);
 
-    if (taste.showContinueButton) {
-      return Container(
-        alignment: Alignment.bottomRight,
-        height: 90,
-        padding: const EdgeInsets.only(right: 25, bottom: 25),
-        child: CustomElevatedButton(
+    Widget showContinueButton() {
+      if (taste.showContinueButton) {
+        return CustomElevatedButton(
           width: 150, 
           onPressed: () {
             if (taste.tasteMultiple == TasteOptionsMultiple.acceder) {
@@ -232,11 +223,23 @@ class _ContinueButton extends StatelessWidget {
             }
           },
           child: const Text('Continuar'),
-        ),
-      );
+        );
+      }
+      return const SizedBox();
     }
 
-    return const SizedBox();    
+    return Container(
+      alignment: Alignment.bottomRight,
+      height: 90,
+      padding: const EdgeInsets.only(right: 25, bottom: 25),
+      child: AnimatedSwitcher(
+      duration: const Duration(milliseconds: 250),
+      layoutBuilder: (currentChild, previousChildren) {
+        return currentChild!;
+      },
+      child: showContinueButton(),
+      ),
+    );
   }
 }
 

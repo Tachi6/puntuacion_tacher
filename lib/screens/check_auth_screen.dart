@@ -23,7 +23,7 @@ class CheckAuthScreen extends StatelessWidget {
 
     return Scaffold(
       body: Center(
-         child: FutureBuilder(
+         child: FutureBuilder( // TODO refactorizar este para que tenga en cuenta la carga de los vinos
           future: authService.readIdToken(), 
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
             if (!snapshot.hasData) {

@@ -8,7 +8,6 @@ class VisibleOptionsProvider extends ChangeNotifier {
   TasteOptions _taste = TasteOptions.empty;
   TasteOptionsNormal _tasteNormal = TasteOptionsNormal.empty;
   TasteOptionsMultiple _tasteMultiple = TasteOptionsMultiple.empty;
-  // TODO refactorizar el aparecer/desaparecer widgets
   bool _showSecondWidget = false;
   bool _showThirdWidget = false;
   bool _showContinueButton = false;
