@@ -26,9 +26,17 @@ class CustomMultipleBottomSheet extends StatelessWidget {
     final screenProvider = Provider.of<ScreensProvider>(context);
 
     return CustomBottomSheet(
-      buttonText: multipleService.isMultipleTasted
-        ? 'Salir'
-        : 'Enviar Valoración',
+      widgetButton: CustomElevatedButton(
+        width: 160,
+        height: 100/3,
+        onPressed: onPressed,
+        child: Text(
+          multipleService.isMultipleTasted
+            ? 'Salir'
+            : 'Enviar Valoración',
+        ),
+      ),
+
       leading: screenProvider.multipleScreen == 0 
         ? null
         : TextButton(
@@ -90,7 +98,6 @@ class CustomMultipleBottomSheet extends StatelessWidget {
             ],
           ),
         ),
-      onPressed: onPressed,
     );
   }
 }

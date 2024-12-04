@@ -21,7 +21,7 @@ class CreateEditWineFormProvider extends ChangeNotifier {
   double ratingVista = 0;
   double ratingNariz = 0;
   double ratingBoca = 0;
-  double ratingPuntos = 0;
+  double ratingPuntos = 0.1;
   
   int puntosFinal = 0;
 
@@ -101,12 +101,12 @@ class CreateEditWineFormProvider extends ChangeNotifier {
     ratingVista = 0;
     ratingNariz = 0;
     ratingBoca = 0;
-    ratingPuntos = 0;
+    ratingPuntos = 0.1;
     notifyListeners();
   }
 
   bool isValidRating() {
-    if (ratingVista == 0 || ratingNariz == 0 || ratingBoca == 0 || ratingPuntos == 0) {
+    if (ratingVista == 0 || ratingNariz == 0 || ratingBoca == 0 || ratingPuntos == 0.1) {
       return false;
     }
     return true;
@@ -176,6 +176,13 @@ class CreateEditWineFormProvider extends ChangeNotifier {
     wine.puntuacionBoca = Formulas.puntuacionCategoria(wine.puntuacionesBoca!);
 
     notifyListeners();
+  }
 
+  void resetSettings() {
+    clearNotas();
+    clearComentarios();
+    setDefaultRatings();
+    setDefaultCreateWine();
+    notifyListeners();
   }
 }

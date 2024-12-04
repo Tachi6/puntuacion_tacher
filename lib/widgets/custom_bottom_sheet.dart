@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
-import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class CustomBottomSheet extends StatelessWidget {
   const CustomBottomSheet({
     super.key, 
-    this.wine, 
-    required this.buttonText,
+    this.wine,
+    required this.widgetButton, 
     this.leading, 
     this.trailing, 
-    this.onPressed, 
   });
 
   final Wines? wine;
-  final String buttonText;
+  final Widget widgetButton;
   final Widget? leading;
   final Widget? trailing;
-  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +32,7 @@ class CustomBottomSheet extends StatelessWidget {
             child: leading
           ),
 
-          CustomElevatedButton(
-            width: 160,
-            height: 100/3,
-            onPressed: onPressed,
-            child: Text(buttonText),
-          ),
+          widgetButton,
 
           SizedBox(
             height: 58, 

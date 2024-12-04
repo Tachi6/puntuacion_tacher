@@ -89,7 +89,7 @@ class WinesService extends ChangeNotifier {
 
   Future<bool> isDataLoaded() async {
     await Future.doWhile(() async {
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future.delayed(const Duration(milliseconds: 250));
       return winesByIndex.isEmpty;      
     },);
     return false;

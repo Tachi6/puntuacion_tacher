@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
@@ -14,28 +15,6 @@ InputDecoration _customInputDecorationText(String label) {
     labelStyle: const TextStyle(fontSize: 14),
   );
 }
-
-// class CreateWineButton extends StatelessWidget {
-//   const CreateWineButton({super.key, this.onPressed, this.onPressedSave});
-
-//   final void Function()? onPressed;
-//   final void Function()? onPressedSave; // TODO
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return SizedBox(
-//       width: 96,
-//       child: Row(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           SearchWineButton(onPressed: onPressed),
-
-//           AddWineButton(onPressedSave: onPressedSave),
-//         ],
-//       ),
-//     );
-//   }
-// }
 
 class AddWineButton extends StatelessWidget {
   const AddWineButton({
@@ -128,7 +107,7 @@ class CreateNewWineForm extends StatelessWidget {
     final winesService = Provider.of<WinesService>(context, listen: true);
 
     return SizedBox(
-      width: size.width * 0.8,
+      width: size.width * 0.80,
       child: SingleChildScrollView(
         reverse: false,
         child: Form(
@@ -396,6 +375,7 @@ class TextFormFieldSearch extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final colors = Theme.of(context).colorScheme;
+    final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
     final size = MediaQuery.of(context).size;
 
     return Autocomplete<String>(
@@ -480,7 +460,9 @@ class TextFormFieldSearch extends StatelessWidget {
                     contentPadding: const EdgeInsets.only(left: 20,right: 20),
                     onTap: () => onSelected(option),
                     title: Text(option, style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),),
-                    tileColor: colors.surfaceContainerLow
+                    tileColor: themeColor.isDarkMode
+                      ? colors.surfaceContainer
+                      : colors.surfaceContainerLow,
                   );
                 },
               ),
