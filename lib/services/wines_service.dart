@@ -96,14 +96,14 @@ class WinesService extends ChangeNotifier {
   }
 
   void updateWinesByRate() {
-    winesByRate = List.from(winesByIndex);
+    winesByRate = [...winesByIndex];
     // Elimino vinos sin valoracion
     winesByRate.removeWhere((element) => element.puntuacionFinal == -1);
     winesByRate.sort((a, b) => b.puntuacionFinal.compareTo(a.puntuacionFinal));
   }
 
   List<Wines> winesBestCategory(String category) {
-    List<Wines> winesCategory = List.from(winesByRate);
+    List<Wines> winesCategory = [...winesByRate];
     winesCategory.removeWhere((element) => element.tipo != category);
 
     return winesCategory;
@@ -112,7 +112,7 @@ class WinesService extends ChangeNotifier {
   List<Wines> userTastedWines(String mail) {
 
     // Creo lista temporal de vinos
-    List<Wines> tempTastedWines = List.from(winesByRate);
+    List<Wines> tempTastedWines = [...winesByRate];
     // Elimino usuarios que no han catado ese vino
     tempTastedWines.removeWhere((element) => !element.usuarios!.contains(mail));
     // Creo nueva lista para vinos catados 2 veces

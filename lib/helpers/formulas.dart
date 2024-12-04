@@ -134,7 +134,7 @@ class Formulas {
 
     double puntosFinal;
     // Nueva lista parta el calculo
-    final List<int> puntosBruto = List.from(puntuaciones);
+    final List<int> puntosBruto = [...puntuaciones];
     // Media de puntos real
     final double averagePuntosBruto = puntosBruto.average;
     // Media de puntos real + 25%

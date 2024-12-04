@@ -46,9 +46,9 @@ class MultipleTasteProvider extends ChangeNotifier {
 
   Multiple initMultiple() {
     // Creo nueva lista con solo el id del vino
-    final List<String> winesIndex = List.from(winesMultipleTaste.map((e) {
-      return e.id;
-    }));
+    final List<String> winesIndex = winesMultipleTaste.map((e) {
+      return e.id!;
+    }).toList();
     // Creo mapa vacio
     Map<String, Map<String, WineTaste>> wines = {};
     Map<String, AverageRatings> averageRatings = {};

@@ -261,9 +261,15 @@ class _SingleTacherScreen extends StatelessWidget {
       }, 
       bottomSheet: CustomBottomSheet(
         wine: wineForm.wine,
-        widgetButton: wineForm.wine.nombre == ''
-          ? const HiddenTasteButtons()
-          : const SendTasteButton(),
+        widgetButton: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 250),
+          layoutBuilder: (currentChild, previousChildren) {
+            return currentChild!;
+          },
+          child: wineForm.wine.nombre == '' 
+            ? const HiddenTasteButtons(key: ValueKey<String>('hiddenTasteButtons'))
+            : const SendTasteButton(key: ValueKey<String>('SendTasteButton')), 
+        ),
       ),
     );
   }
