@@ -39,7 +39,6 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
             actions: [
               IconButton(
                 onPressed: () async { // TODO probar si brinca pantalla anterior
-                  await winesService.loadWines();
                   if (context.mounted) {
                     final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
                       customResultText: '',
@@ -60,6 +59,12 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
 
               IconButton(
                 onPressed: () {
+                  // winesService.createNewJson();
+                  // final routeList = CupertinoPageRoute(
+                  //   builder: (context) => DeleteScreen(data: winesService.createNewJson())
+                  // );
+                  // Navigator.push(context, routeList);
+
                   // TODO select best views
                 },
                 icon: const Icon(Icons.tune_rounded)

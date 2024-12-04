@@ -166,74 +166,25 @@ class Formulas {
   }
 }
 
-// Llamo funcion obtainRatingPuntos;
-double obtainRatingPuntospuntos({required double ratingVista, required double ratingNariz, required double ratingBoca, required int puntosFinal}) {
+// Llamo funcion obtainRatingPuntos, para actualizar DB anueva DB;
+// double obtainRatingPuntospuntos({required double ratingVista, required double ratingNariz, required double ratingBoca, required int puntosFinal}) {
 
-  double ratingPuntos = 0;
+//   const List<double> ratings = [10, 9, 8, 7, 6, 5, 4, 3, 2, 4, 0];
 
-  switch (puntosFinal) {
-    case 10: 
-      final formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: 10);
-      if (formulas.calculosFinal == puntosFinal) {
-        ratingPuntos = 10;
-        break;
-      }
-    case 9: 
-      final formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: 9);
-      if (formulas.calculosFinal == puntosFinal) {
-        ratingPuntos = 9;
-        break;
-      }
-    case 8: 
-      final formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: 8);
-      if (formulas.calculosFinal == puntosFinal) {
-        ratingPuntos = 8;
-        break;
-      }
-    case 7: 
-      final formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: 7);
-      if (formulas.calculosFinal == puntosFinal) {
-        ratingPuntos = 7;
-        break;
-      }
-    case 6: 
-      final formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: 6);
-      if (formulas.calculosFinal == puntosFinal) {
-        ratingPuntos = 6;
-        break;
-      }
-    case 5: 
-      final formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: 5);
-      if (formulas.calculosFinal == puntosFinal) {
-        ratingPuntos = 5;
-        break;
-      }
-    case 4: 
-      final formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: 4);
-      if (formulas.calculosFinal == puntosFinal) {
-        ratingPuntos = 4;
-        break;
-      }
-    case 3: 
-      final formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: 3);
-      if (formulas.calculosFinal == puntosFinal) {
-        ratingPuntos = 3;
-        break;
-      }
-    case 2: 
-      final formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: 2);
-      if (formulas.calculosFinal == puntosFinal) {
-        ratingPuntos = 2;
-        break;
-      }
-    case 1: 
-      final formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: 1);
-      if (formulas.calculosFinal == puntosFinal) {
-        ratingPuntos = 1;
-        break;
-      }
-    default: ratingPuntos = 0;
-  }
+//   for (double rating in ratings) {
+//     final formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: rating);
+//     if (formulas.calculosFinal == puntosFinal) return rating;
+//   }
 
-  return ratingPuntos;
-}
+//   for (double rating in ratings) {
+//     final formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: rating);
+//     if (formulas.calculosFinal + 1 == puntosFinal) return rating;
+//   }
+
+//   for (double rating in ratings) {
+//     final formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: rating);
+//     if (formulas.calculosFinal - 1 == puntosFinal) return rating;
+//   }
+
+//   return (puntosFinal/10).truncateToDouble();
+// }

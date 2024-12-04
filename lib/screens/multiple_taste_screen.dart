@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/mappers/mappers.dart';
 
 import 'package:puntuacion_tacher/pages/pages.dart';
 import 'package:puntuacion_tacher/models/models.dart';
-import 'package:puntuacion_tacher/mappers/winetaste_to_wines.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
@@ -85,12 +85,11 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       // Subo AverageRatings
       await multipleService.updateAverageRatings(multipleName: multipleTaste.multipleTaste.name, averageRatings: multipleTaste.multipleTaste.averageRatings);
       // Mapear todos los vinos y subir los cambios a firebase
-      // TODO habilitar subir cambios de vino y crear el wineTaste latest
-      // for (var wineTaste in multipleTaste.userMultipleTaste) {
-      //   final wineId = int.parse(wineTaste.id);
-      //   await winesService.updateWine(WinesMapper.wineTasteToWines(wineTaste, winesService.winesByIndex[wineId]));
-      //   await winesService.saveDeleteLatestTastedWine(wineTaste);
-      // }
+      for (var wineTaste in multipleTaste.userMultipleTaste) {
+        final wineId = int.parse(wineTaste.id);
+        await winesService.updateWine(WinesMapper.wineTasteToWines(wineTaste, winesService.winesByIndex[wineId]));
+        await winesService.saveDeleteLatestTastedWine(wineTaste);
+      }
     }
 
     List<Widget> tastePages() {

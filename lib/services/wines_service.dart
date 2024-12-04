@@ -314,6 +314,64 @@ class WinesService extends ChangeNotifier {
     return resp.body;
   }
 
+  // void createNewJson() async {
+  //   int wineCount = 0;
 
+  //   final String repeatedDate = "2022-01-01T00:00:00.000000";
+
+  //   // Map<String, Wines> tempJsonMap = {};
+
+  //   for (Wines wine in winesByRate) {
+  //     for (int i = 0; i < wine.fechas!.length; i++) { 
+  //       if (repeatedDate == wine.fechas![i]) wineCount++;
+
+  //       // final double ratingVista = ((wine.puntuacionesVista![i] * 7) / 5).round().toDouble();
+  //       // final double ratingNariz = ((wine.puntuacionesNariz![i] * 9) / 5).round().toDouble();
+  //       // final double ratingBoca = ((wine.puntuacionesBoca![i] * 9) / 5).round().toDouble();
+
+  //       final String newDate = (repeatedDate == wine.fechas![i]) 
+  //         ? repeatedDate.replaceRange(26 - wineCount.toString().length, 26, wineCount.toString())
+  //         : wine.fechas![i];
+
+  //       wine.fechas![i] = newDate.replaceAll('.', ':');
+
+  //       // Map<String, Wines> tempMap = {
+  //       //   wine.id!: wine,
+  //       // };
+
+  //       // Map<String, WineTaste> tempMap = {
+  //       //   newDate.replaceAll('.', ':'): WineTaste(
+  //       //     fecha: newDate.replaceAll('.', ':'), 
+  //       //     id: wine.id!, 
+  //       //     nombre: wine.nombre, 
+  //       //     user: wine.usuarios![i] == '' ? 'admin@tacher.com' : wine.usuarios![i], 
+  //       //     ratingVista: ratingVista,
+  //       //     ratingNariz: ratingNariz,
+  //       //     ratingBoca: ratingBoca, 
+  //       //     ratingPuntos: obtainRatingPuntospuntos(
+  //       //       ratingVista: ratingVista,
+  //       //       ratingNariz: ratingNariz,
+  //       //       ratingBoca: ratingBoca,
+  //       //       puntosFinal: wine.puntuaciones![i],
+  //       //     ), 
+  //       //     puntosVista: wine.puntuacionesVista![i], 
+  //       //     puntosNariz: wine.puntuacionesNariz![i], 
+  //       //     puntosBoca: wine.puntuacionesBoca![i], 
+  //       //     puntosFinal: wine.puntuaciones![i],
+  //       //     notasVista: wine.notasVista![i],
+  //       //     notasNariz: wine.notasNariz![i],
+  //       //     notasBoca: wine.notasBoca![i],
+  //       //     comentarios: wine.comentarios![i],
+  //       //   )
+  //       // };
+
+  //       // tempJsonMap = {...tempJsonMap, ...tempMap};
+  //     }
+
+  //     await updateWine(wine);
+  //   }
+    
+  //   // return jsonEncode(tempJsonMap);    
+  // }
 
 }

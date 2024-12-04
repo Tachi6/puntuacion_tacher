@@ -22,7 +22,6 @@ class ListTop10 extends StatelessWidget {
       height: 360,
       child: Swiper(
         loop: true,
-        
         autoplay: true,
         autoplayDelay: 3000,
         duration: 1000,

@@ -30,7 +30,7 @@ class ValorationCards extends StatelessWidget {
         }
 
         return ListView.builder(
-          itemCount: winesTasteLatest.length,
+          itemCount: 30,
           itemBuilder: (context, index) {
         
             final WineTaste wineTaste = winesTasteLatest[index];
