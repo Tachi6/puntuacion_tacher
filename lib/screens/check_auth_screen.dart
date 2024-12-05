@@ -1,5 +1,3 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -23,7 +21,7 @@ class CheckAuthScreen extends StatelessWidget {
 
     return Scaffold(
       body: Center(
-         child: FutureBuilder( // TODO refactorizar este para que tenga en cuenta la carga de los vinos
+         child: FutureBuilder(
           future: authService.readIdToken(), 
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
             if (!snapshot.hasData) {
@@ -33,16 +31,12 @@ class CheckAuthScreen extends StatelessWidget {
             }
             if (snapshot.data == '') {
               Future.microtask(() async {
-                final routeDetails = CupertinoPageRoute(
-                  builder: (context) => const LoginScreen()
+                final routeDetails = PageRouteBuilder(
+                  transitionDuration: Duration.zero,
+                  pageBuilder: (_, __, ___) => const LoginScreen(),
                 );
-                await Future.delayed(const Duration(milliseconds: 1000));
-                if (context.mounted) Navigator.pushReplacement(context, routeDetails);
 
-                // Navigator.pushReplacement(context, PageRouteBuilder(
-                //   pageBuilder: ( _ , __ , ___ ) => const LoginScreen(),
-                //   transitionDuration: const Duration(seconds: 0),
-                // ));
+                if (context.mounted) Navigator.pushReplacement(context, routeDetails);
               });
             }
             else {
@@ -55,17 +49,13 @@ class CheckAuthScreen extends StatelessWidget {
                   authService.isDisplayNameGenerated = false;
                   loginForm.isRegister = true;
                 }
-                
-                final routeDetails = CupertinoPageRoute(
-                  builder: (context) => loginForm.isRegister ? const UserSettingsScreen() : const HomeScreen(),
+                // Para mandarlo directo sin animacion, solo quiero que cargue el usuario en esta screen
+                final routeDetails = PageRouteBuilder(
+                  transitionDuration: Duration.zero,
+                  pageBuilder: (_, __, ___) => loginForm.isRegister ? const UserSettingsScreen() : const HomeScreen(),
                 );
-                await Future.delayed(const Duration(milliseconds: 1000));
-                if (context.mounted) Navigator.pushReplacement(context, routeDetails);
 
-                // Navigator.pushReplacement(context, PageRouteBuilder(
-                //   pageBuilder: ( _ , __ , ___ ) => loginForm.isRegister ? const UserSettingsScreen() : const HomeScreen(),
-                //   transitionDuration: const Duration(seconds: 0),
-                // ));
+                if (context.mounted) Navigator.pushReplacement(context, routeDetails);
               });
             }
             return const SizedBox();
