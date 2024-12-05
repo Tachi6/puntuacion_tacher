@@ -106,7 +106,7 @@ class SearchDelegateMultiple extends SearchDelegate{
       itemBuilder: ( _ , index) {
         return ListTile(
           title: Text(_filtro[index].name),
-          // subtitle: Text(_filtro[index].tipo), // TODO algun subtitulo?
+          subtitle: Text(_filtro[index].description, maxLines: 1, overflow: TextOverflow.ellipsis),
           onTap: () async {
             showResults(context);
             FocusManager.instance.primaryFocus?.unfocus();
@@ -161,7 +161,7 @@ class SearchDelegateMultiple extends SearchDelegate{
       itemBuilder: ( _ , index) {
         return ListTile(
           title: Text(_filtro[index].name),
-          // subtitle: Text(_filtro[index].tipo), // TODO algun subtitulo?
+          subtitle: Text(_filtro[index].description, maxLines: 1, overflow: TextOverflow.ellipsis),
           onTap: () async {
             showResults(context);
             FocusManager.instance.primaryFocus?.unfocus();
@@ -303,7 +303,7 @@ class NoResultsMultiple extends StatelessWidget {
             width: 170,
             height: 35, 
             onPressed: () {
-              
+              // TODO hacer la funcion del boton
             },
             child: const Text('Crear cata múltiple'),
           ),
