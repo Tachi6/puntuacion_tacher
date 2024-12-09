@@ -251,6 +251,8 @@ class ValidateUserButton extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final authService = Provider.of<AuthService>(context, listen: false);
+    final winesService = Provider.of<WinesService>(context, listen: false);
+    final multipleService = Provider.of<MultipleService>(context, listen: false);
     final loginForm = Provider.of<LoginProvider>(context);
     final colors = Theme.of(context).colorScheme;
 
@@ -279,13 +281,17 @@ class ValidateUserButton extends StatelessWidget {
               authService.isDisplayNameGenerated = false;
               loginForm.isRegister = true;
             }
+
+            await winesService.loadWines();
+            await winesService.loadWinesTaste();
+            await multipleService.loadMultiple();
             
             final newRoute = CupertinoPageRoute(
               builder: (context) => loginForm.isRegister ? const UserSettingsScreen() : const HomeScreen()
             );
-            Navigator.pushReplacement(context, newRoute);
+            if (context.mounted) Navigator.pushReplacement(context, newRoute);
             // FOR NOT VIEW 'ingresar' MESSAGE IF THERE ARE A LOGOUT
-            await Future.delayed(const Duration(seconds: 2), () => loginForm.isLoading = false);
+            // await Future.delayed(const Duration(seconds: 2), () => loginForm.isLoading = false);
           }
           else {
             if (!context.mounted) return;

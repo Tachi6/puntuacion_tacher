@@ -72,8 +72,8 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
                   ]
                 ),
           
-                const SizedBox(
-                  height: 20,
+                const Spacer(
+                  flex: 1
                 ),
                     
                 Row(
@@ -86,13 +86,16 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
                   ]
                 ),
           
-                const SizedBox(
-                  height: 20,
+                const Spacer(
+                  flex: 1
                 ),
                     
                 _ThirdFormWidget(),
                     
-                SizedBox(height: innerSizedBox()),
+                const Spacer(
+                  flex: 5
+                ),
+                // SizedBox(height: innerSizedBox()),
                     
                 _ContinueButton(),
               ]
@@ -231,7 +234,7 @@ class _ContinueButton extends StatelessWidget {
     return Container(
       alignment: Alignment.bottomRight,
       height: 90,
-      padding: const EdgeInsets.only(right: 25, bottom: 25),
+      padding: const EdgeInsets.only(right: 20, bottom: 20),
       child: AnimatedSwitcher(
       duration: const Duration(milliseconds: 250),
       layoutBuilder: (currentChild, previousChildren) {
@@ -375,7 +378,7 @@ class HiddenTasteButtons extends StatelessWidget {
             ],
           ),
           onPressed: () async {
-            await winesService.loadWines();
+            winesService.loadWines();
             if (context.mounted) {
               final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
                 customResultText: '',

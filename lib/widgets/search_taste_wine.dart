@@ -23,7 +23,7 @@ class SearchTasteWine extends StatelessWidget {
     );
 
     void onPressed() async {
-      await winesService.loadWines();
+      winesService.loadWines();
       if (context.mounted) {
         final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
           customResultText: 'Vuelve atras y crea tu' '\n' 'vino para catarlo.'

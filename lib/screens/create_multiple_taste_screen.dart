@@ -650,7 +650,7 @@ class RowVisibleWines extends StatelessWidget {
                     
           SearchWineButton(
             onPressed: () async {
-              await winesService.loadWines();
+              winesService.loadWines();
               if (context.mounted) {
                 final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
                   customResultText: 'Vuelve atras y crea tu vino' '\n' 'para añadirlo a la cata.'

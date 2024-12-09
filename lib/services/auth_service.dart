@@ -202,8 +202,17 @@ class AuthService extends ChangeNotifier {
     await storage.deleteAll();
   }
 
-  Future<String> readIdToken() async {
-    return await storage.read(key: 'idToken') ?? '';
+  Future<bool> isUserLoggedLoadData(Future<void> Function() loadData) async {
+    final String idToken = await storage.read(key: 'idToken') ?? '';
+    if (idToken != '') {
+      final String? email = await storage.read(key: 'email');
+      final String? password = await storage.read(key: 'password');
+      await loginUser(email!, password!);
+      await loadData();
+      return true;
+    }
+    await Future.delayed(const Duration(milliseconds: 500));
+    return false;
   }
 
   String get tempDisplayName => _tempDisplayName;

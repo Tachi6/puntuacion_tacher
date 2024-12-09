@@ -20,44 +20,33 @@ class ValorationCards extends StatelessWidget {
     // final List<Wines> wines = winesService.winesLatestTasted;
     final List<WineTaste> winesTasteLatest = winesService.winesTaste;
 
-    return FutureBuilder(
-      future: winesService.isDataLoaded(),
-      builder: (context, snapshot) {
-        if (snapshot.data == null) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
-        return ListView.builder(
-          itemCount: 30,
-          itemBuilder: (context, index) {
-        
-            final WineTaste wineTaste = winesTasteLatest[index];
-            final wine = winesService.obtainWine(wineTaste.id);
-        
-            return GestureDetector(
-              onTap: () {
-                final routeDetails = CupertinoPageRoute(
-                  builder: (context) => DetailsScreen(wine: wine, wineTaste: wineTaste, email: 'latest', source:'latest-$index'));
-                Navigator.push(context, routeDetails);
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: Card.filled(
-                  elevation: 2,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomLeadingTile(wine: wine, index: index),
-                
-                      CustomBodyTile(wine: wine, wineTaste: wineTaste)
-                    ],
-                  )
-                ),
-              ),
-            );
+    return ListView.builder(
+      itemCount: 30,
+      itemBuilder: (context, index) {
+    
+        final WineTaste wineTaste = winesTasteLatest[index];
+        final wine = winesService.obtainWine(wineTaste.id);
+    
+        return GestureDetector(
+          onTap: () {
+            final routeDetails = CupertinoPageRoute(
+              builder: (context) => DetailsScreen(wine: wine, wineTaste: wineTaste, email: 'latest', source:'latest-$index'));
+            Navigator.push(context, routeDetails);
           },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Card.filled(
+              elevation: 2,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomLeadingTile(wine: wine, index: index),
+            
+                  CustomBodyTile(wine: wine, wineTaste: wineTaste)
+                ],
+              )
+            ),
+          ),
         );
       },
     );

@@ -27,13 +27,9 @@ class WinesService extends ChangeNotifier {
   bool isLoading = true;
   bool isSaving = false;
 
-  WinesService() {
-    loadWines();
-    loadWinesTaste();
-    // pruebaLatest();
-  }
+  WinesService();
 
-  Future loadWines() async {
+  Future<void> loadWines() async {
 
     isLoading = true;
     notifyListeners();
@@ -62,7 +58,7 @@ class WinesService extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future loadWinesTaste() async {
+  Future<void> loadWinesTaste() async {
     List<WineTaste> tempLatestTasted = [];
 
     isLoading = true;
@@ -85,14 +81,6 @@ class WinesService extends ChangeNotifier {
 
     isLoading = false;
     notifyListeners();
-  }
-
-  Future<bool> isDataLoaded() async {
-    await Future.doWhile(() async {
-      await Future.delayed(const Duration(milliseconds: 250));
-      return winesByIndex.isEmpty || winesTaste.isEmpty;      
-    },);
-    return false;
   }
 
   void updateWinesByRate() {
@@ -223,6 +211,8 @@ class WinesService extends ChangeNotifier {
     final resp = await http.put(url, body: wineTaste.toRawJson());
 
     winesTaste.insert(0, wineTaste);
+
+    notifyListeners();
 
     return resp.body;
   }
