@@ -22,7 +22,7 @@ class SelectMultipleTaste extends StatelessWidget {
     );
 
     void onPressed() async {
-      multipleService.loadMultiple();
+      multipleService.loadMultiples();
       // Multiple? multipleSearched;
       if (context.mounted) {
         final multipleSearched = await showSearch(context: context, delegate: SearchDelegateMultiple());

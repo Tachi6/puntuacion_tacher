@@ -26,7 +26,7 @@ class MultipleService extends ChangeNotifier {
 
   final storage = const FlutterSecureStorage();
 
-  Future<void> loadMultiple() async {
+  Future<void> loadMultiples() async {
     List<Multiple> tempMultipleTasteList = [];
     // Cargo las catas multiples de bdd
     final url = Uri.https(_baseUrl, _jsonTypeMultiple, {
@@ -142,7 +142,7 @@ class MultipleService extends ChangeNotifier {
   }
 
   Future<bool> isMultipleNameUsed(String multipleName) async {
-    await loadMultiple();
+    await loadMultiples();
     // Evaluo si el nombre del vino ya ha sido usado anteriomente
     return multipleTasteList.any((element) => element.name == multipleName);
   }

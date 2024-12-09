@@ -284,7 +284,7 @@ class ValidateUserButton extends StatelessWidget {
 
             await winesService.loadWines();
             await winesService.loadWinesTaste();
-            await multipleService.loadMultiple();
+            await multipleService.loadMultiples();
             
             final newRoute = CupertinoPageRoute(
               builder: (context) => loginForm.isRegister ? const UserSettingsScreen() : const HomeScreen()
