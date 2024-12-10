@@ -1,4 +1,6 @@
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -73,15 +75,24 @@ class MyApp extends StatelessWidget{
       ],
       locale: const Locale('es', 'ES'),
       debugShowCheckedModeBanner: false,
-      theme: AppTheme().getTheme(context), 
+      theme: AppTheme().getTheme(context),
       routes: {
         'checkingAuth':(context) => const CheckAuthScreen(),
 
         'login':(context) => const LoginScreen(),
 
-        'home':(context) => const HomeScreen(),
+        'home':(context) => MediaQuery.withNoTextScaling(child: const HomeScreen()),
       },
       initialRoute: 'checkingAuth',
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: TextScaler.noScaling,
+            boldText: false, 
+          ),
+          child: child!,
+        );
+      },
     );
   }
 }

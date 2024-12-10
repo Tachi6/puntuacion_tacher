@@ -128,7 +128,7 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
           name: 'puntos',
         ),
 
-        const Spacer(flex: 3),
+        const Spacer(flex: 2),
         
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -140,9 +140,10 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
           ]
         ),
 
-        const Spacer(flex: 3),
+        const Spacer(flex: 2),
         // Height of BottomSheet + Rating Box Bottom Padding
         const SizedBox(height: 68),
+
       ]
     );
   }

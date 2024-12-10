@@ -41,14 +41,13 @@ class SearchTasteWine extends StatelessWidget {
       }
     }
 
-    return Container(
+    return SizedBox(
       height: 85,
       width: double.infinity,
-      padding: const EdgeInsets.only(right: 20, left: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Busca el vino en nuestro listado o crealo nuevo', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+          const Text('Busca el vino en nuestro listado o crealo', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
           Row(
             children: [
               Expanded(

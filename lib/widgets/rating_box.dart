@@ -38,7 +38,7 @@ class RatingBox extends StatelessWidget {
     final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
 
     return Padding(
-      padding: const EdgeInsets.only(top: 5, bottom: 10, left: 10, right: 10),
+      padding: const EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
       child: Material(
         elevation: 1,
         shadowColor: colors.shadow,
@@ -48,7 +48,7 @@ class RatingBox extends StatelessWidget {
           : colors.surfaceContainerHighest.withOpacity(0.6),
         child: Container(
           alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -63,7 +63,7 @@ class RatingBox extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height:5),
+              const SizedBox(height: 2),
         
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -76,7 +76,7 @@ class RatingBox extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 5),
+              const SizedBox(height: 2),
         
               if (name != null) _RatingCustomWidget(
                 initialRating: initialRating!, 

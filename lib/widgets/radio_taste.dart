@@ -33,16 +33,15 @@ class _RadioWidgetState extends State<RadioWidget> {
     final colors = Theme.of(context).colorScheme;
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
         
-    return Container(
-      padding: const EdgeInsets.only(right: 10),
-      width: 240,
+    return SizedBox(
+      width: 165,
       height: 150,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Elige el número de vinos', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
           Transform.translate(
-            offset: const Offset(65, -3),
+            offset: const Offset(-10, -3),
             child: RadioListTile(
               dense: true,
               contentPadding: const EdgeInsets.all(0),
@@ -59,7 +58,7 @@ class _RadioWidgetState extends State<RadioWidget> {
             ),
           ),
           Transform.translate(
-            offset: const Offset(65, -20),
+            offset: const Offset(-10, -20),
             child: RadioListTile(
               dense: true,
               contentPadding: const EdgeInsets.all(0),

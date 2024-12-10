@@ -8,11 +8,10 @@ class HiddenTaste extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
    
-    return Container(
+    return const SizedBox(
       height: 85,
-      padding: const EdgeInsets.only(right: 20, left: 20),
       width: double.infinity,
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Cata ciega seleccionada', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),

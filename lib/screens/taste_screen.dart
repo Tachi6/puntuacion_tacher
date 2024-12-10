@@ -25,6 +25,8 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
     super.build(context);
 
     final Size size = MediaQuery.of(context).size;
+    final screenHeight = size.height;
+    final double backgroundHeight = (size.width / 1.5) - 10;
     
     double innerSizedBox() {
       // CUSTOM HEIGHT OF APPBAR
@@ -56,48 +58,40 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisSize: MainAxisSize.max,
-              // mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 20,
+                SizedBox(
+                  height: screenHeight * 0.01,
+                ), 
+
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.only(right: screenHeight * 0.02),
+                  alignment: Alignment.centerRight,
+                  child: const RadioTaste(),
+                ),
+
+                const Spacer(),
+
+                Container(
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  child: _SecondFormWidget(),
+                ),
+
+                const Spacer(), 
+                    
+                Padding(
+                  padding: EdgeInsets.only(left: screenHeight * 0.02),
+                  child: _ThirdFormWidget(),
                 ),
                     
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: size.width - 240 - 10,
-                    ),
-                    const RadioTaste()
-                  ]
+                const Spacer(),
+
+                Container(
+                  height: backgroundHeight,
+                  padding: EdgeInsets.only(right: screenHeight * 0.02, bottom: screenHeight * 0.02),
+                  child: _ContinueButton(),
                 ),
-          
-                const Spacer(
-                  flex: 1
-                ),
-                    
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Transform.translate(
-                      offset: const Offset(20, 0),
-                      child: _SecondFormWidget()
-                    )
-                  ]
-                ),
-          
-                const Spacer(
-                  flex: 1
-                ),
-                    
-                _ThirdFormWidget(),
-                    
-                const Spacer(
-                  flex: 5
-                ),
-                // SizedBox(height: innerSizedBox()),
-                    
-                _ContinueButton(),
               ]
             ),
           ),
@@ -234,7 +228,7 @@ class _ContinueButton extends StatelessWidget {
     return Container(
       alignment: Alignment.bottomRight,
       height: 90,
-      padding: const EdgeInsets.only(right: 20, bottom: 20),
+      padding: const EdgeInsets.only(right: 0, bottom: 0),
       child: AnimatedSwitcher(
       duration: const Duration(milliseconds: 250),
       layoutBuilder: (currentChild, previousChildren) {

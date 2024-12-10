@@ -33,9 +33,8 @@ class _RadioWidgetMultipleState extends State<RadioWidgetMultiple> {
     final colors = Theme.of(context).colorScheme;
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     
-    return Container(
-      padding: const EdgeInsets.only(left: 20),
-      width: 305,
+    return SizedBox(
+      width: 265,
       height: 150,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

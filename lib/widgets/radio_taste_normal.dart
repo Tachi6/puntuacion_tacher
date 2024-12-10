@@ -35,9 +35,8 @@ class _RadioWidgetNormalState extends State<RadioWidgetNormal> {
     final colors = Theme.of(context).colorScheme;
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
 
-    return Container(
-      padding: const EdgeInsets.only(left: 20),
-      width: 305,
+    return SizedBox(
+      width: 235,
       height: 150,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

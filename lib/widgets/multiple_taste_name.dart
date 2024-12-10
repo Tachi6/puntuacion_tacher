@@ -37,14 +37,13 @@ class _MultipleTasteNameState extends State<MultipleTasteName> {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleService>(context);
 
-    return Container(
+    return SizedBox(
       height: 85,
       width: double.infinity,
-      padding: const EdgeInsets.only(right: 20, left: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Inserta el nombre de tu cata múltiple y continua', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+          const Text('Inserta el nombre de tu cata múltiple', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
 
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,

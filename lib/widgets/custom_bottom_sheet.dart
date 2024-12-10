@@ -22,23 +22,28 @@ class CustomBottomSheet extends StatelessWidget {
       height: 58,
       alignment: Alignment.center,
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      // padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(
-            height: 58, 
-            width: 58, 
-            child: leading
-          ),
+          leading != null || trailing != null 
+            ? SizedBox(
+              height: 58, 
+              width: 58, 
+              child: leading
+            )
+            : const Spacer(),
 
           widgetButton,
 
-          SizedBox(
-            height: 58, 
-            width: 58, 
-            child: trailing
-          ),
+          leading != null || trailing != null
+            ? SizedBox(
+              height: 58, 
+              width: 58, 
+              child: trailing
+            )
+            : const Spacer(),
         ],
       ),
     );

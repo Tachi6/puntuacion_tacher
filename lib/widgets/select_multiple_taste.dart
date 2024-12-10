@@ -40,10 +40,9 @@ class SelectMultipleTaste extends StatelessWidget {
       }
     }
 
-    return Container(
+    return SizedBox(
       height: 85,
       width: double.infinity,
-      padding: const EdgeInsets.only(right: 20, left: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
