@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:provider/provider.dart';
 import 'package:card_swiper/card_swiper.dart';
 
-import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/widgets/load_wine_image.dart';
@@ -55,30 +53,12 @@ class _WinePosterTop10 extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final colors = Theme.of(context).colorScheme;
-    final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
       height: double.infinity,
       width: double.infinity,
       color: colors.surface,
-      // decoration: BoxDecoration(
-      //   color: Colors.grey.shade50,
-      //   borderRadius: BorderRadius.only(
-      //     topLeft: Radius.circular(circularRadius),
-      //       topRight: Radius.circular(circularRadius),
-      //       bottomLeft: Radius.circular(circularRadius),
-      //       bottomRight: Radius.circular(circularRadius)
-      //   ),
-      //   boxShadow: [
-      //     BoxShadow(
-      //       color: Colors.black.withOpacity(0.5),
-      //       spreadRadius: 1,
-      //       blurRadius: 1,
-      //       offset: const Offset(1, 1), // changes position of shadow
-      //     ),
-      //   ],
-      // ),
       child: Column(
         children: [
           Stack(
@@ -101,25 +81,6 @@ class _WinePosterTop10 extends StatelessWidget {
                   source: 'top10-$index',
                 ),
               ),
-                
-              Transform.translate(
-                offset: const Offset(4, 13),
-                child: ClipRRect( // TODO ARREGLAR HERO TAPA NUMERO SI LO PONGO ENCIMA
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(circularRadius), bottomLeft: Radius.circular(circularRadius)),
-                  child: Container(
-                    color: colors.onPrimaryFixedVariant,
-                    height: 48,
-                    width: 36,
-                    padding: const EdgeInsets.only(left: 2),
-                    alignment: Alignment.center,
-                    child: Text(
-                      (index + 1).toString(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 18, color: themeColor.isDarkMode ? colors.inverseSurface : colors.surface),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
     
@@ -129,7 +90,7 @@ class _WinePosterTop10 extends StatelessWidget {
             color: colors.surface,
             alignment: Alignment.bottomCenter,
             child: Text(
-              '${wine.vino} ${wine.anada}',
+              wine.nombre,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(

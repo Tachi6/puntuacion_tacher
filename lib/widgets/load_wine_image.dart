@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
 
+import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/services/services.dart';
 
 class LoadWineImage extends StatelessWidget {
 
@@ -88,27 +91,59 @@ class UrlImagePoster extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final winesService = Provider.of<WinesService>(context);
+    final themeColor = Provider.of<ChangeThemeProvider>(context);
     final colors = Theme.of(context).colorScheme;
+    final int wineRatePosition = winesService.winesByRate.indexOf(wine) + 1;
 
-    return Container(
-      height: scale * 300,
-      width: imageWidth,
-      decoration: imageDecoration,
-      child: Hero(
-        tag: '$source-${wine.id}',
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(borderRadius),
-          child: CachedNetworkImage(
-            imageUrl: wine.imagenVino!,
-            placeholder: (context, url) {
-              return Center(
-                child: CircularProgressIndicator(
-                  color: colors.primary,
+    return Hero(
+      tag: '$source-${wine.id}',
+      child: Material(
+        type: MaterialType.transparency,
+        color: Colors.transparent,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              height: scale * 300,
+              width: imageWidth,
+              decoration: imageDecoration,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(borderRadius),
+                child: CachedNetworkImage(
+                  imageUrl: wine.imagenVino!,
+                  fit: BoxFit.fitHeight,
+                  placeholder: (context, url) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: colors.primary,
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-            fit: BoxFit.fitHeight,
-          ),
+              ),
+            ),
+            
+            if (source.contains('top10') && scale == 1) Positioned(
+              top: 0,
+              left: 0,
+              child: ClipRRect( 
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(borderRadius), bottomRight: Radius.circular(borderRadius)),
+                child: Container(
+                  color: colors.onPrimaryFixedVariant,
+                  height: 48,
+                  width: 36,
+                  padding: const EdgeInsets.only(left: 2),
+                  alignment: Alignment.center,
+                  child: Text(
+                    wineRatePosition.toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18, color: themeColor.isDarkMode ? colors.inverseSurface : colors.surface),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -135,6 +170,12 @@ class NoImagePoster extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    final winesService = Provider.of<WinesService>(context);
+    final themeColor = Provider.of<ChangeThemeProvider>(context);
+    final colors = Theme.of(context).colorScheme;
+    final int wineRatePosition = winesService.winesByRate.indexOf(wine) + 1;
+
     return Hero(
       tag: '$source-${wine.id}',
       child: Material(
@@ -186,7 +227,27 @@ class NoImagePoster extends StatelessWidget {
                   SizedBox(height: 3 * scale),
                 ],
               ),
-            )
+            ),
+            // 
+            if (source.contains('top10') && scale == 1) Positioned(
+              top: 0,
+              left: 0,
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(borderRadius), bottomRight: Radius.circular(borderRadius)),
+                child: Container(
+                  color: colors.onPrimaryFixedVariant,
+                  height: 48,
+                  width: 36,
+                  padding: const EdgeInsets.only(left: 2),
+                  alignment: Alignment.center,
+                  child: Text(
+                    wineRatePosition.toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18, color: themeColor.isDarkMode ? colors.inverseSurface : colors.surface),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
