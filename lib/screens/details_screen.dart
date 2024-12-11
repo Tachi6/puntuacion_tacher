@@ -200,6 +200,8 @@ class _WinePoster extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final size = MediaQuery.of(context).size;
+
     Widget detectEmptyText(String dato) {
       if (dato != "" ) {
         return Text(dato, style: const TextStyle(fontSize: 14));
@@ -216,7 +218,7 @@ class _WinePoster extends StatelessWidget {
           LoadWineImage(
             wine: wine, 
             scale: 5/6, 
-            imageWidth: 105,
+            imageWidth: size.width * 0.4 - 30,
             source: source,
           ),
 
@@ -225,13 +227,12 @@ class _WinePoster extends StatelessWidget {
           ),
 
           SizedBox(
-            width: 195,
+            width: size.width * 0.6 - 30,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(wine.vino, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16), maxLines: 2),
-                Text(wine.anada.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                Text(wine.nombre, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16), maxLines: 3, overflow: TextOverflow.ellipsis),
                 detectEmptyText(wine.tipo),
                 detectEmptyText(wine.bodega),
                 detectEmptyText(wine.region),

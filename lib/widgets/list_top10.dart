@@ -21,12 +21,10 @@ class ListTop10 extends StatelessWidget {
       width: double.infinity,
       height: 360,
       child: Swiper(
-        loop: true,
-        autoplay: true,
-        autoplayDelay: 3000,
-        duration: 1000,
+        scrollDirection: Axis.horizontal,
+        loop: false,
         itemCount: wines.length >= 10 ? 10 : wines.length,
-        layout: SwiperLayout.STACK,
+        layout: SwiperLayout.DEFAULT,
         axisDirection: AxisDirection.right,
         itemHeight: 360,
         itemWidth: 240,
@@ -105,7 +103,7 @@ class _WinePosterTop10 extends StatelessWidget {
               ),
                 
               Transform.translate(
-                offset: const Offset(-36, 12),
+                offset: const Offset(4, 13),
                 child: ClipRRect( // TODO ARREGLAR HERO TAPA NUMERO SI LO PONGO ENCIMA
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(circularRadius), bottomLeft: Radius.circular(circularRadius)),
                   child: Container(

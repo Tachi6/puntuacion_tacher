@@ -99,7 +99,11 @@ class SearchDelegateMultiple extends SearchDelegate{
   @override
   Widget buildResults(BuildContext context) {
 
-    if(_filtro.isEmpty) return const NoResultsMultiple();
+    if(_filtro.isEmpty) {
+      return const NoResultsMultiple(
+        titleLabel: 'Cata múltiple no encontrada',
+      ); //noResultsMultiple(context);
+    } 
 
     return ListView.builder(
       itemCount: _filtro.length,
@@ -138,23 +142,20 @@ class SearchDelegateMultiple extends SearchDelegate{
   Widget buildSuggestions(BuildContext context) {
 
     final multipleService = Provider.of<MultipleService>(context);
-    final colors = Theme.of(context).colorScheme;
 
     if (query.isEmpty) {
-      return Container(
-        padding: const EdgeInsets.only(top: 100),
-        alignment: Alignment.topCenter,
-        color: colors.surface,
-        width: double.infinity,
-        child: const MultipleWineImage(),
-      );
+      return const NoResultsMultiple();
     }
  
     _filtro = multipleService.multipleTasteList.where((multiple) {
       return multiple.name.toLowerCase().contains(query.trim().toLowerCase());
     }).toList();
 
-    if(_filtro.isEmpty) return const NoResultsMultiple(); //noResultsMultiple(context);
+    if(_filtro.isEmpty) {
+      return const NoResultsMultiple(
+        titleLabel: 'Cata múltiple no encontrada',
+      ); //noResultsMultiple(context);
+    } 
 
     return ListView.builder(
       itemCount: _filtro.length,
@@ -276,39 +277,50 @@ class MultipleWineImage extends StatelessWidget {
 }
 
 class NoResultsMultiple extends StatelessWidget {
-  const NoResultsMultiple({super.key});
+  const NoResultsMultiple({
+    super.key, 
+    this.titleLabel, 
+    this.buttonLabel
+  });
+
+  final String? titleLabel;
+  final String? buttonLabel;
 
   @override
   Widget build(BuildContext context) {   
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 30),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(height: 10),
 
-          Container(
-            alignment: Alignment.center,
-            height: 40,
-            child: const Text('Cata múltiple no encontrada', textAlign: TextAlign.center, style: TextStyle(fontSize: 16))
-          ),
-          
-          const SizedBox(height: 30),
-      
-          const MultipleWineImage(),
-      
-          const SizedBox(height: 40),
-      
-          CustomElevatedButton(
+        Container(
+          alignment: Alignment.center,
+          height: 40,
+          child: titleLabel != null 
+            ? Text(titleLabel!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16))
+            : null
+        ),
+        
+        const SizedBox(height: 20),
+    
+        const MultipleWineImage(),
+    
+        const SizedBox(height: 20),
+        
+        buttonLabel != null 
+          ? CustomElevatedButton(
             width: 170,
             height: 35, 
             onPressed: () {
               // TODO hacer la funcion del boton
             },
             child: const Text('Crear cata múltiple'),
-          ),
-        ],
-      ),
+          )
+          : const SizedBox(
+            height: 35,
+          )
+      ],
     );
   }
 }

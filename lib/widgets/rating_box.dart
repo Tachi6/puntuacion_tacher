@@ -119,6 +119,8 @@ class _RatingCustomWidget extends StatelessWidget{
     final double itemSize = ((size.width * 0.90) / 11).truncateToDouble();
 
     return RatingBar.builder(
+      updateOnDrag: true,
+      wrapAlignment: WrapAlignment.center,
       initialRating: initialRating,
       minRating: minRating,
       itemCount: itemCount,
@@ -129,7 +131,8 @@ class _RatingCustomWidget extends StatelessWidget{
       itemPadding: const EdgeInsets.only(top: 6, bottom: 6, left: 0, right: 0), 
       itemBuilder: (context, index) {
         if (name == 'puntos') {
-          return SizedBox(
+          return Container(
+            color: Colors.transparent,
             width: itemSize,
             height: itemSize,
             child: SvgPicture.asset(
@@ -139,7 +142,8 @@ class _RatingCustomWidget extends StatelessWidget{
           );
         } 
         else {
-          return SizedBox(
+          return Container(
+            color: Colors.transparent,
             width: itemSize,
             height: itemSize,
             child: SvgPicture.asset(

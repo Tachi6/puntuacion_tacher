@@ -200,27 +200,28 @@ class CreateNewWineForm extends StatelessWidget {
           
               const SizedBox(height: 25),
           
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
+              // TODO subir image o url de vino
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.start,
+              //   children: [
           
-                  IconButton(
-                    // color: colors.surface,
-                    icon: const Icon(Icons.camera_alt_outlined),
-                    onPressed: () {},
-                  ),
+              //     IconButton(
+              //       // color: colors.surface,
+              //       icon: const Icon(Icons.camera_alt_outlined),
+              //       onPressed: () {},
+              //     ),
                    
-                  IconButton(
-                    // color: colors.surface,
-                    icon: const Icon(Icons.upload_file_outlined),
-                    onPressed: () {},
-                  ),
+              //     IconButton(
+              //       // color: colors.surface,
+              //       icon: const Icon(Icons.upload_file_outlined),
+              //       onPressed: () {},
+              //     ),
           
-                  const SizedBox(width:10),
+              //     const SizedBox(width:10),
           
-                  const Text('Añadir imagen del vino', style: TextStyle(fontSize: 14)),
-                ],
-              ),
+              //     const Text('Imagen del vino', style: TextStyle(fontSize: 14)),
+              //   ],
+              // ),
             ]
           )
         ),

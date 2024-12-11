@@ -53,7 +53,11 @@ class SearchDelegateWines extends SearchDelegate{
   @override
   Widget buildResults(BuildContext context) {
 
-    if(_filtro.isEmpty) return const NoResultsWine();
+    if(_filtro.isEmpty) {
+      return const NoResultsWine(
+        titleLabel: 'Vino no encontrado en base de datos',
+      );
+    }
 
     return ListView.builder(
       itemCount: _filtro.length,
@@ -75,23 +79,18 @@ class SearchDelegateWines extends SearchDelegate{
   Widget buildSuggestions(BuildContext context) {
 
     final winesService = Provider.of<WinesService>(context);
-    final colors = Theme.of(context).colorScheme;
 
-    if (query.isEmpty) {
-      return Container(
-        padding: const EdgeInsets.only(top: 100),
-        alignment: Alignment.topCenter,
-        color: colors.surface,
-        width: double.infinity,
-        child: const SingleWineImage(),
-      );
-    }
+    if (query.isEmpty) return const NoResultsWine();
  
     _filtro = winesService.winesByIndex.where((wines) {
       return wines.nombre.toLowerCase().contains(query.trim().toLowerCase());
     }).toList();
 
-    if(_filtro.isEmpty) return const NoResultsWine();
+    if(_filtro.isEmpty) {
+      return const NoResultsWine(
+        titleLabel: 'Vino no encontrado en base de datos',
+      );
+    }
 
     return ListView.builder(
       itemCount: _filtro.length,
@@ -127,7 +126,14 @@ class SingleWineImage extends StatelessWidget {
 }
 
 class NoResultsWine extends StatelessWidget {
-  const NoResultsWine({super.key});
+  const NoResultsWine({
+    super.key, 
+    this.titleLabel, 
+    this.buttonLabel
+  });
+
+  final String? titleLabel;
+  final String? buttonLabel;
 
   @override
   Widget build(BuildContext context) {   
@@ -136,28 +142,34 @@ class NoResultsWine extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 30),
+          const SizedBox(height: 10),
 
           Container(
             alignment: Alignment.center,
             height: 40,
-            child: const Text('Vino no encontrado en base de datos', textAlign: TextAlign.center, style: TextStyle(fontSize: 16))
+            child: titleLabel != null
+              ? Text(titleLabel!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16))
+              : null,
           ),
           
-          const SizedBox(height: 30),
+          const SizedBox(height: 20),
       
           const SingleWineImage(),
       
-          const SizedBox(height: 40),
+          const SizedBox(height: 20),
       
-          CustomElevatedButton(
-            width: 170,
-            height: 35, 
-            onPressed: () {
-              // TODO hacer la funcion del boton
-            },
-            child: const Text('Añadir vino'),
-          ),
+          buttonLabel != null 
+            ? CustomElevatedButton(
+                width: 170,
+                height: 35, 
+                onPressed: () {
+                  // TODO hacer la funcion del boton
+                },
+                child: const Text('Añadir vino'),
+              )
+            : const SizedBox(
+              height: 35
+            ),
         ],
       ),
     );

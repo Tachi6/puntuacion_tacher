@@ -437,7 +437,6 @@ class _ListViewMultipleWinesState extends State<ListViewMultipleWines> {
                 color: colors.surfaceContainerLow,
               );
             },  
-            padding: const EdgeInsets.symmetric(horizontal: 10),
             itemCount: multipleTaste.winesMultipleTaste.length, 
             itemBuilder: (context, index) {
               return CustomMultipleWinesRow(
@@ -641,58 +640,66 @@ class RowVisibleWines extends StatelessWidget {
 
     return Container(
       alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(left: 10),
+      padding: const EdgeInsets.only(left: 5),
       child: Row(
         children: [
-          Text('Busca, añade y oculta vinos', style: styles.bodyMedium),
+          Text('Añade/oculta tus vinos', style: styles.bodyMedium),
                                 
           const Spacer(),
                     
-          SearchWineButton(
-            onPressed: () async {
-              winesService.loadWines();
-              if (context.mounted) {
-                final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
-                  customResultText: 'Vuelve atras y crea tu vino' '\n' 'para añadirlo a la cata.'
-                ));
-                // Compruebo si el vino ya esta añadido al listado
-                if (context.mounted && multipleTaste.winesMultipleTaste.any((element) => element.id == wineSearched.id)) {
-                  NotificationsService.showSnackbar('Vino duplicado', context);
-                  return;
-                }
-                if (wineSearched != null) multipleTaste.addWine(wineSearched);
-                if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
-              }
-            },
-          ),
-                    
-          AddWineButton(
-            onPressedSave: () async {
-              if (wineForm.isValidForm()) {
-                wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
-                final String wineId = await winesService.createWine(wineForm.wine);
-                wineForm.wine.id = wineId;
-                multipleTaste.addWine(wineForm.wine.copy());
-                if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
-                taste.showContinueButton = true;
-                if (context.mounted) Navigator.pop(context, 'Guardar');
-              }
-            },
-          ),
-
-          IconButton(
-            onPressed: () {
-              // multipleTaste.multipleTaste.hidden = !multipleTaste.multipleTaste.hidden;
-              multipleTaste.hideAllWines();
-            },
-            icon: Icon(
-              multipleTaste.multipleTaste.hidden
-                ? Icons.visibility_off_rounded
-                : Icons.visibility_rounded,
-              color: colors.onSurface,
-              size: 22
+          Transform.translate(
+            offset: const Offset(5, 0),
+            child: Row(
+              children: [
+                SearchWineButton(
+                  onPressed: () async {
+                    winesService.loadWines();
+                    if (context.mounted) {
+                      final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
+                        customResultText: 'Vuelve atras y crea tu vino' '\n' 'para añadirlo a la cata.'
+                      ));
+                      // Compruebo si el vino ya esta añadido al listado
+                      if (context.mounted && multipleTaste.winesMultipleTaste.any((element) => element.id == wineSearched.id)) {
+                        NotificationsService.showSnackbar('Vino duplicado', context);
+                        return;
+                      }
+                      if (wineSearched != null) multipleTaste.addWine(wineSearched);
+                      if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
+                    }
+                  },
+                ),
+                
+                AddWineButton(
+                  onPressedSave: () async {
+                    if (wineForm.isValidForm()) {
+                      wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
+                      final String wineId = await winesService.createWine(wineForm.wine);
+                      wineForm.wine.id = wineId;
+                      multipleTaste.addWine(wineForm.wine.copy());
+                      if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
+                      taste.showContinueButton = true;
+                      if (context.mounted) Navigator.pop(context, 'Guardar');
+                    }
+                  },
+                ),
+            
+                IconButton(
+                  onPressed: () {
+                    // multipleTaste.multipleTaste.hidden = !multipleTaste.multipleTaste.hidden;
+                    multipleTaste.hideAllWines();
+                  },
+                  icon: Icon(
+                    multipleTaste.multipleTaste.hidden
+                      ? Icons.visibility_off_rounded
+                      : Icons.visibility_rounded,
+                    color: colors.onSurface,
+                    size: 22
+                  ),
+                ),
+              ],
             ),
           ),
+                    
         ],
       ),
     );
