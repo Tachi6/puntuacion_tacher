@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -34,8 +35,7 @@ class _RadioWidgetMultipleState extends State<RadioWidgetMultiple> {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     
     return SizedBox(
-      width: 265,
-      height: 150,
+      width: Platform.isAndroid ? 265 : 280,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[

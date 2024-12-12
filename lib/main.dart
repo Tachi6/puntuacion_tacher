@@ -52,6 +52,7 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: ( _ ) => CreateEditWineFormProvider()),
         ChangeNotifierProvider(create: ( _ ) => ChangeThemeProvider()),
         ChangeNotifierProvider(create: ( _ ) => MultipleTasteProvider()),
+        ChangeNotifierProvider(create: ( _ ) => ScreenElementsSizeProvider()),
       ],
       child: const MyApp(),
     );

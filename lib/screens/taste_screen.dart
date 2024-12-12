@@ -26,23 +26,29 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
 
     final Size size = MediaQuery.of(context).size;
     final screenHeight = size.height;
-    final double backgroundHeight = (size.width / 1.5) - 10;
+    final double backgroundHeight = (size.width / 1.5);
     
     double innerSizedBox() {
       // CUSTOM HEIGHT OF APPBAR
       const double appBarSize = 0;
       // CUSTOM HEIGHT OF BOTTOMNAVIGATIONBAR
       const double bottomNavigationBarSize = 58;
-      // HEIGHT OF STATUS 
+      // HEIGHT OF BOTTOM SCREEN ELEMENT
+      final bottomPadding = MediaQuery.of(context).padding.bottom;
+      // HEIGHT OF STATUS
       final statusBarHeight = View.of(context).padding.top / View.of(context).devicePixelRatio;
-      // HEIGHT OF WIDGETS: SIZEDBOX + 1ST WIDGET + 2ND WIDGET + 3RD WIDGET + CONTINUE BUTTON
-      const widgetsHeight = 20 + 150 + 20 + 150 + 20 + 85 + 90;
+      // HEIGHT OF WIDGETS: SIZEDBOX + 1ST WIDGET + 2ND WIDGET + 3RD WIDGET
+      final widgetsHeight = (screenHeight * 0.01) + 150 + 150 + 85 + backgroundHeight;
       // SCREEN HEIGHT
       final double screenSize = MediaQuery.of(context).size.height;
       // FILLED SPACE IN SCREEN
-      final filledScreen = appBarSize + bottomNavigationBarSize + statusBarHeight + widgetsHeight;
-      // EMPTY HEIGHT OF THE SCREEN
-      return screenSize - filledScreen; // 25 is the same padding of right of continue button
+      final filledScreen = appBarSize + bottomNavigationBarSize + statusBarHeight + widgetsHeight + bottomPadding;
+      
+      if (filledScreen > screenSize) {
+        return backgroundHeight - (filledScreen - screenSize);
+      }
+
+      return backgroundHeight;
     }
 
     return Scaffold(
@@ -65,6 +71,7 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
 
                 Container(
                   width: double.infinity,
+                  height: 150,
                   padding: EdgeInsets.only(right: screenHeight * 0.02),
                   alignment: Alignment.centerRight,
                   child: const RadioTaste(),
@@ -74,6 +81,7 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
 
                 Container(
                   width: double.infinity,
+                  height: 150,
                   alignment: Alignment.center,
                   child: _SecondFormWidget(),
                 ),
@@ -88,7 +96,7 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
                 const Spacer(),
 
                 Container(
-                  height: backgroundHeight,
+                  height: innerSizedBox(),
                   padding: EdgeInsets.only(right: screenHeight * 0.02, bottom: screenHeight * 0.02),
                   child: _ContinueButton(),
                 ),
@@ -121,7 +129,7 @@ class _ThirdFormWidget extends StatelessWidget {
     }
 
     return SizedBox(
-      height:70,
+      height:85,
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 250),
         layoutBuilder: (currentChild, previousChildren) {
@@ -305,7 +313,7 @@ class SendTasteButton extends StatelessWidget {
     final winesService = Provider.of<WinesService>(context);
 
     return CustomElevatedButton(
-      width: 160,
+      width: 170,
       height: 100/3,
       onPressed: () async {
         // Verifico si se has rellenado todos los campos del formulario
@@ -356,7 +364,7 @@ class HiddenTasteButtons extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CustomElevatedButton(
           width: 120,

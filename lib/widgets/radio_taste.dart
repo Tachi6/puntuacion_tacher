@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -33,48 +34,53 @@ class _RadioWidgetState extends State<RadioWidget> {
     final colors = Theme.of(context).colorScheme;
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
         
-    return SizedBox(
-      width: 165,
-      height: 150,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Elige el número de vinos', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-          Transform.translate(
-            offset: const Offset(-10, -3),
-            child: RadioListTile(
-              dense: true,
-              contentPadding: const EdgeInsets.all(0),
-              subtitle: Text('Catar un único vino', style: TextStyle(fontSize:12, color: colors.outline)),
-              title: const Text('Cata única', style: TextStyle(fontSize: 14)),
-              value: TasteOptions.unica, 
-              groupValue: _taste, 
-              onChanged: (TasteOptions? value) {
-                _taste = value;
-                taste.taste = value!;
-                multipleTaste.multipleName = '';
-                setState(() {});
-              },
-            ),
+    return Row(
+      children: [
+        const Spacer(),
+
+        SizedBox(
+          width: Platform.isAndroid ? 165 : 180,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Elige el número de vinos', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+              Transform.translate(
+                offset: const Offset(-10, -3),
+                child: RadioListTile(
+                  dense: true,
+                  contentPadding: const EdgeInsets.all(0),
+                  subtitle: Text('Catar un único vino', style: TextStyle(fontSize:12, color: colors.outline)),
+                  title: const Text('Cata única', style: TextStyle(fontSize: 14)),
+                  value: TasteOptions.unica, 
+                  groupValue: _taste, 
+                  onChanged: (TasteOptions? value) {
+                    _taste = value;
+                    taste.taste = value!;
+                    multipleTaste.multipleName = '';
+                    setState(() {});
+                  },
+                ),
+              ),
+              Transform.translate(
+                offset: const Offset(-10, -20),
+                child: RadioListTile(
+                  dense: true,
+                  contentPadding: const EdgeInsets.all(0),
+                  subtitle: Text('Catar varios vinos', style: TextStyle(fontSize: 12, color: colors.outline)),
+                  title: const Text('Cata múltiple', style: TextStyle(fontSize: 14)),
+                  value: TasteOptions.multiple, 
+                  groupValue: _taste, 
+                  onChanged: (TasteOptions? value) {
+                    _taste = value;
+                    taste.taste = value!;
+                    setState(() {});
+                  },
+                ),
+              ),
+            ],
           ),
-          Transform.translate(
-            offset: const Offset(-10, -20),
-            child: RadioListTile(
-              dense: true,
-              contentPadding: const EdgeInsets.all(0),
-              subtitle: Text('Catar varios vinos', style: TextStyle(fontSize: 12, color: colors.outline)),
-              title: const Text('Cata múltiple', style: TextStyle(fontSize: 14)),
-              value: TasteOptions.multiple, 
-              groupValue: _taste, 
-              onChanged: (TasteOptions? value) {
-                _taste = value;
-                taste.taste = value!;
-                setState(() {});
-              },
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -36,8 +37,7 @@ class _RadioWidgetNormalState extends State<RadioWidgetNormal> {
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
 
     return SizedBox(
-      width: 235,
-      height: 150,
+      width: Platform.isAndroid ? 235 : 260,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

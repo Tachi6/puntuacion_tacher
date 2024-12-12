@@ -21,13 +21,12 @@ class CustomMultipleBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-
     final multipleService = Provider.of<MultipleService>(context);
     final screenProvider = Provider.of<ScreensProvider>(context);
 
     return CustomBottomSheet(
       widgetButton: CustomElevatedButton(
-        width: 160,
+        width: 170,
         height: 100/3,
         onPressed: onPressed,
         child: Text(

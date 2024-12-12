@@ -20,8 +20,9 @@ import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 PersistentBottomSheetController viewBottomMenu(BuildContext context) {
   return showBottomSheet(
+    // clipBehavior: Clip.antiAliasWithSaveLayer,
     builder: (context) {
-      return const MultipleActionsButtons();
+      return const SafeArea(child: MultipleActionsButtons());
     },
     context: context,
   );
@@ -32,6 +33,12 @@ class CreateMultipleTasteScreen extends StatelessWidget{
     
   @override
   Widget build(BuildContext context) {
+
+    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
+    final colors = Theme.of(context).colorScheme;
+    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
+    final double opacity = 0.8;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -40,15 +47,31 @@ class CreateMultipleTasteScreen extends StatelessWidget{
         titleSpacing: 0,
         title: const _CustomAppBar(),
       ),
-      body: const Stack(
+      body: Stack(
         children: [
           Padding(
-            padding: EdgeInsets.only(bottom: 58),
-            child: BottomImageBackground(image: 'assets/initial-multiple-background.jpg', opacity: 0.8),
+            padding: EdgeInsets.only(bottom: 58 + bottomPadding),
+            child: BottomImageBackground(image: 'assets/initial-multiple-background.jpg', opacity: opacity),
           ),
 
-          _CustomBody(),
-          // ListViewMultipleWines(),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 58 + bottomPadding,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white.withOpacity(opacity),
+                    colors.surface,
+                  ],
+                )
+              ),
+            ),
+          ),
+
+          const _CustomBody(),
         ],
       ),      
     );
@@ -563,7 +586,7 @@ class MultipleActionsButtons extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           CustomElevatedButton(
-            width: 100,
+            width: 105,
             child: const Text('Guardar'),
             onPressed: () async {
               // Valido campo descripcion
@@ -588,7 +611,7 @@ class MultipleActionsButtons extends StatelessWidget {
           ),
 
           CustomElevatedButton(
-            width: 100,
+            width: 105,
             child: const Text('Realizar'),
             onPressed: () async {
               // Valido campo descripcion

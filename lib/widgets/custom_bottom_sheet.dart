@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/providers/providers.dart';
 
 class CustomBottomSheet extends StatelessWidget {
   const CustomBottomSheet({
@@ -8,7 +10,7 @@ class CustomBottomSheet extends StatelessWidget {
     this.wine,
     required this.widgetButton, 
     this.leading, 
-    this.trailing, 
+    this.trailing,
   });
 
   final Wines? wine;
@@ -18,11 +20,16 @@ class CustomBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
+
+    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
+    
     return Container(
-      height: 58,
+      height: 58 + bottomPadding,
       alignment: Alignment.center,
       width: double.infinity,
-      // padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.only(bottom: bottomPadding, right: 16, left: 16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,7 +40,7 @@ class CustomBottomSheet extends StatelessWidget {
               width: 58, 
               child: leading
             )
-            : const Spacer(),
+            : const SizedBox(),
 
           widgetButton,
 
@@ -43,7 +50,7 @@ class CustomBottomSheet extends StatelessWidget {
               width: 58, 
               child: trailing
             )
-            : const Spacer(),
+            : const SizedBox(),
         ],
       ),
     );

@@ -262,7 +262,7 @@ class _UserSettingsBody extends StatelessWidget {
                       leading: Icons.palette_outlined, 
                       title: 'Tema de color',
                       content: DropdownMenu(
-                        width: 170,
+                        width: 173,
                         label: Center(
                           child: Transform.translate(
                             offset: const Offset(4, 0), 

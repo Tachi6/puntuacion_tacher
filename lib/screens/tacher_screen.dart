@@ -1,14 +1,15 @@
 // Image of https://unsplash.com/es/@edge2edgemedia
 // Link https://unsplash.com/es/fotos/IhOamKjNWwI
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class TacherScreen extends StatefulWidget {
@@ -70,6 +71,8 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
   @override
   Widget build(BuildContext context) {
 
+    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
+    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
     final Textos textos = Textos();
     var titleGroup = AutoSizeGroup();
     var bodyGroup = AutoSizeGroup();
@@ -141,9 +144,8 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
         ),
 
         const Spacer(flex: 2),
-        // Height of BottomSheet + Rating Box Bottom Padding
-        const SizedBox(height: 68),
-
+        // Height of BottomSheet + Rating Box Bottom Padding + BottomElement Height
+        SizedBox(height: 68 + bottomPadding),
       ]
     );
   }
