@@ -113,6 +113,7 @@ class UrlImagePoster extends StatelessWidget {
                 child: CachedNetworkImage(
                   imageUrl: wine.imagenVino!,
                   fit: BoxFit.fitHeight,
+                  filterQuality: FilterQuality.medium,
                   placeholder: (context, url) {
                     return Center(
                       child: CircularProgressIndicator(
@@ -120,6 +121,7 @@ class UrlImagePoster extends StatelessWidget {
                       ),
                     );
                   },
+                  // TODO manejar el error de imagen sin que brinque despues en el Hero, esta manejado desde peticion http en wines service
                 ),
               ),
             ),

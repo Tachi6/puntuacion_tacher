@@ -43,13 +43,18 @@ class WinesService extends ChangeNotifier {
 
     final Map<String, dynamic> winesMap = json.decode(resp.body);
 
-    winesMap.forEach((key, value) {
-      final tempWine = Wines.fromMap(value);
+    winesMap.forEach((key, value) async {
+      Wines tempWine = Wines.fromMap(value);
       tempWine.id = key;
       tempWinesByIndex.add(tempWine);
     });
 
     winesByIndex = tempWinesByIndex;
+
+    // TODO lo hago asi porque no me funciona el Hero manejando el error. Pensar otra forma
+    for (Wines wine in winesByIndex) {
+      wine.imagenVino = await checkErrorImage(wine.imagenVino);
+    }
 
     // Wines sort by points
     updateWinesByRate();
@@ -220,6 +225,15 @@ class WinesService extends ChangeNotifier {
   Wines obtainWine(String id) {
     final wineIndex = int.parse(id);    
     return winesByIndex[wineIndex];
+  }
+
+  Future<String?> checkErrorImage(String? url) async {
+    if (url != null) {
+      final Uri uri = Uri.parse(url);
+      final resp = await http.get(uri);
+      if (resp.statusCode != 200) return null;
+    }
+    return url;
   }
 
   Future<String> likesCount(Wines wine) async {
