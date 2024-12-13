@@ -230,7 +230,7 @@ class WinesService extends ChangeNotifier {
   Future<String?> checkErrorImage(String? url) async {
     if (url != null) {
       final Uri uri = Uri.parse(url);
-      final resp = await http.get(uri);
+      final resp = await http.head(uri);
       if (resp.statusCode != 200) return null;
     }
     return url;
