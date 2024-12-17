@@ -211,6 +211,8 @@ class AuthService extends ChangeNotifier {
     _tempDisplayName = '';
     _isSavingUser = false;
     _isUserLogued = false;
+    _isregistering = false;
+    _isDisplayNameGenerated = false;
     await storage.deleteAll();
   }
 

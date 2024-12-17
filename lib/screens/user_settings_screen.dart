@@ -22,63 +22,66 @@ class UserSettingsScreen extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
 
-    return Stack(
-      children: [
-        const FullScreenBackground(image: 'assets/settings_background.jpg', opacity: 0.54),
-
-        Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 48,
-            backgroundColor: Colors.transparent,
-            systemOverlayStyle: themeColor.isDarkMode 
-              ? SystemUiOverlayStyle.light
-              : SystemUiOverlayStyle.dark,
-            automaticallyImplyLeading: false, 
-            actions: [
-              IconButton(
-                onPressed: () {
-                  if (!authService.isRegistering) {
-                    Navigator.pop(context);
-                    return;
-                  }
-                  if (authService.isDisplayNameGenerated) {
-                    final newRoute = CupertinoPageRoute(
-                      builder: (context) => const HomeScreen()
-                    );
-                    Navigator.pushReplacement(context, newRoute);
-                    Future.delayed(const Duration(milliseconds: 500), () => authService.isRegistering = false); 
-                    return;
-                  }
-                  if (!authService.isDisplayNameGenerated) {
-                    NotificationsService.showSnackbar('El nombre de usuario es obligatorio', context);
-                    return;
-                  }
-                }, 
-                icon: Icon(
-                  !authService.isRegistering 
-                    ? Icons.arrow_back_rounded
-                    : Icons.clear_rounded,
+    return PopScope(
+      canPop: false,
+      child: Stack(
+        children: [
+          const FullScreenBackground(image: 'assets/settings_background.jpg', opacity: 0.54),
+      
+          Scaffold(
+            appBar: AppBar(
+              toolbarHeight: 48,
+              backgroundColor: Colors.transparent,
+              systemOverlayStyle: themeColor.isDarkMode 
+                ? SystemUiOverlayStyle.light
+                : SystemUiOverlayStyle.dark,
+              automaticallyImplyLeading: false, 
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    if (!authService.isRegistering) {
+                      Navigator.pop(context);
+                      return;
+                    }
+                    if (authService.isDisplayNameGenerated) {
+                      final newRoute = CupertinoPageRoute(
+                        builder: (context) => const HomeScreen()
+                      );
+                      Navigator.pushReplacement(context, newRoute);
+                      Future.delayed(const Duration(milliseconds: 500), () => authService.isRegistering = false); 
+                      return;
+                    }
+                    if (!authService.isDisplayNameGenerated) {
+                      NotificationsService.showSnackbar('El nombre de usuario es obligatorio', context);
+                      return;
+                    }
+                  }, 
+                  icon: Icon(
+                    !authService.isRegistering 
+                      ? Icons.arrow_back_rounded
+                      : Icons.clear_rounded,
+                  ),
                 ),
-              ),
-              
-              const Spacer(),
-              
-              IconButton(
-                onPressed: () => themeColor.setDefaultTheme(),
-                icon: const Icon(Icons.settings_backup_restore_rounded)
-              ),
-            ]
+                
+                const Spacer(),
+                
+                IconButton(
+                  onPressed: () => themeColor.setDefaultTheme(),
+                  icon: const Icon(Icons.settings_backup_restore_rounded)
+                ),
+              ]
+            ),
+            backgroundColor: Colors.transparent,
+            body: SingleChildScrollView(
+              child: _UserSettingsBody(
+                colors: colors, 
+                size: size, 
+                authService: authService
+              )
+            ),
           ),
-          backgroundColor: Colors.transparent,
-          body: SingleChildScrollView(
-            child: _UserSettingsBody(
-              colors: colors, 
-              size: size, 
-              authService: authService
-            )
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
