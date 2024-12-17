@@ -54,6 +54,7 @@ class WinesService extends ChangeNotifier {
     // TODO lo hago asi porque no me funciona el Hero manejando el error. Pensar otra forma
     for (Wines wine in winesByIndex) {
       wine.imagenVino = await checkErrorImage(wine.imagenVino);
+      wine.logoBodega = await checkErrorImage(wine.logoBodega);
     }
 
     // Wines sort by points

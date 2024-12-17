@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/providers/providers.dart';
 
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
@@ -17,7 +16,6 @@ class CheckAuthScreen extends StatelessWidget {
     final authService = Provider.of<AuthService>(context, listen: false);
     final winesService = Provider.of<WinesService>(context, listen: false);
     final multipleService = Provider.of<MultipleService>(context, listen: false);
-    final loginForm = Provider.of<LoginProvider>(context);
     final colors = Theme.of(context).colorScheme;
 
     Future<void> loadData() async {
@@ -28,23 +26,28 @@ class CheckAuthScreen extends StatelessWidget {
 
     return Scaffold(
       body: Center(
-         child: FutureBuilder(
+         child: FutureBuilder<UserLoginStatus>(
           future: authService.isUserLoggedLoadData(loadData), 
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            if (snapshot.hasData && snapshot.data!) {
+          builder: (BuildContext context, AsyncSnapshot<UserLoginStatus> snapshot) {
+            if (snapshot.hasData && snapshot.data! == UserLoginStatus.registering) {
               Future.microtask(() async {
-                if (authService.userDisplayName == '') {
-                  authService.isDisplayNameGenerated = false;
-                  loginForm.isRegister = true;
-                }
                 final routeDetails = CupertinoPageRoute(
-                  builder: (context) => loginForm.isRegister ? const UserSettingsScreen() : const HomeScreen(),
+                  builder: (context) => const UserSettingsScreen(),
                 );
 
                 if (context.mounted) Navigator.pushReplacement(context, routeDetails);
               });
             }
-            if (snapshot.hasData && !snapshot.data!) {
+            if (snapshot.hasData && snapshot.data! == UserLoginStatus.logged) {
+              Future.microtask(() async {
+                final routeDetails = CupertinoPageRoute(
+                  builder: (context) => const HomeScreen(),
+                );
+
+                if (context.mounted) Navigator.pushReplacement(context, routeDetails);
+              });
+            }
+            if (snapshot.hasData && snapshot.data! == UserLoginStatus.notLogged) {
               Future.microtask(() async {
                 final routeDetails = CupertinoPageRoute(
                   builder: (context) => const LoginScreen(),

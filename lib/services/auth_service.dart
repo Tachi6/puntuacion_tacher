@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
+enum UserLoginStatus {notLogged, logged, registering}
+
 class AuthService extends ChangeNotifier {
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -20,7 +22,8 @@ class AuthService extends ChangeNotifier {
   String _tempDisplayName = '';
   bool _isSavingUser = false;
   bool _isUserLogued = false;
-  bool _isDisplayNameGenerated = true;
+  bool _isregistering = false;
+  bool _isDisplayNameGenerated = false;
 
   final storage = const FlutterSecureStorage();
 
@@ -51,7 +54,10 @@ class AuthService extends ChangeNotifier {
       await storage.write(key: 'password', value: password);
       await storage.write(key: 'idToken', value: decodedResp['idToken']);
       await storage.write(key: 'localId', value: decodedResp['localId']); // TODO trabajar con localId en vez que con email en app y en bd
+
       isUserLogued = true;
+      isRegistering = true;
+
       notifyListeners();
       // To refresh user auto every 55 minuts
       refreshUser();
@@ -90,7 +96,13 @@ class AuthService extends ChangeNotifier {
       await storage.write(key: 'displayName', value: decodedResp['displayName']);
       await storage.write(key: 'localId', value: decodedResp['localId']);
       userDisplayName = decodedResp['displayName'];
+
       isUserLogued = true;
+      if (userDisplayName == '') {
+        isRegistering = true;
+        isDisplayNameGenerated = false;
+      }
+
       notifyListeners();
       // To refresh user auto every 55 minuts
       refreshUser();
@@ -202,17 +214,19 @@ class AuthService extends ChangeNotifier {
     await storage.deleteAll();
   }
 
-  Future<bool> isUserLoggedLoadData(Future<void> Function() loadData) async {
-    final String idToken = await storage.read(key: 'idToken') ?? '';
-    if (idToken != '') {
-      final String? email = await storage.read(key: 'email');
-      final String? password = await storage.read(key: 'password');
-      await loginUser(email!, password!);
-      await loadData();
-      return true;
-    }
+  Future<UserLoginStatus> isUserLoggedLoadData(Future<void> Function() loadData) async {
+    final String? idToken = await storage.read(key: 'idToken');
+    if (idToken == null) return UserLoginStatus.notLogged;
+
+    final String? email = await storage.read(key: 'email');
+    final String? password = await storage.read(key: 'password');
+    await loginUser(email!, password!);
+    final String? displayName = await storage.read(key: 'displayName');
+    await loadData();
+    if (displayName == '') return UserLoginStatus.registering;
+
     await Future.delayed(const Duration(milliseconds: 500));
-    return false;
+    return UserLoginStatus.logged;
   }
 
   String get tempDisplayName => _tempDisplayName;
@@ -240,6 +254,13 @@ class AuthService extends ChangeNotifier {
 
   set isDisplayNameGenerated(bool value) {
     _isDisplayNameGenerated = value;
+    notifyListeners();
+  }
+
+  bool get isRegistering => _isregistering;
+
+  set isRegistering(bool value) {
+    _isregistering = value;
     notifyListeners();
   }
 }

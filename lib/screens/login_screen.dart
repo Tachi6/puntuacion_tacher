@@ -269,7 +269,7 @@ class ValidateUserButton extends StatelessWidget {
 
           final String? errorMessage;
           
-          (loginForm.isRegister)
+          loginForm.isRegister
             ? errorMessage = await authService.createUser(loginForm.email, loginForm.password)
             : errorMessage = await authService.loginUser(loginForm.email, loginForm.password);
 
@@ -277,21 +277,19 @@ class ValidateUserButton extends StatelessWidget {
 
             if (!context.mounted) return;
 
-            if (authService.userDisplayName == '') {
-              authService.isDisplayNameGenerated = false;
-              loginForm.isRegister = true;
-            }
-
             await winesService.loadWines();
             await winesService.loadWinesTaste();
             await multipleService.loadMultiples();
-            
+           
             final newRoute = CupertinoPageRoute(
-              builder: (context) => loginForm.isRegister ? const UserSettingsScreen() : const HomeScreen()
+              builder: (context) => authService.userDisplayName == '' ? const UserSettingsScreen() : const HomeScreen()
             );
             if (context.mounted) Navigator.pushReplacement(context, newRoute);
             // FOR NOT VIEW 'ingresar' MESSAGE IF THERE ARE A LOGOUT
-            // await Future.delayed(const Duration(seconds: 2), () => loginForm.isLoading = false);
+            await Future.delayed(const Duration(seconds: 2), () {
+              loginForm.isLoading = false;
+              loginForm.isRegister = false;
+            });
           }
           else {
             if (!context.mounted) return;

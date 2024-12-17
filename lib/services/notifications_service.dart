@@ -15,7 +15,7 @@ class NotificationsService {
         textAlign: TextAlign.center,
       )    
     );
-
+    ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
     // messengerKey.currentState!.showSnackBar(snackBar);
   }

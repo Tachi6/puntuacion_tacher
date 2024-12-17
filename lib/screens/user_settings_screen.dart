@@ -18,7 +18,6 @@ class UserSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final authService = Provider.of<AuthService>(context);  
-    final loginForm = Provider.of<LoginProvider>(context); 
     final Size size = MediaQuery.of(context).size;
     final colors = Theme.of(context).colorScheme;
     final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
@@ -38,7 +37,7 @@ class UserSettingsScreen extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () {
-                  if (!loginForm.isRegister) {
+                  if (!authService.isRegistering) {
                     Navigator.pop(context);
                     return;
                   }
@@ -47,7 +46,7 @@ class UserSettingsScreen extends StatelessWidget {
                       builder: (context) => const HomeScreen()
                     );
                     Navigator.pushReplacement(context, newRoute);
-                    loginForm.isRegister = false;
+                    Future.delayed(const Duration(milliseconds: 500), () => authService.isRegistering = false); 
                     return;
                   }
                   if (!authService.isDisplayNameGenerated) {
@@ -55,7 +54,11 @@ class UserSettingsScreen extends StatelessWidget {
                     return;
                   }
                 }, 
-                icon: Icon(loginForm.isRegister ? Icons.clear_rounded : Icons.arrow_back_rounded),
+                icon: Icon(
+                  !authService.isRegistering 
+                    ? Icons.arrow_back_rounded
+                    : Icons.clear_rounded,
+                ),
               ),
               
               const Spacer(),
