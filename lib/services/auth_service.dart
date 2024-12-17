@@ -222,7 +222,9 @@ class AuthService extends ChangeNotifier {
 
     final String? email = await storage.read(key: 'email');
     final String? password = await storage.read(key: 'password');
-    await loginUser(email!, password!);
+    final String? resp = await loginUser(email!, password!);
+    if (resp != null) return UserLoginStatus.notLogged;
+    
     final String? displayName = await storage.read(key: 'displayName');
     await loadData();
     if (displayName == '') return UserLoginStatus.registering;
