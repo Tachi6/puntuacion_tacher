@@ -1,12 +1,14 @@
 // Photo by <a href="/photographer/muddy-31912">muddy</a> on <a href="/">Freeimages.com</a>
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/services.dart';
 import 'package:image_pixels/image_pixels.dart';
-
+import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
+
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -36,6 +38,7 @@ class DetailsScreen extends StatelessWidget {
           CustomScrollView(
             slivers: [
               _CustomAppBar(wine: wine, user: email, source: source),
+
               SliverList(
                 delegate: SliverChildListDelegate([
           
@@ -52,130 +55,203 @@ class DetailsScreen extends StatelessWidget {
 }
 
 class _CustomAppBar extends StatelessWidget {
+  const _CustomAppBar({
+    required this.wine, 
+    this.user, 
+    required this.source
+  });
 
   final Wines wine;
   final String? user;
   final String source;
 
-  const _CustomAppBar({required this.wine, this.user, required this.source});
+  ImageProvider<Object>? imageProvider() {
+    if (wine.logoBodega != null) return NetworkImage(wine.logoBodega!);
+    return const AssetImage('initial-multiple-background.jpg');
+  }
 
   @override
   Widget build(BuildContext context) {
 
-    final statusBarHeight = View.of(context).padding.top / View.of(context).devicePixelRatio;
-    final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
     final colors = Theme.of(context).colorScheme;
-    final styles = Theme.of(context).textTheme.titleLarge?.copyWith(
-      color: wine.bodega == 'Valenciso' 
-        ? themeColor.isDarkMode 
-          ? colors.surface
-          : colors.inverseSurface
-        : null // TODO with image
-    );
     
-    return SliverAppBar(
-      toolbarHeight: 150 + statusBarHeight,
-      automaticallyImplyLeading: false,
-      pinned: true,
-      floating: false,
-      flexibleSpace: FlexibleSpaceBar(
-        titlePadding: const EdgeInsets.all(0),
-        centerTitle: true,
-        title: Container(
-          width: double.infinity,
-          color: Colors.black12,
-          alignment: Alignment.center,
-          child:Column(
-            children: [
-              SizedBox(
-                height: statusBarHeight
-              ),
+    final statusBarHeight = View.of(context).padding.top / View.of(context).devicePixelRatio;
 
-              Container(
-                height: 48,
-                width: double.infinity,
-                alignment: Alignment.center,
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: wine.bodega == 'Valenciso' 
-                          ? themeColor.isDarkMode 
-                            ? colors.surface
-                            : colors.inverseSurface
-                          : null // TODO with image
-                        ),
-                      onPressed: () => Navigator.pop(context),
+    return ImagePixels(
+      imageProvider: imageProvider(), 
+      builder: (context, img) {
+
+        final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
+        final Color backgroundColor = img.pixelColorAtAlignment!(Alignment.topLeft);
+        Color frontColor;
+        SystemUiOverlayStyle? statusBarMode;
+
+        if(backgroundColor.computeLuminance() > 0.179) {
+          if (themeColor.isDarkMode) {
+            frontColor = colors.surface;
+          }
+          else {
+            frontColor = colors.inverseSurface;
+          }
+          statusBarMode = SystemUiOverlayStyle.dark;
+        }
+        else {
+          if (themeColor.isDarkMode) {
+            frontColor = colors.inverseSurface;
+          }
+          else {
+            frontColor = colors.surface;
+          }
+          statusBarMode = SystemUiOverlayStyle.light;
+        }
+
+        return SliverAppBar(
+          toolbarHeight: 150 + statusBarHeight,
+          systemOverlayStyle: wine.logoBodega != null ? statusBarMode : null,
+          automaticallyImplyLeading: false,
+          pinned: true,
+          floating: false,
+          flexibleSpace: FlexibleSpaceBar(
+            titlePadding: const EdgeInsets.all(0),
+            centerTitle: true,
+            title: _AppBarTextAndButtons(statusBarHeight: statusBarHeight, wine: wine, frontColor: frontColor, user: user, source: source),
+            background: _AppBarBackgroundImage(wine: wine, backgroundColor: backgroundColor),
+          ),
+        );  
+      },
+    );
+  }
+}
+
+class _AppBarTextAndButtons extends StatelessWidget {
+  const _AppBarTextAndButtons({
+    required this.statusBarHeight,
+    required this.wine,
+    required this.frontColor,
+    required this.user,
+    required this.source,
+  });
+
+  final double statusBarHeight;
+  final Wines wine;
+  final Color frontColor;
+  final String? user;
+  final String source;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final styles = Theme.of(context).textTheme.titleLarge?.copyWith(
+      color: wine.logoBodega != null ? frontColor : null
+    );     
+
+    return Container(
+      width: double.infinity,
+      color: Colors.black12,
+      alignment: Alignment.center,
+      child:Column(
+        children: [
+          SizedBox(
+            height: statusBarHeight
+          ),
+    
+          Container(
+            height: 48,
+            width: double.infinity,
+            alignment: Alignment.center,
+            child: Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: wine.logoBodega != null 
+                      ? frontColor
+                      : null
                     ),
-              
-                    const Spacer(),
-              
-                    IconButton(
-                      tooltip: 'Editar logo de la bodega',
-                      onPressed: () {}, 
-                      icon: Icon(
-                        Icons.edit,
-                        color: wine.bodega == 'Valenciso' 
-                          ? themeColor.isDarkMode 
-                            ? colors.surface
-                            : colors.inverseSurface
-                          : null // TODO with image
-                      )
-                    ),
-                  ],
+                  onPressed: () => Navigator.pop(context),
                 ),
-              ),
-
-              const Spacer(),
-              
-              user == null // styles.headlineSmall
-                ?
-                Text('Ficha técnica global', style: styles)
-                :
-                  source == 'latest' 
-                    ?
-                    Text('Valoración de la cata', style: styles)
-                    :
-                    Text('Valoración de mi cata', style: styles),
-
-              const SizedBox(height: 5),             
-            ],
-          ) 
           
-        ),
-        // TODO ingresar imagen de bodega
-        // TODO theme background when there are a logo of bodega with contrast buttons
-        background: (wine.bodega == 'Valenciso') 
-          ?
-          ImagePixels.container(
-            imageProvider: const AssetImage('assets/valenciso.jpg'),
-            colorAlignment: Alignment.bottomLeft,
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: FadeInImage(
-                placeholder: AssetImage('assets/no_image.jpg'), 
-                image: AssetImage('assets/valenciso.jpg'),
-                fit: BoxFit.fitWidth,
-              ),
-            ),
-          )
-          : 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Center(
-              child: AutoSizeText(
-                wine.bodega,
-                textAlign: TextAlign.center,
-                maxLines: wine.bodega.contains(' ') ? 2 : 1,
-                style: const TextStyle(
-                  fontSize: 60,
-                  fontWeight: FontWeight.bold, 
-                  height: 1
+                const Spacer(),
+          
+                IconButton(
+                  tooltip: 'Editar logo de la bodega',
+                  onPressed: () {}, 
+                  icon: Icon(
+                    Icons.edit,
+                    color: wine.logoBodega != null 
+                      ? frontColor
+                      : null
+                  )
                 ),
-              )
+              ],
             ),
           ),
+    
+          const Spacer(),
+          
+          user == null // styles.headlineSmall
+            ?
+            Text('Ficha técnica global', style: styles)
+            :
+              source == 'latest' 
+                ?
+                Text('Valoración de la cata', style: styles)
+                :
+                Text('Valoración de mi cata', style: styles),
+    
+          const SizedBox(height: 5),             
+        ],
+      ),
+    );
+  }
+}
+
+class _AppBarBackgroundImage extends StatelessWidget {
+  const _AppBarBackgroundImage({
+    required this.wine, 
+    required this.backgroundColor
+  });
+
+  final Wines wine;
+  final Color backgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final colors = Theme.of(context).colorScheme;
+
+    if (wine.logoBodega != null) {
+      return Container(
+        color: backgroundColor,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: CachedNetworkImage(
+          imageUrl: wine.logoBodega!,
+          fit: BoxFit.fitWidth,
+          filterQuality: FilterQuality.medium,
+          placeholder: (context, url) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: colors.primary,
+              ),
+            );
+          },
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Center(
+        child: AutoSizeText(
+          wine.bodega,
+          textAlign: TextAlign.center,
+          maxLines: wine.bodega.contains(' ') ? 2 : 1,
+          style: const TextStyle(
+            fontSize: 60,
+            fontWeight: FontWeight.bold, 
+            height: 1
+          ),
+        )
       ),
     );
   }
