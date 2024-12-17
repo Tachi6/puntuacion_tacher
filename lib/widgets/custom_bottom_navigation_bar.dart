@@ -22,7 +22,7 @@ class CustomNavigationBar extends StatelessWidget {
         height: 58,
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.trending_up_outlined), label: 'Valoraciones'),
+            icon: Icon(Icons.trending_up_outlined), label: 'Novedades'),
           NavigationDestination(
             icon: Icon(Icons.wine_bar), label: 'Catas'),
           NavigationDestination(

@@ -18,6 +18,8 @@ import 'package:puntuacion_tacher/search/search.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
+import '../apptheme/apptheme.dart';
+
 PersistentBottomSheetController viewBottomMenu(BuildContext context) {
   return showBottomSheet(
     // clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -35,6 +37,7 @@ class CreateMultipleTasteScreen extends StatelessWidget{
   Widget build(BuildContext context) {
 
     final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
+    final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
     final colors = Theme.of(context).colorScheme;
     final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
     final double opacity = 0.8;
@@ -54,7 +57,7 @@ class CreateMultipleTasteScreen extends StatelessWidget{
             child: BottomImageBackground(image: 'assets/initial-multiple-background.jpg', opacity: opacity),
           ),
 
-          Align(
+          if (!themeColor.isDarkMode) Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               height: 58 + bottomPadding,
@@ -666,7 +669,7 @@ class RowVisibleWines extends StatelessWidget {
       padding: const EdgeInsets.only(left: 5),
       child: Row(
         children: [
-          Text('Añade/oculta tus vinos', style: styles.bodyMedium),
+          Text('Añade y oculta vinos', style: styles.bodyMedium),
                                 
           const Spacer(),
                     

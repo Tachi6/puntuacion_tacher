@@ -46,7 +46,7 @@ class SelectMultipleTaste extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Busca la cata múltiple a realizar en el listado', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+          const Text('Busca la cata múltiple a realizar', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
           Row(
             children: [
               Expanded(

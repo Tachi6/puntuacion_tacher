@@ -138,39 +138,41 @@ class NoResultsWine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {   
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 10),
-
-          Container(
-            alignment: Alignment.center,
-            height: 40,
-            child: titleLabel != null
-              ? Text(titleLabel!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16))
-              : null,
-          ),
-          
-          const SizedBox(height: 20),
-      
-          const SingleWineImage(),
-      
-          const SizedBox(height: 20),
-      
-          buttonLabel != null 
-            ? CustomElevatedButton(
-                width: 170,
-                height: 35, 
-                onPressed: () {
-                  // TODO hacer la funcion del boton
-                },
-                child: const Text('Añadir vino'),
-              )
-            : const SizedBox(
-              height: 35
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 10),
+        
+            Container(
+              alignment: Alignment.center,
+              height: 40,
+              child: titleLabel != null
+                ? Text(titleLabel!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16))
+                : null,
             ),
-        ],
+            
+            const SizedBox(height: 20),
+        
+            const SingleWineImage(),
+        
+            const SizedBox(height: 20),
+        
+            buttonLabel != null 
+              ? CustomElevatedButton(
+                  width: 170,
+                  height: 35, 
+                  onPressed: () {
+                    // TODO hacer la funcion del boton
+                  },
+                  child: const Text('Añadir vino'),
+                )
+              : const SizedBox(
+                height: 35
+              ),
+          ],
+        ),
       ),
     );
   }

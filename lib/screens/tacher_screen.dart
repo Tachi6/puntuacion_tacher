@@ -91,7 +91,7 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
           minRating: 1,
           name: 'vista',
         ),
-
+    
         const Spacer(flex: 1),
         
         RatingBox(
@@ -104,7 +104,7 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
           minRating: 1,
           name: 'nariz',
         ),
-
+    
         const Spacer(flex: 1),
         
         RatingBox(
@@ -117,7 +117,7 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
           minRating: 1,
           name: 'boca',
         ),
-
+    
         const Spacer(flex: 1),
         
         RatingBox(
@@ -130,7 +130,7 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
           minRating: 1,
           name: 'puntos',
         ),
-
+    
         const Spacer(flex: 2),
         
         const Row(
@@ -142,7 +142,7 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
             NotesCommentsBox(titulo: 'Comentarios')
           ]
         ),
-
+    
         const Spacer(flex: 2),
         // Height of BottomSheet + Rating Box Bottom Padding + BottomElement Height
         SizedBox(height: 68 + bottomPadding),
