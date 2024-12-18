@@ -33,28 +33,18 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
       final appBarHeight = Theme.of(context).appBarTheme.toolbarHeight;
       // CUSTOM HEIGHT OF NAVIGATIONBAR
       final navigationBarHeight = Theme.of(context).navigationBarTheme.height;
-      // HEIGHT OF BOTTOM SCREEN ELEMENT
-      final bottomPadding = MediaQuery.of(context).padding.bottom;
-      final bo = MediaQuery.of(context).systemGestureInsets.bottom;
-      print('bottomPadding $bottomPadding');
-      print('bo $bo');
       // HEIGHT OF STATUS
-      final st = MediaQuery.of(context).padding.top;
-      print('st $st');
-      final statusBarHeight = View.of(context).padding.top / View.of(context).devicePixelRatio;
-      print('statusBarHeight $statusBarHeight');
+      final statusBarHeight = MediaQuery.of(context).padding.top;
       // HEIGHT OF WIDGETS: SIZEDBOX + 1ST WIDGET + 2ND WIDGET + 3RD WIDGET
       final widgetsHeight = (screenHeight * 0.01) + 150 + 150 + 85 + backgroundHeight;
       // SCREEN HEIGHT
       final double screenSize = MediaQuery.of(context).size.height;
       // FILLED SPACE IN SCREEN
-      final filledScreen = appBarHeight! + navigationBarHeight! + statusBarHeight + widgetsHeight + bottomPadding + bo; // TODO
-      print('full height $screenHeight');
+      final filledScreen = appBarHeight! + navigationBarHeight! + statusBarHeight + widgetsHeight;
       
       if (filledScreen > screenSize) {
         return backgroundHeight - (filledScreen - screenSize);
       }
-      print(screenSize - (statusBarHeight + appBarHeight + (screenHeight * 0.01) + 150 + 150 + 85 + backgroundHeight + navigationBarHeight));
       return backgroundHeight;
     }
 
@@ -65,7 +55,7 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          const BottomImageBackground(image: 'assets/taste-background.jpg', opacity: 0.8),
+           if (screenHeight > 600) const BottomImageBackground(image: 'assets/taste-background.jpg', opacity: 0.8),
       
           Form(
             child: Column(
@@ -107,8 +97,6 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
                   padding: EdgeInsets.only(right: screenHeight * 0.02, bottom: screenHeight * 0.02),
                   child: _ContinueButton(),
                 ),
-
-                Expanded(child: SizedBox())
               ]
             ),
           ),
