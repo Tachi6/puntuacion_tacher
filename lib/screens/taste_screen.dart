@@ -35,14 +35,20 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
       const double bottomNavigationBarSize = 58;
       // HEIGHT OF BOTTOM SCREEN ELEMENT
       final bottomPadding = MediaQuery.of(context).padding.bottom;
+      final bo = MediaQuery.of(context).systemGestureInsets.bottom;
+      print('bottomPadding $bottomPadding');
+      print('bo $bo');
       // HEIGHT OF STATUS
+      final st = MediaQuery.of(context).padding.top;
+      print('st $st');
       final statusBarHeight = View.of(context).padding.top / View.of(context).devicePixelRatio;
+      print('statusBarHeight $statusBarHeight');
       // HEIGHT OF WIDGETS: SIZEDBOX + 1ST WIDGET + 2ND WIDGET + 3RD WIDGET
       final widgetsHeight = (screenHeight * 0.01) + 150 + 150 + 85 + backgroundHeight;
       // SCREEN HEIGHT
       final double screenSize = MediaQuery.of(context).size.height;
       // FILLED SPACE IN SCREEN
-      final filledScreen = appBarSize + bottomNavigationBarSize + statusBarHeight + widgetsHeight + bottomPadding;
+      final filledScreen = appBarSize + bottomNavigationBarSize + statusBarHeight + widgetsHeight + bottomPadding + bo; // TODO
       
       if (filledScreen > screenSize) {
         return backgroundHeight - (filledScreen - screenSize);
@@ -59,7 +65,7 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
       body: Stack(
         children: [
           const BottomImageBackground(image: 'assets/taste-background.jpg', opacity: 0.8),
-
+      
           Form(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -68,7 +74,7 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
                 SizedBox(
                   height: screenHeight * 0.01,
                 ), 
-
+      
                 Container(
                   width: double.infinity,
                   height: 150,
@@ -76,16 +82,16 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
                   alignment: Alignment.centerRight,
                   child: const RadioTaste(),
                 ),
-
+      
                 const Spacer(),
-
+      
                 Container(
                   width: double.infinity,
                   height: 150,
                   alignment: Alignment.center,
                   child: _SecondFormWidget(),
                 ),
-
+      
                 const Spacer(), 
                     
                 Padding(
@@ -94,7 +100,7 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
                 ),
                     
                 const Spacer(),
-
+      
                 Container(
                   height: innerSizedBox(),
                   padding: EdgeInsets.only(right: screenHeight * 0.02, bottom: screenHeight * 0.02),
