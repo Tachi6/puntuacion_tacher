@@ -120,6 +120,9 @@ class AppTheme {
       dialogTheme: DialogTheme(
         shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(15)),
         elevation: 2,
+      ),
+      navigationBarTheme: const NavigationBarThemeData(
+        height: 58,
       ),      // iconTheme: IconThemeData(color: )
     );
   }

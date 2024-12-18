@@ -19,7 +19,6 @@ class CustomNavigationBar extends StatelessWidget {
     
     return SizedBox(
       child: NavigationBar(
-        height: 58,
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.trending_up_outlined), label: 'Novedades'),

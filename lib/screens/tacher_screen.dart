@@ -35,6 +35,8 @@ class _TacherScreenState extends State<TacherScreen> with AutomaticKeepAliveClie
   Widget build(BuildContext context) {
     super.build(context);
 
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Stack(
       children: [
         const FullScreenBackground(image: 'assets/tacher-background.jpg', opacity: 0.3),
@@ -47,7 +49,9 @@ class _TacherScreenState extends State<TacherScreen> with AutomaticKeepAliveClie
               appBarTitle: widget.appBarTitle!
             ),
           backgroundColor: Colors.transparent,
-          body: const _CustomTacherBody(),
+          body: screenHeight < 600
+            ? const SingleChildScrollView(child: _CustomTacherBody(isLittleScreen: true))
+            : const _CustomTacherBody(isLittleScreen: false),
           bottomSheet: widget.bottomSheet,
         ),
       ],
@@ -59,14 +63,15 @@ class _TacherScreenState extends State<TacherScreen> with AutomaticKeepAliveClie
 }
 
 class _CustomTacherBody extends StatefulWidget {
-  const _CustomTacherBody();
+  const _CustomTacherBody({required this.isLittleScreen});
+
+  final bool isLittleScreen;
 
   @override
   State<_CustomTacherBody> createState() => _CustomTacherBodyState();
 }
 
 class _CustomTacherBodyState extends State<_CustomTacherBody> {
-
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +97,7 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
           name: 'vista',
         ),
     
-        const Spacer(flex: 1),
+        if (!widget.isLittleScreen) const Spacer(flex: 1),
         
         RatingBox(
           titleText: textos.narizTitulo,
@@ -105,7 +110,7 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
           name: 'nariz',
         ),
     
-        const Spacer(flex: 1),
+        if (!widget.isLittleScreen) const Spacer(flex: 1),
         
         RatingBox(
           titleText: textos.bocaTitulo,
@@ -118,7 +123,7 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
           name: 'boca',
         ),
     
-        const Spacer(flex: 1),
+        if (!widget.isLittleScreen) const Spacer(flex: 1),
         
         RatingBox(
           titleText: textos.puntosTitulo,
@@ -131,7 +136,7 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
           name: 'puntos',
         ),
     
-        const Spacer(flex: 2),
+        if (!widget.isLittleScreen) const Spacer(flex: 2),
         
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -143,7 +148,7 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
           ]
         ),
     
-        const Spacer(flex: 2),
+        if (!widget.isLittleScreen) const Spacer(flex: 2),
         // Height of BottomSheet + Rating Box Bottom Padding + BottomElement Height
         SizedBox(height: 68 + bottomPadding),
       ]

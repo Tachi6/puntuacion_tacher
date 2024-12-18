@@ -30,9 +30,9 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
     
     double innerSizedBox() {
       // CUSTOM HEIGHT OF APPBAR
-      const double appBarSize = 0;
-      // CUSTOM HEIGHT OF BOTTOMNAVIGATIONBAR
-      const double bottomNavigationBarSize = 58;
+      final appBarHeight = Theme.of(context).appBarTheme.toolbarHeight;
+      // CUSTOM HEIGHT OF NAVIGATIONBAR
+      final navigationBarHeight = Theme.of(context).navigationBarTheme.height;
       // HEIGHT OF BOTTOM SCREEN ELEMENT
       final bottomPadding = MediaQuery.of(context).padding.bottom;
       final bo = MediaQuery.of(context).systemGestureInsets.bottom;
@@ -48,12 +48,13 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
       // SCREEN HEIGHT
       final double screenSize = MediaQuery.of(context).size.height;
       // FILLED SPACE IN SCREEN
-      final filledScreen = appBarSize + bottomNavigationBarSize + statusBarHeight + widgetsHeight + bottomPadding + bo; // TODO
+      final filledScreen = appBarHeight! + navigationBarHeight! + statusBarHeight + widgetsHeight + bottomPadding + bo; // TODO
+      print('full height $screenHeight');
       
       if (filledScreen > screenSize) {
         return backgroundHeight - (filledScreen - screenSize);
       }
-
+      print(screenSize - (statusBarHeight + appBarHeight + (screenHeight * 0.01) + 150 + 150 + 85 + backgroundHeight + navigationBarHeight));
       return backgroundHeight;
     }
 
@@ -106,6 +107,8 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
                   padding: EdgeInsets.only(right: screenHeight * 0.02, bottom: screenHeight * 0.02),
                   child: _ContinueButton(),
                 ),
+
+                Expanded(child: SizedBox())
               ]
             ),
           ),
