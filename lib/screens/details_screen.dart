@@ -223,7 +223,6 @@ class _AppBarBackgroundImage extends StatelessWidget {
     if (wine.logoBodega != null) {
       return Container(
         color: backgroundColor,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: CachedNetworkImage(
           imageUrl: wine.logoBodega!,
           fit: BoxFit.fitWidth,

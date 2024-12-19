@@ -112,7 +112,7 @@ class CreateNewWineForm extends StatelessWidget {
         reverse: false,
         child: Form(
           key: wineForm.formKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
+          autovalidateMode: AutovalidateMode.always,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -186,7 +186,8 @@ class CreateNewWineForm extends StatelessWidget {
                 label: 'Variedades', 
                 initialValue: wine.variedades, 
                 onChanged: (value) => wine.variedades = value, 
-                maxLines: 2, validator: null
+                maxLines: 2, 
+                validator: null
               ),
          
               TextFormFieldGraduacion(wine: wine),
@@ -196,7 +197,16 @@ class CreateNewWineForm extends StatelessWidget {
                 initialValue: wine.descripcion, 
                 onChanged: (value) => wine.descripcion = value,
                 maxLines: 3, 
-              validator: null),
+                validator: null
+              ),
+          
+              TextFormFieldText(
+                label: 'Imagen del vino (url)', 
+                initialValue: '', 
+                onChanged: (value) => wine.imagenVino = value,
+                maxLines: 1, 
+                validator: null,
+              ),
           
               const SizedBox(height: 25),
           

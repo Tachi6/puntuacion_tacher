@@ -74,6 +74,14 @@ class SearchTasteWine extends StatelessWidget {
 
                   AddWineButton(
                     onPressedSave: () async {
+                      if (wineForm.wine.imagenVino != null && wineForm.wine.imagenVino != '') {
+                        final urlChecked = await winesService.checkErrorImage(wineForm.wine.imagenVino);
+                        if (urlChecked == null && context.mounted) {
+                          NotificationsService.showFlushBar('URL DE IMAGEN INCORRECTA', context);
+                          return;
+                        }
+                      }
+
                       if (wineForm.isValidForm()) {
                         wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
                         final String wineId = await winesService.createWine(wineForm.wine);
