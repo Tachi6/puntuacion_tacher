@@ -318,9 +318,8 @@ class SendTasteButton extends StatelessWidget {
           NotificationsService.showSnackbar('RELLENA TODOS LOS CAMPOS', context);
           return;
         } 
-        // Mando updates de los diferentes campos al wine
+        // Mando updates de los diferentes campos al wine y creo el wineTaste
         wineForm.addUpdatesToWine();
-        // Mando wine al servidor
         final WineTaste wineTaste = WineTasteMapper.winesToWinesTaste(
           wine: winesService.selectedWine!,
           ratingVista: wineForm.ratingVista,
@@ -328,6 +327,9 @@ class SendTasteButton extends StatelessWidget {
           ratingBoca: wineForm.ratingBoca,
           ratingPuntos: wineForm.ratingPuntos,              
         );
+        // Lanzo la confirmacion
+        showCustomDialog(context, child: PointsBox(wine: wineForm.wine, puntuacionFinal: wineForm.puntosFinal));
+        // Mando wine al servidor
         if (wineForm.wine.id == '-1') {
           final String newId = await winesService.createWine(winesService.selectedWine!);
           wineTaste.id = newId;
@@ -337,12 +339,6 @@ class SendTasteButton extends StatelessWidget {
           await winesService.updateWine(winesService.selectedWine!);
           await winesService.saveDeleteLatestTastedWine(wineTaste);
         }
-        // Mando wine a la confirmacion
-        if (!context.mounted) return;
-        showCustomDialog(context, child: PointsBox(wine: wineForm.wine, puntuacionFinal: wineForm.puntosFinal));
-  
-        // Elimino registros para poder valorar de nuevo
-        wineForm.resetSettings();
       },
       child: const Text('Enviar Valoración'),
     );

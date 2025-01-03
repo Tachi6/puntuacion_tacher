@@ -19,9 +19,11 @@ class CheckAuthScreen extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     Future<void> loadData() async {
-      await winesService.loadWines();
-      await winesService.loadWinesTaste();
-      await multipleService.loadMultiples();
+      await Future.wait([
+        winesService.loadWines(),
+        winesService.loadWinesTaste(),
+        multipleService.loadMultiples()
+      ]);
     }
 
     return Scaffold(

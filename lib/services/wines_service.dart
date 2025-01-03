@@ -51,11 +51,11 @@ class WinesService extends ChangeNotifier {
 
     winesByIndex = tempWinesByIndex;
 
-    // TODO lo hago asi porque no me funciona el Hero manejando el error. Pensar otra forma
-    for (Wines wine in winesByIndex) {
-      wine.imagenVino = await checkErrorImage(wine.imagenVino);
-      wine.logoBodega = await checkErrorImage(wine.logoBodega);
-    }
+    // // TODO lo hago asi porque no me funciona el Hero manejando el error. Pensar otra forma
+    // for (Wines wine in winesByIndex) {
+    //   wine.imagenVino = await checkErrorImage(wine.imagenVino);
+    //   wine.logoBodega = await checkErrorImage(wine.logoBodega);
+    // }
 
     // Wines sort by points
     updateWinesByRate();
@@ -228,17 +228,17 @@ class WinesService extends ChangeNotifier {
     return winesByIndex[wineIndex];
   }
 
-  Future<String?> checkErrorImage(String? url) async {
-    if (url == null) return null;
+  Future<bool> isValidImage(String? url) async {
+    if (url == null) return false;
 
     final bool isURLValid = Uri.parse(url).host.isNotEmpty;
-    if (!isURLValid) return null; 
+    if (!isURLValid) return false; 
 
     final Uri uri = Uri.parse(url);
     final resp = await http.head(uri);
-    if (resp.statusCode != 200) return null;
+    if (resp.statusCode != 200) return false;
       
-    return url;
+    return true;
   }
 
   Future<String> likesCount(Wines wine) async {

@@ -20,6 +20,7 @@ class PointsBox extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final taste = Provider.of<VisibleOptionsProvider>(context);
+    final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: true);
     final screenProvider = Provider.of<ScreensProvider>(context);
     final winesService = Provider.of<WinesService>(context);
     final styles = Theme.of(context).textTheme;
@@ -50,18 +51,21 @@ class PointsBox extends StatelessWidget {
           ),
         ),
         cancelText: 'Cerrar',
-        onPressedCancel: () {
+        onPressedCancel: () async {
+          // Cierro dialog
           Navigator.pop(context);
-
-          screenProvider.currentScreen = 0;
-          
+          // Limpio el taste_screen
           taste.clearWidgets();
           winesService.selectedWine = null;
-
+          // Vuelvo a pantalla de inicio
+          screenProvider.currentScreen = 0;
           final routeDetails = CupertinoPageRoute(
             builder: (context) => const HomeScreen()
           );
           Navigator.pushReplacement(context, routeDetails);
+          // Elimino registros para poder valorar de nuevo (retaso para que cambie de pagina)
+          await Future.delayed(const Duration(milliseconds: 300));
+          wineForm.resetSettings();
         },
       )
       
