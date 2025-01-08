@@ -38,29 +38,36 @@ class UserSettingsScreen extends StatelessWidget {
               automaticallyImplyLeading: false, 
               actions: [
                 IconButton(
-                  onPressed: () {
-                    if (!authService.isRegistering) {
+                  onPressed: () async {
+                    FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
+                    
+                    if (authService.tempDisplayName == authService.userDisplayName) {
                       Navigator.pop(context);
                       return;
                     }
-                    if (authService.isDisplayNameGenerated) {
-                      final newRoute = CupertinoPageRoute(
-                        builder: (context) => const HomeScreen()
-                      );
-                      Navigator.pushReplacement(context, newRoute);
-                      Future.delayed(const Duration(milliseconds: 500), () => authService.isRegistering = false); 
+
+                    if (authService.tempDisplayName == '') {
+                      NotificationsService.showSnackbar('NOMBRE DE USUARIO VACIO', context);
                       return;
                     }
-                    if (!authService.isDisplayNameGenerated) {
-                      NotificationsService.showSnackbar('El nombre de usuario es obligatorio', context);
+
+                    if (authService.tempDisplayName.trim().length < 4) {
+                      NotificationsService.showSnackbar('NOMBRE DE USUARIO MUY CORTO', context);
+                      return;
+                    }
+
+                    if (await authService.isUniqueDisplayName(authService.tempDisplayName)) {
+                      await authService.renameUser(authService.tempDisplayName);
+                      if (context.mounted) NotificationsService.showSnackbar('NOMBRE DE USUARIO ACTUALIZADO', context);
+                      if (context.mounted) Navigator.pop(context);
+                      return;
+                    }
+                    if (!await authService.isUniqueDisplayName(authService.tempDisplayName)) {
+                      if (context.mounted) NotificationsService.showSnackbar('NOMBRE DE USUARIO YA UTILIZADO', context);
                       return;
                     }
                   }, 
-                  icon: Icon(
-                    !authService.isRegistering 
-                      ? Icons.arrow_back_rounded
-                      : Icons.clear_rounded,
-                  ),
+                  icon: const Icon(Icons.arrow_back_rounded),
                 ),
                 
                 const Spacer(),
@@ -152,164 +159,116 @@ class _UserSettingsBody extends StatelessWidget {
             child: Container(
               width: size.width * 0.85,
               padding: const EdgeInsets.all(20),
-              child: Form(
-                key: authService.formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                child: Column(
-                  children: [
-                    SettingsOptions(
-                      leading: Icons.alternate_email_outlined,
-                      title: 'Correo electrónico',
-                      content: Text(authService.userEmail, style: const TextStyle(fontSize: 14))
-                    ),
-                             
-                    SettingsOptions(
-                      leading: Icons.person, 
-                      title: 'Nombre de usuario', 
-                      content: Row(
-                        children: [
-                          const SizedBox(width: 48),
-    
-                          Expanded(
-                            child: TextFormField(
-                              initialValue: authService.userDisplayName,
-                              enableInteractiveSelection: false,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 14),
-                              decoration: const InputDecoration(
-                                isCollapsed: true,
-                                border: UnderlineInputBorder(borderSide: BorderSide.none),
-                                floatingLabelBehavior: FloatingLabelBehavior.never,
-                                alignLabelWithHint: true,
-                                errorStyle: TextStyle(fontSize: 0),
-                              ),
-                              onChanged: (value) {
-                                authService.isSavingUser = true;
-                                authService.tempDisplayName = value;
-                              },
-                              validator: (value) {
-                                if (value == null) {
-                                  return '';
-                                }
-                                if (value.trim().length < 4) {
-                                  return '';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-    
-                          AnimatedOpacity(
-                            opacity: authService.isSavingUser ? 1 : 0,
-                            duration: const Duration(milliseconds: 300),
-                            child: IconButton(
-                              padding: const EdgeInsets.all(0),
-                              onPressed: 
-                                authService.isSavingUser  
-                                ? () async {
-                                  if (authService.tempDisplayName.trim().length < 4) {
-                                    NotificationsService.showSnackbar('NOMBRE DE USUARIO MUY CORTO', context);
-                                  }
-                                  else if (await authService.isUniqueDisplayName(authService.tempDisplayName) && authService.isValidForm()) {
-                                    await authService.renameUser(authService.tempDisplayName);
-                                    if (context.mounted) NotificationsService.showSnackbar('NOMBRE DE USUARIO ACTUALIZADO', context);
-                                    authService.isSavingUser = false;
-                                    authService.isDisplayNameGenerated = true;
-                                  }
-                                  else if (context.mounted) {
-                                    NotificationsService.showSnackbar('NOMBRE DE USUARIO YA UTILIZADO', context);
-                                  }
-                                } 
-                                : null,
-                              icon: const Icon(Icons.check_rounded),
-                            ),
-                          ),
-                        ],
-                      )
-                    ),
-                             
-                    SettingsOptions(
-                      leading: Icons.image_outlined, 
-                      title: 'Imagen de perfil', 
-                      content: Row(
-                        children: [
-                          const SizedBox(width: 6),
-                
-                          Icon(Icons.upload_file_outlined, color: colors.outline), // TODO cambiar color al implementar
-                
-                          Expanded(
-                            child: TextFormField(
-                              initialValue: 'Función no disponible',
-                              enabled: false,
-                              readOnly: true,
-                              enableInteractiveSelection: false,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 14, color: colors.outline),
-                              decoration: const InputDecoration(
-                                isCollapsed: true,
-                                border: UnderlineInputBorder(borderSide: BorderSide.none),
-                                floatingLabelBehavior: FloatingLabelBehavior.never,
-                                alignLabelWithHint: true,
-                              ),
-                              onChanged: (value) {
-                                
-                              },
-                            ),
-                          ),
-                
-                          Icon(Icons.photo_camera_outlined, color: colors.outline), // TODO cambiar color al implementar
-                
-                          const SizedBox(width: 6),
-                        ],
-                      )
-                    ),
-                             
-                    SettingsOptions(
-                      leading: Icons.palette_outlined, 
-                      title: 'Tema de color',
-                      content: DropdownMenu(
-                        width: 173,
-                        label: Center(
-                          child: Transform.translate(
-                            offset: const Offset(4, 0), 
-                            child: Text(themeColor.getColorName()!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14))
-                          ),
-                        ),
-                        initialSelection: themeColor.themeColor,
-                        enableSearch: false,
-                        enableFilter: false,
-                        leadingIcon: const SizedBox(width: 32,), //48
-                        textStyle: const TextStyle(fontSize: 14),
-                        trailingIcon: const SizedBox(), // 32
-                        expandedInsets: const EdgeInsets.all(0),
-                        inputDecorationTheme: const InputDecorationTheme(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.all(0),
-                          isDense: true,
-                          isCollapsed: false,
-                        ),
-                        dropdownMenuEntries: themeColor.dropDownThemeEntries(),
-                        menuStyle: MenuStyle(
-                          alignment: Alignment.lerp(Alignment.centerLeft, Alignment.centerRight, 0.17)
-                        ),
-                        onSelected: (color) => themeColor.setThemeColor(color!),
+              child: Column(
+                children: [
+                  SettingsOptions(
+                    leading: Icons.alternate_email_rounded,
+                    title: 'Correo electrónico',
+                    content: Text(authService.userEmail, style: const TextStyle(fontSize: 14))
+                  ),
+                           
+                  SettingsOptions(
+                    leading: Icons.person_rounded, 
+                    title: 'Nombre de usuario', 
+                    content: TextFormField(
+                      initialValue: authService.userDisplayName,
+                      enableInteractiveSelection: false,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 14),
+                      decoration: const InputDecoration(
+                        isCollapsed: true,
+                        border: UnderlineInputBorder(borderSide: BorderSide.none),
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        alignLabelWithHint: true,
+                        errorStyle: TextStyle(fontSize: 0),
                       ),
+                      onChanged: (value) {
+                        authService.tempDisplayName = value;
+                      },
                     ),
-                    GestureDetector(
-                      onTap: () => themeColor.setIsDarkMode(),
-                      child: SettingsOptions(
-                        leading: Icons.dark_mode, 
-                        title: 'Modo oscuro',
-                        content: Text(
-                          themeColor.isDarkMode
-                            ? 'Activado'
-                            : 'Desactivado', 
-                          style: const TextStyle(fontSize: 14)
+                  ),
+                           
+                  SettingsOptions(
+                    leading: Icons.image_rounded, 
+                    title: 'Imagen de perfil', 
+                    content: Row(
+                      children: [
+                        const SizedBox(width: 6),
+              
+                        Icon(Icons.upload_file_rounded, color: colors.outline), // TODO cambiar color al implementar
+              
+                        Expanded(
+                          child: TextFormField(
+                            initialValue: 'Función no disponible',
+                            enabled: false,
+                            readOnly: true,
+                            enableInteractiveSelection: false,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 14, color: colors.outline),
+                            decoration: const InputDecoration(
+                              isCollapsed: true,
+                              border: UnderlineInputBorder(borderSide: BorderSide.none),
+                              floatingLabelBehavior: FloatingLabelBehavior.never,
+                              alignLabelWithHint: true,
+                            ),
+                            onChanged: (value) {
+                              
+                            },
+                          ),
+                        ),
+              
+                        Icon(Icons.photo_camera_rounded, color: colors.outline), // TODO cambiar color al implementar
+              
+                        const SizedBox(width: 6),
+                      ],
+                    )
+                  ),
+                           
+                  SettingsOptions(
+                    leading: Icons.palette_rounded, 
+                    title: 'Tema de color',
+                    content: DropdownMenu(
+                      width: 173,
+                      label: Center(
+                        child: Transform.translate(
+                          offset: const Offset(4, 0), 
+                          child: Text(themeColor.getColorName()!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14))
                         ),
                       ),
+                      initialSelection: themeColor.themeColor,
+                      enableSearch: false,
+                      enableFilter: false,
+                      leadingIcon: const SizedBox(width: 32,), //48
+                      textStyle: const TextStyle(fontSize: 14),
+                      trailingIcon: const SizedBox(), // 32
+                      expandedInsets: const EdgeInsets.all(0),
+                      inputDecorationTheme: const InputDecorationTheme(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.all(0),
+                        isDense: true,
+                        isCollapsed: false,
+                      ),
+                      dropdownMenuEntries: themeColor.dropDownThemeEntries(),
+                      menuStyle: MenuStyle(
+                        alignment: Alignment.lerp(Alignment.centerLeft, Alignment.centerRight, 0.17)
+                      ),
+                      onSelected: (color) => themeColor.setThemeColor(color!),
                     ),
-                  ],
-                ),
+                  ),
+                  GestureDetector(
+                    onTap: () => themeColor.setIsDarkMode(),
+                    child: SettingsOptions(
+                      leading: Icons.dark_mode_rounded, 
+                      title: 'Modo oscuro',
+                      content: Text(
+                        themeColor.isDarkMode
+                          ? 'Activado'
+                          : 'Desactivado', 
+                        style: const TextStyle(fontSize: 14)
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

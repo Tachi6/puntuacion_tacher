@@ -282,7 +282,7 @@ class ValidateUserButton extends StatelessWidget {
             await multipleService.loadMultiples();
            
             final newRoute = CupertinoPageRoute(
-              builder: (context) => authService.userDisplayName == '' ? const UserSettingsScreen() : const HomeScreen()
+              builder: (context) => authService.userDisplayName == '' ? const EnterDisplayNameScreen() : const HomeScreen()
             );
             if (context.mounted) Navigator.pushReplacement(context, newRoute);
             // FOR NOT VIEW 'ingresar' MESSAGE IF THERE ARE A LOGOUT

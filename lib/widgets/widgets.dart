@@ -8,6 +8,7 @@ export 'package:puntuacion_tacher/widgets/custom_alert_dialog.dart';
 export 'package:puntuacion_tacher/widgets/custom_bottom_navigation_bar.dart';
 export 'package:puntuacion_tacher/widgets/custom_bottom_sheet.dart';
 export 'package:puntuacion_tacher/widgets/custom_elevated_button.dart';
+export 'package:puntuacion_tacher/widgets/display_name_background.dart';
 export 'package:puntuacion_tacher/widgets/full_screen_background.dart';
 export 'package:puntuacion_tacher/widgets/hidden_taste.dart';
 export 'package:puntuacion_tacher/widgets/list_best.dart';

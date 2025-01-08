@@ -34,7 +34,7 @@ class CheckAuthScreen extends StatelessWidget {
             if (snapshot.hasData && snapshot.data! == UserLoginStatus.registering) {
               Future.microtask(() async {
                 final routeDetails = CupertinoPageRoute(
-                  builder: (context) => const UserSettingsScreen(),
+                  builder: (context) => const EnterDisplayNameScreen(),
                 );
 
                 if (context.mounted) Navigator.pushReplacement(context, routeDetails);

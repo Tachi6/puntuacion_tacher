@@ -20,14 +20,11 @@ class AuthService extends ChangeNotifier {
   String userEmail = '';
   String userDisplayName = '';
   String _tempDisplayName = '';
-  bool _isSavingUser = false;
   bool _isUserLogued = false;
-  bool _isregistering = false;
-  bool _isDisplayNameGenerated = false;
 
   final storage = const FlutterSecureStorage();
 
-  bool isValidForm() {
+  bool isValidLoginRegister() {
     return formKey.currentState?.validate() ?? false;
   }
 
@@ -56,7 +53,6 @@ class AuthService extends ChangeNotifier {
       await storage.write(key: 'localId', value: decodedResp['localId']); // TODO trabajar con localId en vez que con email en app y en bd
 
       isUserLogued = true;
-      isRegistering = true;
 
       notifyListeners();
       // To refresh user auto every 55 minuts
@@ -96,12 +92,9 @@ class AuthService extends ChangeNotifier {
       await storage.write(key: 'displayName', value: decodedResp['displayName']);
       await storage.write(key: 'localId', value: decodedResp['localId']);
       userDisplayName = decodedResp['displayName'];
+      tempDisplayName = decodedResp['displayName'];
 
       isUserLogued = true;
-      if (userDisplayName == '') {
-        isRegistering = true;
-        isDisplayNameGenerated = false;
-      }
 
       notifyListeners();
       // To refresh user auto every 55 minuts
@@ -197,6 +190,7 @@ class AuthService extends ChangeNotifier {
     if (decodedResp.containsKey('displayName')) {
       await storage.write(key: 'displayName', value: decodedResp['displayName']);
       userDisplayName = decodedResp['displayName'];
+      tempDisplayName = decodedResp['displayName'];
       notifyListeners();
 
       return null;
@@ -209,10 +203,7 @@ class AuthService extends ChangeNotifier {
   Future logout() async {
     userDisplayName = '';
     _tempDisplayName = '';
-    _isSavingUser = false;
     _isUserLogued = false;
-    _isregistering = false;
-    _isDisplayNameGenerated = false;
     await storage.deleteAll();
   }
 
@@ -240,31 +231,10 @@ class AuthService extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get isSavingUser => _isSavingUser;
-
-  set isSavingUser(bool isSaving) {
-    _isSavingUser = isSaving;
-    notifyListeners();
-  }
-
   bool get isUserLogued => _isUserLogued;
 
   set isUserLogued(bool isUserLogued) {
     _isUserLogued = isUserLogued;
-    notifyListeners();
-  }
-
-  bool get isDisplayNameGenerated => _isDisplayNameGenerated;
-
-  set isDisplayNameGenerated(bool value) {
-    _isDisplayNameGenerated = value;
-    notifyListeners();
-  }
-
-  bool get isRegistering => _isregistering;
-
-  set isRegistering(bool value) {
-    _isregistering = value;
     notifyListeners();
   }
 }
