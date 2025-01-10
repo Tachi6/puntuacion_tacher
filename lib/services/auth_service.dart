@@ -201,10 +201,10 @@ class AuthService extends ChangeNotifier {
   }
 
   Future logout() async {
+    await storage.deleteAll();
     userDisplayName = '';
     _tempDisplayName = '';
     _isUserLogued = false;
-    await storage.deleteAll();
   }
 
   Future<UserLoginStatus> isUserLoggedLoadData(Future<void> Function() loadData) async {

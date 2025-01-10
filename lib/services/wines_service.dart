@@ -27,6 +27,15 @@ class WinesService extends ChangeNotifier {
   bool isLoading = true;
   bool isSaving = false;
 
+  String _refreshedLogo = '';
+
+  String get refreshedLogo => _refreshedLogo;
+
+  set refreshedLogo(String newLogo) {
+    _refreshedLogo = newLogo;
+    notifyListeners();
+  }
+
   WinesService();
 
   Future<void> loadWines() async {
@@ -239,6 +248,13 @@ class WinesService extends ChangeNotifier {
     if (resp.statusCode != 200) return false;
       
     return true;
+  }
+
+  String changeWineLogo(Wines wine) {
+    if (refreshedLogo == '') {
+      return wine.logoBodega!;
+    }
+    return refreshedLogo;
   }
 
   Future<String> likesCount(Wines wine) async {

@@ -128,9 +128,7 @@ class _UserSettingsBody extends StatelessWidget {
                     backgroundColor: colors.onPrimaryFixedVariant,
                     radius: 80,
                     child: Text(
-                      authService.userDisplayName == ''
-                        ? authService.userEmail[0].toUpperCase()
-                        : authService.userDisplayName[0].toUpperCase(),
+                      authService.userDisplayName[0],
                       style: TextStyle(color: colors.surface, fontSize: 100)
                     ),
                   ),
@@ -304,9 +302,8 @@ class SettingsEndButtons extends StatelessWidget {
           Text('Logout', style: TextStyle(fontSize: 14), textAlign: TextAlign.center),
         ],
       ),
-      onPressed: () {
+      onPressed: () async {
         Navigator.pop(context);
-        authService.logout();
         screenProvider.currentScreen = 0;
         screenProvider.multipleScreen = 0;
         themeColor.setDefaultTheme();
@@ -314,6 +311,7 @@ class SettingsEndButtons extends StatelessWidget {
           builder: (context) => const LoginScreen()
         );
         Navigator.push(context, initialRoute);
+        await authService.logout();
       },
     );
   }

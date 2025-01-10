@@ -30,27 +30,30 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          const BottomImageBackground(image: 'assets/details-background.jpg', opacity: 0.4),
-
-          CustomScrollView(
-            slivers: [
-              _CreateSliverAppBar(wine: wine),
-
-              SliverList(
-                delegate: SliverChildListDelegate([
-          
-                  _WinePoster(wine: wine, wineTaste: wineTaste, user: email, source: source)
-                
-                ])
-              )
-            ],
-          ),
-        ],
-      )
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            const BottomImageBackground(image: 'assets/details-background.jpg', opacity: 0.4),
+      
+            CustomScrollView(
+              slivers: [
+                _CreateSliverAppBar(wine: wine),
+      
+                SliverList(
+                  delegate: SliverChildListDelegate([
+            
+                    _WinePoster(wine: wine, wineTaste: wineTaste, user: email, source: source)
+                  
+                  ])
+                )
+              ],
+            ),
+          ],
+        )
+      ),
     );
   }
 }
@@ -249,6 +252,7 @@ class _SliverAppBarButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final winesService = Provider.of<WinesService>(context);
     final statusBarHeight = View.of(context).padding.top / View.of(context).devicePixelRatio;
 
     return Container(
@@ -272,7 +276,10 @@ class _SliverAppBarButtons extends StatelessWidget {
                     Icons.arrow_back,
                     color: frontColor
                     ),
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    winesService.refreshedLogo = '';
+                  }
                 ),
           
                 const Spacer(),
@@ -308,10 +315,12 @@ class _CustomBackgroundImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
+    final winesService = Provider.of<WinesService>(context);
     final colors = Theme.of(context).colorScheme;
 
     return Image.network(
-      wine.logoBodega!,
+      // wine.logoBodega!,
+      winesService.changeWineLogo(wine),
       fit: BoxFit.cover,
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) return child;
@@ -592,6 +601,7 @@ class _UrlDialogState extends State<UrlDialog> {
               NotificationsService.showFlushBar('URL DE IMAGEN INCORRECTA', context);
               return;
             }
+            winesService.refreshedLogo = logoImageUrl!;
             widget.wine.logoBodega = logoImageUrl; // TODO RELOAD IMAGE
             winesService.updateWine(widget.wine);
             if (context.mounted) Navigator.pop(context);
