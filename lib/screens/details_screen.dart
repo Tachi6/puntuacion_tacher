@@ -72,26 +72,24 @@ class _ContainerSliverAppBar extends StatelessWidget {
 
     return winesService.refreshLogo 
       ? _CustomLogoImage(wine: wine)
-      : 
-
-    FutureBuilder(
-      future: winesService.isValidImage(wine.logoBodega), 
-      builder: (context, snapshot) {
-        if (snapshot.data == null) {
-          return _LoadingLogoImage(
+      : FutureBuilder(
+        future: winesService.isValidImage(wine.logoBodega), 
+        builder: (context, snapshot) {
+          if (snapshot.data == null) {
+            return _LoadingLogoImage(
+              wine: wine, 
+            );
+          }
+          if (snapshot.data!) {
+            return _CustomLogoImage(
+              wine: wine,
+            );
+          }
+          return _ErrorLogoImage(
             wine: wine, 
           );
-        }
-        if (snapshot.data!) {
-          return _CustomLogoImage(
-            wine: wine,
-          );
-        }
-        return _ErrorLogoImage(
-          wine: wine, 
-        );
-      },
-    );
+        },
+      );
   }
 }
 
