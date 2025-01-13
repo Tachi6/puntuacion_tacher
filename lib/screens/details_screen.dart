@@ -1,6 +1,6 @@
 // Photo by <a href="/photographer/muddy-31912">muddy</a> on <a href="/">Freeimages.com</a>
 
-import 'package:cached_network_image/cached_network_image.dart'; // TODO delete, and pubspect too
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -40,7 +40,7 @@ class DetailsScreen extends StatelessWidget {
       
             CustomScrollView(
               slivers: [
-                _CreateSliverAppBar(wine: wine),
+                _ContainerSliverAppBar(wine: wine),
       
                 SliverList(
                   delegate: SliverChildListDelegate([
@@ -58,8 +58,8 @@ class DetailsScreen extends StatelessWidget {
   }
 }
 
-class _CreateSliverAppBar extends StatelessWidget {
-  const _CreateSliverAppBar({
+class _ContainerSliverAppBar extends StatelessWidget {
+  const _ContainerSliverAppBar({
     required this.wine, 
   });
 
@@ -68,9 +68,13 @@ class _CreateSliverAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final winesService = Provider.of<WinesService>(context, listen: false);
+    final winesService = Provider.of<WinesService>(context);
 
-    return FutureBuilder(
+    return winesService.refreshLogo 
+      ? _CustomLogoImage(wine: wine)
+      : 
+
+    FutureBuilder(
       future: winesService.isValidImage(wine.logoBodega), 
       builder: (context, snapshot) {
         if (snapshot.data == null) {
@@ -278,7 +282,7 @@ class _SliverAppBarButtons extends StatelessWidget {
                     ),
                   onPressed: () {
                     Navigator.pop(context);
-                    winesService.refreshedLogo = '';
+                    winesService.refreshLogo = false;
                   }
                 ),
           
@@ -315,22 +319,20 @@ class _CustomBackgroundImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    final winesService = Provider.of<WinesService>(context);
     final colors = Theme.of(context).colorScheme;
 
-    return Image.network(
-      // wine.logoBodega!,
-      winesService.changeWineLogo(wine),
+    return CachedNetworkImage(
+      imageUrl: wine.logoBodega!,
       fit: BoxFit.cover,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
+      filterQuality: FilterQuality.medium,
+      placeholder: (context, url) {
         return Center(
           child: CircularProgressIndicator(
             color: colors.primary,
           ),
         );
       },
-      
+      // TODO manejar el error de imagen sin que brinque despues en el Hero, esta manejado desde peticion http en wines service
     );
   }
 }
@@ -367,20 +369,21 @@ class _WinePoster extends StatelessWidget {
       return const SizedBox();
     }
 
+    String detailsLabel() { // TODO Refactor with enum
+      if (source.startsWith('latest')){
+        return 'Valoración de la cata';
+      }
+      if (source.startsWith('email')) {
+        return 'Valoración de mi cata';
+      }
+      return 'Ficha técnica global';
+    }
+
     return Container(
       margin: const EdgeInsets.only(top:15, left: 20, right: 20),
       child: Column(
         children: [
-          user == null // styles.headlineSmall
-            ?
-            Text('Ficha técnica global', style: styles)
-            :
-              source == 'latest' 
-                ?
-                Text('Valoración de la cata', style: styles)
-                :
-                Text('Valoración de mi cata', style: styles),
-
+          Text(detailsLabel(), style: styles),
 
           const SizedBox(height: 20),
 
@@ -601,8 +604,8 @@ class _UrlDialogState extends State<UrlDialog> {
               NotificationsService.showFlushBar('URL DE IMAGEN INCORRECTA', context);
               return;
             }
-            winesService.refreshedLogo = logoImageUrl!;
-            widget.wine.logoBodega = logoImageUrl; // TODO RELOAD IMAGE
+            winesService.refreshLogo = true;
+            widget.wine.logoBodega = logoImageUrl;
             winesService.updateWine(widget.wine);
             if (context.mounted) Navigator.pop(context);
           }
