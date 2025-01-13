@@ -10,6 +10,7 @@ class CreateEditWineFormProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final storage = const FlutterSecureStorage();
+  AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
 
   late Wines wine;
 

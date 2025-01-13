@@ -81,6 +81,7 @@ class CreateWineDialog extends StatelessWidget {
       onPressedCancel: () {
         wineForm.setDefaultCreateWine();
         Navigator.pop(context, 'Cancelar');
+        wineForm.autovalidateMode = AutovalidateMode.disabled;
       },
       onPressedSave: onPressedSave,
     );
@@ -112,7 +113,7 @@ class CreateNewWineForm extends StatelessWidget {
         reverse: false,
         child: Form(
           key: wineForm.formKey,
-          autovalidateMode: AutovalidateMode.always,
+          autovalidateMode: wineForm.autovalidateMode,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -209,29 +210,6 @@ class CreateNewWineForm extends StatelessWidget {
               ),
           
               const SizedBox(height: 25),
-          
-              // TODO subir image o url de vino
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.start,
-              //   children: [
-          
-              //     IconButton(
-              //       // color: colors.surface,
-              //       icon: const Icon(Icons.camera_alt_outlined),
-              //       onPressed: () {},
-              //     ),
-                   
-              //     IconButton(
-              //       // color: colors.surface,
-              //       icon: const Icon(Icons.upload_file_outlined),
-              //       onPressed: () {},
-              //     ),
-          
-              //     const SizedBox(width:10),
-          
-              //     const Text('Imagen del vino', style: TextStyle(fontSize: 14)),
-              //   ],
-              // ),
             ]
           )
         ),

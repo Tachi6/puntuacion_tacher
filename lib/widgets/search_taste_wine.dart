@@ -25,9 +25,7 @@ class SearchTasteWine extends StatelessWidget {
     void onPressed() async {
       winesService.loadWines();
       if (context.mounted) {
-        final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
-          customResultText: 'Vuelve atras y crea tu' '\n' 'vino para catarlo.'
-        ));
+        final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines());
 
         if (wineSearched != null) {
           winesService.selectedWine = wineSearched;
@@ -74,6 +72,7 @@ class SearchTasteWine extends StatelessWidget {
 
                   AddWineButton(
                     onPressedSave: () async {
+                      wineForm.autovalidateMode = AutovalidateMode.always;
                       if (wineForm.wine.imagenVino != null && wineForm.wine.imagenVino != '') {
                         final urlChecked = await winesService.isValidImage(wineForm.wine.imagenVino); // TODO circle progress de espera al await
                         if (!urlChecked && context.mounted) {
@@ -89,6 +88,7 @@ class SearchTasteWine extends StatelessWidget {
                         winesService.selectedWine = wineForm.wine;
                         taste.showContinueButton = true;
                         if (context.mounted) Navigator.pop(context, 'Guardar');
+                        wineForm.autovalidateMode = AutovalidateMode.disabled;
                       }
                     }, 
                   ),
