@@ -8,11 +8,11 @@ import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class SearchDelegateWines extends SearchDelegate{
-  SearchDelegateWines({required this.customResultText});
+  SearchDelegateWines({this.needButton});
 
   late List<Wines> _filtro;
-  final String customResultText;
-  final String noResultText = 'Vino no encontrado en' '\n' 'nuestra base de datos.';
+  final bool? needButton;
+  final String titleLabel = 'Vino no encontrado en base de datos';
 
   SvgPicture wineIcon(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -54,8 +54,8 @@ class SearchDelegateWines extends SearchDelegate{
   Widget buildResults(BuildContext context) {
 
     if(_filtro.isEmpty) {
-      return const NoResultsWine(
-        titleLabel: 'Vino no encontrado en base de datos',
+      return NoResultsWine(
+        titleLabel: titleLabel,
       );
     }
 
@@ -87,8 +87,8 @@ class SearchDelegateWines extends SearchDelegate{
     }).toList();
 
     if(_filtro.isEmpty) {
-      return const NoResultsWine(
-        titleLabel: 'Vino no encontrado en base de datos',
+      return NoResultsWine(
+        titleLabel: titleLabel,
       );
     }
 
@@ -129,11 +129,13 @@ class NoResultsWine extends StatelessWidget {
   const NoResultsWine({
     super.key, 
     this.titleLabel, 
-    this.buttonLabel
+    this.buttonLabel,
+    this.needButton,
   });
 
   final String? titleLabel;
   final String? buttonLabel;
+  final bool? needButton;
 
   @override
   Widget build(BuildContext context) {   
@@ -164,7 +166,9 @@ class NoResultsWine extends StatelessWidget {
                   width: 170,
                   height: 35, 
                   onPressed: () {
-                    // TODO hacer la funcion del boton
+                    // TODO pensar como hacrelo para varios sitios
+
+
                   },
                   child: const Text('Añadir vino'),
                 )

@@ -90,14 +90,6 @@ class CustomBodyTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    // TODO siempre va a tener usuario
-    // final String user;
-
-    // wine.displayName == '' || wine.displayName == null
-    //   ? user = wine.usuarios!.last
-    //   : user = wine.displayName!;
-
     return Expanded(
       child: Container(
         padding: const EdgeInsets.only(left: 8, top: 4, right: 8),

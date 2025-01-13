@@ -99,10 +99,6 @@ class _WinePoster extends StatelessWidget {
             wine: wine,
             scale: 0.5,
             imageWidth: 105,
-            // imageHeight: height * 0.16,
-            // imageWidth: width * 0.25,
-            // heightReducer: 0.16, 
-            // widthReducer: 0.25,
             source: 'best-$index',
           ),
 

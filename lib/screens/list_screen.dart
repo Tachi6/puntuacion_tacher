@@ -38,11 +38,9 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
             floating: true,
             actions: [
               IconButton(
-                onPressed: () async { // TODO probar si brinca pantalla anterior
+                onPressed: () async {
                   if (context.mounted) {
-                    final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
-                      customResultText: '',
-                    ));
+                    final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines());
                     final routeDetails = CupertinoPageRoute(
                       builder: (context) => DetailsScreen(wine:wineSearched, source: 'search')
                     );
@@ -57,18 +55,12 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
                 icon: const Icon(Icons.search)
               ),
 
-              IconButton(
-                onPressed: () {
-                  // winesService.createNewJson();
-                  // final routeList = CupertinoPageRoute(
-                  //   builder: (context) => DeleteScreen(data: winesService.createNewJson())
-                  // );
-                  // Navigator.push(context, routeList);
-
-                  // TODO select best views
-                },
-                icon: const Icon(Icons.tune_rounded)
-              ),
+              // TODO select best views
+              // IconButton(
+              //   onPressed: () {
+              //   },
+              //   icon: const Icon(Icons.tune_rounded)
+              // ),
               
               const Spacer(),
               
