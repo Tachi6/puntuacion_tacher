@@ -681,9 +681,7 @@ class RowVisibleWines extends StatelessWidget {
                   onPressed: () async {
                     winesService.loadWines();
                     if (context.mounted) {
-                      final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
-                        customResultText: 'Vuelve atras y crea tu vino' '\n' 'para añadirlo a la cata.'
-                      ));
+                      final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines());
                       // Compruebo si el vino ya esta añadido al listado
                       if (context.mounted && multipleTaste.winesMultipleTaste.any((element) => element.id == wineSearched.id)) {
                         NotificationsService.showSnackbar('Vino duplicado', context);

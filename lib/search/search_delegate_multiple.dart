@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:puntuacion_tacher/helpers/helpers.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -102,6 +104,7 @@ class SearchDelegateMultiple extends SearchDelegate{
     if(_filtro.isEmpty) {
       return const NoResultsMultiple(
         titleLabel: 'Cata múltiple no encontrada',
+        buttonLabel: 'Crear cata múltiple',
       ); //noResultsMultiple(context);
     } 
 
@@ -154,6 +157,7 @@ class SearchDelegateMultiple extends SearchDelegate{
     if(_filtro.isEmpty) {
       return const NoResultsMultiple(
         titleLabel: 'Cata múltiple no encontrada',
+        buttonLabel: 'Crear cata múltiple',
       ); //noResultsMultiple(context);
     } 
 
@@ -314,7 +318,12 @@ class NoResultsMultiple extends StatelessWidget {
               width: 170,
               height: 35, 
               onPressed: () {
-                // TODO hacer la funcion del boton
+                Navigator.pop(context);
+
+                final routeDetails = CupertinoPageRoute(
+                  builder: (context) => const CreateMultipleTasteScreen(),
+                );
+                Navigator.push(context, routeDetails);
               },
               child: const Text('Crear cata múltiple'),
             )
