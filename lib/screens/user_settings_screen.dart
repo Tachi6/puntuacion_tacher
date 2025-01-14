@@ -128,7 +128,9 @@ class _UserSettingsBody extends StatelessWidget {
                     backgroundColor: colors.onPrimaryFixedVariant,
                     radius: 80,
                     child: Text(
-                      authService.userDisplayName[0],
+                      authService.userDisplayName == '' // TODO da error en IOS
+                        ? authService.userEmail[0].toUpperCase()
+                        : authService.userDisplayName[0].toUpperCase(),
                       style: TextStyle(color: colors.surface, fontSize: 100)
                     ),
                   ),
