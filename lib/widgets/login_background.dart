@@ -41,13 +41,13 @@ class LoginBackground extends StatelessWidget {
             right: 40,
             top: 60,
             child: Text(
-              'TACHER', 
+              'TasteApp', 
               style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold, color: colors.primary),
             ),
           ),
           Positioned(
             right: 40,
-            top: 130,
+            top: 140,
             child: Text(
               'Tu rincon de amigos y... Vinos', 
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colors.primary),

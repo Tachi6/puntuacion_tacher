@@ -51,7 +51,7 @@ class ListAllScreen extends StatelessWidget {
                 flex: 1,
               ),
           
-              Text('Listado Tacher', style: styles.titleLarge),
+              Text('Listado de vinos', style: styles.titleLarge),
           
               const Spacer(
                 flex: 1,

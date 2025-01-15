@@ -68,49 +68,6 @@ class PointsBox extends StatelessWidget {
           wineForm.resetSettings();
         },
       )
-      
-      // AlertDialog(
-      //   backgroundColor: colors.surfaceContainerLow,
-      //   insetPadding: const EdgeInsets.all(20),
-      //   actionsPadding: const EdgeInsets.only(bottom: 12, right: 16),
-      //   title: const Text('Tacher', textAlign: TextAlign.center),
-      //   content: SizedBox(
-      //     width: 250,
-      //     child: Column(
-      //       mainAxisSize: MainAxisSize.min,
-      //       children: [
-      //         Text('Has catado:', style: styles.bodyLarge),
-                
-      //         const SizedBox(height: 16),
-                
-      //         Text(wine!.nombre, style: styles.headlineSmall),
-      //         Text(wine!.tipo, style: styles.bodyLarge),
-                
-      //         const SizedBox(height: 16),
-                
-      //         Text('Tu puntuación:', style: styles.bodyLarge),
-                
-      //         Text('$puntuacionFinal', style: styles.displayLarge)
-      //       ]
-      //     ),
-      //   ),
-      //   actions: [
-      //     TextButton(
-      //       onPressed: () {
-      //         Navigator.pop(context);
-              
-      //         taste.clearWidgets();
-      //         winesService.selectedWine = null;
-
-      //         final routeDetails = CupertinoPageRoute(
-      //           builder: (context) => const HomeScreen()
-      //         );
-      //         Navigator.pushReplacement(context, routeDetails);
-      //       },
-      //       child: const Text('Cerrar')
-      //     )
-      //   ],
-      // ),
     );
   }
 }

@@ -422,7 +422,7 @@ class _WinePoster extends StatelessWidget {
                         children: [
                           Text(
                             wine.puntuacionFinal != -1 
-                              ? '${wine.puntuacionFinal} puntos Tacher'
+                              ? '${wine.puntuacionFinal} puntos'
                               : '\nSin valoraciones',
                               style: const TextStyle(fontSize: 14)
                             ),
@@ -459,7 +459,7 @@ class _WinePoster extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${wineTaste!.puntosFinal} puntos Tacher', style: const TextStyle(fontSize: 14)),
+                          Text('${wineTaste!.puntosFinal} puntos', style: const TextStyle(fontSize: 14)),
           
                           Row(
                             children: [
@@ -493,7 +493,7 @@ class _WinePoster extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${wine.puntuaciones![wine.usuarios!.indexOf(user!)]} puntos Tacher', style: const TextStyle(fontSize: 14)),
+                          Text('${wine.puntuaciones![wine.usuarios!.indexOf(user!)]} puntos', style: const TextStyle(fontSize: 14)),
           
                           Row(
                             children: [

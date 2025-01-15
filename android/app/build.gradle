@@ -36,7 +36,7 @@ java {
 }
 
 android {
-    namespace "com.example.puntuacion_tacher"
+    namespace "com.davidgonzalez.tasteapp"
     compileSdk 35
     ndkVersion "27.1.12297006"
 
@@ -54,13 +54,13 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.puntuacion_tacher"
+        applicationId "com.davidgonzalez.tasteapp"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk 21
         targetSdk 35
-        versionCode 11
-        versionName "0.8.7"
+        versionCode 12
+        versionName "1.0.0"
     }
 
     signingConfigs {

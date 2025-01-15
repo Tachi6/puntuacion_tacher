@@ -1,4 +1,4 @@
-package com.example.puntuacion_tacher
+package com.davidgonzalez.tasteapp
 
 import io.flutter.embedding.android.FlutterActivity
 
