@@ -257,10 +257,7 @@ class _SingleTacherScreen extends StatelessWidget {
     return TacherScreen(
       appBarTitle: wineForm.wine.nombre == '' ? 'Vino catado a ciegas' : wineForm.wine.nombre,
       onPressedBackButon: () {
-        wineForm.clearNotas();
-        wineForm.clearNotas();
-        wineForm.setDefaultRatings();
-        wineForm.setDefaultCreateWine();
+        wineForm.resetSettings();
         winesService.selectedWine = null;
         Navigator.pop(context);
       }, 

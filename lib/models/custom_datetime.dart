@@ -7,7 +7,12 @@ class CustomDatetime {
 
   // factory CustomDatetime.fromDateTime(DateTime datetime) => datetime.toIso8601String().replaceAll('.', ':');
 
-  String toTextToEndOfDay(DateTime datetime) =>'${datetime.year}-${datetime.month}-${datetime.day}T23:59:59:999';
+  String toTextToEndOfDay(DateTime datetime) {
+    final String month = datetime.month.toString().length < 2 ? '0${datetime.month}' : datetime.month.toString();
+    final String day = datetime.day.toString().length < 2 ? '0${datetime.day}' : datetime.day.toString();
+    // ignore: unnecessary_brace_in_string_interps
+    return '${datetime.year}-${month}-${day}T23:59:59:999';
+  }
 
   String toText(DateTime datetime) => datetime.toIso8601String().replaceAll('.', ':');
   

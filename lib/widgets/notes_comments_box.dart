@@ -184,7 +184,7 @@ class ComentariosBox extends StatelessWidget {
                   multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].comentarios = value); 
                   return;
                 }
-                wineForm.editCommentarios = value;               
+                wineForm.editComentarios = value;               
               },);
             },
           ),

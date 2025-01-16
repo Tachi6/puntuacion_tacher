@@ -132,7 +132,7 @@ class CreateEditWineFormProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  set editCommentarios(String value){
+  set editComentarios(String value){
     comentarios = value;
     notifyListeners();
   }

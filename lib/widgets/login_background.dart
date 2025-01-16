@@ -38,7 +38,7 @@ class LoginBackground extends StatelessWidget {
             ),
           ),
           Positioned(
-            right: 40,
+            right: 38,
             top: 60,
             child: Text(
               'TasteApp', 
