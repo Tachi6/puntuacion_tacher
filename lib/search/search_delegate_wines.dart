@@ -10,7 +10,7 @@ import 'package:puntuacion_tacher/widgets/widgets.dart';
 class SearchDelegateWines extends SearchDelegate{
   SearchDelegateWines({this.needButton});
 
-  late List<Wines> _filtro;
+  List<Wines> _filtro = [];
   final bool? needButton;
   final String titleLabel = 'Vino no encontrado en base de datos';
 

@@ -13,7 +13,7 @@ import 'package:puntuacion_tacher/widgets/widgets.dart';
 class SearchDelegateMultiple extends SearchDelegate{
   SearchDelegateMultiple();
 
-  late List<Multiple> _filtro;
+  List<Multiple> _filtro = [];
 
   Future<bool?> enterPasswordBox(BuildContext context, Multiple multiple) {
     return showGeneralDialog(
