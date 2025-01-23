@@ -46,7 +46,7 @@ class BottomImageBackground extends StatelessWidget {
                 end: Alignment.bottomCenter,
                 colors: [
                   colors.surface,
-                  Colors.white.withOpacity(opacity),
+                  Colors.white.withAlpha((255 * opacity).toInt()),
                 ],
               )
             ),

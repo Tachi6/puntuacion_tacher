@@ -137,7 +137,7 @@ class _CustomLogoImage extends StatelessWidget {
         Color frontColor;
         SystemUiOverlayStyle? statusBarMode;
     
-        if (backgroundColor.opacity == 0.0) {
+        if (backgroundColor.a == 0.0) {
           statusBarMode = themeColor.isDarkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark;
           frontColor = colors.inverseSurface;           
         }

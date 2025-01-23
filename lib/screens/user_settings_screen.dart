@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
-import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -128,9 +126,7 @@ class _UserSettingsBody extends StatelessWidget {
                     backgroundColor: colors.onPrimaryFixedVariant,
                     radius: 80,
                     child: Text(
-                      authService.userDisplayName == '' // TODO da error en IOS
-                        ? authService.userEmail[0].toUpperCase()
-                        : authService.userDisplayName[0].toUpperCase(),
+                      authService.userDisplayName[0].toUpperCase(),
                       style: TextStyle(color: colors.surface, fontSize: 100)
                     ),
                   ),
@@ -152,7 +148,7 @@ class _UserSettingsBody extends StatelessWidget {
           Material(
             color: themeColor.isDarkMode
               ? colors.surfaceContainerHighest
-              : colors.surfaceContainerHighest.withOpacity(0.6),
+              : colors.surfaceContainerHighest.withAlpha((255 * 0.6).toInt()),
             shadowColor: colors.shadow,
             elevation: 1,
             borderRadius: BorderRadius.circular(15),
@@ -304,16 +300,12 @@ class SettingsEndButtons extends StatelessWidget {
           Text('Logout', style: TextStyle(fontSize: 14), textAlign: TextAlign.center),
         ],
       ),
-      onPressed: () async {
-        Navigator.pop(context);
+      onPressed: () {
         screenProvider.currentScreen = 0;
         screenProvider.multipleScreen = 0;
         themeColor.setDefaultTheme();
-        final initialRoute = CupertinoPageRoute(
-          builder: (context) => const LoginScreen()
-        );
-        Navigator.push(context, initialRoute);
-        await authService.logout();
+        if (context.mounted) Navigator.popAndPushNamed(context, 'login');
+        authService.logout();
       },
     );
   }

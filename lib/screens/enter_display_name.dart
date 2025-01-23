@@ -52,7 +52,7 @@ class ChangeDisplayNameBox extends StatelessWidget {
           width: size.width * 0.85,
           // height: 240,
           decoration: BoxDecoration(
-            color: colors.onPrimaryFixedVariant.withOpacity(0.8),
+            color: colors.onPrimaryFixedVariant.withAlpha((255 * 0.8).toInt()),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(

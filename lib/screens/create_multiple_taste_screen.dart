@@ -66,7 +66,7 @@ class CreateMultipleTasteScreen extends StatelessWidget{
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.white.withOpacity(opacity),
+                    Colors.white.withAlpha((255 * opacity.toInt())),
                     colors.surface,
                   ],
                 )

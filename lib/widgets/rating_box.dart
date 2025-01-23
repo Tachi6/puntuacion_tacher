@@ -45,7 +45,7 @@ class RatingBox extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         color: themeColor.isDarkMode 
           ? colors.surfaceContainerHighest
-          : colors.surfaceContainerHighest.withOpacity(0.6),
+          : colors.surfaceContainerHighest.withAlpha((255 *0.6).toInt()),
         child: Container(
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(vertical: 5),

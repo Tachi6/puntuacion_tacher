@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class LoginProvider extends ChangeNotifier {
 
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
 
   bool _passwordObscure = true;
   
@@ -27,7 +27,7 @@ class LoginProvider extends ChangeNotifier {
   }
 
   bool isValidForm() {
-    return formKey.currentState?.validate() ?? false;
+    return loginFormKey.currentState?.validate() ?? false;
   }
 
   bool get passwordObscure => _passwordObscure;

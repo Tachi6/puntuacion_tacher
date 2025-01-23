@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -29,9 +30,6 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final loginForm = Provider.of<LoginProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -42,16 +40,18 @@ class LoginForm extends StatelessWidget {
         alignment: Alignment.bottomCenter,
         width: double.infinity,
         height: double.infinity,
-        child: SingleChildScrollView(
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 250),
-            layoutBuilder: (currentChild, previousChildren) {
-              return currentChild!;
-            },
-            child: loginForm.isRegister 
-              ? const ContainerLoginForm(key: ValueKey<String>('register'))
-              : const ContainerLoginForm(key: ValueKey<String>('login')), 
-          ),
+        child: const SingleChildScrollView(
+          child: ContainerLoginForm()
+          
+          // AnimatedSwitcher(
+          //   duration: const Duration(milliseconds: 250),
+          //   layoutBuilder: (currentChild, previousChildren) {
+          //     return currentChild!;
+          //   },
+          //   child: loginForm.isRegister 
+            //   ? const ContainerLoginForm(key: ValueKey<String>('register'))
+            //   : const ContainerLoginForm(key: ValueKey<String>('login')), 
+          // ),
         ),
       )
     );
@@ -71,7 +71,7 @@ class ContainerLoginForm extends StatelessWidget {
       padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
       width: size.width * 0.85,
       decoration: BoxDecoration(
-        color: colors.onPrimaryFixedVariant.withOpacity(0.8),
+        color: colors.onPrimaryFixedVariant.withAlpha((255 * 0.8).toInt()),
         borderRadius: BorderRadius.circular(16),
       ),
       child: const LoginRegisterForm(),
@@ -92,7 +92,7 @@ class LoginRegisterForm extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     return Form(
-      key: loginForm.formKey,
+      key: loginForm.loginFormKey,
       autovalidateMode: AutovalidateMode.onUnfocus,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -148,14 +148,18 @@ class LoginRegisterForm extends StatelessWidget {
           const ValidateUserButton(),
     
           const SizedBox(height: 10),
-    
+  
           TextButton(
             onPressed: () => loginForm.isRegister = !loginForm.isRegister,
-            child: Text(
-              loginForm.isRegister 
-                ? '¿Ya tienes una cuenta?'
-                : 'Crear una nueva cuenta', 
-              style: TextStyle(color: colors.surface, fontWeight: FontWeight.bold)
+            child: 
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 1250),
+              layoutBuilder: (currentChild, previousChildren) {
+                return currentChild!;
+              },
+              child: loginForm.isRegister 
+                ? FadeIn(child: Text('¿Ya tienes una cuenta?', style: TextStyle(color: colors.surface, fontWeight: FontWeight.bold)))
+                : Text('Crear una nueva cuenta', style: TextStyle(color: colors.surface, fontWeight: FontWeight.bold)), 
             ),
           ),
         ],
@@ -297,16 +301,23 @@ class ValidateUserButton extends StatelessWidget {
             loginForm.isLoading = false;
           }
         },      
-        child: Text(
-          loginForm.isRegister 
-          ? loginForm.isLoading
-            ? 'Registrando'
-            : 'Registrar'
-          : loginForm.isLoading
-            ? 'Ingresando'
-            : 'Ingresar',
-          style: TextStyle(color: colors.primary, fontSize: 16)
-        )
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 1250),
+          layoutBuilder: (currentChild, previousChildren) {
+            return currentChild!;
+          },
+          child: loginForm.isRegister 
+            ? FadeIn(
+              child: Text(
+                loginForm.isLoading ? 'Registrando' : 'Registrar', 
+                style: TextStyle(color: colors.primary, fontSize: 16)
+              )
+            )
+            : Text(
+              loginForm.isLoading ? 'Ingresando' : 'Ingresar', 
+              style: TextStyle(color: colors.primary, fontSize: 16)
+            ), 
+        ),
       ),
     );
   }

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 
 class CheckAuthScreen extends StatelessWidget {
@@ -33,29 +31,17 @@ class CheckAuthScreen extends StatelessWidget {
           builder: (BuildContext context, AsyncSnapshot<UserLoginStatus> snapshot) {
             if (snapshot.hasData && snapshot.data! == UserLoginStatus.registering) {
               Future.microtask(() async {
-                final routeDetails = CupertinoPageRoute(
-                  builder: (context) => const EnterDisplayNameScreen(),
-                );
-
-                if (context.mounted) Navigator.pushReplacement(context, routeDetails);
+                if (context.mounted) Navigator.popAndPushNamed(context, 'displayName');
               });
             }
             if (snapshot.hasData && snapshot.data! == UserLoginStatus.logged) {
               Future.microtask(() async {
-                final routeDetails = CupertinoPageRoute(
-                  builder: (context) => const HomeScreen(),
-                );
-
-                if (context.mounted) Navigator.pushReplacement(context, routeDetails);
+                if (context.mounted) Navigator.popAndPushNamed(context, 'home');
               });
             }
             if (snapshot.hasData && snapshot.data! == UserLoginStatus.notLogged) {
               Future.microtask(() async {
-                final routeDetails = CupertinoPageRoute(
-                  builder: (context) => const LoginScreen(),
-                );
-
-                if (context.mounted) Navigator.pushReplacement(context, routeDetails);
+                if (context.mounted) Navigator.popAndPushNamed(context, 'login');
               });
             }
             return CircularProgressIndicator(
