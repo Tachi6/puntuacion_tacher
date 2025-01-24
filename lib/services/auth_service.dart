@@ -19,6 +19,7 @@ class AuthService extends ChangeNotifier {
 
   String userEmail = '';
   String userDisplayName = '';
+  String userInitial = '';
   String _tempDisplayName = '';
   bool _isUserLogued = false;
 
@@ -92,6 +93,7 @@ class AuthService extends ChangeNotifier {
       await storage.write(key: 'displayName', value: decodedResp['displayName']);
       await storage.write(key: 'localId', value: decodedResp['localId']);
       userDisplayName = decodedResp['displayName'];
+      userInitial = decodedResp['displayName'][0].toUpperCase();
       tempDisplayName = decodedResp['displayName'];
 
       isUserLogued = true;
@@ -190,6 +192,7 @@ class AuthService extends ChangeNotifier {
     if (decodedResp.containsKey('displayName')) {
       await storage.write(key: 'displayName', value: decodedResp['displayName']);
       userDisplayName = decodedResp['displayName'];
+      userInitial = decodedResp['displayName'][0].toUpperCase();
       tempDisplayName = decodedResp['displayName'];
       notifyListeners();
 
@@ -203,6 +206,7 @@ class AuthService extends ChangeNotifier {
   Future logout() async {
     await storage.deleteAll();
     userDisplayName = '';
+    userInitial = '';
     _tempDisplayName = '';
     _isUserLogued = false;
   }

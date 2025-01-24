@@ -126,7 +126,7 @@ class _UserSettingsBody extends StatelessWidget {
                     backgroundColor: colors.onPrimaryFixedVariant,
                     radius: 80,
                     child: Text(
-                      authService.userDisplayName[0].toUpperCase(),
+                      authService.userInitial,
                       style: TextStyle(color: colors.surface, fontSize: 100)
                     ),
                   ),
@@ -304,7 +304,7 @@ class SettingsEndButtons extends StatelessWidget {
         screenProvider.currentScreen = 0;
         screenProvider.multipleScreen = 0;
         themeColor.setDefaultTheme();
-        if (context.mounted) Navigator.popAndPushNamed(context, 'login');
+        Navigator.popAndPushNamed(context, 'login');
         authService.logout();
       },
     );
