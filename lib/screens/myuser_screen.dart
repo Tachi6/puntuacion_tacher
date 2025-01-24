@@ -21,22 +21,11 @@ class _MyUserScreenState extends State<MyUserScreen> with AutomaticKeepAliveClie
   Widget build(BuildContext context) {
     super.build(context);
 
-    final authService = Provider.of<AuthService>(context, listen: true);
-    final winesService = Provider.of<WinesService>(context);
-    final Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
       ),
-      body: MyUserBody(
-        size: size, 
-        winesService: winesService, 
-        email: authService.userEmail, 
-        user: authService.userDisplayName == ''
-          ? authService.userEmail
-          : authService.userDisplayName
-      ),
+      body: const MyUserBody(),
     );
   }
   
@@ -46,22 +35,13 @@ class _MyUserScreenState extends State<MyUserScreen> with AutomaticKeepAliveClie
 
 class MyUserBody extends StatelessWidget {
 
-  const MyUserBody({
-    super.key,
-    required this.size,
-    required this.winesService,
-    required this.email, 
-    required this.user,
-  });
-
-  final Size size;
-  final WinesService winesService;
-  final String email;
-  final String user;
+  const MyUserBody({super.key});
 
   @override
   Widget build(BuildContext context) {
 
+    final authService = Provider.of<AuthService>(context, listen: true);
+    final winesService = Provider.of<WinesService>(context);
     final styles = Theme.of(context).textTheme;
     final colors = Theme.of(context).colorScheme;
 
@@ -99,7 +79,7 @@ class MyUserBody extends StatelessWidget {
                       child: CircleAvatar(
                         backgroundColor: colors.onPrimaryFixedVariant,
                         radius: 48,
-                        child: Text(user[0].toUpperCase(), style: TextStyle(color: colors.surface, fontSize: 60)),
+                        child: Text(authService.userInitial, style: TextStyle(color: colors.surface, fontSize: 60)),
                       ),
                     ),
                   ),
@@ -108,7 +88,7 @@ class MyUserBody extends StatelessWidget {
                     height: 10,
                   ),
             
-                  Text(user, style: styles.titleLarge),
+                  Text(authService.userDisplayName, style: styles.titleLarge),
                 ],
               ),
             ),
@@ -126,7 +106,7 @@ class MyUserBody extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     LoadWineImage(
-                      wine: winesService.userTastedWines(email)[index],
+                      wine: winesService.userTastedWines(authService.userUuid)[index],
                       scale: 2/6,
                       imageWidth: 60,
                       source: 'email-$index',
@@ -140,28 +120,28 @@ class MyUserBody extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            winesService.userTastedWines(email)[index].nombre, 
+                            winesService.userTastedWines(authService.userUuid)[index].nombre, 
                             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                               
                           Text(
-                            winesService.userTastedWines(email)[index].bodega, 
+                            winesService.userTastedWines(authService.userUuid)[index].bodega, 
                             style: const TextStyle(fontSize: 14),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                               
                           Text(
-                            winesService.userTastedWines(email)[index].tipo, 
+                            winesService.userTastedWines(authService.userUuid)[index].tipo, 
                             style: const TextStyle(fontSize: 14),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                               
                           Text(
-                            winesService.userTastedWines(email)[index].region, 
+                            winesService.userTastedWines(authService.userUuid)[index].region, 
                             style: const TextStyle(fontSize: 14),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -175,7 +155,7 @@ class MyUserBody extends StatelessWidget {
                     Column(
                       children: [
                         Text(
-                            winesService.userTastedWines(email)[index].puntuaciones![winesService.userTastedWines(email)[index].usuarios!.indexOf(email)].toString(), 
+                            winesService.userTastedWines(authService.userUuid)[index].puntuaciones![winesService.userTastedWines(authService.userUuid)[index].usuarios!.indexOf(authService.userUuid)].toString(), 
                             style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: colors.outline)
                           ),
                         
@@ -190,12 +170,12 @@ class MyUserBody extends StatelessWidget {
                 ),
                 onTap: () {
                   final routeDetails = CupertinoPageRoute(
-                    builder: (context) => DetailsScreen(wine: winesService.userTastedWines(email)[index], email: email, source: 'email-$index'));
+                    builder: (context) => DetailsScreen(wine: winesService.userTastedWines(authService.userUuid)[index], email: authService.userUuid, source: 'email-$index'));
                   Navigator.push(context, routeDetails);
                 },
               );
             },
-            childCount: winesService.userTastedWines(email).length,
+            childCount: winesService.userTastedWines(authService.userUuid).length,
           )
         )
       ],

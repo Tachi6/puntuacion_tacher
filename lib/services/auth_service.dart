@@ -18,6 +18,7 @@ class AuthService extends ChangeNotifier {
   final String _unencodedPathUpdate = '/v1/accounts:update';
 
   String userEmail = '';
+  String userUuid = '';
   String userDisplayName = '';
   String userInitial = '';
   String _tempDisplayName = '';
@@ -48,10 +49,11 @@ class AuthService extends ChangeNotifier {
 
     if (decodedResp.containsKey('idToken')) {
       await storage.write(key: 'email', value: email);
+      userUuid = decodedResp['localId'];
       userEmail = email;
       await storage.write(key: 'password', value: password);
       await storage.write(key: 'idToken', value: decodedResp['idToken']);
-      await storage.write(key: 'localId', value: decodedResp['localId']); // TODO trabajar con localId en vez que con email en app y en bd
+      await storage.write(key: 'localId', value: decodedResp['localId']);
 
       isUserLogued = true;
 
@@ -87,6 +89,7 @@ class AuthService extends ChangeNotifier {
 
     if (decodedResp.containsKey('idToken')) {
       await storage.write(key: 'email', value: email);
+      userUuid = decodedResp['localId'];
       userEmail = email;
       await storage.write(key: 'password', value: password);
       await storage.write(key: 'idToken', value: decodedResp['idToken']);
@@ -205,6 +208,8 @@ class AuthService extends ChangeNotifier {
 
   Future logout() async {
     await storage.deleteAll();
+    userEmail = '';
+    userUuid = '';
     userDisplayName = '';
     userInitial = '';
     _tempDisplayName = '';

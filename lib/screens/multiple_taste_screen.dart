@@ -88,7 +88,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       for (var wineTaste in multipleTaste.userMultipleTaste) {
         final wineId = int.parse(wineTaste.id);
         await winesService.updateWine(WinesMapper.wineTasteToWines(wineTaste, winesService.winesByIndex[wineId]));
-        await winesService.saveDeleteLatestTastedWine(wineTaste);
+        await winesService.saveTastedWine(wineTaste);
       }
     }
 

@@ -330,11 +330,11 @@ class SendTasteButton extends StatelessWidget {
         if (wineForm.wine.id == '-1') {
           final String newId = await winesService.createWine(winesService.selectedWine!);
           wineTaste.id = newId;
-          await winesService.saveDeleteLatestTastedWine(wineTaste);
+          await winesService.saveTastedWine(wineTaste);
         }
         else {
           await winesService.updateWine(winesService.selectedWine!);
-          await winesService.saveDeleteLatestTastedWine(wineTaste);
+          await winesService.saveTastedWine(wineTaste);
         }
       },
       child: const Text('Enviar Valoración'),

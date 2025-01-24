@@ -150,9 +150,7 @@ class WinesService extends ChangeNotifier {
 
     isSaving = true;
     notifyListeners();
-    // Cambio displayName por email
-    final email = await storage.read(key: 'email');
-    wine.usuarios![wine.usuarios!.length - 1] = email!;
+    
     await loadWines();
 
     final String jsonUpdateType = 'wines/${wine.id}.json';
@@ -163,7 +161,6 @@ class WinesService extends ChangeNotifier {
 
     // Actualizar el listado de productos
     final int wineId = int.parse(wine.id!);
-    // int id =  winesByIndex.indexWhere((element) => element.id == wine.id);
     winesByIndex[wineId] = wine;
 
     isSaving = false;
@@ -179,18 +176,6 @@ class WinesService extends ChangeNotifier {
     const defaultNewId = "00000000000000000000";
     final newId = defaultNewId.replaceRange(20 - idLenght, 20, lastWineIndex);
     wine.id = newId;
-    // if (wine.puntuacionFinal == -1) {
-    //   wine.comentarios = ['notValorated'];
-    //   wine.fechas = ['notValorated'];
-    //   wine.notasVista = ['notValorated'];
-    //   wine.notasNariz = ['notValorated'];
-    //   wine.notasBoca = ['notValorated'];
-    //   wine.puntuaciones = [-1];
-    //   wine.puntuacionesVista = [-1.0];
-    //   wine.puntuacionesNariz = [-1.0];
-    //   wine.puntuacionesBoca = [-1.0];
-    //   wine.usuarios = ['notValorated'];
-    // }
 
     final String jsonCreateType = 'wines/${wine.id}.json';
     final url = Uri.https(_baseUrl, jsonCreateType, {
@@ -208,13 +193,11 @@ class WinesService extends ChangeNotifier {
     // return resp.body;
   }
 
-  Future<String> saveDeleteLatestTastedWine(WineTaste wineTaste) async {
-    // TODO upload only user name???
-    // Cambio email por displayName cuando viene mapeado wine a wineTaste
-    if (wineTaste.user.contains('@')) {
-      final displayName = await storage.read(key: 'displayName');
-      wineTaste.user = displayName!;
-    }
+  Future<String> saveTastedWine(WineTaste wineTaste) async {
+    // TODO subir tambien uuid???
+    // Cambio uuid por displayName cuando viene mapeado wine a wineTaste
+    final displayName = await storage.read(key: 'displayName');
+    wineTaste.user = displayName!;
     // Creo id de firebase con la fecha custom
     final String idFirebase = wineTaste.fecha;
 
