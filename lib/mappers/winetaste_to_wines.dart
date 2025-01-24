@@ -2,7 +2,7 @@ import 'package:puntuacion_tacher/helpers/helpers.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 
 class WinesMapper {
-  static Wines wineTasteToWines(WineTaste wineTaste, Wines wine) => Wines(
+  static Wines wineTasteToWines(WineTaste wineTaste, Wines wine, String user) => Wines(
     anada: wine.anada, 
     bodega: wine.bodega, 
     comentarios: [...wine.comentarios!, wineTaste.comentarios ?? ''],
@@ -27,7 +27,7 @@ class WinesMapper {
     puntuacionesVista: [...wine.puntuacionesVista!, wineTaste.puntosVista], 
     region: wine.region, 
     tipo: wine.tipo, 
-    usuarios: [...wine.usuarios!, wineTaste.user], 
+    usuarios: [...wine.usuarios!, user], 
     variedades: wine.variedades, 
     vino: wine.vino
   );

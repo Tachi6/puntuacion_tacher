@@ -40,6 +40,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
   Widget build(BuildContext context) {
 
     final size = MediaQuery.of(context).size;
+    final authService = Provider.of<AuthService>(context);
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleService>(context);
     final winesService = Provider.of<WinesService>(context);
@@ -87,7 +88,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       // Mapear todos los vinos y subir los cambios a firebase
       for (var wineTaste in multipleTaste.userMultipleTaste) {
         final wineId = int.parse(wineTaste.id);
-        await winesService.updateWine(WinesMapper.wineTasteToWines(wineTaste, winesService.winesByIndex[wineId]));
+        await winesService.updateWine(WinesMapper.wineTasteToWines(wineTaste, winesService.winesByIndex[wineId], authService.userUuid));
         await winesService.saveTastedWine(wineTaste);
       }
     }
