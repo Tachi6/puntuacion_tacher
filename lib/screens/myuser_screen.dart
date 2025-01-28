@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 
 import 'package:puntuacion_tacher/services/services.dart';
@@ -98,6 +99,10 @@ class MyUserBody extends StatelessWidget {
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
+
+              final WineTaste wineTaste = winesService.userWineTaste(authService.userUuid)[index];
+              final wine = winesService.obtainWine(wineTaste.id);
+
               return ListTile(
                 minVerticalPadding: 6,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -106,7 +111,7 @@ class MyUserBody extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     LoadWineImage(
-                      wine: winesService.userTastedWines(authService.userUuid)[index],
+                      wine: wine,
                       scale: 2/6,
                       imageWidth: 60,
                       source: 'email-$index',
@@ -120,28 +125,28 @@ class MyUserBody extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            winesService.userTastedWines(authService.userUuid)[index].nombre, 
+                            wine.nombre, 
                             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                               
                           Text(
-                            winesService.userTastedWines(authService.userUuid)[index].bodega, 
+                            wine.bodega, 
                             style: const TextStyle(fontSize: 14),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                               
                           Text(
-                            winesService.userTastedWines(authService.userUuid)[index].tipo, 
+                            wine.region, 
                             style: const TextStyle(fontSize: 14),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                              
+
                           Text(
-                            winesService.userTastedWines(authService.userUuid)[index].region, 
+                            wine.tipo, 
                             style: const TextStyle(fontSize: 14),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -155,7 +160,7 @@ class MyUserBody extends StatelessWidget {
                     Column(
                       children: [
                         Text(
-                            winesService.userTastedWines(authService.userUuid)[index].puntuaciones![winesService.userTastedWines(authService.userUuid)[index].usuarios!.indexOf(authService.userUuid)].toString(), 
+                            wineTaste.puntosFinal.toString(),
                             style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: colors.outline)
                           ),
                         
@@ -163,19 +168,18 @@ class MyUserBody extends StatelessWidget {
                           'Puntos', 
                           style: TextStyle(fontSize: 14, color: colors.outline)
                         ),
-                              
                       ],
                     )
                   ],
                 ),
                 onTap: () {
                   final routeDetails = CupertinoPageRoute(
-                    builder: (context) => DetailsScreen(wine: winesService.userTastedWines(authService.userUuid)[index], email: authService.userUuid, source: 'email-$index'));
+                    builder: (context) => DetailsScreen(wine: wine, wineTaste:wineTaste, email: authService.userUuid, source: 'email-$index'));
                   Navigator.push(context, routeDetails);
                 },
               );
             },
-            childCount: winesService.userTastedWines(authService.userUuid).length,
+            childCount: winesService.userWineTaste(authService.userUuid).length,
           )
         )
       ],

@@ -30,6 +30,9 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    const double chipListHeight = 65;
+
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -44,15 +47,18 @@ class DetailsScreen extends StatelessWidget {
       
                 SliverList(
                   delegate: SliverChildListDelegate([
-            
-                    _WinePoster(wine: wine, wineTaste: wineTaste, user: email, source: source)
-                  
+                    _WinePoster(wine: wine, wineTaste: wineTaste, source: source, chipListHeight: chipListHeight),
                   ])
                 )
               ],
             ),
+
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: _OtherTasteChipList(wine: wine, wineTaste: wineTaste, chipListHeight: chipListHeight),
+            ),
           ],
-        )
+        ),
       ),
     );
   }
@@ -204,10 +210,10 @@ class _CustomSliverAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final statusBarHeight = View.of(context).padding.top / View.of(context).devicePixelRatio;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return SliverAppBar(
-      toolbarHeight: 150 + statusBarHeight,
+      toolbarHeight: screenHeight * 0.2,
       systemOverlayStyle: statusBarMode,
       automaticallyImplyLeading: false,
       pinned: true,
@@ -336,54 +342,35 @@ class _CustomBackgroundImage extends StatelessWidget {
 }
 
 class _WinePoster extends StatelessWidget {
-
-  // TODO refactorizar mas limpio
-
-  final Wines wine;
-  final WineTaste? wineTaste;
-  final String? user;
-  final String source;
-
   const _WinePoster({
     required this.wine, 
     this.wineTaste,
-    this.user, 
-    required this.source
+    required this.source,
+    required this.chipListHeight,
   });
+
+  final Wines wine;
+  final WineTaste? wineTaste;
+  final String source;
+  final double chipListHeight;
 
   @override
   Widget build(BuildContext context) {
-
+    
+    final styles = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
 
-    final styles = Theme.of(context).textTheme.titleLarge!.copyWith(
-      fontWeight: FontWeight.bold,
-    );
-
-    Widget detectEmptyText(String dato) {
-      if (dato != "" ) {
-        return Text(dato, style: const TextStyle(fontSize: 14));
-      }
-      return const SizedBox();
-    }
-
-    String detailsLabel() { // TODO Refactor with enum
-      if (source.startsWith('latest')){
-        return 'Valoración de la cata';
-      }
-      if (source.startsWith('email')) {
-        return 'Valoración de mi cata';
-      }
-      return 'Ficha técnica global';
-    }
-
     return Container(
-      margin: const EdgeInsets.only(top:15, left: 20, right: 20),
-      child: Column(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Flex(
+        direction: Axis.vertical,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(detailsLabel(), style: styles),
+          const SizedBox(height: 15),
 
-          const SizedBox(height: 20),
+          _LabelLine(wineTaste: wineTaste, styles: styles),
+
+          const SizedBox(height: 15),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -406,129 +393,331 @@ class _WinePoster extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(wine.nombre, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16), maxLines: 3, overflow: TextOverflow.ellipsis),
-                    detectEmptyText(wine.tipo),
-                    detectEmptyText(wine.bodega),
-                    detectEmptyText(wine.region),
-                    detectEmptyText(wine.variedades),
-                    wine.graduacion != '' ? Text('${wine.graduacion}%', style: const TextStyle(fontSize: 14)) : const SizedBox(),
-                    detectEmptyText(wine.descripcion),
-          
-                    user == null // TODO refactorizar
-                      ? 
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            wine.puntuacionFinal != -1 
-                              ? '${wine.puntuacionFinal} puntos'
-                              : '\nSin valoraciones',
-                              style: const TextStyle(fontSize: 14)
-                            ),
-          
-                          if (wine.puntuacionFinal != -1) Row(
-                            children: [
-                              const SizedBox(width: 44 ,child: Text('Vista', style: TextStyle(fontSize: 14),)),
-                              RatingDetailsCategory(ratingCategory: wine.puntuacionVista)
-                            ],
-                          ),
-                          detectEmptyText(wine.notaVista),
-                          
-                          if (wine.puntuacionFinal != -1) Row(
-                            children: [
-                              const SizedBox(width: 44 ,child: Text('Nariz', style: TextStyle(fontSize: 14),)),
-                              RatingDetailsCategory(ratingCategory: wine.puntuacionNariz)
-                            ],
-                          ),
-                          detectEmptyText(wine.notaNariz),
-          
-                          if (wine.puntuacionFinal != -1) Row(
-                            children: [
-                              const SizedBox(width: 44 ,child: Text('Boca', style: TextStyle(fontSize: 14),)),
-                              RatingDetailsCategory(ratingCategory: wine.puntuacionBoca)
-                            ],
-                          ),
-                          detectEmptyText(wine.notaBoca),
-                        ]
-                      )
-                      :
-                      user == 'latest'
-                      ?
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('${wineTaste!.puntosFinal} puntos', style: const TextStyle(fontSize: 14)),
-          
-                          Row(
-                            children: [
-                              const SizedBox(width: 44 ,child: Text('Vista', style: TextStyle(fontSize: 14),)),
-                              RatingDetailsCategory(ratingCategory: wineTaste!.puntosVista),
-                            ],
-                          ),
-                          detectEmptyText(wineTaste!.notasVista!),
-                          
-                          Row(
-                            children: [
-                              const SizedBox(width: 44 ,child: Text('Nariz', style: TextStyle(fontSize: 14),)),
-                              RatingDetailsCategory(ratingCategory: wineTaste!.puntosNariz),
-                            ],
-                          ),
-                          detectEmptyText(wineTaste!.notasNariz!),
-          
-                          Row(
-                            children: [
-                              const SizedBox(width: 44 ,child: Text('Boca', style: TextStyle(fontSize: 14),)),
-                              RatingDetailsCategory(ratingCategory: wineTaste!.puntosBoca),
-                            ],
-                          ),
-                          detectEmptyText(wineTaste!.notasBoca!),
-          
-                          detectEmptyText(wineTaste!.comentarios!),
-                        ]
-                      )
-                      :
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('${wine.puntuaciones![wine.usuarios!.indexOf(user!)]} puntos', style: const TextStyle(fontSize: 14)),
-          
-                          Row(
-                            children: [
-                              const SizedBox(width: 44 ,child: Text('Vista', style: TextStyle(fontSize: 14),)),
-                              RatingDetailsCategory(ratingCategory: wine.puntuacionesVista![wine.usuarios!.indexOf(user!)]),
-                            ],
-                          ),
-                          detectEmptyText(wine.notasVista![wine.usuarios!.indexOf(user!)]),
-                          
-                          Row(
-                            children: [
-                              const SizedBox(width: 44 ,child: Text('Nariz', style: TextStyle(fontSize: 14),)),
-                              RatingDetailsCategory(ratingCategory: wine.puntuacionesNariz![wine.usuarios!.indexOf(user!)]),
-                            ],
-                          ),
-                          detectEmptyText(wine.notasNariz![wine.usuarios!.indexOf(user!)]),
-          
-                          Row(
-                            children: [
-                              const SizedBox(width: 44 ,child: Text('Boca', style: TextStyle(fontSize: 14),)),
-                              RatingDetailsCategory(ratingCategory: wine.puntuacionesBoca![wine.usuarios!.indexOf(user!)]),
-                            ],
-                          ),
-                          detectEmptyText(wine.notasBoca![wine.usuarios!.indexOf(user!)]),
-          
-                          Text(wine.comentarios![wine.usuarios!.indexOf(user!)], style: const TextStyle(fontSize: 14)),
-                        ]
-                      )
+                    _NameLine(wine: wine, styles: styles),
+
+                    const SizedBox(height: 2),
+
+                    _DefaultLine(text: wine.bodega, styles: styles),
+
+                    _DefaultLine(text: wine.region, styles: styles),
+
+                    _DefaultLine(text: wine.tipo, styles: styles),
+
+                    _DefaultLine(text: wine.variedades, styles: styles),
+
+                    _DefaultLine(text: '${wine.graduacion}% vol.', styles: styles),
+
+                    _RatingColumn(wine: wine, wineTaste: wineTaste, styles: styles),
+
+                    _PointsLine(wine: wine, wineTaste: wineTaste, styles: styles),
                   ],
                 ),
               ),
             ],
           ),
+
+          const SizedBox(height: 15),
+
+          if (wineTaste != null) _CustomLine(text: 'Comentarios: ${wineTaste!.comentarios}', styles: styles),
+          
+          if (wineTaste != null && wineTaste!.comentarios != '') const SizedBox(height: 15),
+          
+          if (wineTaste != null) _CustomLine(text: 'Cata Vista: ${wineTaste?.notasVista}', styles: styles),
+          
+          if (wineTaste != null) _CustomLine(text: 'Cata Nariz: ${wineTaste?.notasNariz}', styles: styles),
+          
+          if (wineTaste != null) _CustomLine(text: 'Cata Boca: ${wineTaste?.notasBoca}', styles: styles),
+
+          SizedBox(height: chipListHeight + 15),
         ],
       )
+    );
+  }
+}
+
+class _LabelLine extends StatelessWidget {
+  const _LabelLine({
+    this.wineTaste,
+    required this.styles,
+  });
+
+  final WineTaste? wineTaste;
+  final TextTheme styles;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      alignment: Alignment.center,
+      child: Text(
+        wineTaste == null 
+          ? 'Ficha técnica global'
+          : 'Valoración de la cata', 
+        style: styles.titleLarge!.copyWith(fontWeight: FontWeight.bold)
+      ),
+    );
+  }
+}
+
+class _NameLine extends StatelessWidget {
+  const _NameLine({
+    required this.wine,
+    required this.styles,
+  });
+
+  final Wines wine;
+  final TextTheme styles;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final width = MediaQuery.of(context).size.width;
+
+    String wineNameTwoLines() { // TODO entender esta funcion
+
+      final text = wine.nombre;
+      final TextStyle style = styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold, fontSize: 17);
+
+      final TextPainter textPainter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      
+      if (textPainter.size.width > (width * 0.6 - 30)) {
+        return wine.nombre;
+      }
+      else {
+        return '${wine.vino}\n${wine.anada}';
+      }
+    }
+
+    return Text(
+      wineNameTwoLines(), 
+      style: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold, fontSize: 17),
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis
+    );
+  }
+}
+
+class _DefaultLine extends StatelessWidget {
+  const _DefaultLine({
+    required this.text,
+    required this.styles,
+  });
+
+  final String text;
+  final TextTheme styles;
+
+  @override
+  Widget build(BuildContext context) {
+
+    if (text == '' || text == '% vol.') return const SizedBox();
+
+    return Text(
+      text, 
+      style: styles.bodyMedium!.copyWith(fontSize: 15),
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis
+    );
+  }
+}
+
+class _CustomLine extends StatelessWidget {
+  const _CustomLine({
+    required this.text,
+    required this.styles,
+  });
+
+  final String text;
+  final TextTheme styles;
+
+  @override
+  Widget build(BuildContext context) {
+
+    if (text == 'Comentarios: ' || text == 'Cata Vista: ' || text == 'Cata Nariz: ' || text == 'Cata Boca: ') return const SizedBox();
+
+    return Text(
+      text, 
+      style: styles.bodyMedium!.copyWith(fontSize: 15),
+      // overflow: TextOverflow.ellipsis
+    );
+  }
+}
+
+class _PointsLine extends StatelessWidget {
+  const _PointsLine({
+    required this.wine, 
+    this.wineTaste,
+    required this.styles,
+  });
+
+  final Wines wine;
+  final WineTaste? wineTaste;
+  final TextTheme styles;
+
+  @override
+  Widget build(BuildContext context) {
+
+    if (wine.puntuacionFinal == -1) {
+      return Text(
+        '\nSin valoraciones',
+      style: styles.bodyMedium!.copyWith(fontSize: 15, fontWeight: FontWeight.bold),
+      );
+    }
+    
+    int puntuacionFinal;
+
+    wineTaste == null
+      ? puntuacionFinal = wine.puntuacionFinal
+      : puntuacionFinal = wineTaste!.puntosFinal;
+
+    return  Row(
+      children: [
+        Text(
+          puntuacionFinal.toString(),
+          style: styles.bodyMedium!.copyWith(fontSize: 15, fontWeight: FontWeight.bold),
+        ),
+
+        Text(
+          ' puntos',
+          style: styles.bodyMedium!.copyWith(fontSize: 15),
+        ),
+      ],
+    );
+  }
+}
+
+class _RatingColumn extends StatelessWidget {
+  const _RatingColumn({
+    required this.wine, 
+    this.wineTaste,
+    required this.styles,
+  });
+
+  final Wines wine;
+  final WineTaste? wineTaste;
+  final TextTheme styles;
+
+  @override
+  Widget build(BuildContext context) {
+
+    if (wine.puntuacionFinal == -1) return const SizedBox();
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            SizedBox(
+              width: 44, 
+              child: Text(
+                'Vista', 
+                style: styles.bodyMedium!.copyWith(fontSize: 15)
+              ),
+            ),
+        
+            RatingDetailsCategory(
+              ratingCategory: wineTaste == null
+                ? wine.puntuacionVista
+                : wineTaste!.puntosVista
+            ),
+          ],
+        ),
+
+        Row(
+          children: [
+            SizedBox(
+              width: 44, 
+              child: Text(
+                'Nariz', 
+                style: styles.bodyMedium!.copyWith(fontSize: 15)
+              ),
+            ),
+        
+            RatingDetailsCategory(
+              ratingCategory: wineTaste == null
+                ? wine.puntuacionNariz
+                : wineTaste!.puntosNariz
+            ),
+          ],
+        ),
+
+        Row(
+          children: [
+            SizedBox(
+              width: 44, 
+              child: Text(
+                'Boca', 
+                style: styles.bodyMedium!.copyWith(fontSize: 15)
+              ),
+            ),
+        
+            RatingDetailsCategory(
+              ratingCategory: wineTaste == null
+                ? wine.puntuacionBoca
+                : wineTaste!.puntosBoca
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _OtherTasteChipList extends StatelessWidget {
+  const _OtherTasteChipList({
+    required this.wine,
+    this.wineTaste,
+    required this.chipListHeight,
+  });
+
+  final Wines wine;
+  final WineTaste? wineTaste;
+  final double chipListHeight;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final chipStyle = Theme.of(context).textTheme.bodySmall;
+    final winesService = Provider.of<WinesService>(context);
+    final String? date = wineTaste?.fecha;
+    final List<WineTaste> otherTaste = winesService.otherWineTaste(wine, date);
+    
+    if (otherTaste.length < 2) return const SizedBox();
+    
+    return Container(
+      height: chipListHeight,
+      padding: const EdgeInsets.only(left: 10, bottom: 5),
+      alignment: Alignment.center,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: otherTaste.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: FilterChip.elevated(
+              showCheckmark: false,
+              label: SizedBox(
+                height: 32,
+                child: Column(
+                  children: [
+                    Text(otherTaste[index].user),
+                
+                    Text('${otherTaste[index].puntosFinal.toString()} puntos'),
+                  ],
+                ),
+              ),
+              labelStyle: chipStyle,
+              // selected: multipleTaste.userView == multipleTaste.otherUsersTaste()[index],
+              onSelected: (value) {
+                // TODO hacer el cambio
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }

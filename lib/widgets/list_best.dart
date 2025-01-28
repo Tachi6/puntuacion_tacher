@@ -72,7 +72,7 @@ class _WinePoster extends StatelessWidget {
 
     String wineNameTwoLines() { // TODO entender esta funcion
 
-      final text = wine.vino;
+      final text = wine.nombre;
       TextStyle style = const TextStyle(fontSize: 10, fontWeight: FontWeight.bold);
 
       final TextPainter textPainter = TextPainter(

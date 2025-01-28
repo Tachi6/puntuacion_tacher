@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -29,14 +30,14 @@ class WinesService extends ChangeNotifier {
 
   bool _needRefreshLogo = false;
 
+  WinesService();
+
   bool get refreshLogo => _needRefreshLogo;
 
   set refreshLogo(bool value) {
     _needRefreshLogo = value;
     notifyListeners();
   }
-
-  WinesService();
 
   Future<void> loadWines() async {
 
@@ -112,29 +113,31 @@ class WinesService extends ChangeNotifier {
     return winesCategory;
   }
 
-  List<Wines> userTastedWines(String mail) {
+  List<WineTaste> userWineTaste(String userUuid) {
     // Creo lista temporal de vinos
-    List<Wines> userTastedWines = [...winesByRate];
+    List<WineTaste> userTastedWines = [...winesTaste];
     // Elimino usuarios que no han catado ese vino
-    userTastedWines.removeWhere((element) => !element.usuarios!.contains(mail));
-    // Elimino todas las catas que no son del usuario
-    for (Wines wine in userTastedWines) {
-      final int userI = wine.usuarios!.indexOf(mail);
-      wine.comentarios = [wine.comentarios![userI]];
-      wine.fechas = [wine.fechas![userI]];
-      wine.notasVista = [wine.notasVista![userI]];
-      wine.notasNariz = [wine.notasNariz![userI]];
-      wine.notasBoca = [wine.notasBoca![userI]];
-      wine.puntuaciones = [wine.puntuaciones![userI]];
-      wine.puntuacionesVista = [wine.puntuacionesVista![userI]];
-      wine.puntuacionesNariz = [wine.puntuacionesNariz![userI]];
-      wine.puntuacionesBoca = [wine.puntuacionesBoca![userI]];
-      wine.usuarios = [wine.usuarios![userI]];
-    }
-    // Ordeno userTastedWines by rate
-    userTastedWines.sort((a, b) => b.puntuaciones![0].compareTo(a.puntuaciones![0]));
-
+    userTastedWines.removeWhere((element) => !element.user.contains(userUuid));
+    // Ordeno la lista por mayores puntuaciones
+    userTastedWines.sort((a, b) => b.puntosFinal.compareTo(a.puntosFinal));
+    
     return userTastedWines;
+  }
+
+  List<WineTaste> otherWineTaste(Wines wine, String? date) {
+    List<WineTaste> otherUsersTastedWines = [];
+    for (var wineTaste in winesTaste) {
+      if(wineTaste.id == wine.id) {
+        otherUsersTastedWines = [...otherUsersTastedWines, wineTaste];
+      }
+    }
+
+    if (date != null) {
+      final userIndex = otherUsersTastedWines.indexWhere((element) => element.fecha == date);
+      if (userIndex != 0) otherUsersTastedWines.swap(0, userIndex);
+    }
+
+    return otherUsersTastedWines;
   }
 
   Wines? get selectedWine {
