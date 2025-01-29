@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:another_flushbar/flushbar.dart';
 
-class NotificationsService {
+class NotificationServices {
 
   // static GlobalKey<ScaffoldMessengerState> messengerKey = GlobalKey<ScaffoldMessengerState>();
 

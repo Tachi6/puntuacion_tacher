@@ -1,6 +1,5 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
 
@@ -254,9 +253,9 @@ class ValidateUserButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final authService = Provider.of<AuthService>(context, listen: false);
-    final winesService = Provider.of<WinesService>(context, listen: false);
-    final multipleService = Provider.of<MultipleService>(context, listen: false);
+    final authService = Provider.of<AuthServices>(context, listen: false);
+    final winesService = Provider.of<WineServices>(context, listen: false);
+    final multipleService = Provider.of<MultipleServices>(context, listen: false);
     final loginForm = Provider.of<LoginProvider>(context);
     final colors = Theme.of(context).colorScheme;
 
@@ -285,7 +284,7 @@ class ValidateUserButton extends StatelessWidget {
             await winesService.loadWinesTaste();
             await multipleService.loadMultiples();
            
-            final newRoute = CupertinoPageRoute(
+            final newRoute = MaterialPageRoute(
               builder: (context) => authService.userDisplayName == '' ? const EnterDisplayNameScreen() : const HomeScreen()
             );
             if (context.mounted) Navigator.pushReplacement(context, newRoute);
@@ -297,7 +296,7 @@ class ValidateUserButton extends StatelessWidget {
           }
           else {
             if (!context.mounted) return;
-            NotificationsService.showSnackbar(errorMessage, context);
+            NotificationServices.showSnackbar(errorMessage, context);
             loginForm.isLoading = false;
           }
         },      

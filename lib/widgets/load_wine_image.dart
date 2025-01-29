@@ -74,7 +74,7 @@ class WineImagePoster extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    final winesService = Provider.of<WinesService>(context);
+    final winesService = Provider.of<WineServices>(context);
     final int wineRatePosition = winesService.winesByRate.indexOf(wine) + 1;
     final colors = Theme.of(context).colorScheme;
 

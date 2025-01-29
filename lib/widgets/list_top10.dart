@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:card_swiper/card_swiper.dart';
 
@@ -29,7 +28,7 @@ class ListTop10 extends StatelessWidget {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              final routeDetails = CupertinoPageRoute(
+              final routeDetails = MaterialPageRoute(
                 builder: (context) => DetailsScreen(wine: wines[index], source: 'top10-$index'));
               Navigator.push(context, routeDetails);
             },

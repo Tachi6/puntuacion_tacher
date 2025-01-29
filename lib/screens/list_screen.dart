@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
@@ -21,7 +20,7 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
   Widget build(BuildContext context) {
     super.build(context);
 
-    final winesService = Provider.of<WinesService>(context, listen: false);
+    final winesService = Provider.of<WineServices>(context, listen: false);
     final colors = Theme.of(context).colorScheme;
 
     if (winesService.isLoading) return const LoadingScreen();
@@ -41,7 +40,7 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
                 onPressed: () async {
                   if (context.mounted) {
                     final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines());
-                    final routeDetails = CupertinoPageRoute(
+                    final routeDetails = MaterialPageRoute(
                       builder: (context) => DetailsScreen(wine:wineSearched, source: 'search')
                     );
                     if (wineSearched != null && context.mounted) Navigator.push(context, routeDetails);
@@ -66,7 +65,7 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
               
               TextButton(
                 onPressed: () {
-                  final routeList = CupertinoPageRoute(
+                  final routeList = MaterialPageRoute(
                     builder: (context) => ListAllScreen(winesService.winesByRate)
                   );
                   Navigator.push(context, routeList);

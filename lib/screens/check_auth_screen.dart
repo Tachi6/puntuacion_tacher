@@ -11,16 +11,18 @@ class CheckAuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final authService = Provider.of<AuthService>(context, listen: false);
-    final winesService = Provider.of<WinesService>(context, listen: false);
-    final multipleService = Provider.of<MultipleService>(context, listen: false);
+    final authService = Provider.of<AuthServices>(context, listen: false);
+    final winesService = Provider.of<WineServices>(context, listen: false);
+    final multipleService = Provider.of<MultipleServices>(context, listen: false);
+    final userService = Provider.of<UserServices>(context, listen: false);
     final colors = Theme.of(context).colorScheme;
 
     Future<void> loadData() async {
       await Future.wait([
         winesService.loadWines(),
         winesService.loadWinesTaste(),
-        multipleService.loadMultiples()
+        multipleService.loadMultiples(),
+        userService.loadUsers(),
       ]);
     }
 

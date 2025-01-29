@@ -40,10 +40,11 @@ class AppState extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: ( _ ) => AuthService()),
+        ChangeNotifierProvider(create: ( _ ) => AuthServices()),
         ChangeNotifierProvider(create: ( _ ) => LoginProvider()),
-        ChangeNotifierProvider(create: ( _ ) => WinesService()),
-        ChangeNotifierProvider(create: ( _ ) => MultipleService()),
+        ChangeNotifierProvider(create: ( _ ) => WineServices()),
+        ChangeNotifierProvider(create: ( _ ) => UserServices()),
+        ChangeNotifierProvider(create: ( _ ) => MultipleServices()),
         ChangeNotifierProvider(create: ( _ ) => ScreensProvider()),
         ChangeNotifierProvider(create: ( _ ) => VisibleOptionsProvider()),
         ChangeNotifierProvider(create: ( _ ) => CreateEditWineFormProvider()),

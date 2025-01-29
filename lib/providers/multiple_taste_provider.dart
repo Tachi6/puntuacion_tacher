@@ -11,7 +11,7 @@ class MultipleTasteProvider extends ChangeNotifier {
   }
 
   String _multipleName = '';
-  late final String userDisplayName;
+  late final String user;
   AutovalidateMode _autovalidateName = AutovalidateMode.disabled;
   // bool _isNameUsed = false;
   int _winesHiddenNumber = 0;
@@ -35,8 +35,8 @@ class MultipleTasteProvider extends ChangeNotifier {
   
   Future<void> obtainUser() async {
     const storage = FlutterSecureStorage();
-    userDisplayName = await storage.read(key: 'displayName') ?? '';
-    userView = userDisplayName;
+    user = await storage.read(key: 'localId') ?? '';
+    userView = user;
     notifyListeners();
   }
 
@@ -99,7 +99,7 @@ class MultipleTasteProvider extends ChangeNotifier {
     if (isTasted) {
       multipleTaste.wines.forEach((key, value) {
         value.forEach((key, value) {
-          if (value.user == userDisplayName) {
+          if (value.user == user) {
             tempUserMultipleTaste.add(value);
           }
         },);
@@ -108,7 +108,7 @@ class MultipleTasteProvider extends ChangeNotifier {
     else {
       for (var i = 0; i < winesMultipleTaste.length; i++) {
         final WineTaste tempUserTaste = WineTaste(
-          user: userDisplayName,
+          user: user,
           id: winesMultipleTaste[i].id ?? 'Vino a ciegas $i',
           nombre: winesMultipleTaste[i].nombre,
           comentarios: '',
@@ -213,12 +213,12 @@ class MultipleTasteProvider extends ChangeNotifier {
     },);
 
     List<String> otherUsers = [];
-    if (userMultipleTaste.isNotEmpty && userMultipleTaste.first.puntosFinal != -1) otherUsers.add(userDisplayName);
+    if (userMultipleTaste.isNotEmpty && userMultipleTaste.first.puntosFinal != -1) otherUsers.add(user);
 
     othersUsersTaste.forEach((key, value) {
       value.forEach((key, value) {
-        if (value.user == userDisplayName) {
-          otherUsers[0] = userDisplayName;
+        if (value.user == user) {
+          otherUsers[0] = user;
         }
         else {
           otherUsers.add(value.user);

@@ -15,7 +15,7 @@ class SelectMultipleTaste extends StatelessWidget {
 
     final taste = Provider.of<VisibleOptionsProvider>(context);
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final multipleService = Provider.of<MultipleService>(context);
+    final multipleService = Provider.of<MultipleServices>(context);
 
     final nameSearchedController = TextEditingController(
       text: multipleTaste.multipleName, 

@@ -11,7 +11,7 @@ import 'package:puntuacion_tacher/models/models.dart';
 
 //TODO repasar que no pase objetos por referencia
 
-class WinesService extends ChangeNotifier {
+class WineServices extends ChangeNotifier {
 
   final String _baseUrl = 'puntos-tacher-default-rtdb.europe-west1.firebasedatabase.app';
   final String _jsonType = 'wines.json';
@@ -30,7 +30,7 @@ class WinesService extends ChangeNotifier {
 
   bool _needRefreshLogo = false;
 
-  WinesService();
+  WineServices();
 
   bool get refreshLogo => _needRefreshLogo;
 
@@ -197,10 +197,6 @@ class WinesService extends ChangeNotifier {
   }
 
   Future<String> saveTastedWine(WineTaste wineTaste) async {
-    // TODO subir tambien uuid???
-    // Cambio uuid por displayName cuando viene mapeado wine a wineTaste
-    final displayName = await storage.read(key: 'displayName');
-    wineTaste.user = displayName!;
     // Creo id de firebase con la fecha custom
     final String idFirebase = wineTaste.fecha;
 

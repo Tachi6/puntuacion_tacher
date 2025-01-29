@@ -78,7 +78,7 @@ class SearchDelegateWines extends SearchDelegate{
   @override
   Widget buildSuggestions(BuildContext context) {
 
-    final winesService = Provider.of<WinesService>(context);
+    final winesService = Provider.of<WineServices>(context);
 
     if (query.isEmpty) return const NoResultsWine();
  

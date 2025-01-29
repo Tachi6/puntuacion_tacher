@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/mappers/mappers.dart';
@@ -170,10 +169,10 @@ class _ContinueButton extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final taste = Provider.of<VisibleOptionsProvider>(context);
-    final authService = Provider.of<AuthService>(context);
+    final authService = Provider.of<AuthServices>(context);
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final multipleService = Provider.of<MultipleService>(context);
-    final wineService = Provider.of<WinesService>(context);
+    final multipleService = Provider.of<MultipleServices>(context);
+    final wineService = Provider.of<WineServices>(context);
     final screenProvider = Provider.of<ScreensProvider>(context, listen: true);
 
     Widget showContinueButton() {
@@ -182,7 +181,7 @@ class _ContinueButton extends StatelessWidget {
           width: 150, 
           onPressed: () {
             if (taste.tasteMultiple == TasteOptionsMultiple.acceder) {
-              final routeList = CupertinoPageRoute(
+              final routeList = MaterialPageRoute(
                 builder: (context) => const PopScope(
                   canPop: false,
                   child: MultipleTasteScreen()
@@ -200,9 +199,10 @@ class _ContinueButton extends StatelessWidget {
               },);
               multipleTaste.addVisibleWines(visibleWines);
               
-              multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userDisplayName);
+              multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userUuid);
               multipleTaste.initUserTaste(multipleService.isMultipleTasted);
-
+              
+              // Navigator.popAndPushNamed(context, 'home');
               Navigator.push(context, routeList);
               taste.showContinueButton = false;
               return;
@@ -212,7 +212,7 @@ class _ContinueButton extends StatelessWidget {
               // To reset RatingBox if multiple taste is used
               screenProvider.multipleScreen = 0;
 
-              final newRoute = CupertinoPageRoute(
+              final newRoute = MaterialPageRoute(
                 builder: (context) => const PopScope(
                   canPop: false,
                   child: _SingleTacherScreen()
@@ -252,7 +252,7 @@ class _SingleTacherScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: true);
-    final winesService = Provider.of<WinesService>(context);
+    final winesService = Provider.of<WineServices>(context);
 
     return TacherScreen(
       appBarTitle: wineForm.wine.nombre == '' ? 'Vino catado a ciegas' : wineForm.wine.nombre,
@@ -304,7 +304,7 @@ class SendTasteButton extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: true);
-    final winesService = Provider.of<WinesService>(context);
+    final winesService = Provider.of<WineServices>(context);
 
     return CustomElevatedButton(
       width: 170,
@@ -312,7 +312,7 @@ class SendTasteButton extends StatelessWidget {
       onPressed: () async {
         // Verifico si se has rellenado todos los campos del formulario
         if (!wineForm.isValidRating()) {
-          NotificationsService.showSnackbar('RELLENA TODOS LOS CAMPOS', context);
+          NotificationServices.showSnackbar('RELLENA TODOS LOS CAMPOS', context);
           return;
         } 
         // Mando updates de los diferentes campos al wine y creo el wineTaste
@@ -348,7 +348,7 @@ class HiddenTasteButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final winesService = Provider.of<WinesService>(context);
+    final winesService = Provider.of<WineServices>(context);
     final taste = Provider.of<VisibleOptionsProvider>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
     final colors = Theme.of(context).colorScheme;
@@ -399,7 +399,7 @@ class HiddenTasteButtons extends StatelessWidget {
           ),
           onPressed: () {
               final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: false);
-              final winesService = Provider.of<WinesService>(context, listen: false);
+              final winesService = Provider.of<WineServices>(context, listen: false);
               final taste = Provider.of<VisibleOptionsProvider>(context, listen: false);
 
               wineForm.setDefaultCreateWine();

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 
+import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
@@ -27,7 +27,7 @@ class AddWineButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final winesService = Provider.of<WinesService>(context, listen: true);
+    final winesService = Provider.of<WineServices>(context, listen: true);
     final colors = Theme.of(context).colorScheme;
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
 
@@ -105,7 +105,7 @@ class CreateNewWineForm extends StatelessWidget {
 
     final Wines wine = wineForm.wine;
     final Size size = MediaQuery.of(context).size;
-    final winesService = Provider.of<WinesService>(context, listen: true);
+    final winesService = Provider.of<WineServices>(context, listen: true);
 
     return SizedBox(
       width: size.width * 0.80,

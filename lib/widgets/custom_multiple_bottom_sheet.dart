@@ -21,7 +21,7 @@ class CustomMultipleBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final multipleService = Provider.of<MultipleService>(context);
+    final multipleService = Provider.of<MultipleServices>(context);
     final screenProvider = Provider.of<ScreensProvider>(context);
 
     return CustomBottomSheet(

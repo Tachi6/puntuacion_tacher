@@ -74,7 +74,7 @@ class _ContainerSliverAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final winesService = Provider.of<WinesService>(context);
+    final winesService = Provider.of<WineServices>(context);
 
     return winesService.refreshLogo 
       ? _CustomLogoImage(wine: wine)
@@ -260,7 +260,7 @@ class _SliverAppBarButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final winesService = Provider.of<WinesService>(context);
+    final winesService = Provider.of<WineServices>(context);
     final statusBarHeight = View.of(context).padding.top / View.of(context).devicePixelRatio;
 
     return Container(
@@ -681,7 +681,8 @@ class _OtherTasteChipList extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final chipStyle = Theme.of(context).textTheme.bodySmall;
-    final winesService = Provider.of<WinesService>(context);
+    final winesService = Provider.of<WineServices>(context);
+    final userService = Provider.of<UserServices>(context);
     final String? date = wineTaste?.fecha;
     final List<WineTaste> otherTaste = winesService.otherWineTaste(wine, date);
     
@@ -695,6 +696,9 @@ class _OtherTasteChipList extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: otherTaste.length,
         itemBuilder: (context, index) {
+
+          final displayName = userService.obtainDisplayName(otherTaste[index].user);
+
           return Padding(
             padding: const EdgeInsets.only(right: 10),
             child: FilterChip.elevated(
@@ -703,7 +707,7 @@ class _OtherTasteChipList extends StatelessWidget {
                 height: 32,
                 child: Column(
                   children: [
-                    Text(otherTaste[index].user),
+                    Text(displayName),
                 
                     Text('${otherTaste[index].puntosFinal.toString()} puntos'),
                   ],
@@ -748,7 +752,7 @@ class _UrlDialogState extends State<UrlDialog> {
   @override
   Widget build(BuildContext context) {
 
-    final winesService = Provider.of<WinesService>(context);
+    final winesService = Provider.of<WineServices>(context);
     final size = MediaQuery.of(context).size;
     final styles = Theme.of(context).textTheme;
     String? logoImageUrl;
@@ -788,7 +792,7 @@ class _UrlDialogState extends State<UrlDialog> {
             isCheckingImage = false;
             setState(() {});
             if (!urlChecked && context.mounted) {
-              NotificationsService.showFlushBar('URL DE IMAGEN INCORRECTA', context);
+              NotificationServices.showFlushBar('URL DE IMAGEN INCORRECTA', context);
               return;
             }
             winesService.refreshLogo = true;
@@ -798,7 +802,7 @@ class _UrlDialogState extends State<UrlDialog> {
           }
           if (logoImageUrl == '') {
             if (context.mounted) {
-              NotificationsService.showFlushBar('URL DE IMAGEN VACIO', context);
+              NotificationServices.showFlushBar('URL DE IMAGEN VACIO', context);
               return;
             }            
           }

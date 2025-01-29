@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -128,7 +127,7 @@ class SearchDelegateMultiple extends SearchDelegate{
                 return;
               }
               if (!isCorrectPassword && context.mounted) {
-                NotificationsService.showSnackbar('Contraseña incorrecta', context); 
+                NotificationServices.showSnackbar('Contraseña incorrecta', context); 
                 return;
               }
               return;
@@ -144,7 +143,7 @@ class SearchDelegateMultiple extends SearchDelegate{
   @override
   Widget buildSuggestions(BuildContext context) {
 
-    final multipleService = Provider.of<MultipleService>(context);
+    final multipleService = Provider.of<MultipleServices>(context);
 
     if (query.isEmpty) {
       return const NoResultsMultiple();
@@ -181,7 +180,7 @@ class SearchDelegateMultiple extends SearchDelegate{
                 return;
               }
               if (!isCorrectPassword && context.mounted) {
-                NotificationsService.showSnackbar('Contraseña incorrecta', context);
+                NotificationServices.showSnackbar('Contraseña incorrecta', context);
                 return;
               }
               return;
@@ -320,7 +319,7 @@ class NoResultsMultiple extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
 
-                final routeDetails = CupertinoPageRoute(
+                final routeDetails = MaterialPageRoute(
                   builder: (context) => const CreateMultipleTasteScreen(),
                 );
                 Navigator.push(context, routeDetails);

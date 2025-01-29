@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/models/models.dart';
@@ -41,8 +40,8 @@ class MyUserBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final authService = Provider.of<AuthService>(context, listen: true);
-    final winesService = Provider.of<WinesService>(context);
+    final authService = Provider.of<AuthServices>(context, listen: true);
+    final winesService = Provider.of<WineServices>(context);
     final styles = Theme.of(context).textTheme;
     final colors = Theme.of(context).colorScheme;
 
@@ -65,7 +64,7 @@ class MyUserBody extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: IconButton(
                       onPressed: () {
-                        final routeDetails = CupertinoPageRoute(
+                        final routeDetails = MaterialPageRoute(
                           builder: (context) => const UserSettingsScreen());
                         Navigator.push(context, routeDetails);
                       }, 
@@ -173,7 +172,7 @@ class MyUserBody extends StatelessWidget {
                   ],
                 ),
                 onTap: () {
-                  final routeDetails = CupertinoPageRoute(
+                  final routeDetails = MaterialPageRoute(
                     builder: (context) => DetailsScreen(wine: wine, wineTaste:wineTaste, email: authService.userUuid, source: 'email-$index'));
                   Navigator.push(context, routeDetails);
                 },

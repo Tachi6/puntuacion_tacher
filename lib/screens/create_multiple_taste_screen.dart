@@ -2,22 +2,19 @@
 
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/helpers/helpers.dart';
-
-import 'package:puntuacion_tacher/models/models.dart';
-import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
+import 'package:puntuacion_tacher/helpers/helpers.dart';
+import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/search/search.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
-
 import '../apptheme/apptheme.dart';
 
 PersistentBottomSheetController viewBottomMenu(BuildContext context) {
@@ -578,8 +575,8 @@ class MultipleActionsButtons extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final multipleService = Provider.of<MultipleService>(context);
-    final authService = Provider.of<AuthService>(context);
+    final multipleService = Provider.of<MultipleServices>(context);
+    final authService = Provider.of<AuthServices>(context);
 
     return Container(
       height: 58,
@@ -594,11 +591,11 @@ class MultipleActionsButtons extends StatelessWidget {
             onPressed: () async {
               // Valido campo descripcion
               if (multipleTaste.multipleTaste.description.isEmpty || multipleTaste.multipleTaste.description.trim().isEmpty) {
-                NotificationsService.showSnackbar('La descripcion de la cata es obligatoria', context);
+                NotificationServices.showSnackbar('La descripcion de la cata es obligatoria', context);
                 return;
               }
               if (multipleTaste.multipleTaste.description.trim().length < 10) {
-                NotificationsService.showSnackbar('La descripcion de la cata muy corta', context);
+                NotificationServices.showSnackbar('La descripcion de la cata muy corta', context);
                 return;
               }
               // Asigno nombre de cata definitivamente
@@ -619,11 +616,11 @@ class MultipleActionsButtons extends StatelessWidget {
             onPressed: () async {
               // Valido campo descripcion
               if (multipleTaste.multipleTaste.description.isEmpty || multipleTaste.multipleTaste.description.trim().isEmpty) {
-                NotificationsService.showSnackbar('La descripcion de la cata es obligatoria', context);
+                NotificationServices.showSnackbar('La descripcion de la cata es obligatoria', context);
                 return;
               }
               if (multipleTaste.multipleTaste.description.trim().length < 10) {
-                NotificationsService.showSnackbar('La descripcion de la cata muy corta', context);
+                NotificationServices.showSnackbar('La descripcion de la cata muy corta', context);
                 return;
               }
               // Asigno nombre de cata definitivamente
@@ -632,11 +629,11 @@ class MultipleActionsButtons extends StatelessWidget {
               // Subo a Firebase la cata multiple
               await multipleService.createMultipleTaste(multipleTaste.initMultiple());
               // Lo comprueblo por si se ha quedado la variable en true antes
-              multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userDisplayName);
+              multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userUuid);
               multipleTaste.initUserTaste(multipleService.isMultipleTasted);
               multipleTaste.autovalidateMode = AutovalidateMode.disabled;
 
-              final routeList = CupertinoPageRoute(
+              final routeList = MaterialPageRoute(
                 builder: (context) => const MultipleTasteScreen()
               );
               if (context.mounted) Navigator.pushReplacement(context, routeList);
@@ -658,7 +655,7 @@ class RowVisibleWines extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final winesService = Provider.of<WinesService>(context);
+    final winesService = Provider.of<WineServices>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: false);
     final taste = Provider.of<VisibleOptionsProvider>(context, listen: false);
     final colors = Theme.of(context).colorScheme;
@@ -684,7 +681,7 @@ class RowVisibleWines extends StatelessWidget {
                       final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines());
                       // Compruebo si el vino ya esta añadido al listado
                       if (context.mounted && multipleTaste.winesMultipleTaste.any((element) => element.id == wineSearched.id)) {
-                        NotificationsService.showSnackbar('Vino duplicado', context);
+                        NotificationServices.showSnackbar('Vino duplicado', context);
                         return;
                       }
                       if (wineSearched != null) multipleTaste.addWine(wineSearched);
@@ -698,7 +695,7 @@ class RowVisibleWines extends StatelessWidget {
                     if (wineForm.wine.imagenVino != null && wineForm.wine.imagenVino != '') {
                       final urlChecked = await winesService.isValidImage(wineForm.wine.imagenVino); // TODO circle progress de espera al await
                       if (!urlChecked && context.mounted) {
-                        NotificationsService.showFlushBar('URL DE IMAGEN INCORRECTA', context);
+                        NotificationServices.showFlushBar('URL DE IMAGEN INCORRECTA', context);
                         return;
                       }
                     }
@@ -807,7 +804,7 @@ class RowHiddenWines extends StatelessWidget {
                   if (multipleTaste.winesMultipleTaste.length > 1) viewBottomMenu(context);
                 }
                 else {
-                  NotificationsService.showSnackbar('NUMERO DE VINOS DEBE ESTAR ENTRE 2 Y 20', context);
+                  NotificationServices.showSnackbar('NUMERO DE VINOS DEBE ESTAR ENTRE 2 Y 20', context);
               }
 
               },
@@ -824,7 +821,7 @@ class RowHiddenWines extends StatelessWidget {
               }
               else {
                 FocusManager.instance.primaryFocus?.unfocus();
-                NotificationsService.showSnackbar('EL NUMERO DE VINOS DEBE ESTAR ENTRE 2 Y 20', context);
+                NotificationServices.showSnackbar('EL NUMERO DE VINOS DEBE ESTAR ENTRE 2 Y 20', context);
               }
             }, 
             icon: Icon(

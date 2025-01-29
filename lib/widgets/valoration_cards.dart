@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
 
@@ -16,7 +15,7 @@ class ValorationCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final winesService = Provider.of<WinesService>(context);
+    final winesService = Provider.of<WineServices>(context);
     // final List<Wines> wines = winesService.winesLatestTasted;
     final List<WineTaste> winesTasteLatest = winesService.winesTaste;
 
@@ -29,7 +28,7 @@ class ValorationCards extends StatelessWidget {
     
         return GestureDetector(
           onTap: () {
-            final routeDetails = CupertinoPageRoute(
+            final routeDetails = MaterialPageRoute(
               builder: (context) => DetailsScreen(wine: wine, wineTaste: wineTaste, email: 'latest', source:'latest-$index'));
             Navigator.push(context, routeDetails);
           },
@@ -90,6 +89,10 @@ class CustomBodyTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final userService = Provider.of<UserServices>(context);
+    final String displayName = userService.obtainDisplayName(wineTaste.user);
+
     return Expanded(
       child: Container(
         padding: const EdgeInsets.only(left: 8, top: 4, right: 8),
@@ -97,7 +100,7 @@ class CustomBodyTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${wineTaste.user} cató ${wineTaste.nombre} y lo valoró con ${wineTaste.puntosFinal} puntos',
+              '$displayName cató ${wineTaste.nombre} y lo valoró con ${wineTaste.puntosFinal} puntos',
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
       

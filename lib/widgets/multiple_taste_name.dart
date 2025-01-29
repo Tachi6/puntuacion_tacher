@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
 
@@ -35,7 +34,7 @@ class _MultipleTasteNameState extends State<MultipleTasteName> {
 
     final colors = Theme.of(context).colorScheme;
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final multipleService = Provider.of<MultipleService>(context);
+    final multipleService = Provider.of<MultipleServices>(context);
 
     return SizedBox(
       height: 85,
@@ -88,10 +87,10 @@ class _MultipleTasteNameState extends State<MultipleTasteName> {
               IconButton(
                 onPressed: () async {
                   if (await multipleService.isMultipleNameUsed(multipleTaste.multipleName) && context.mounted) {
-                    NotificationsService.showSnackbar('El nombre de la cata ya ha sido utilizado.', context);
+                    NotificationServices.showSnackbar('El nombre de la cata ya ha sido utilizado.', context);
                     return;
                   }
-                  final routeList = CupertinoPageRoute(
+                  final routeList = MaterialPageRoute(
                     builder: (context) => const PopScope(
                       canPop: false,
                       child: CreateMultipleTasteScreen(),

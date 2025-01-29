@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
@@ -41,7 +40,7 @@ class ListBestScreen extends StatelessWidget {
               itemBuilder: ( _  , index) {
                 return GestureDetector(
                   onTap: () {
-                    final routeDetails = CupertinoPageRoute(
+                    final routeDetails = MaterialPageRoute(
                       builder: (context) => DetailsScreen(wine: wines[index], source: 'best-$index')
                     );
                     Navigator.push(context, routeDetails);

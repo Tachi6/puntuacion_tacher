@@ -40,10 +40,10 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
   Widget build(BuildContext context) {
 
     final size = MediaQuery.of(context).size;
-    final authService = Provider.of<AuthService>(context);
+    final authService = Provider.of<AuthServices>(context);
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final multipleService = Provider.of<MultipleService>(context);
-    final winesService = Provider.of<WinesService>(context);
+    final multipleService = Provider.of<MultipleServices>(context);
+    final winesService = Provider.of<WineServices>(context);
     final screenProvider = Provider.of<ScreensProvider>(context);
 
     void onPressed() async {
@@ -54,7 +54,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
         return;
       }
       if (!multipleTaste.isValidRating()) {
-        NotificationsService.showSnackbar('RELLENA TODOS LOS CAMPOS', context);
+        NotificationServices.showSnackbar('RELLENA TODOS LOS CAMPOS', context);
         return;
       }
 
@@ -66,7 +66,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
         curve: Curves.easeInOut,           
       );
       // Mando aviso de cata enviada
-      NotificationsService.showSnackbar('Cata múltiple enviada', context);
+      NotificationServices.showSnackbar('Cata múltiple enviada', context);
       // Cargo la cata multiples para tener los ultimos cambios
       final Multiple multipleUpdated = await multipleService.loadMultipleToUpdate(multipleTaste.multipleTaste.name);
       // Actualizo el multiple local
@@ -91,6 +91,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
         await winesService.updateWine(WinesMapper.wineTasteToWines(wineTaste, winesService.winesByIndex[wineId], authService.userUuid));
         await winesService.saveTastedWine(wineTaste);
       }
+      // TODO mirar que aqui arriba mande bien el uuid tanto en wines como en winetaste
     }
 
     List<Widget> tastePages() {

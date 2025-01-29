@@ -2,7 +2,7 @@
 // Link https://unsplash.com/es/fotos/copa-de-vino-transparente-con-vino-tinto-Y4PJ5F_Oskw
 
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
@@ -61,7 +61,7 @@ class ListAllScreen extends StatelessWidget {
                 onPressed: () async {
                   if (context.mounted) {
                     final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines());
-                    final routeDetails = CupertinoPageRoute(
+                    final routeDetails = MaterialPageRoute(
                       builder: (context) => DetailsScreen(wine:wineSearched, source: 'search')
                     );
                     
@@ -126,7 +126,7 @@ class _ListAllBody extends StatelessWidget {
             ],
           ),
           onTap: () {
-            final routeDetails = CupertinoPageRoute(
+            final routeDetails = MaterialPageRoute(
               builder: (context) => DetailsScreen(wine: wines[index], source: 'list'));
             Navigator.push(context, routeDetails);
           },

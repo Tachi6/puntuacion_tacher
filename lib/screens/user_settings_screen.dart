@@ -15,7 +15,7 @@ class UserSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final authService = Provider.of<AuthService>(context);  
+    final authService = Provider.of<AuthServices>(context);  
     final Size size = MediaQuery.of(context).size;
     final colors = Theme.of(context).colorScheme;
     final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
@@ -45,23 +45,23 @@ class UserSettingsScreen extends StatelessWidget {
                     }
 
                     if (authService.tempDisplayName == '') {
-                      NotificationsService.showSnackbar('NOMBRE DE USUARIO VACIO', context);
+                      NotificationServices.showSnackbar('NOMBRE DE USUARIO VACIO', context);
                       return;
                     }
 
                     if (authService.tempDisplayName.trim().length < 4) {
-                      NotificationsService.showSnackbar('NOMBRE DE USUARIO MUY CORTO', context);
+                      NotificationServices.showSnackbar('NOMBRE DE USUARIO MUY CORTO', context);
                       return;
                     }
 
                     if (await authService.isUniqueDisplayName(authService.tempDisplayName)) {
                       await authService.renameUser(authService.tempDisplayName);
-                      if (context.mounted) NotificationsService.showSnackbar('NOMBRE DE USUARIO ACTUALIZADO', context);
+                      if (context.mounted) NotificationServices.showSnackbar('NOMBRE DE USUARIO ACTUALIZADO', context);
                       if (context.mounted) Navigator.pop(context);
                       return;
                     }
                     if (!await authService.isUniqueDisplayName(authService.tempDisplayName)) {
-                      if (context.mounted) NotificationsService.showSnackbar('NOMBRE DE USUARIO YA UTILIZADO', context);
+                      if (context.mounted) NotificationServices.showSnackbar('NOMBRE DE USUARIO YA UTILIZADO', context);
                       return;
                     }
                   }, 
@@ -100,7 +100,7 @@ class _UserSettingsBody extends StatelessWidget {
 
   final ColorScheme colors;
   final Size size;
-  final AuthService authService;
+  final AuthServices authService;
 
   @override
   Widget build(BuildContext context) {
@@ -285,7 +285,7 @@ class SettingsEndButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final authService = Provider.of<AuthService>(context, listen: false);
+    final authService = Provider.of<AuthServices>(context, listen: false);
     final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
     final screenProvider = Provider.of<ScreensProvider>(context, listen: true);
 

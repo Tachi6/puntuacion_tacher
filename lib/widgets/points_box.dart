@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:provider/provider.dart';
 
@@ -22,7 +21,7 @@ class PointsBox extends StatelessWidget {
     final taste = Provider.of<VisibleOptionsProvider>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: true);
     final screenProvider = Provider.of<ScreensProvider>(context);
-    final winesService = Provider.of<WinesService>(context);
+    final winesService = Provider.of<WineServices>(context);
     final styles = Theme.of(context).textTheme;
 
     return PopScope(
@@ -59,7 +58,7 @@ class PointsBox extends StatelessWidget {
           winesService.selectedWine = null;
           // Vuelvo a pantalla de inicio
           screenProvider.currentScreen = 0;
-          final routeDetails = CupertinoPageRoute(
+          final routeDetails = MaterialPageRoute(
             builder: (context) => const HomeScreen()
           );
           Navigator.pushReplacement(context, routeDetails);

@@ -1,9 +1,9 @@
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/providers/providers.dart';
-import 'package:puntuacion_tacher/search/search_delegate_wines.dart';
 
+import 'package:provider/provider.dart';
+
+import 'package:puntuacion_tacher/search/search_delegate_wines.dart';
+import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -14,7 +14,7 @@ class SearchTasteWine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final winesService = Provider.of<WinesService>(context);
+    final winesService = Provider.of<WineServices>(context);
     final taste = Provider.of<VisibleOptionsProvider>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
 
@@ -76,7 +76,7 @@ class SearchTasteWine extends StatelessWidget {
                       if (wineForm.wine.imagenVino != null && wineForm.wine.imagenVino != '') {
                         final urlChecked = await winesService.isValidImage(wineForm.wine.imagenVino); // TODO circle progress de espera al await
                         if (!urlChecked && context.mounted) {
-                          NotificationsService.showFlushBar('URL DE IMAGEN INCORRECTA', context);
+                          NotificationServices.showFlushBar('URL DE IMAGEN INCORRECTA', context);
                           return;
                         }
                       }

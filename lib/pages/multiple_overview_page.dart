@@ -51,7 +51,7 @@ class UserMultipleTasteDetails extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final multipleService = Provider.of<MultipleService>(context);
+    final multipleService = Provider.of<MultipleServices>(context);
     final wineTasteList = multipleTaste.userMultipleTaste;
 
     return SizedBox(
@@ -207,11 +207,15 @@ class _OtherUsersTaste extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: multipleTaste.otherUsersTaste().length,
         itemBuilder: (context, index) {
+
+          final userService = Provider.of<UserServices>(context);
+          final String displayName = userService.obtainDisplayName(multipleTaste.otherUsersTaste()[index]); // TODO comprobar que funciona
+
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: FilterChip.elevated(
               showCheckmark: false,
-              label: Text(multipleTaste.otherUsersTaste()[index]),
+              label: Text(displayName),
               labelStyle: styles.bodySmall,
               selected: multipleTaste.userView == multipleTaste.otherUsersTaste()[index],
               onSelected: (value) => multipleTaste.userView = multipleTaste.otherUsersTaste()[index],

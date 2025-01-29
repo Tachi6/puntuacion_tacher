@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -31,7 +32,7 @@ class _RadioWidgetNormalState extends State<RadioWidgetNormal> {
   @override
   Widget build(BuildContext context) {
 
-    final winesService = Provider.of<WinesService>(context, listen: false);
+    final winesService = Provider.of<WineServices>(context, listen: false);
     final taste = Provider.of<VisibleOptionsProvider>(context);
     final colors = Theme.of(context).colorScheme;
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/models/models.dart';
 
+import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 
@@ -13,7 +13,7 @@ class CustomMultipleAppBar extends StatelessWidget implements PreferredSizeWidge
   Widget build(BuildContext context) {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final multipleService = Provider.of<MultipleService>(context);
+    final multipleService = Provider.of<MultipleServices>(context);
     final screenProvider = Provider.of<ScreensProvider>(context);
     final size = MediaQuery.of(context).size;
     
