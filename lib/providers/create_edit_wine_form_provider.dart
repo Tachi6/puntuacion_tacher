@@ -157,7 +157,7 @@ class CreateEditWineFormProvider extends ChangeNotifier {
     puntosFinal = formulas.calculosFinal;
     notifyListeners();
     // Añado fechas y usuario
-    wine.fechas!.add(CustomDatetime().toText(DateTime.now()));
+    wine.fechas!.add(CustomDatetime().toText(DateTime.now().toUtc()));
     wine.usuarios!.add(user);
     // Añado notas de cata y comentarios
     wine.notasVista!.add(notasVista);

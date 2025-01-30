@@ -107,7 +107,7 @@ class MultipleServices extends ChangeNotifier {
     Map<String, WineTaste> userMultipleTasteMap = {};
     // Paso listado de List<WineTaste> a Map<String, WineTaste>
     for (var element in userMultipleTaste) {
-      final String date = CustomDatetime().toText(DateTime.now());
+      final String date = CustomDatetime().toText(DateTime.now().toUtc());
       // Añado fecha de cata al WineTaste
       element.fecha = date;
       // Creo nueva entrada para en map

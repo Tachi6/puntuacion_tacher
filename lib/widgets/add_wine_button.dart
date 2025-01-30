@@ -167,7 +167,7 @@ class CreateNewWineForm extends StatelessWidget {
                   if (value!.isEmpty) return 'Este campo es obligatorio';
 
                   final int anada = int.parse(value);
-                  final year = DateTime.now().year;
+                  final year = DateTime.now().toUtc().year;
                       
                   if (anada < 1950 || anada > year ) return 'Añada no válida';
 
@@ -279,7 +279,7 @@ class TextFormFieldAnada extends StatelessWidget {
         }
             
         final int anada = int.parse(value!);
-        final year = DateTime.now().year;
+        final year = DateTime.now().toUtc().year;
             
         if (anada < 1950 || anada > year ) {
           return 'Añada no válida';

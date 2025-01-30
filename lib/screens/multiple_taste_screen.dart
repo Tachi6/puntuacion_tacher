@@ -100,7 +100,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
         ? CustomDatetime().toDateTime('3000-01-01T00:00:00.000')
         : CustomDatetime().toDateTime(multipleTaste.multipleTaste.dateLimit!);
 
-      if (datelimit.isBefore(DateTime.now())) {
+      if (datelimit.isBefore(DateTime.now().toUtc())) {
         tastePages = [];
       }
       if (multipleService.isMultipleTasted) {

@@ -175,7 +175,7 @@ class ItemsAddWineForm {
   ];
 
   static List<String> anada() {
-    final DateTime date = DateTime.now();
+    final DateTime date = DateTime.now().toUtc();
     final int year = date.year;
     final anada = List.generate(year - 1950, (index) => (year - index).toString());
     return anada;
