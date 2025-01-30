@@ -631,6 +631,7 @@ class MultipleActionsButtons extends StatelessWidget {
               // Lo comprueblo por si se ha quedado la variable en true antes
               multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userUuid);
               multipleTaste.initUserTaste(multipleService.isMultipleTasted);
+              // Como creo la cata es imposible que esta catada, por eso no pongo el overview global en true
               multipleTaste.autovalidateMode = AutovalidateMode.disabled;
 
               final routeList = MaterialPageRoute(

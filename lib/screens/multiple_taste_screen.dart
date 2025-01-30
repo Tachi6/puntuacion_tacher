@@ -46,7 +46,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
     final winesService = Provider.of<WineServices>(context);
     final screenProvider = Provider.of<ScreensProvider>(context);
 
-    void onPressed() async {
+    void onPressedBottomSheetButton() async {
       if (multipleService.isMultipleTasted) {
         Navigator.pop(context);
         multipleTaste.resetSettings();
@@ -91,7 +91,6 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
         await winesService.updateWine(WinesMapper.wineTasteToWines(wineTaste, winesService.winesByIndex[wineId], authService.userUuid));
         await winesService.saveTastedWine(wineTaste);
       }
-      // TODO mirar que aqui arriba mande bien el uuid tanto en wines como en winetaste
     }
 
     List<Widget> tastePages() {
@@ -103,7 +102,10 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
 
       if (datelimit.isBefore(DateTime.now())) {
         tastePages = [];
-      } 
+      }
+      if (multipleService.isMultipleTasted) {
+        tastePages = [];
+      }
       else {
         for (var wine in multipleTaste.winesMultipleTaste) {
           final Widget tastePage = TacherScreen(
@@ -121,7 +123,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       return [
         const MultipleInitialPage(),
         
-        if (!multipleService.isMultipleTasted) ...tastePages,
+        ...tastePages,
         
         const MultipleOverviewPage(),
       ];
@@ -143,7 +145,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       ),
       bottomSheet: CustomMultipleBottomSheet(
         pageController: pageController, 
-        onPressed: onPressed,
+        onPressed: onPressedBottomSheetButton,
         totalPages: tastePages().length,
       ),
     );

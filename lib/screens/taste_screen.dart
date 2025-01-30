@@ -201,8 +201,11 @@ class _ContinueButton extends StatelessWidget {
               
               multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userUuid);
               multipleTaste.initUserTaste(multipleService.isMultipleTasted);
-              
-              // Navigator.popAndPushNamed(context, 'home');
+              // Activo vista global en el overview si esta catada
+              if (multipleService.isMultipleTasted) {
+                multipleTaste.overview = true;
+              }
+              // Navego a siguiente pantalla
               Navigator.push(context, routeList);
               taste.showContinueButton = false;
               return;

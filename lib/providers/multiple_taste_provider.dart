@@ -371,13 +371,6 @@ class MultipleTasteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // bool get isNameUsed => _isNameUsed;
-
-  // set isNameUsed(bool value) {
-  //   _isNameUsed = value;
-  //   notifyListeners();
-  // }
-
   int get winesHiddenNumber => _winesHiddenNumber;
 
   set winesHiddenNumber(int value) {
