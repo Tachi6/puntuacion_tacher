@@ -8,14 +8,13 @@ import 'package:http/http.dart' as http;
 import 'package:puntuacion_tacher/models/models.dart';
 
 class MultipleServices extends ChangeNotifier {
+  MultipleServices();
 
   final String _baseUrl = 'puntos-tacher-default-rtdb.europe-west1.firebasedatabase.app';
   final String _jsonTypeMultiple = 'multiple.json';
 
   List<Multiple> multipleTasteList = [];
   bool _isMultipleTasted = false;
-
-  MultipleServices();
 
   bool get isMultipleTasted => _isMultipleTasted;
 

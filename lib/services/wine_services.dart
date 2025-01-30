@@ -12,6 +12,7 @@ import 'package:puntuacion_tacher/models/models.dart';
 //TODO repasar que no pase objetos por referencia
 
 class WineServices extends ChangeNotifier {
+  WineServices();
 
   final String _baseUrl = 'puntos-tacher-default-rtdb.europe-west1.firebasedatabase.app';
   final String _jsonType = 'wines.json';
@@ -29,8 +30,6 @@ class WineServices extends ChangeNotifier {
   bool isSaving = false;
 
   bool _needRefreshLogo = false;
-
-  WineServices();
 
   bool get refreshLogo => _needRefreshLogo;
 

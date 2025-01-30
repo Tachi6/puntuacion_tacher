@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -143,8 +142,16 @@ class LoginRegisterForm extends StatelessWidget {
           ),
               
           const SizedBox(height: 40),
-   
-          const ValidateUserButton(),
+
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 1250),
+            layoutBuilder: (currentChild, previousChildren) {
+              return currentChild!;
+            },
+            child: loginForm.isRegister
+              ? const ValidateUserButton(key: ValueKey('register_button'))
+              : const ValidateUserButton(key: ValueKey('login_button')),
+          ),
     
           const SizedBox(height: 10),
   
@@ -156,9 +163,17 @@ class LoginRegisterForm extends StatelessWidget {
               layoutBuilder: (currentChild, previousChildren) {
                 return currentChild!;
               },
-              child: loginForm.isRegister 
-                ? FadeIn(child: Text('¿Ya tienes una cuenta?', style: TextStyle(color: colors.surface, fontWeight: FontWeight.bold)))
-                : Text('Crear una nueva cuenta', style: TextStyle(color: colors.surface, fontWeight: FontWeight.bold)), 
+              child: loginForm.isRegister // TODO poner key para ver si funciona
+                ? Text(
+                  key: const ValueKey('old_account_text'),
+                  '¿Ya tienes una cuenta?',
+                  style: TextStyle(color: colors.surface, fontWeight: FontWeight.bold)
+                  )
+                : Text(
+                  key: const ValueKey('new_account_text'),
+                  'Crear una nueva cuenta', 
+                  style: TextStyle(color: colors.surface, fontWeight: FontWeight.bold)
+                  ), 
             ),
           ),
         ],
@@ -256,6 +271,7 @@ class ValidateUserButton extends StatelessWidget {
     final authService = Provider.of<AuthServices>(context, listen: false);
     final winesService = Provider.of<WineServices>(context, listen: false);
     final multipleService = Provider.of<MultipleServices>(context, listen: false);
+    final userService = Provider.of<UserServices>(context, listen: false);
     final loginForm = Provider.of<LoginProvider>(context);
     final colors = Theme.of(context).colorScheme;
 
@@ -280,6 +296,7 @@ class ValidateUserButton extends StatelessWidget {
 
             if (!context.mounted) return;
 
+            await userService.loadUsers();
             await winesService.loadWines();
             await winesService.loadWinesTaste();
             await multipleService.loadMultiples();
@@ -300,23 +317,17 @@ class ValidateUserButton extends StatelessWidget {
             loginForm.isLoading = false;
           }
         },      
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 1250),
-          layoutBuilder: (currentChild, previousChildren) {
-            return currentChild!;
-          },
-          child: loginForm.isRegister 
-            ? FadeIn(
-              child: Text(
-                loginForm.isLoading ? 'Registrando' : 'Registrar', 
-                style: TextStyle(color: colors.primary, fontSize: 16)
-              )
-            )
-            : Text(
-              loginForm.isLoading ? 'Ingresando' : 'Ingresar', 
-              style: TextStyle(color: colors.primary, fontSize: 16)
-            ), 
-        ),
+        child: loginForm.isRegister 
+          ? Text(
+            key: const ValueKey('register_text'),
+            loginForm.isLoading ? 'Registrando' : 'Registrar', 
+            style: TextStyle(color: colors.primary, fontSize: 16)
+          )
+          : Text(
+            key: const ValueKey('login_text'),
+            loginForm.isLoading ? 'Ingresando' : 'Ingresar', 
+            style: TextStyle(color: colors.primary, fontSize: 16)
+          ), 
       ),
     );
   }

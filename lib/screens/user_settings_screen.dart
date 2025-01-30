@@ -15,7 +15,8 @@ class UserSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final authService = Provider.of<AuthServices>(context);  
+    final authService = Provider.of<AuthServices>(context);
+    final userService = Provider.of<UserServices>(context); 
     final Size size = MediaQuery.of(context).size;
     final colors = Theme.of(context).colorScheme;
     final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
@@ -54,13 +55,14 @@ class UserSettingsScreen extends StatelessWidget {
                       return;
                     }
 
-                    if (await authService.isUniqueDisplayName(authService.tempDisplayName)) {
-                      await authService.renameUser(authService.tempDisplayName);
+                    if (await userService.isUniqueDisplayName(authService.tempDisplayName)) {
+                      await authService.changeDisplayName(authService.tempDisplayName);
+                      await userService.updateUuidDisplayName(authService.tempDisplayName);
                       if (context.mounted) NotificationServices.showSnackbar('NOMBRE DE USUARIO ACTUALIZADO', context);
                       if (context.mounted) Navigator.pop(context);
                       return;
                     }
-                    if (!await authService.isUniqueDisplayName(authService.tempDisplayName)) {
+                    else {
                       if (context.mounted) NotificationServices.showSnackbar('NOMBRE DE USUARIO YA UTILIZADO', context);
                       return;
                     }

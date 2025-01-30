@@ -85,8 +85,6 @@ class AuthServices extends ChangeNotifier {
 
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
 
-    print(decodedResp);
-
     if (decodedResp.containsKey('idToken')) {
       await storage.write(key: 'email', value: email);
       userUuid = decodedResp['localId'];
@@ -95,9 +93,11 @@ class AuthServices extends ChangeNotifier {
       await storage.write(key: 'idToken', value: decodedResp['idToken']);
       await storage.write(key: 'displayName', value: decodedResp['displayName']);
       await storage.write(key: 'localId', value: decodedResp['localId']);
-      userDisplayName = decodedResp['displayName'];
-      userInitial = decodedResp['displayName'][0].toUpperCase();
-      tempDisplayName = decodedResp['displayName'];
+      if (decodedResp['displayName'] != '') {
+        userDisplayName = decodedResp['displayName'];
+        userInitial = decodedResp['displayName'][0].toUpperCase();
+        tempDisplayName = decodedResp['displayName'];
+      }
 
       isUserLogued = true;
 
@@ -143,38 +143,7 @@ class AuthServices extends ChangeNotifier {
     
   }
 
-  Future<bool> isUniqueDisplayName(String newDisplayName) async {
-
-    const String baseUrl = 'puntos-tacher-default-rtdb.europe-west1.firebasedatabase.app';
-    const String jsonUpdateType = 'users.json';
-    final String idToken = await storage.read(key: 'idToken') ?? '';
-    final String oldDisplayName = await storage.read(key: 'displayName') ?? '';
-    final String jsonDeleteType = 'users/$oldDisplayName.json';
-
-    final url = Uri.https(baseUrl, jsonUpdateType, {
-      'auth': idToken,
-    });
-
-    final Map<String, String> data = {
-      newDisplayName: ""
-    };
-
-    final String json = jsonEncode(data);
-
-    final resp = await http.patch(url, body: json);
-
-    final urlDelete = Uri.https(baseUrl, jsonDeleteType, {
-      'auth': idToken,
-    });
-
-    await http.delete(urlDelete);
-
-    if(resp.statusCode == 200) return true;
-
-    return false;
-  }
-
-  Future<String?> renameUser(String displayName) async {
+  Future<String?> changeDisplayName(String displayName) async {
 
     final idToken = await storage.read(key: 'idToken');
 

@@ -31,6 +31,7 @@ class ChangeDisplayNameBox extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final authService = Provider.of<AuthServices>(context);
+    final userService = Provider.of<UserServices>(context);
     final colors = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
 
@@ -77,7 +78,6 @@ class ChangeDisplayNameBox extends StatelessWidget {
                 width: 150,
                 child: Text('Comenzar', style: TextStyle(color: colors.primary, fontSize: 16)),
                 onPressed: () async { 
-                  // TODO actualizar base de datos de nombres de usuario
                   FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
 
                   if (authService.tempDisplayName == '') {
@@ -90,8 +90,9 @@ class ChangeDisplayNameBox extends StatelessWidget {
                     return;
                   }
 
-                  if (await authService.isUniqueDisplayName(authService.tempDisplayName)) {
-                    await authService.renameUser(authService.tempDisplayName);
+                  if (await userService.isUniqueDisplayName(authService.tempDisplayName)) {
+                    await authService.changeDisplayName(authService.tempDisplayName);
+                    await userService.updateUuidDisplayName(authService.tempDisplayName);
                     
                     final newRoute = MaterialPageRoute(
                       builder: (context) => authService.userDisplayName == '' ? const EnterDisplayNameScreen() : const HomeScreen()
@@ -99,7 +100,7 @@ class ChangeDisplayNameBox extends StatelessWidget {
                     if (context.mounted) Navigator.pushReplacement(context, newRoute);
                     return;
                   }
-                  if (!await authService.isUniqueDisplayName(authService.tempDisplayName)) {
+                  else {
                     if (context.mounted) NotificationServices.showSnackbar('NOMBRE DE USUARIO YA UTILIZADO', context);
                     return;
                   }

@@ -19,10 +19,10 @@ class CheckAuthScreen extends StatelessWidget {
 
     Future<void> loadData() async {
       await Future.wait([
+        userService.loadUsers(),
         winesService.loadWines(),
         winesService.loadWinesTaste(),
         multipleService.loadMultiples(),
-        userService.loadUsers(),
       ]);
     }
 
