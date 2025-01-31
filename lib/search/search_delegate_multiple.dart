@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:puntuacion_tacher/helpers/helpers.dart';
+import 'package:diacritic/diacritic.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
@@ -150,7 +151,7 @@ class SearchDelegateMultiple extends SearchDelegate{
     }
  
     _filtro = multipleService.multipleTasteList.where((multiple) {
-      return multiple.name.toLowerCase().contains(query.trim().toLowerCase());
+      return removeDiacritics(multiple.name.toLowerCase()).contains(removeDiacritics(query.trim().toLowerCase()));
     }).toList();
 
     if(_filtro.isEmpty) {

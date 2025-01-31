@@ -51,6 +51,7 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: ( _ ) => ChangeThemeProvider()),
         ChangeNotifierProvider(create: ( _ ) => MultipleTasteProvider()),
         ChangeNotifierProvider(create: ( _ ) => ScreenElementsSizeProvider()),
+        ChangeNotifierProvider(create: ( _ ) => OtherTasteProvider()),
       ],
       child: const MyApp(),
     );

@@ -1,15 +1,16 @@
 // Photo by <a href="/photographer/muddy-31912">muddy</a> on <a href="/">Freeimages.com</a>
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
 import 'package:image_pixels/image_pixels.dart';
 import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 
+import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -47,7 +48,7 @@ class DetailsScreen extends StatelessWidget {
       
                 SliverList(
                   delegate: SliverChildListDelegate([
-                    _WinePoster(wine: wine, wineTaste: wineTaste, source: source, chipListHeight: chipListHeight),
+                    _WinePoster(wine: wine, source: source, chipListHeight: chipListHeight),
                   ])
                 )
               ],
@@ -55,7 +56,7 @@ class DetailsScreen extends StatelessWidget {
 
             Align(
               alignment: Alignment.bottomCenter,
-              child: _OtherTasteChipList(wine: wine, wineTaste: wineTaste, chipListHeight: chipListHeight),
+              child: _OtherTasteChipList(wine: wine, chipListHeight: chipListHeight),
             ),
           ],
         ),
@@ -344,13 +345,11 @@ class _CustomBackgroundImage extends StatelessWidget {
 class _WinePoster extends StatelessWidget {
   const _WinePoster({
     required this.wine, 
-    this.wineTaste,
     required this.source,
     required this.chipListHeight,
   });
 
   final Wines wine;
-  final WineTaste? wineTaste;
   final String source;
   final double chipListHeight;
 
@@ -359,6 +358,8 @@ class _WinePoster extends StatelessWidget {
     
     final styles = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
+    final otherTasteProvider = Provider.of<OtherTasteProvider>(context);
+    final WineTaste? wineTaste = otherTasteProvider.selectedWineTaste;
 
     return Container(
       padding: const EdgeInsets.only(left: 20, right: 20),
@@ -418,15 +419,15 @@ class _WinePoster extends StatelessWidget {
 
           const SizedBox(height: 15),
 
-          if (wineTaste != null) _CustomLine(text: 'Comentarios: ${wineTaste!.comentarios}', styles: styles),
+          if (wineTaste != null) _CustomLine(label: 'Comentarios', text: wineTaste.comentarios!, styles: styles),
           
-          if (wineTaste != null && wineTaste!.comentarios != '') const SizedBox(height: 15),
+          if (wineTaste != null && wineTaste.comentarios != '') const SizedBox(height: 15),
           
-          if (wineTaste != null) _CustomLine(text: 'Cata Vista: ${wineTaste?.notasVista}', styles: styles),
+          if (wineTaste != null) _CustomLine(label: 'Cata Vista', text: wineTaste.notasVista!, styles: styles),
           
-          if (wineTaste != null) _CustomLine(text: 'Cata Nariz: ${wineTaste?.notasNariz}', styles: styles),
+          if (wineTaste != null) _CustomLine(label: 'Cata Nariz', text: wineTaste.notasNariz!, styles: styles),
           
-          if (wineTaste != null) _CustomLine(text: 'Cata Boca: ${wineTaste?.notasBoca}', styles: styles),
+          if (wineTaste != null) _CustomLine(label: 'Cata Boca', text: wineTaste.notasBoca!, styles: styles),
 
           SizedBox(height: chipListHeight + 15),
         ],
@@ -446,13 +447,16 @@ class _LabelLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final userService = Provider.of<UserServices>(context);
+
     return Container(
       width: double.infinity,
       alignment: Alignment.center,
       child: Text(
         wineTaste == null 
           ? 'Ficha técnica global'
-          : 'Valoración de la cata', 
+          : 'Valoración de ${userService.obtainDisplayName(wineTaste!.user)}', 
         style: styles.titleLarge!.copyWith(fontWeight: FontWeight.bold)
       ),
     );
@@ -525,22 +529,35 @@ class _DefaultLine extends StatelessWidget {
 
 class _CustomLine extends StatelessWidget {
   const _CustomLine({
+    required this.label,
     required this.text,
     required this.styles,
   });
 
+  final String label;
   final String text;
   final TextTheme styles;
 
   @override
   Widget build(BuildContext context) {
 
-    if (text == 'Comentarios: ' || text == 'Cata Vista: ' || text == 'Cata Nariz: ' || text == 'Cata Boca: ') return const SizedBox();
+    if (text == '') return const SizedBox();
 
-    return Text(
-      text, 
-      style: styles.bodyMedium!.copyWith(fontSize: 15),
-      // overflow: TextOverflow.ellipsis
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label, 
+          style: styles.bodyMedium!.copyWith(fontSize: 15, fontWeight: FontWeight.bold),
+          // overflow: TextOverflow.ellipsis
+        ),
+
+        Text(
+          text, 
+          style: styles.bodyMedium!.copyWith(fontSize: 15),
+          // overflow: TextOverflow.ellipsis
+        ),
+      ],
     );
   }
 }
@@ -669,12 +686,10 @@ class _RatingColumn extends StatelessWidget {
 class _OtherTasteChipList extends StatelessWidget {
   const _OtherTasteChipList({
     required this.wine,
-    this.wineTaste,
     required this.chipListHeight,
   });
 
   final Wines wine;
-  final WineTaste? wineTaste;
   final double chipListHeight;
 
   @override
@@ -683,8 +698,10 @@ class _OtherTasteChipList extends StatelessWidget {
     final chipStyle = Theme.of(context).textTheme.bodySmall;
     final winesService = Provider.of<WineServices>(context);
     final userService = Provider.of<UserServices>(context);
+    final otherTasteProvider = Provider.of<OtherTasteProvider>(context);
+    final WineTaste? wineTaste = otherTasteProvider.selectedWineTaste;
     final String? date = wineTaste?.fecha;
-    final List<WineTaste> otherTaste = winesService.otherWineTaste(wine, date);
+    final List<WineTaste> otherTaste = winesService.otherWineTaste(wine, date, otherTasteProvider.isChangingSelectedWineTaste);
     
     if (otherTaste.length < 2) return const SizedBox();
     
@@ -700,7 +717,7 @@ class _OtherTasteChipList extends StatelessWidget {
           final displayName = userService.obtainDisplayName(otherTaste[index].user);
 
           return Padding(
-            padding: const EdgeInsets.only(right: 10),
+            padding: const EdgeInsets.only(right: 10), 
             child: FilterChip.elevated(
               showCheckmark: false,
               label: SizedBox(
@@ -714,10 +731,11 @@ class _OtherTasteChipList extends StatelessWidget {
                 ),
               ),
               labelStyle: chipStyle,
-              // selected: multipleTaste.userView == multipleTaste.otherUsersTaste()[index],
+              selected: otherTaste[index].fecha == wineTaste?.fecha,
               onSelected: (value) {
-                // TODO hacer el cambio
-              },
+                otherTasteProvider.isChangingSelectedWineTaste = true;
+                otherTasteProvider.selectedWineTaste = otherTaste[index];
+              } 
             ),
           );
         },

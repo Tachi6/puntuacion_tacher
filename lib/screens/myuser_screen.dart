@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/models/models.dart';
-import 'package:puntuacion_tacher/screens/screens.dart';
 
+import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -40,8 +41,9 @@ class MyUserBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final authService = Provider.of<AuthServices>(context, listen: true);
+    final authService = Provider.of<AuthServices>(context);
     final winesService = Provider.of<WineServices>(context);
+    final otherTasteProvider = Provider.of<OtherTasteProvider>(context);
     final styles = Theme.of(context).textTheme;
     final colors = Theme.of(context).colorScheme;
 
@@ -172,8 +174,13 @@ class MyUserBody extends StatelessWidget {
                   ],
                 ),
                 onTap: () {
+                  // Asigno el selected WineTaste
+                  otherTasteProvider.selectedWineTaste = wineTaste;
+                  // Permito ordenar los otherTaste
+                  otherTasteProvider.isChangingSelectedWineTaste = false;
+
                   final routeDetails = MaterialPageRoute(
-                    builder: (context) => DetailsScreen(wine: wine, wineTaste:wineTaste, email: authService.userUuid, source: 'email-$index'));
+                    builder: (context) => DetailsScreen(wine: wine, email: authService.userUuid, source: 'email-$index'));
                   Navigator.push(context, routeDetails);
                 },
               );

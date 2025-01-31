@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/load_wine_image.dart';
@@ -16,7 +17,7 @@ class ValorationCards extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final winesService = Provider.of<WineServices>(context);
-    // final List<Wines> wines = winesService.winesLatestTasted;
+    final otherTasteProvider = Provider.of<OtherTasteProvider>(context);
     final List<WineTaste> winesTasteLatest = winesService.winesTaste;
 
     return ListView.builder(
@@ -28,8 +29,13 @@ class ValorationCards extends StatelessWidget {
     
         return GestureDetector(
           onTap: () {
+            // Asigno el selected WineTaste
+            otherTasteProvider.selectedWineTaste = wineTaste;
+            // Permito ordenar los otherTaste
+            otherTasteProvider.isChangingSelectedWineTaste = false;
+            
             final routeDetails = MaterialPageRoute(
-              builder: (context) => DetailsScreen(wine: wine, wineTaste: wineTaste, email: 'latest', source:'latest-$index'));
+              builder: (context) => DetailsScreen(wine: wine, email: 'latest', source:'latest-$index'));
             Navigator.push(context, routeDetails);
           },
           child: Padding(

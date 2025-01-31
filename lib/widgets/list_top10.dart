@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:card_swiper/card_swiper.dart';
+import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/widgets/load_wine_image.dart';
 
@@ -14,6 +16,9 @@ class ListTop10 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final otherTasteProvider = Provider.of<OtherTasteProvider>(context);
+    
     return SizedBox(
       width: double.infinity,
       height: 360,
@@ -28,6 +33,11 @@ class ListTop10 extends StatelessWidget {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
+              // Limpio el selected WineTaste
+              if (otherTasteProvider.selectedWineTaste != null) {
+                otherTasteProvider.selectedWineTaste = null;
+              }
+
               final routeDetails = MaterialPageRoute(
                 builder: (context) => DetailsScreen(wine: wines[index], source: 'top10-$index'));
               Navigator.push(context, routeDetails);

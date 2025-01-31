@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/screens/screens.dart';
-import 'package:puntuacion_tacher/search/search.dart';
 
+import 'package:puntuacion_tacher/search/search.dart';
+import 'package:puntuacion_tacher/screens/screens.dart';
+import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -21,6 +22,7 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
     super.build(context);
 
     final winesService = Provider.of<WineServices>(context, listen: false);
+    final otherTasteProvider = Provider.of<OtherTasteProvider>(context);
     final colors = Theme.of(context).colorScheme;
 
     if (winesService.isLoading) return const LoadingScreen();
@@ -38,7 +40,12 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
             actions: [
               IconButton(
                 onPressed: () async {
-                  if (context.mounted) {
+                    if (context.mounted) {
+                    // Limpio el selected WineTaste
+                    if (otherTasteProvider.selectedWineTaste != null) {
+                      otherTasteProvider.selectedWineTaste = null;
+                    }
+
                     final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines());
                     final routeDetails = MaterialPageRoute(
                       builder: (context) => DetailsScreen(wine:wineSearched, source: 'search')

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:diacritic/diacritic.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/services/services.dart';
@@ -83,7 +84,7 @@ class SearchDelegateWines extends SearchDelegate{
     if (query.isEmpty) return const NoResultsWine();
  
     _filtro = winesService.winesByIndex.where((wines) {
-      return wines.nombre.toLowerCase().contains(query.trim().toLowerCase());
+      return removeDiacritics(wines.nombre.toLowerCase()).contains(removeDiacritics(query.trim().toLowerCase()));
     }).toList();
 
     if(_filtro.isEmpty) {

@@ -2,17 +2,16 @@
 // Link https://unsplash.com/es/fotos/copa-de-vino-transparente-con-vino-tinto-Y4PJ5F_Oskw
 
 import 'package:flutter/material.dart';
-
 import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/search/search.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
-
 
 class ListAllScreen extends StatelessWidget {
 
@@ -24,6 +23,7 @@ class ListAllScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final otherTasteProvider = Provider.of<OtherTasteProvider>(context);
     final styles = Theme.of(context).textTheme;
     final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
 
@@ -59,6 +59,10 @@ class ListAllScreen extends StatelessWidget {
           
               IconButton(
                 onPressed: () async {
+                  // Limpio el selected WineTaste
+                  if (otherTasteProvider.selectedWineTaste != null) {
+                    otherTasteProvider.selectedWineTaste = null;
+                  }
                   if (context.mounted) {
                     final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines());
                     final routeDetails = MaterialPageRoute(
@@ -89,6 +93,7 @@ class _ListAllBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final otherTasteProvider = Provider.of<OtherTasteProvider>(context);
     final colors = Theme.of(context).colorScheme;
 
     return ListView.builder(
@@ -126,6 +131,11 @@ class _ListAllBody extends StatelessWidget {
             ],
           ),
           onTap: () {
+            // Limpio el selected WineTaste
+            if (otherTasteProvider.selectedWineTaste != null) {
+              otherTasteProvider.selectedWineTaste = null;
+            }
+
             final routeDetails = MaterialPageRoute(
               builder: (context) => DetailsScreen(wine: wines[index], source: 'list'));
             Navigator.push(context, routeDetails);

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
 import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -14,6 +17,7 @@ class ListBestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
+    final otherTasteProvider = Provider.of<OtherTasteProvider>(context);
     final colors = Theme.of(context).colorScheme;
 
     return Container(
@@ -40,6 +44,11 @@ class ListBestScreen extends StatelessWidget {
               itemBuilder: ( _  , index) {
                 return GestureDetector(
                   onTap: () {
+                    // Limpio el selected WineTaste
+                    if (otherTasteProvider.selectedWineTaste != null) {
+                      otherTasteProvider.selectedWineTaste = null;
+                    }
+
                     final routeDetails = MaterialPageRoute(
                       builder: (context) => DetailsScreen(wine: wines[index], source: 'best-$index')
                     );
