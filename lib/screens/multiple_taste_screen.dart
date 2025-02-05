@@ -122,8 +122,10 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
 
       return [
         const MultipleInitialPage(),
-        
+
         ...tastePages,
+        
+        const ThemeTastePage(),
         
         const MultipleOverviewPage(),
       ];

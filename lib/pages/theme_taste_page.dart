@@ -5,41 +5,65 @@ class ThemeTastePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: 4,
-      itemBuilder: (context, index) {
-        return Column(
-          children: [
-            const Text('Ut ut eiusmod commodo eiusmod laboris ea aliquip quis cupidatat nisi fugiat.'),
 
-            DropdownButton(
-              items: const [
-                DropdownMenuItem(
-                  value: 1,
-                  child: Text('1'),
-                ),
+    final size = MediaQuery.of(context).size;
 
-                DropdownMenuItem(
-                  value: 1,
-                  child: Text('1'),
-                ),
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: 4,
+          itemBuilder: (context, index) {
+            return Container(
+              padding: EdgeInsets.all(10),
+              width: size.width / 2.5,
+              child: Column(
+                children: [
+                  const Text('Ut ut eiusmod commodo eiusmod laboris ea aliquip quis cupidatat nisi fugiat.'),
 
-                DropdownMenuItem(
-                  value: 1,
-                  child: Text('1'),
-                ),
+                  const SizedBox(height: 10),
+              
+                  SizedBox(
+                    width: size.width - 40,
+                    child: DropdownButton(
+                      isExpanded: true,
+                      
+                      alignment: AlignmentDirectional.center,
+                      menuWidth: (size.width / 2.5),
 
-                DropdownMenuItem(
-                  value: 1,
-                  child: Text('1'),
-                ),
-              ], 
-              onChanged: (value) {},
-            ),
-          ],
-        );
-      },
+                      items: [
+                        DropdownMenuItem(
+                          value: 1,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Text('1')),
+                        ),
+                                  
+                        DropdownMenuItem(
+                          value: 1,
+                          child: Text('1'),
+                        ),
+                                  
+                        DropdownMenuItem(
+                          value: 1,
+                          child: Text('1'),
+                        ),
+                                  
+                        DropdownMenuItem(
+                          value: 1,
+                          child: Text('1'),
+                        ),
+                      ], 
+                      onChanged: (value) {},
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }
