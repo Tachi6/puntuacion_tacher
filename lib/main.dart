@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:provider/provider.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:puntuacion_tacher/constants/environment.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
@@ -10,7 +10,7 @@ import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 
 Future<void> main() async {
-  await dotenv.load(fileName: ".env");
+  await Environment.initEnvironment();
   
   runApp(const AppState());
 }
@@ -64,6 +64,9 @@ class MyApp extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+
+    print(Environment.encryptKey);
+    
     return MaterialApp(
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,

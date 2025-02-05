@@ -1,5 +1,6 @@
 import 'package:encrypt/encrypt.dart' as encrypt;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'package:puntuacion_tacher/constants/constants.dart';
 
 class EncryptionService {
   // The singleton instance
@@ -16,7 +17,7 @@ class EncryptionService {
   // Encryption key 
   // TODO obtener encript_key de firebase
   // TODO repasar si viene nulo
-  final encrypt.Key _key = encrypt.Key.fromUtf8(dotenv.env['ENCRYPT_KEY']!);
+  final encrypt.Key _key = encrypt.Key.fromUtf8(Environment.encryptKey);
 
   // Method to initialize the encryption key
   // void init(String keyString) {
