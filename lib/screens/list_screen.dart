@@ -34,6 +34,7 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            automaticallyImplyLeading: false,
             toolbarHeight: 48,
             collapsedHeight: 48,
             floating: true,
@@ -58,14 +59,14 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
                   
                 //   showSearch(context: context, delegate: WineSearch(winesService.winesByIndex));
                 // },
-                icon: const Icon(Icons.search)
+                icon: Icon(Icons.search)
               ),
 
               // TODO select best views
               // IconButton(
               //   onPressed: () {
               //   },
-              //   icon: const Icon(Icons.tune_rounded)
+              //   icon: const Icon(Icons.tune_rounded, color: colors.onSurface)
               // ),
               
               const Spacer(),

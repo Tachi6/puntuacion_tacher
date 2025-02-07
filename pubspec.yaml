@@ -43,7 +43,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_rating_bar: ^4.0.1
-  flutter_secure_storage: ^9.0.0
+  flutter_secure_storage: ^10.0.0-beta.4
   flutter_svg: ^2.0.9
   http: ^1.1.0
   image_pixels: ^4.0.0
@@ -53,8 +53,8 @@ dependencies:
   provider: ^6.0.5
   shared_preferences: ^2.3.2
   source_span: ^1.9.1
-  syncfusion_flutter_datepicker: ^27.1.51
-  syncfusion_flutter_gauges: ^27.1.48
+  syncfusion_flutter_datepicker: ^28.2.4
+  syncfusion_flutter_gauges: ^28.2.4
   test_api: ^0.7.0
 
 dev_dependencies:

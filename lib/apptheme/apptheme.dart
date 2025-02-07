@@ -107,15 +107,17 @@ class AppTheme {
   ThemeData getTheme(BuildContext context) {
 
     final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
+    final colors = Theme.of(context).colorScheme;
 
     return ThemeData(
       colorSchemeSeed: themeColor.themeColor,
       brightness: themeColor.isDarkMode
         ? Brightness.dark
         : Brightness.light,
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         toolbarHeight: 0,
         centerTitle: true,
+        iconTheme: IconThemeData(color: colors.onSurface)
       ),
       dialogTheme: DialogTheme(
         shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(15)),

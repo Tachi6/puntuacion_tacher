@@ -146,14 +146,14 @@ class _CustomLogoImage extends StatelessWidget {
     
         if (backgroundColor.a == 0.0) {
           statusBarMode = themeColor.isDarkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark;
-          frontColor = colors.inverseSurface;           
+          frontColor = colors.onSurface;           
         }
         else if (backgroundColor.computeLuminance() > 0.179) {
-          themeColor.isDarkMode ? frontColor = colors.surface : frontColor = colors.inverseSurface;
+          themeColor.isDarkMode ? frontColor = colors.onInverseSurface : frontColor = colors.onSurface;
           statusBarMode = SystemUiOverlayStyle.dark;
         }
         else {
-          themeColor.isDarkMode ? frontColor = colors.inverseSurface : frontColor = colors.surface;
+          themeColor.isDarkMode ? frontColor = colors.onSurface : frontColor = colors.onInverseSurface;
           statusBarMode = SystemUiOverlayStyle.light;
         }
     
