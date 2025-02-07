@@ -125,7 +125,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
 
         ...tastePages,
         
-        const ThemeTastePage(),
+        const QuizTastePage(),
         
         const MultipleOverviewPage(),
       ];

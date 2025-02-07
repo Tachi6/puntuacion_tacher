@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-class ThemeTastePage extends StatelessWidget {
-  const ThemeTastePage({super.key});
+class QuizTastePage extends StatelessWidget {
+  const QuizTastePage({super.key});
 
   @override
   Widget build(BuildContext context) {
