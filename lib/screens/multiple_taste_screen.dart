@@ -44,13 +44,13 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleServices>(context);
     final winesService = Provider.of<WineServices>(context);
-    final screenProvider = Provider.of<ScreensProvider>(context);
+    final pageProvider = Provider.of<ScreensProvider>(context);
 
     void onPressedBottomSheetButton() async {
       if (multipleService.isMultipleTasted) {
         Navigator.pop(context);
         multipleTaste.resetSettings();
-        screenProvider.multipleScreen = 0;
+        pageProvider.multiplePage = 0;
         return;
       }
       if (!multipleTaste.isValidRating()) {
@@ -59,7 +59,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       }
 
       final int newPageIndex = multipleTaste.winesMultipleTaste.length + 1;
-      screenProvider.multipleScreen = newPageIndex;
+      pageProvider.multiplePage = newPageIndex;
       pageController.animateToPage(
         newPageIndex, 
         duration: const Duration(milliseconds: 250), 
@@ -80,7 +80,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       // Desactivar que vuelvan a catar y moverme a la nueva ultima pagina
       multipleService.isMultipleTasted = true;
       pageController.jumpToPage(1);
-      screenProvider.multipleScreen = 1;
+      pageProvider.multiplePage = 1;
       // Subo WineTaste del usuario
       await multipleService.createUserMultipleTaste(multipleName: multipleTaste.multipleTaste.name, userMultipleTaste: multipleTaste.userMultipleTaste);
       // Subo AverageRatings
@@ -112,7 +112,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
             appBarTitle: wine.nombre,
             onPressedBackButon: () {
               Navigator.pop(context);
-              screenProvider.multipleScreen = 0;
+              pageProvider.multiplePage = 0;
               multipleTaste.resetSettings();
             },
           );
@@ -141,7 +141,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
           controller: pageController,
           children: tastePages(),
           onPageChanged: (value) {
-            screenProvider.multipleScreen = value;
+            pageProvider.multiplePage = value;
           }
         ),
       ),

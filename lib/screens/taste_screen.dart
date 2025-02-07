@@ -213,7 +213,7 @@ class _ContinueButton extends StatelessWidget {
 
             if (taste.showThirdWidget) {
               // To reset RatingBox if multiple taste is used
-              screenProvider.multipleScreen = 0;
+              screenProvider.multiplePage = 0;
 
               final newRoute = MaterialPageRoute(
                 builder: (context) => const PopScope(
