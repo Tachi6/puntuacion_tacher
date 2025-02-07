@@ -80,21 +80,27 @@ class SearchDelegateMultiple extends SearchDelegate{
 
   @override
   List<Widget>? buildActions(BuildContext context) {
+
+    final colors = Theme.of(context).colorScheme;
+
     return [
       IconButton(
         onPressed: () => query ='', 
-        icon: const Icon(Icons.clear)
+        icon: Icon(Icons.clear, color: colors.onSurface)
       )
     ];
   }
 
   @override
   Widget? buildLeading(BuildContext context) {
+
+    final colors = Theme.of(context).colorScheme;
+
     return IconButton(
       onPressed: () {
         close(context, null);
       }, 
-      icon: const Icon(Icons.arrow_back),
+      icon: Icon(Icons.arrow_back, color: colors.onSurface),
     );
   }
 
