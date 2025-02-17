@@ -184,7 +184,9 @@ class _ErrorLogoImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return _CustomSliverAppBar(
       wine: wine, 
-      child: Center(
+      child: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 60),
         child: AutoSizeText(
           wine.bodega,
           textAlign: TextAlign.center,

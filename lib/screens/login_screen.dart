@@ -28,13 +28,16 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.transparent,
       body: Container(
-        padding: const EdgeInsets.only(bottom: 30),
+        padding: EdgeInsets.only(bottom: bottomPadding + 30),
         alignment: Alignment.bottomCenter,
         width: double.infinity,
         height: double.infinity,
