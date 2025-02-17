@@ -126,7 +126,7 @@ class AppTheme {
       ),
       navigationBarTheme: const NavigationBarThemeData(
         height: 58,
-      ),      // iconTheme: IconThemeData(color: )
+      ),
     );
   }
 }
