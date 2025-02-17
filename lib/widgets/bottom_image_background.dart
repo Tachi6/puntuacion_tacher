@@ -9,10 +9,16 @@ import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 
 class BottomImageBackground extends StatelessWidget {
-  const BottomImageBackground({super.key, required this.image, required this.opacity});
+  const BottomImageBackground({
+    super.key, 
+    required this.image, 
+    required this.opacity,
+    this.bottomPadding,
+  });
 
   final String image;
   final double opacity;
+  final double? bottomPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +69,21 @@ class BottomImageBackground extends StatelessWidget {
               ),
             ),
           ),
+
+           if (bottomPadding != null) Container(
+            height: 58 + bottomPadding!, // 58 of bottomSheet
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.white.withAlpha((255 * opacity).toInt()),
+                  colors.surface,
+                ],
+              )
+            ),
+          ),
+
         ],
       ),
     );
