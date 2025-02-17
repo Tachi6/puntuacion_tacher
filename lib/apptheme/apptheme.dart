@@ -117,8 +117,8 @@ class AppTheme {
       appBarTheme: AppBarTheme(
         toolbarHeight: 0,
         centerTitle: true,
-        iconTheme: IconThemeData(color: colors.onSurface),
-        actionsIconTheme: IconThemeData(color: colors.onSurface),
+        iconTheme: IconThemeData(color: themeColor.isDarkMode ? colors.onInverseSurface : colors.onSurface),
+        actionsIconTheme: IconThemeData(color: themeColor.isDarkMode ? colors.onInverseSurface : colors.onSurface),
       ),
       dialogTheme: DialogTheme(
         shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(15)),
