@@ -28,6 +28,13 @@ class _HomeScreenState extends State<HomeScreen> {
       initialPage: 0,
       keepPage: true,
     );
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) => setElementsSize(context));
+  }
+
+  void setElementsSize(BuildContext context) {
+    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context, listen: false);
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    screenElementsSizeProvider.bottomElementHeight = bottomPadding;
   }
 
   @override
@@ -47,8 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     
     final screenProvider = Provider.of<ScreensProvider>(context, listen: true);
-    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
    
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -56,10 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
         physics: const ClampingScrollPhysics(),
         controller: pageController,
         children: screensList,
-        onPageChanged: (value) {
-          screenProvider.currentScreen = value;
-          screenElementsSizeProvider.bottomElementHeight = bottomPadding;
-        },
+        onPageChanged: (value) => screenProvider.currentScreen = value,
       ),
       bottomNavigationBar: CustomNavigationBar(pageController: pageController)
     );
