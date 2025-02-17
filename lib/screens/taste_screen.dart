@@ -192,12 +192,12 @@ class _ContinueButton extends StatelessWidget {
               //   multipleTaste.winesHiddenNumber = multipleSearched.wines.keys.length;
               //   multipleTaste.addHiddenWines();
               // }
-              multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste = multipleService.loadMultipleTaste(multipleTaste.multipleName).copy());
-              List<Wines> visibleWines = [];
+              multipleTaste.initLoadedMultipleTaste(multipleService.loadMultipleTaste(multipleTaste.multipleName).copy());
+              List<Wines> winesMultipleTaste = [];
               multipleTaste.multipleTaste.wines.forEach((key, value) {
-                visibleWines.add(wineService.winesByIndex[int.parse(key)].copy());
+                winesMultipleTaste.add(wineService.winesByIndex[int.parse(key)].copy());
               },);
-              multipleTaste.addVisibleWines(visibleWines);
+              multipleTaste.addMultipleTasteWines(winesMultipleTaste);
               
               multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userUuid);
               multipleTaste.initUserTaste(multipleService.isMultipleTasted);
@@ -213,7 +213,7 @@ class _ContinueButton extends StatelessWidget {
 
             if (taste.showThirdWidget) {
               // To reset RatingBox if multiple taste is used
-              screenProvider.multipleScreen = 0;
+              screenProvider.multiplePage = 0;
 
               final newRoute = MaterialPageRoute(
                 builder: (context) => const PopScope(
@@ -317,9 +317,12 @@ class SendTasteButton extends StatelessWidget {
         if (!wineForm.isValidRating()) {
           NotificationServices.showSnackbar('RELLENA TODOS LOS CAMPOS', context);
           return;
-        } 
+        }
+        // Actualizo wine desde server
+        final Wines wineFromServer = await winesService.loadWine(wineForm.wine.id!);
         // Mando updates de los diferentes campos al wine y creo el wineTaste
-        wineForm.addUpdatesToWine();
+        wineForm.addUpdatesToWine(wineFromServer);
+        winesService.selectedWine = wineFromServer;
         final WineTaste wineTaste = WineTasteMapper.winesToWinesTaste(
           wine: winesService.selectedWine!,
           ratingVista: wineForm.ratingVista,
@@ -328,7 +331,7 @@ class SendTasteButton extends StatelessWidget {
           ratingPuntos: wineForm.ratingPuntos,              
         );
         // Lanzo la confirmacion
-        showCustomDialog(context, child: PointsBox(wine: wineForm.wine, puntuacionFinal: wineForm.puntosFinal));
+        if (context.mounted) showCustomDialog(context, child: PointsBox(wine: wineForm.wine, puntuacionFinal: wineForm.puntosFinal));
         // Mando wine al servidor
         if (wineForm.wine.id == '-1') {
           final String newId = await winesService.createWine(winesService.selectedWine!);
@@ -375,7 +378,7 @@ class HiddenTasteButtons extends StatelessWidget {
           onPressed: () async {
             winesService.loadWines();
             if (context.mounted) {
-              final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines());
+              final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
               if (wineSearched != null) {
                 winesService.selectedWine = wineSearched;
                 wineForm.setWineToEdit(wineSearched);

@@ -81,12 +81,9 @@ class MyApp extends StatelessWidget{
       theme: AppTheme().getTheme(context),
       routes: {
         'checkingAuth':(context) => const CheckAuthScreen(),
-
         'login':(context) => MediaQuery.withNoTextScaling(child: const LoginScreen()),
-
         'displayName':(context) => MediaQuery.withNoTextScaling(child: const EnterDisplayNameScreen()),
-
-        'home':(context) => MediaQuery.withNoTextScaling(child: const HomeScreen()),
+        'home':(context) => MediaQuery.withNoTextScaling(child: const HomeScreen()),   
       },
       initialRoute: 'checkingAuth',
       builder: (context, child) {

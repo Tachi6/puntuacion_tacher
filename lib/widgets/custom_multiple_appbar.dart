@@ -7,7 +7,9 @@ import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 
 class CustomMultipleAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomMultipleAppBar({super.key});
+  const CustomMultipleAppBar({super.key, this.allowActionButtons = false});
+
+  final bool allowActionButtons;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class CustomMultipleAppBar extends StatelessWidget implements PreferredSizeWidge
           onPressed: () {
             Navigator.pop(context);
             multipleTaste.resetSettings();            
-            screenProvider.multipleScreen = 0;
+            screenProvider.multiplePage = 0;
           },
           icon: const Icon(Icons.arrow_back_rounded)
         ),
@@ -45,17 +47,17 @@ class CustomMultipleAppBar extends StatelessWidget implements PreferredSizeWidge
           ),
         ),
    
-        multipleService.isMultipleTasted && screenProvider.multipleScreen != 0 && multipleTaste.overview
+        multipleService.isMultipleTasted && allowActionButtons && multipleTaste.overview
           ? IconButton(
             onPressed: () async {
               final Multiple multipleUpdated = await multipleService.loadMultipleToUpdate(multipleTaste.multipleName);
-              multipleTaste.updateMultipleTaste(multipleUpdated);
+              multipleTaste.initLoadedMultipleTaste(multipleUpdated);
             },
             icon: const Icon(Icons.refresh_rounded)
           )
           : const SizedBox(width: 48),
 
-        multipleService.isMultipleTasted && screenProvider.multipleScreen != 0
+        multipleService.isMultipleTasted && allowActionButtons
           ? IconButton(
             onPressed: () => multipleTaste.overview = !multipleTaste.overview,
             icon: const Icon(Icons.autorenew_rounded)

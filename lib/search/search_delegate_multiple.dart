@@ -11,7 +11,9 @@ import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class SearchDelegateMultiple extends SearchDelegate{
-  SearchDelegateMultiple();
+  SearchDelegateMultiple({required this.multipleList});
+
+  final List<Multiple> multipleList;
 
   List<Multiple> _filtro = [];
 
@@ -73,28 +75,34 @@ class SearchDelegateMultiple extends SearchDelegate{
   }
   
   @override
-  String? get searchFieldLabel => 'Buscar vino';
+  String? get searchFieldLabel => 'Buscar Cata Múltiple';
 
   @override
   TextStyle? get searchFieldStyle => const TextStyle(fontSize: 18, decorationThickness: 0, decoration: TextDecoration.none);
 
   @override
   List<Widget>? buildActions(BuildContext context) {
+
+    final colors = Theme.of(context).colorScheme;
+
     return [
       IconButton(
         onPressed: () => query ='', 
-        icon: const Icon(Icons.clear)
+        icon: Icon(Icons.clear, color: colors.onSurface)
       )
     ];
   }
 
   @override
   Widget? buildLeading(BuildContext context) {
+
+    final colors = Theme.of(context).colorScheme;
+
     return IconButton(
       onPressed: () {
         close(context, null);
       }, 
-      icon: const Icon(Icons.arrow_back),
+      icon: Icon(Icons.arrow_back, color: colors.onSurface),
     );
   }
 
@@ -147,7 +155,7 @@ class SearchDelegateMultiple extends SearchDelegate{
     final multipleService = Provider.of<MultipleServices>(context);
 
     if (query.isEmpty) {
-      return const NoResultsMultiple();
+      _filtro = multipleList;
     }
  
     _filtro = multipleService.multipleTasteList.where((multiple) {

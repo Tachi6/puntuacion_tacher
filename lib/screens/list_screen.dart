@@ -47,7 +47,7 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
                       otherTasteProvider.selectedWineTaste = null;
                     }
 
-                    final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines());
+                    final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
                     final routeDetails = MaterialPageRoute(
                       builder: (context) => DetailsScreen(wine:wineSearched, source: 'search')
                     );

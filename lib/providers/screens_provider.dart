@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ScreensProvider extends ChangeNotifier {
 
   int _currentScreen = 0;
-  int _multipleScreen = 0;
+  int _multiplePage = 0;
   
   int get currentScreen => _currentScreen;
 
@@ -12,10 +12,10 @@ class ScreensProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int get multipleScreen => _multipleScreen;
+  int get multiplePage => _multiplePage;
 
-  set multipleScreen(int screen) {
-    _multipleScreen = screen;
+  set multiplePage(int screen) {
+    _multiplePage = screen;
     notifyListeners();
   }
 }

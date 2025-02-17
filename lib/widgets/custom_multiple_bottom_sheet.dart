@@ -36,12 +36,12 @@ class CustomMultipleBottomSheet extends StatelessWidget {
         ),
       ),
 
-      leading: screenProvider.multipleScreen == 0 
+      leading: screenProvider.multiplePage == 0 
         ? null
         : TextButton(
           onPressed: () {
-            final int newPageIndex = screenProvider.multipleScreen - 1;
-            screenProvider.multipleScreen = newPageIndex;
+            final int newPageIndex = screenProvider.multiplePage - 1;
+            screenProvider.multiplePage = newPageIndex;
             pageController.animateToPage(
               newPageIndex, 
               duration: const Duration(milliseconds: 250), 
@@ -59,7 +59,7 @@ class CustomMultipleBottomSheet extends StatelessWidget {
               Positioned(
                 bottom: 0,
                 child: Text(
-                  screenProvider.multipleScreen == 1 ? 'Inicio' : 'Cata', 
+                  screenProvider.multiplePage == 1 ? 'Inicio' : 'Cata', 
                   style: const TextStyle(fontSize: 12)
                 ),
               ),
@@ -67,12 +67,12 @@ class CustomMultipleBottomSheet extends StatelessWidget {
           ),
         ),
 
-      trailing: screenProvider.multipleScreen == (totalPages - 1) 
+      trailing: screenProvider.multiplePage == (totalPages - 1) 
         ? null
         : TextButton(
           onPressed: () {
-            final int newPageIndex = screenProvider.multipleScreen + 1;
-            screenProvider.multipleScreen = newPageIndex;
+            final int newPageIndex = screenProvider.multiplePage + 1;
+            screenProvider.multiplePage = newPageIndex;
             pageController.animateToPage(
               newPageIndex, 
               duration: const Duration(milliseconds: 250), 
@@ -90,7 +90,7 @@ class CustomMultipleBottomSheet extends StatelessWidget {
               Positioned(
                 bottom: 0,
                 child: Text(
-                  screenProvider.multipleScreen == (totalPages - 2) ? 'Final' : 'Cata', 
+                  screenProvider.multiplePage == (totalPages - 2) ? 'Final' : 'Cata', 
                   style: const TextStyle(fontSize: 12)
                 ),
               ),

@@ -25,7 +25,7 @@ class MultipleOverviewPage extends StatelessWidget {
     final newHeight = size.height - statusBarHeight - 48 - 58 - 160 - 40 - 5;
 
     return Scaffold(
-      appBar: const CustomMultipleAppBar(),
+      appBar: const CustomMultipleAppBar(allowActionButtons: true),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 250),
         layoutBuilder: (currentChild, previousChildren) {

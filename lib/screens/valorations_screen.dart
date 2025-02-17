@@ -11,6 +11,7 @@ class ValorationsScreen extends StatefulWidget {
 }
 
 class _ValorationsScreenState extends State<ValorationsScreen> with AutomaticKeepAliveClientMixin {
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -18,8 +19,7 @@ class _ValorationsScreenState extends State<ValorationsScreen> with AutomaticKee
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-      ),
-      
+      ),     
       body: const ValorationCards(),
     );
   }

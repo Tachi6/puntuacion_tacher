@@ -32,6 +32,8 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
+    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
     const double chipListHeight = 65;
 
     return PopScope(
@@ -53,10 +55,13 @@ class DetailsScreen extends StatelessWidget {
                 )
               ],
             ),
-
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: _OtherTasteChipList(wine: wine, chipListHeight: chipListHeight),
+      
+            Padding(
+              padding: EdgeInsets.only(bottom: bottomPadding),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: _OtherTasteChipList(wine: wine, chipListHeight: chipListHeight),
+              ),
             ),
           ],
         ),

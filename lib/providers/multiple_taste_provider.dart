@@ -20,11 +20,16 @@ class MultipleTasteProvider extends ChangeNotifier {
   List<WineTaste> userMultipleTaste = [];
   String _userView = '';
   bool _overview = false;
+  Map<String, bool> tasteQuiz = {
+    'simple': false,
+    'advanced': false,
+  };
 
   Multiple multipleTaste = Multiple(
     name: '',
     description: '',
     hidden: false,
+    wineSequence: [],
     wines: {},
     averageRatings: {}
   );
@@ -44,16 +49,51 @@ class MultipleTasteProvider extends ChangeNotifier {
     return formNameKey.currentState?.validate() ?? false;
   }
 
+  void isSimpleQuiz(bool? quizType) {
+    if (quizType == null) return;
+
+    if (quizType) {
+      multipleTaste.tasteQuiz = 'simple';
+      tasteQuiz['simple'] = true;
+      tasteQuiz['advanced'] = false;
+      notifyListeners();
+    }
+    else {
+      multipleTaste.tasteQuiz = null;
+      tasteQuiz['simple'] = false;
+      notifyListeners();
+    }
+  }
+
+  void isAdvancedQuiz(bool? quizType) {
+    if (quizType == null) return;
+
+    if (quizType) {
+      multipleTaste.tasteQuiz = 'advanced';
+      tasteQuiz['advanced'] = true;
+      tasteQuiz['simple'] = false;
+      notifyListeners();
+    }
+    else {
+      multipleTaste.tasteQuiz = null;
+      tasteQuiz['advanced'] = false;
+      notifyListeners();
+    }
+  }
+
   Multiple initMultiple() {
     // Creo nueva lista con solo el id del vino
     final List<String> winesIndex = winesMultipleTaste.map((e) {
       return e.id!;
     }).toList();
-    // Creo mapa vacio
+    // Creo mapa vacio de Wines, AverageRatings y wineSequence
     Map<String, Map<String, WineTaste>> wines = {};
     Map<String, AverageRatings> averageRatings = {};
+    List<String> wineSequence = [];
     // Mapeo la lista como un mapa, con el primer valor como 'No iniciada' solo en el WineTaste
-    for (var wineId in winesIndex) {
+    for (int i = 0; i < winesIndex.length; i++) {
+      final String wineId = winesIndex[i];
+
       final Map<String, Map<String, WineTaste>> winesEntry = {
         wineId: {
           'notStarted': WineTaste(
@@ -72,6 +112,7 @@ class MultipleTasteProvider extends ChangeNotifier {
           ),
         }
       };
+
       final Map<String, AverageRatings> averageRatingsEntry = {
         wineId: AverageRatings(
           vista: -1,
@@ -83,10 +124,43 @@ class MultipleTasteProvider extends ChangeNotifier {
       // Añado entrada al mapa
       wines = {...wines, ...winesEntry};
       averageRatings = {...averageRatings, ...averageRatingsEntry};
+      wineSequence.add(wineId);
     }
+    // for (var wineId in winesIndex) {
+    //   final Map<String, Map<String, WineTaste>> winesEntry = {
+    //     wineId: {
+    //       'notStarted': WineTaste(
+    //         fecha: '',
+    //         user: 'not', 
+    //         nombre: '',
+    //         id: wineId,
+    //         ratingVista: -1, 
+    //         ratingNariz: -1, 
+    //         ratingBoca: -1, 
+    //         ratingPuntos: -1, 
+    //         puntosFinal: -1,
+    //         puntosVista: -1, 
+    //         puntosNariz: -1, 
+    //         puntosBoca: -1, 
+    //       ),
+    //     }
+    //   };
+    //   final Map<String, AverageRatings> averageRatingsEntry = {
+    //     wineId: AverageRatings(
+    //       vista: -1,
+    //       nariz: -1, 
+    //       boca: -1, 
+    //       puntos: -1, 
+    //     ),
+    //   };
+    //   // Añado entrada al mapa
+    //   wines = {...wines, ...winesEntry};
+    //   averageRatings = {...averageRatings, ...averageRatingsEntry};
+    // }
     // Añado vinos a cata multiple
     multipleTaste.wines = wines;
     multipleTaste.averageRatings = averageRatings;
+    multipleTaste.wineSequence = wineSequence;
     notifyListeners();
 
     return multipleTaste;
@@ -131,11 +205,6 @@ class MultipleTasteProvider extends ChangeNotifier {
 
     userMultipleTaste = tempUserMultipleTaste;
 
-    notifyListeners();
-  }
-
-  void updateMultipleTaste(Multiple updatedMultipleTaste) {
-    multipleTaste = updatedMultipleTaste.copy();
     notifyListeners();
   }
 
@@ -248,6 +317,22 @@ class MultipleTasteProvider extends ChangeNotifier {
     return wineTasteList;
   }
 
+  initLoadedMultipleTaste(Multiple loadedMultipleTaste) {
+    // Asign actual MultipleTaste
+    multipleTaste = loadedMultipleTaste;
+    notifyListeners();
+    // Set WineSequence
+    Map<String, Map<String, WineTaste>> tempWineSequence = {};
+    for (String wineId in multipleTaste.wineSequence) {
+      Map<String, Map<String, WineTaste>> wineMap = {
+        wineId: multipleTaste.wines[wineId]!,
+      };
+      tempWineSequence = {...tempWineSequence, ...wineMap};
+    }
+    multipleTaste.wines = tempWineSequence;
+    notifyListeners();
+  }
+
   bool isValidRating() {
     final validation = [];
     for (var wineTaste in userMultipleTaste) {
@@ -264,10 +349,19 @@ class MultipleTasteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addVisibleWines(List<Wines> wines) {
+  void addMultipleTasteWines(List<Wines> wines) {
+    // List<Wines> wines = [];
+    // for (String wineId in multipleTaste.wineSequence) {
+    //   wines.add(winesByIndex[int.parse(wineId)]);
+    // }
     winesMultipleTaste = wines;
     notifyListeners();
   }
+
+  // void addVisibleWines(List<Wines> wines) {
+  //   winesMultipleTaste = wines;
+  //   notifyListeners();
+  // }
 
   void addHiddenWines() {
     List<Wines> tempHiddenWines = [];
@@ -318,28 +412,8 @@ class MultipleTasteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // void hideWine(int index) {
-  //   hideIndex.contains(index) 
-  //     ? hideIndex.remove(index)
-  //     : hideIndex.add(index);
-    
-  //   hideIndex.sort((a, b) => a.compareTo(b));
-  //   notifyListeners();
-  // }
-
   void hideAllWines() {
-    // if (multipleTaste.hidden) {
-    //   hideIndex = List.generate(winesMultipleTaste.length, (index) => index);
-    // }
-    // else {
-    //   hideIndex.clear();
-    // }
     multipleTaste.hidden = !multipleTaste.hidden;
-    notifyListeners();
-  }
-
-  void editMultipleTaste(Function changeFunction) {
-    changeFunction();
     notifyListeners();
   }
 
@@ -384,9 +458,14 @@ class MultipleTasteProvider extends ChangeNotifier {
     multipleTaste.description = '';
     multipleTaste.password = null;
     multipleTaste.hidden = false;
+    multipleTaste.tasteQuiz = null;
     multipleTaste.dateLimit = null;
     multipleTaste.wines = {};
     multipleTaste.averageRatings = {};
+    tasteQuiz = {
+      'simple': false,
+      'advanced': false,
+    };
     winesHiddenNumber = 0;
     overview = false;
     

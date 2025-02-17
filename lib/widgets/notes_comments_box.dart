@@ -72,7 +72,7 @@ class NotasCataBox extends StatelessWidget {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final screenProvider = Provider.of<ScreensProvider>(context);
     // Resto 1 porque el listado de userMultipleWineTaste empieza en 0, y las paginas tienen la pagina de inicio en el 0
-    final multiplePage = screenProvider.multipleScreen - 1;
+    final multiplePage = screenProvider.multiplePage - 1;
 
     Timer? timerVista;
     Timer? timerNariz;
@@ -164,7 +164,7 @@ class ComentariosBox extends StatelessWidget {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final screenProvider = Provider.of<ScreensProvider>(context);
     // Resto 1 porque el listado de userMultipleWineTaste empieza en 0, y las paginas tienen la pagina de inicio en el 0
-    final multiplePage = screenProvider.multipleScreen - 1;
+    final multiplePage = screenProvider.multiplePage - 1;
    
     Timer? timer;
 

@@ -40,7 +40,7 @@ class ChangeDisplayNameBox extends StatelessWidget {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
       ),
-
+    
       backgroundColor: Colors.transparent,
       body: Container(
         height: double.infinity,
@@ -69,27 +69,27 @@ class ChangeDisplayNameBox extends StatelessWidget {
               ),
               
               const SizedBox(height: 20),
-
+    
               const DisplayNameTextFormField(),
-
+    
               const SizedBox(height: 40),
-
+    
               CustomElevatedButton(
                 width: 150,
                 child: Text('Comenzar', style: TextStyle(color: colors.primary, fontSize: 16)),
                 onPressed: () async { 
                   FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
-
+    
                   if (authService.tempDisplayName == '') {
                     NotificationServices.showSnackbar('NOMBRE DE USUARIO VACIO', context);
                     return;
                   }
-
+    
                   if (authService.tempDisplayName.trim().length < 4) {
                     NotificationServices.showSnackbar('NOMBRE DE USUARIO MUY CORTO', context);
                     return;
                   }
-
+    
                   if (await userService.isUniqueDisplayName(authService.tempDisplayName)) {
                     await authService.changeDisplayName(authService.tempDisplayName);
                     await userService.updateUuidDisplayName(authService.tempDisplayName);

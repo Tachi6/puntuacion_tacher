@@ -113,7 +113,7 @@ class _RatingCustomWidget extends StatelessWidget{
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final screenProvider = Provider.of<ScreensProvider>(context);
     // Resto 1 porque el listado de userMultipleWineTaste empieza en 0, y las paginas tienen la pagina de inicio en el 0
-    final multiplePage = screenProvider.multipleScreen - 1;
+    final multiplePage = screenProvider.multiplePage - 1;
     final colors = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
     final double itemSize = ((size.width * 0.90) / 11).truncateToDouble();

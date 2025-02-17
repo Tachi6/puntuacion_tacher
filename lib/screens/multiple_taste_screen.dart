@@ -44,13 +44,13 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleServices>(context);
     final winesService = Provider.of<WineServices>(context);
-    final screenProvider = Provider.of<ScreensProvider>(context);
+    final pageProvider = Provider.of<ScreensProvider>(context);
 
     void onPressedBottomSheetButton() async {
       if (multipleService.isMultipleTasted) {
         Navigator.pop(context);
         multipleTaste.resetSettings();
-        screenProvider.multipleScreen = 0;
+        pageProvider.multiplePage = 0;
         return;
       }
       if (!multipleTaste.isValidRating()) {
@@ -58,8 +58,8 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
         return;
       }
 
-      final int newPageIndex = multipleTaste.winesMultipleTaste.length + 1;
-      screenProvider.multipleScreen = newPageIndex;
+      final int newPageIndex = multipleTaste.winesMultipleTaste.length + 1; // TODO: contar la pagina del quiz????
+      pageProvider.multiplePage = newPageIndex;
       pageController.animateToPage(
         newPageIndex, 
         duration: const Duration(milliseconds: 250), 
@@ -70,7 +70,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       // Cargo la cata multiples para tener los ultimos cambios
       final Multiple multipleUpdated = await multipleService.loadMultipleToUpdate(multipleTaste.multipleTaste.name);
       // Actualizo el multiple local
-      multipleTaste.updateMultipleTaste(multipleUpdated);
+      multipleTaste.initLoadedMultipleTaste(multipleUpdated);
       // Calculo puntuaciones de Vista, Nariz y Boca
       multipleTaste.calculateValoration();
       // Calculo puntuaciones medias
@@ -79,16 +79,16 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       multipleTaste.overview = true;
       // Desactivar que vuelvan a catar y moverme a la nueva ultima pagina
       multipleService.isMultipleTasted = true;
-      pageController.jumpToPage(1);
-      screenProvider.multipleScreen = 1;
+      pageController.jumpToPage(1); // TODO: contar la pagina del quiz
+      pageProvider.multiplePage = 1; // TODO: contar la pagina del quiz
       // Subo WineTaste del usuario
       await multipleService.createUserMultipleTaste(multipleName: multipleTaste.multipleTaste.name, userMultipleTaste: multipleTaste.userMultipleTaste);
       // Subo AverageRatings
       await multipleService.updateAverageRatings(multipleName: multipleTaste.multipleTaste.name, averageRatings: multipleTaste.multipleTaste.averageRatings);
       // Mapear todos los vinos y subir los cambios a firebase
-      for (var wineTaste in multipleTaste.userMultipleTaste) {
-        final wineId = int.parse(wineTaste.id);
-        await winesService.updateWine(WinesMapper.wineTasteToWines(wineTaste, winesService.winesByIndex[wineId], authService.userUuid));
+      for (WineTaste wineTaste in multipleTaste.userMultipleTaste) {
+        final Wines wineFromServer = await winesService.loadWine(wineTaste.id);
+        await winesService.updateWine(WinesMapper.wineTasteToWines(wineTaste, wineFromServer, authService.userUuid));
         await winesService.saveTastedWine(wineTaste);
       }
     }
@@ -107,12 +107,14 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
         tastePages = [];
       }
       else {
-        for (var wine in multipleTaste.winesMultipleTaste) {
+        for (int i = 0; i < multipleTaste.winesMultipleTaste.length; i++) {
+          final Wines wine = multipleTaste.winesMultipleTaste[i];
+        
           final Widget tastePage = TacherScreen(
-            appBarTitle: wine.nombre,
+            appBarTitle: multipleTaste.multipleTaste.hidden ? 'Vino a catar a ciegas ${i + 1}' : wine.nombre,
             onPressedBackButon: () {
               Navigator.pop(context);
-              screenProvider.multipleScreen = 0;
+              pageProvider.multiplePage = 0;
               multipleTaste.resetSettings();
             },
           );
@@ -122,8 +124,10 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
 
       return [
         const MultipleInitialPage(),
-        
+
         ...tastePages,
+        
+        // if (multipleTaste.multipleTaste.tasteQuiz != null) const QuizTastePage(), // TODO: activar quiz
         
         const MultipleOverviewPage(),
       ];
@@ -139,7 +143,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
           controller: pageController,
           children: tastePages(),
           onPageChanged: (value) {
-            screenProvider.multipleScreen = value;
+            pageProvider.multiplePage = value;
           }
         ),
       ),

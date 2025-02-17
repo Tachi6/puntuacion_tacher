@@ -25,7 +25,7 @@ class SearchTasteWine extends StatelessWidget {
     void onPressed() async {
       winesService.loadWines();
       if (context.mounted) {
-        final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines());
+        final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
 
         if (wineSearched != null) {
           winesService.selectedWine = wineSearched;

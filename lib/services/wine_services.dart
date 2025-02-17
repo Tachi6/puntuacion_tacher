@@ -22,6 +22,7 @@ class WineServices extends ChangeNotifier {
 
   List<Wines> winesByIndex = [];
   List<Wines> winesByRate = [];
+  List<Wines> winesByName = [];
   List<WineTaste> winesTaste = [];
   Wines? _selectedWine;
   List<Wines> latest = [];
@@ -68,6 +69,7 @@ class WineServices extends ChangeNotifier {
 
     // Wines sort by points
     updateWinesByRate();
+    updateWinesByName();
     isLoading = false;
     
     notifyListeners();
@@ -103,6 +105,12 @@ class WineServices extends ChangeNotifier {
     // Elimino vinos sin valoracion
     winesByRate.removeWhere((element) => element.puntuacionFinal == -1);
     winesByRate.sort((a, b) => b.puntuacionFinal.compareTo(a.puntuacionFinal));
+  }
+
+  void updateWinesByName() {
+    winesByName = [...winesByIndex];
+    // Elimino vinos sin valoracion
+    winesByName.sort((a, b) => b.nombre.compareTo(a.nombre));
   }
 
   List<Wines> winesBestCategory(String category) {
@@ -148,6 +156,27 @@ class WineServices extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<Wines> loadWine(String wineId) async {
+
+    final String jsonType = 'wines/$wineId.json';
+
+    final url = Uri.https(_baseUrl, jsonType, {
+      'auth': await storage.read(key: 'idToken') ?? ''
+    });
+    final resp = await http.get(url);
+
+    final Wines wine = Wines.fromJson(resp.body);
+
+    // Wines update
+    winesByIndex[int.parse(wineId)] = wine;
+    notifyListeners();
+    updateWinesByRate();
+    updateWinesByName();   
+    notifyListeners();
+
+    return wine;
+  }
+
   Future<String> updateWine(Wines wine) async {
 
     isSaving = true;
@@ -164,6 +193,8 @@ class WineServices extends ChangeNotifier {
     // Actualizar el listado de productos
     final int wineId = int.parse(wine.id!);
     winesByIndex[wineId] = wine;
+    updateWinesByRate();
+    updateWinesByName();   
 
     isSaving = false;
     notifyListeners();
@@ -187,6 +218,7 @@ class WineServices extends ChangeNotifier {
 
     winesByIndex.add(wine);
     updateWinesByRate();
+    updateWinesByName();
 
     isSaving = false;
     notifyListeners();
