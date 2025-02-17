@@ -8,6 +8,8 @@ class Multiple {
     String? password;
     bool hidden;
     String? dateLimit;
+    String? tasteQuiz;
+    List<String> wineSequence;
     Map<String, Map<String, WineTaste>> wines;
     Map<String, AverageRatings> averageRatings;
 
@@ -17,6 +19,8 @@ class Multiple {
         this.password,
         required this.hidden,
         this.dateLimit,
+        this.tasteQuiz,
+        required this.wineSequence,
         required this.wines,
         required this.averageRatings,
     });
@@ -31,6 +35,8 @@ class Multiple {
         password: json["password"],
         hidden: json["hidden"],
         dateLimit: json["dateLimit"],
+        tasteQuiz: json["tasteQuiz"],
+        wineSequence: List<String>.from(json["wineSequence"].map((x) => x)),
         wines: Map.from(json["wines"]).map((k, v) => MapEntry<String, Map<String, WineTaste>>(k, Map.from(v).map((k, v) => MapEntry<String, WineTaste>(k, WineTaste.fromJson(v))))),
         averageRatings: Map.from(json["averageRatings"]).map((k, v) => MapEntry<String, AverageRatings>(k, AverageRatings.fromJson(v))),
     );
@@ -41,6 +47,8 @@ class Multiple {
         "password": password,
         "hidden": hidden,
         "dateLimit": dateLimit,
+        "tasteQuiz": tasteQuiz,
+        "wineSequence": List<dynamic>.from(wineSequence.map((x) => x)),
         "wines": Map.from(wines).map((k, v) => MapEntry<String, dynamic>(k, Map.from(v).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())))),
         "averageRatings": Map.from(averageRatings).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
     };
@@ -51,6 +59,8 @@ class Multiple {
     password: password,
     hidden: hidden,
     dateLimit: dateLimit,
+    tasteQuiz: tasteQuiz,
+    wineSequence: wineSequence,
     wines: wines, 
     averageRatings: averageRatings
   );

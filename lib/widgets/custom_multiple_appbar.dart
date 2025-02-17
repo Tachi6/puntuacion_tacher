@@ -51,7 +51,7 @@ class CustomMultipleAppBar extends StatelessWidget implements PreferredSizeWidge
           ? IconButton(
             onPressed: () async {
               final Multiple multipleUpdated = await multipleService.loadMultipleToUpdate(multipleTaste.multipleName);
-              multipleTaste.updateMultipleTaste(multipleUpdated);
+              multipleTaste.initLoadedMultipleTaste(multipleUpdated);
             },
             icon: const Icon(Icons.refresh_rounded)
           )

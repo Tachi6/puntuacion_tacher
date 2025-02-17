@@ -58,7 +58,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
         return;
       }
 
-      final int newPageIndex = multipleTaste.winesMultipleTaste.length + 1;
+      final int newPageIndex = multipleTaste.winesMultipleTaste.length + 1; // TODO: contar la pagina del quiz????
       pageProvider.multiplePage = newPageIndex;
       pageController.animateToPage(
         newPageIndex, 
@@ -70,7 +70,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       // Cargo la cata multiples para tener los ultimos cambios
       final Multiple multipleUpdated = await multipleService.loadMultipleToUpdate(multipleTaste.multipleTaste.name);
       // Actualizo el multiple local
-      multipleTaste.updateMultipleTaste(multipleUpdated);
+      multipleTaste.initLoadedMultipleTaste(multipleUpdated);
       // Calculo puntuaciones de Vista, Nariz y Boca
       multipleTaste.calculateValoration();
       // Calculo puntuaciones medias
@@ -79,8 +79,8 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       multipleTaste.overview = true;
       // Desactivar que vuelvan a catar y moverme a la nueva ultima pagina
       multipleService.isMultipleTasted = true;
-      pageController.jumpToPage(1);
-      pageProvider.multiplePage = 1;
+      pageController.jumpToPage(1); // TODO: contar la pagina del quiz
+      pageProvider.multiplePage = 1; // TODO: contar la pagina del quiz
       // Subo WineTaste del usuario
       await multipleService.createUserMultipleTaste(multipleName: multipleTaste.multipleTaste.name, userMultipleTaste: multipleTaste.userMultipleTaste);
       // Subo AverageRatings
@@ -107,9 +107,11 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
         tastePages = [];
       }
       else {
-        for (var wine in multipleTaste.winesMultipleTaste) {
+        for (int i = 0; i < multipleTaste.winesMultipleTaste.length; i++) {
+          final Wines wine = multipleTaste.winesMultipleTaste[i];
+        
           final Widget tastePage = TacherScreen(
-            appBarTitle: wine.nombre,
+            appBarTitle: multipleTaste.multipleTaste.hidden ? 'Vino a catar a ciegas ${i + 1}' : wine.nombre,
             onPressedBackButon: () {
               Navigator.pop(context);
               pageProvider.multiplePage = 0;
@@ -125,7 +127,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
 
         ...tastePages,
         
-        const QuizTastePage(),
+        // if (multipleTaste.multipleTaste.tasteQuiz != null) const QuizTastePage(), // TODO: activar quiz
         
         const MultipleOverviewPage(),
       ];

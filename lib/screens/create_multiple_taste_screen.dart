@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -46,13 +45,15 @@ class CreateMultipleTasteScreen extends StatelessWidget{
         toolbarHeight: 48,
         titleSpacing: 0,
         title: const _CustomAppBar(),
+        scrolledUnderElevation: 0,
+        forceMaterialTransparency: true,
       ),
+      // floatingActionButton: FloatingActionButton(onPressed: () => quizServices.createQuiz(multipleName: multipleTaste.multipleName, wineList: multipleTaste.winesMultipleTaste)),
+      // floatingActionButton: FloatingActionButton(onPressed: () => quizServices.uploadUserQuiz(multipleName: multipleTaste.multipleName, wineList: multipleTaste.winesMultipleTaste)),
+      // floatingActionButton: FloatingActionButton(onPressed: () => quizServices.loadQuiz(multipleTaste.multipleName)),
       body: Stack(
         children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: 58 + bottomPadding),
-            child: BottomImageBackground(image: 'assets/initial-multiple-background.jpg', opacity: opacity),
-          ),
+          BottomImageBackground(image: 'assets/initial-multiple-background.jpg', opacity: opacity, bottomPadding: bottomPadding),
 
           if (!themeColor.isDarkMode) Align(
             alignment: Alignment.bottomCenter,
@@ -216,91 +217,18 @@ class _CustomBody extends StatelessWidget {
           const SizedBox(height: 20),
 
           const DateTextFormField(),
-      
-          // TextFormField(
-          //   controller: multipleTaste.dateController,  
-          //   minLines: 1,
-          //   readOnly: true,
-          //   canRequestFocus: false,
-          //   autofocus: false,
-          //   style: styles.bodySmall,
-          //   decoration: InputDecoration(
-          //     isDense: true,
-          //     contentPadding: EdgeInsets.fromLTRB(16, 16, 12, 10),
-          //     labelText: 'Fecha límite de cata (opcional)',
-          //     labelStyle: styles.bodySmall,
-          //     floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
-          //     border: OutlineInputBorder(
-          //       borderRadius: BorderRadius.circular(15),
-          //       borderSide: const BorderSide(width: 1)
-          //     ),
-          //     suffixIcon: IconButton(
-          //       onPressed: () {
-          //         showCustomDialog(
-          //           context, 
-          //           child: const CalendarDialog(),
-          //         );
-          //       },
-          //       icon: const Icon(Icons.calendar_month_rounded)
-          //     ),
-          //   ),
-          //   onTap: () {
-          //     showCustomDialog(
-          //       context, 
-          //       child: const CalendarDialog()
-          //     );
-          //   },
-          // ),
 
           const SizedBox(height: 10),
-
-          const RowVisibleWines(),
+    
+          // const EnableTasteQuiz(), // TODO: activar quiz
+    
+          const AddHideWines(),
 
           const SizedBox(height: 10),
 
           const Expanded(
             child: ListViewMultipleWines()
-          ),
-        
-          // Container(
-          //   padding: const EdgeInsets.symmetric(horizontal: 10),
-          //   alignment: Alignment.center,
-          //   height: 42,
-          //   child: Row(
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     children: [
-          //       const Text('Realizar la cata totalmente a ciegas', style: TextStyle(fontSize: 14)),
-            
-          //       const Spacer(),
-            
-          //       SizedBox(
-          //         width: 48,
-          //         child: FittedBox(
-          //           fit: BoxFit.fitWidth,
-          //           child: Switch(
-          //             value: multipleTaste.multipleTaste.hidden,
-          //             onChanged: (_) {
-          //               multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste.hidden = !multipleTaste.multipleTaste.hidden);
-          //               if (multipleTaste.winesMultipleTaste.length > 1) Navigator.pop(context);
-          //               multipleTaste.clearWines();
-          //             }
-          //           ),
-          //         ),
-          //       )
-          //     ],
-          //   ),
-          // ),
-             
-          // AnimatedSwitcher(
-          //   duration: const Duration(milliseconds: 250),
-          //   layoutBuilder: (currentChild, previousChildren) {
-          //     return currentChild!;
-          //   },
-          //   child: multipleTaste.multipleTaste.hidden
-          //     ? const RowHiddenWines(key: ValueKey<String>('notHidden'))
-          //     : const RowVisibleWines(key: ValueKey<String>('hidden')), 
-          // ),
+          ),        
         ],
       ),
     );
@@ -457,6 +385,7 @@ class _ListViewMultipleWinesState extends State<ListViewMultipleWines> {
               return CustomMultipleWinesRow(
                 key: Key('move_$index'),
                 index: index,
+                maxIndex: multipleTaste.winesMultipleTaste.length - 1,
                 color: colors.surfaceContainerLow,
               );
             },  
@@ -465,6 +394,7 @@ class _ListViewMultipleWinesState extends State<ListViewMultipleWines> {
               return CustomMultipleWinesRow(
                 key: Key('main_$index'),
                 index: index,
+                maxIndex: multipleTaste.winesMultipleTaste.length - 1,
                 color: colors.surfaceContainerHigh,
               );  
             }, 
@@ -488,79 +418,76 @@ class CustomMultipleWinesRow extends StatelessWidget {
   const CustomMultipleWinesRow({
     super.key,
     required this.index,
+    required this.maxIndex,
     required this.color,
   });
 
   final int index;
+  final int maxIndex;
   final Color color;
 
   @override
   Widget build(BuildContext context) {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    // final hideIndex = multipleTaste.hideIndex.indexOf(index) + 1;
+    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
+    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
     final styles = Theme.of(context).textTheme;
 
-    return Card(
-      key: key,
-      color: color,
-      margin: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        children: [
-          const SizedBox(width: 16),
+    return Padding(
+      padding: EdgeInsets.only(bottom: index == maxIndex ? (58 + bottomPadding + 2) : 0),
+      child: Card(
+        key: key,
+        color: color,
+        margin: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(
+          children: [
+            const SizedBox(width: 16),
+        
+            const Icon(Icons.menu),
+        
+            const SizedBox(width: 16),
+        
+            Expanded(
+              child: multipleTaste.multipleTaste.hidden
+                ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      // 'Vino a catar a ciegas $hideIndex', 
+                      'Vino a catar a ciegas ${index + 1}', 
+                      maxLines: 1, 
+                      overflow: TextOverflow.ellipsis, 
+                      style: styles.bodySmall!.copyWith(fontWeight: FontWeight.bold),
+                    ),
       
-          const Icon(Icons.menu),
-      
-          const SizedBox(width: 16),
-      
-          Expanded(
-            child: multipleTaste.multipleTaste.hidden // multipleTaste.hideIndex.contains(index) 
-              ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    // 'Vino a catar a ciegas $hideIndex', 
-                    'Vino a catar a ciegas ${index + 1}', 
-                    maxLines: 1, 
-                    overflow: TextOverflow.ellipsis, 
-                    style: styles.bodySmall!.copyWith(fontWeight: FontWeight.bold),
-                  ),
-
-                  Text(
-                    '${multipleTaste.winesMultipleTaste[index].vino} ${multipleTaste.winesMultipleTaste[index].anada}', 
-                    maxLines: 1,
-                    textAlign: TextAlign.right,
-                    overflow: TextOverflow.ellipsis, 
-                    style: const TextStyle(fontSize: 10)
-                  ),
-                ],
-              )
-              : Text(
-                multipleTaste.winesMultipleTaste[index].nombre, 
-                maxLines: 2, 
-                overflow: TextOverflow.ellipsis, 
-                style: styles.bodySmall!.copyWith(fontWeight: FontWeight.bold),
-              ),
-          ),
-             
-          // IconButton (
-          //   icon: Icon(
-          //     multipleTaste.hideIndex.contains(index)
-          //     ? Icons.visibility_rounded
-          //     : Icons.visibility_off_rounded
-          //   ),
-          //   onPressed: () => multipleTaste.hideWine(index),
-          // ),
-      
-          IconButton(
-            icon: const Icon(Icons.remove),
-            onPressed: () {
-              multipleTaste.removeWine(multipleTaste.winesMultipleTaste[index]);
-              if (multipleTaste.winesMultipleTaste.length == 1) Navigator.pop(context);
-            },
-          ),
-        ],
+                    Text(
+                      '${multipleTaste.winesMultipleTaste[index].vino} ${multipleTaste.winesMultipleTaste[index].anada}', 
+                      maxLines: 1,
+                      textAlign: TextAlign.right,
+                      overflow: TextOverflow.ellipsis, 
+                      style: const TextStyle(fontSize: 10)
+                    ),
+                  ],
+                )
+                : Text(
+                  multipleTaste.winesMultipleTaste[index].nombre, 
+                  maxLines: 2, 
+                  overflow: TextOverflow.ellipsis, 
+                  style: styles.bodySmall!.copyWith(fontWeight: FontWeight.bold),
+                ),
+            ),
+        
+            IconButton(
+              icon: const Icon(Icons.remove),
+              onPressed: () {
+                multipleTaste.removeWine(multipleTaste.winesMultipleTaste[index]);
+                if (multipleTaste.winesMultipleTaste.length == 1) Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -602,6 +529,10 @@ class MultipleActionsButtons extends StatelessWidget {
               multipleTaste.multipleTaste.name = multipleTaste.multipleName;
               // Subo a Firebase la cata multiple
               await multipleService.createMultipleTaste(multipleTaste.initMultiple());
+              // Compruebo si hay quiz y lo subo si es true // TODO: activar quiz
+              // if (multipleTaste.tasteQuiz.values.contains(true)) {
+                //await quizService.createQuiz(multipleName: multipleTaste.multipleName, wineList: multipleTaste.winesMultipleTaste);
+              // }
               // Cierro bottomsheet
               if (multipleTaste.winesMultipleTaste.length > 1 && context.mounted) Navigator.pop(context);
               multipleTaste.resetSettings();
@@ -628,6 +559,10 @@ class MultipleActionsButtons extends StatelessWidget {
 
               // Subo a Firebase la cata multiple
               await multipleService.createMultipleTaste(multipleTaste.initMultiple());
+              // Compruebo si hay quiz y lo subo si es true
+              if (multipleTaste.tasteQuiz.values.contains(true)) {
+                //await quizService.createQuiz(multipleName: multipleTaste.multipleName, wineList: multipleTaste.winesMultipleTaste);
+              }
               // Lo comprueblo por si se ha quedado la variable en true antes
               multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userUuid);
               multipleTaste.initUserTaste(multipleService.isMultipleTasted);
@@ -647,8 +582,8 @@ class MultipleActionsButtons extends StatelessWidget {
   }
 }
 
-class RowVisibleWines extends StatelessWidget {
-  const RowVisibleWines({
+class AddHideWines extends StatelessWidget {
+  const AddHideWines({
     super.key,
   });
 
@@ -679,7 +614,7 @@ class RowVisibleWines extends StatelessWidget {
                   onPressed: () async {
                     winesService.loadWines();
                     if (context.mounted) {
-                      final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines());
+                      final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
                       // Compruebo si el vino ya esta añadido al listado
                       if (context.mounted && multipleTaste.winesMultipleTaste.any((element) => element.id == wineSearched.id)) {
                         NotificationServices.showSnackbar('Vino duplicado', context);
@@ -714,10 +649,7 @@ class RowVisibleWines extends StatelessWidget {
                 ),
             
                 IconButton(
-                  onPressed: () {
-                    // multipleTaste.multipleTaste.hidden = !multipleTaste.multipleTaste.hidden;
-                    multipleTaste.hideAllWines();
-                  },
+                  onPressed: () => multipleTaste.hideAllWines(),
                   icon: Icon(
                     multipleTaste.multipleTaste.hidden
                       ? Icons.visibility_off_rounded
@@ -736,101 +668,39 @@ class RowVisibleWines extends StatelessWidget {
   }
 }
 
-class RowHiddenWines extends StatelessWidget {
-  const RowHiddenWines({
+class EnableTasteQuiz extends StatelessWidget {
+  const EnableTasteQuiz({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
 
-    final colors = Theme.of(context).colorScheme;
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
 
     return Container(
       alignment: Alignment.center,
-      padding: const EdgeInsets.only(left: 10),
+      padding: const EdgeInsets.only(left: 5, right: 5),
       height: 42,
       child: Row(
         children: [
-          const Text('Numero de vinos a catar a ciegas', style: TextStyle(fontSize: 14)),
+          const Text('Cata Quiz', style: TextStyle(fontSize: 14)),
       
           const Spacer(),
-      
-          Container(
-            alignment: Alignment.center,
-            height: 42,
-            width: 84,
-            child: TextFormField(
-              textAlignVertical: TextAlignVertical.top,
-              textInputAction: TextInputAction.go,
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,1}'))
-              ],
-              maxLines: 1,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 14),
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                isDense: true,
-                labelText: '',
-                alignLabelWithHint: true,
-                labelStyle: const TextStyle(fontSize: 14),
-                floatingLabelStyle: TextStyle(color: Colors.grey[600], fontSize: 14),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: const BorderSide(width: 1)
-                ),
-              ),
-              // autovalidateMode: AutovalidateMode.onUnfocus,
-              // validator: (value) {
-              //   if (value == '') {
-              //     return ;
-              //   }
-              //   if (int.parse(value!) < 2 || int.parse(value) > 20) {
-              //     return '';
-              //   }
-              //   return null;
-              // },
-              onChanged: (value) {
-                if (value == '') return;
-                multipleTaste.winesHiddenNumber = int.parse(value);
-              },
-              onFieldSubmitted: (value) {
-                if (int.parse(value) > 1 && int.parse(value) < 21) {
-                  multipleTaste.clearWines();
-                  FocusManager.instance.primaryFocus?.unfocus();
-                  multipleTaste.addHiddenWines();
-                  if (multipleTaste.winesMultipleTaste.length > 1) viewBottomMenu(context);
-                }
-                else {
-                  NotificationServices.showSnackbar('NUMERO DE VINOS DEBE ESTAR ENTRE 2 Y 20', context);
-              }
 
-              },
-            ),
+          Checkbox(
+            value: multipleTaste.tasteQuiz['simple'],
+            onChanged: multipleTaste.isSimpleQuiz,
           ),
-      
-          IconButton(
-            onPressed: () {
-              if (multipleTaste.winesHiddenNumber > 1 && multipleTaste.winesHiddenNumber < 21) {
-                multipleTaste.clearWines();
-                FocusManager.instance.primaryFocus?.unfocus();
-                multipleTaste.addHiddenWines();
-                if (multipleTaste.winesMultipleTaste.length > 1) viewBottomMenu(context);
-              }
-              else {
-                FocusManager.instance.primaryFocus?.unfocus();
-                NotificationServices.showSnackbar('EL NUMERO DE VINOS DEBE ESTAR ENTRE 2 Y 20', context);
-              }
-            }, 
-            icon: Icon(
-              Icons.check, 
-              color: colors.onSurface,
-              size: 22
-            ),
-          ),
+
+          const Text('Sencilla', style: TextStyle(fontSize: 14)),
+
+          Checkbox(
+            value: multipleTaste.tasteQuiz['advanced'],
+            onChanged: multipleTaste.isAdvancedQuiz,
+          ),      
+          
+          const Text('Avanzada', style: TextStyle(fontSize: 14)),
         ],
       ),
     );

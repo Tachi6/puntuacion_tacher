@@ -64,7 +64,7 @@ class MultipleServices extends ChangeNotifier {
 
     notifyListeners();
     
-     return multipleUpdated;
+    return multipleUpdated;
   }
 
   Multiple loadMultipleTaste(String multipleName) {

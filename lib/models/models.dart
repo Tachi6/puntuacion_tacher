@@ -9,3 +9,4 @@ export 'package:puntuacion_tacher/models/wines.dart';
 export 'package:puntuacion_tacher/models/multiple.dart';
 export 'package:puntuacion_tacher/models/wine_taste.dart';
 export 'package:puntuacion_tacher/models/wine_ratings.dart';
+export 'package:puntuacion_tacher/models/quiz.dart';

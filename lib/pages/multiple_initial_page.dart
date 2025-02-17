@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class MultipleInitialPage extends StatelessWidget {
@@ -111,6 +112,7 @@ class _WinesListView extends StatelessWidget {
 
     final styles = Theme.of(context).textTheme;
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final multipleService = Provider.of<MultipleServices>(context);
 
     return ListView.builder(
       itemCount: winesMultipleTaste.length,
@@ -131,7 +133,9 @@ class _WinesListView extends StatelessWidget {
               padding: const EdgeInsets.only(top: 0, bottom: 6, left: 10, right: 10),
               alignment: Alignment.centerLeft,
               child: Text(
-                multipleTaste.multipleTaste.hidden ? 'Vino a catar a ciegas ${index + 1}' : winesMultipleTaste[index].nombre,
+                (multipleTaste.multipleTaste.hidden && !multipleService.isMultipleTasted) 
+                  ? 'Vino a catar a ciegas ${index + 1}' 
+                  : winesMultipleTaste[index].nombre,
                 style: styles.bodyMedium
               ),
             ),
