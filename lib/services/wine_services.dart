@@ -110,7 +110,7 @@ class WineServices extends ChangeNotifier {
   void updateWinesByName() {
     winesByName = [...winesByIndex];
     // Elimino vinos sin valoracion
-    winesByRate.sort((a, b) => b.nombre.compareTo(a.nombre));
+    winesByName.sort((a, b) => b.nombre.compareTo(a.nombre));
   }
 
   List<Wines> winesBestCategory(String category) {
