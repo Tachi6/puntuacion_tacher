@@ -156,6 +156,27 @@ class WineServices extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<Wines> loadWine(String wineId) async {
+
+    final String jsonType = 'wines/$wineId.json';
+
+    final url = Uri.https(_baseUrl, jsonType, {
+      'auth': await storage.read(key: 'idToken') ?? ''
+    });
+    final resp = await http.get(url);
+
+    final Wines wine = Wines.fromJson(resp.body);
+
+    // Wines update
+    winesByIndex[int.parse(wineId)] = wine;
+    notifyListeners();
+    updateWinesByRate();
+    updateWinesByName();   
+    notifyListeners();
+
+    return wine;
+  }
+
   Future<String> updateWine(Wines wine) async {
 
     isSaving = true;
@@ -172,6 +193,8 @@ class WineServices extends ChangeNotifier {
     // Actualizar el listado de productos
     final int wineId = int.parse(wine.id!);
     winesByIndex[wineId] = wine;
+    updateWinesByRate();
+    updateWinesByName();   
 
     isSaving = false;
     notifyListeners();
@@ -195,6 +218,7 @@ class WineServices extends ChangeNotifier {
 
     winesByIndex.add(wine);
     updateWinesByRate();
+    updateWinesByName();
 
     isSaving = false;
     notifyListeners();

@@ -34,6 +34,7 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            automaticallyImplyLeading: false,
             toolbarHeight: 48,
             collapsedHeight: 48,
             floating: true,

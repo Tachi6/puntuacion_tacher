@@ -149,11 +149,12 @@ class CreateEditWineFormProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addUpdatesToWine() {
+  void addUpdatesToWine(Wines wineFromServer) {
 
-    final Formulas formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: ratingPuntos);
+    wine = wineFromServer;
 
     // Puntuacion final para PointsBox
+    final Formulas formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: ratingPuntos);
     puntosFinal = formulas.calculosFinal;
     notifyListeners();
     // Añado fechas y usuario
