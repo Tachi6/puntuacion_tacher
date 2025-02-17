@@ -9,11 +9,13 @@ import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class SearchDelegateWines extends SearchDelegate{
-  SearchDelegateWines({this.needButton});
+  SearchDelegateWines({required this.winesList, this.needButton});
 
-  List<Wines> _filtro = [];
+  final List<Wines> winesList;
   final bool? needButton;
   final String titleLabel = 'Vino no encontrado en base de datos';
+
+  List<Wines> _filtro = [];
 
   SvgPicture wineIcon(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -24,7 +26,7 @@ class SearchDelegateWines extends SearchDelegate{
       colorFilter: ColorFilter.mode(colors.onPrimaryFixedVariant, BlendMode.srcIn),
     );
   }
-  
+
   @override
   String? get searchFieldLabel => 'Buscar vino';
 
@@ -87,7 +89,10 @@ class SearchDelegateWines extends SearchDelegate{
 
     final winesService = Provider.of<WineServices>(context);
 
-    if (query.isEmpty) return const NoResultsWine();
+    // if (query.isEmpty) return const NoResultsWine();
+    if (query.isEmpty) {
+      _filtro = winesList;
+    }
  
     _filtro = winesService.winesByIndex.where((wines) {
       return removeDiacritics(wines.nombre.toLowerCase()).contains(removeDiacritics(query.trim().toLowerCase()));

@@ -192,12 +192,12 @@ class _ContinueButton extends StatelessWidget {
               //   multipleTaste.winesHiddenNumber = multipleSearched.wines.keys.length;
               //   multipleTaste.addHiddenWines();
               // }
-              multipleTaste.editMultipleTaste(() => multipleTaste.multipleTaste = multipleService.loadMultipleTaste(multipleTaste.multipleName).copy());
-              List<Wines> visibleWines = [];
+              multipleTaste.initLoadedMultipleTaste(multipleService.loadMultipleTaste(multipleTaste.multipleName).copy());
+              List<Wines> winesMultipleTaste = [];
               multipleTaste.multipleTaste.wines.forEach((key, value) {
-                visibleWines.add(wineService.winesByIndex[int.parse(key)].copy());
+                winesMultipleTaste.add(wineService.winesByIndex[int.parse(key)].copy());
               },);
-              multipleTaste.addVisibleWines(visibleWines);
+              multipleTaste.addMultipleTasteWines(winesMultipleTaste);
               
               multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userUuid);
               multipleTaste.initUserTaste(multipleService.isMultipleTasted);
@@ -375,7 +375,7 @@ class HiddenTasteButtons extends StatelessWidget {
           onPressed: () async {
             winesService.loadWines();
             if (context.mounted) {
-              final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines());
+              final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
               if (wineSearched != null) {
                 winesService.selectedWine = wineSearched;
                 wineForm.setWineToEdit(wineSearched);

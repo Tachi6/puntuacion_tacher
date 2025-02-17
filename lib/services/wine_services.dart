@@ -22,6 +22,7 @@ class WineServices extends ChangeNotifier {
 
   List<Wines> winesByIndex = [];
   List<Wines> winesByRate = [];
+  List<Wines> winesByName = [];
   List<WineTaste> winesTaste = [];
   Wines? _selectedWine;
   List<Wines> latest = [];
@@ -68,6 +69,7 @@ class WineServices extends ChangeNotifier {
 
     // Wines sort by points
     updateWinesByRate();
+    updateWinesByName();
     isLoading = false;
     
     notifyListeners();
@@ -103,6 +105,12 @@ class WineServices extends ChangeNotifier {
     // Elimino vinos sin valoracion
     winesByRate.removeWhere((element) => element.puntuacionFinal == -1);
     winesByRate.sort((a, b) => b.puntuacionFinal.compareTo(a.puntuacionFinal));
+  }
+
+  void updateWinesByName() {
+    winesByName = [...winesByIndex];
+    // Elimino vinos sin valoracion
+    winesByRate.sort((a, b) => b.nombre.compareTo(a.nombre));
   }
 
   List<Wines> winesBestCategory(String category) {

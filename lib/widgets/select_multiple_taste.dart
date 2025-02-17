@@ -25,7 +25,7 @@ class SelectMultipleTaste extends StatelessWidget {
       multipleService.loadMultiples();
       // Multiple? multipleSearched;
       if (context.mounted) {
-        final multipleSearched = await showSearch(context: context, delegate: SearchDelegateMultiple());
+        final multipleSearched = await showSearch(context: context, delegate: SearchDelegateMultiple(multipleList: multipleService.multipleTasteList));
 
         if (multipleSearched != null) {
           multipleTaste.multipleName = multipleSearched.name;
