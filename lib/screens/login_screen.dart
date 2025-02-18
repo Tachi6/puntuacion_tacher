@@ -42,17 +42,7 @@ class LoginForm extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
         child: const SingleChildScrollView(
-          child: ContainerLoginForm()
-          
-          // AnimatedSwitcher(
-          //   duration: const Duration(milliseconds: 250),
-          //   layoutBuilder: (currentChild, previousChildren) {
-          //     return currentChild!;
-          //   },
-          //   child: loginForm.isRegister 
-            //   ? const ContainerLoginForm(key: ValueKey<String>('register'))
-            //   : const ContainerLoginForm(key: ValueKey<String>('login')), 
-          // ),
+          child: ContainerLoginForm(),
         ),
       )
     );
@@ -88,9 +78,51 @@ class LoginRegisterForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final authService = Provider.of<AuthServices>(context, listen: false);
+    final winesService = Provider.of<WineServices>(context, listen: false);
+    final multipleService = Provider.of<MultipleServices>(context, listen: false);
+    final userService = Provider.of<UserServices>(context, listen: false);
     final loginForm = Provider.of<LoginProvider>(context);
-    // final authService = Provider.of<AuthService>(context, listen: false);
     final colors = Theme.of(context).colorScheme;
+
+    Future<void> sendLoginForm() async {
+      FocusManager.instance.primaryFocus?.unfocus(); // quitar teclado
+        
+      if ( !loginForm.isValidForm() ) return;
+
+      loginForm.isLoading = true;
+
+      final String? errorMessage;
+      
+      loginForm.isRegister
+        ? errorMessage = await authService.createUser(loginForm.email, loginForm.password)
+        : errorMessage = await authService.loginUser(loginForm.email, loginForm.password);
+
+      if (errorMessage == null) {
+
+        if (!context.mounted) return;
+
+        await userService.loadUsers();
+        await winesService.loadWines();
+        await winesService.loadWinesTaste();
+        await multipleService.loadMultiples();
+        
+        final newRoute = MaterialPageRoute(
+          builder: (context) => authService.userDisplayName == '' ? const EnterDisplayNameScreen() : const HomeScreen()
+        );
+        if (context.mounted) Navigator.pushReplacement(context, newRoute);
+        // FOR NOT VIEW 'ingresar' MESSAGE IF THERE ARE A LOGOUT
+        await Future.delayed(const Duration(seconds: 1), () {
+          loginForm.isLoading = false;
+          loginForm.isRegister = false;
+        });
+      }
+      else {
+        if (!context.mounted) return;
+        NotificationServices.showSnackbar(errorMessage, context);
+        loginForm.isLoading = false;
+      }
+    }     
 
     return Form(
       key: loginForm.loginFormKey,
@@ -101,6 +133,7 @@ class LoginRegisterForm extends StatelessWidget {
           LoginTextFormField(
             obscureText: false,
             textInputType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
             hintText: 'tacher@tacher.com',
             labelText: 'Correo electrónico',
             icon: Icons.alternate_email_outlined,
@@ -120,6 +153,7 @@ class LoginRegisterForm extends StatelessWidget {
           LoginTextFormField(
             obscureText: loginForm.passwordObscure,
             textInputType: TextInputType.visiblePassword,
+            textInputAction: TextInputAction.done,
             hintText: '******',
             labelText: 'Contraseña',
             icon: Icons.lock_outline,
@@ -134,6 +168,7 @@ class LoginRegisterForm extends StatelessWidget {
               ),
             ),
             onChanged: (value) => loginForm.password = value,
+            onFieldSubmitted: (_) => sendLoginForm(),            
             validator: (value) {
               if (value != null && value.length >= 6) {
                 return null;
@@ -152,8 +187,8 @@ class LoginRegisterForm extends StatelessWidget {
               return currentChild!;
             },
             child: loginForm.isRegister
-              ? const ValidateUserButton(key: ValueKey('register_button'))
-              : const ValidateUserButton(key: ValueKey('login_button')),
+              ? SendLoginForm(key: const ValueKey('register_button'), onPressed: () async => sendLoginForm())
+              : SendLoginForm(key: const ValueKey('login_button'), onPressed: () async => sendLoginForm()),
           ),
     
           const SizedBox(height: 10),
@@ -166,7 +201,7 @@ class LoginRegisterForm extends StatelessWidget {
               layoutBuilder: (currentChild, previousChildren) {
                 return currentChild!;
               },
-              child: loginForm.isRegister // TODO poner key para ver si funciona
+              child: loginForm.isRegister
                 ? Text(
                   key: const ValueKey('old_account_text'),
                   '¿Ya tienes una cuenta?',
@@ -190,22 +225,26 @@ class LoginTextFormField extends StatelessWidget {
     super.key,
     required this.obscureText,
     this.textInputType,
+    this.textInputAction,
     required this.hintText, 
     required this.labelText,
     required this.icon,
     this.suffixIcon, 
     this.onChanged, 
-    this.validator
+    this.validator,
+    this.onFieldSubmitted,
   });
 
   final bool obscureText;
   final TextInputType? textInputType;
+  final TextInputAction? textInputAction;
   final String hintText;
   final String labelText;
   final IconData icon;
   final Widget? suffixIcon;
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
+  final Function(String)? onFieldSubmitted;
 
 
   @override
@@ -225,6 +264,7 @@ class LoginTextFormField extends StatelessWidget {
         cursorColor: colors.surface,
         style: TextStyle(color: colors.surface),
         keyboardType: textInputType,
+        textInputAction: textInputAction,
         decoration: InputDecoration(
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(
@@ -260,66 +300,29 @@ class LoginTextFormField extends StatelessWidget {
         ),
         onChanged: onChanged,
         validator: validator,
+        onFieldSubmitted: onFieldSubmitted,
       ),
     );
   }
 }
 
-class ValidateUserButton extends StatelessWidget {
-  const ValidateUserButton({super.key});
+class SendLoginForm extends StatelessWidget {
+  const SendLoginForm({super.key, this.onPressed});
+
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
 
-    final authService = Provider.of<AuthServices>(context, listen: false);
-    final winesService = Provider.of<WineServices>(context, listen: false);
-    final multipleService = Provider.of<MultipleServices>(context, listen: false);
-    final userService = Provider.of<UserServices>(context, listen: false);
     final loginForm = Provider.of<LoginProvider>(context);
     final colors = Theme.of(context).colorScheme;
 
     return GestureDetector(
       child: CustomElevatedButton(
         width: 150,
-        onPressed: loginForm.isLoading ? null : () async {
-          
-          FocusManager.instance.primaryFocus?.unfocus(); // quitar teclado
-           
-          if ( !loginForm.isValidForm() ) return;
-      
-          loginForm.isLoading = true;
-
-          final String? errorMessage;
-          
-          loginForm.isRegister
-            ? errorMessage = await authService.createUser(loginForm.email, loginForm.password)
-            : errorMessage = await authService.loginUser(loginForm.email, loginForm.password);
-
-          if (errorMessage == null) {
-
-            if (!context.mounted) return;
-
-            await userService.loadUsers();
-            await winesService.loadWines();
-            await winesService.loadWinesTaste();
-            await multipleService.loadMultiples();
-           
-            final newRoute = MaterialPageRoute(
-              builder: (context) => authService.userDisplayName == '' ? const EnterDisplayNameScreen() : const HomeScreen()
-            );
-            if (context.mounted) Navigator.pushReplacement(context, newRoute);
-            // FOR NOT VIEW 'ingresar' MESSAGE IF THERE ARE A LOGOUT
-            await Future.delayed(const Duration(seconds: 2), () {
-              loginForm.isLoading = false;
-              loginForm.isRegister = false;
-            });
-          }
-          else {
-            if (!context.mounted) return;
-            NotificationServices.showSnackbar(errorMessage, context);
-            loginForm.isLoading = false;
-          }
-        },      
+        onPressed: loginForm.isLoading 
+          ? null 
+          : onPressed,      
         child: loginForm.isRegister 
           ? Text(
             key: const ValueKey('register_text'),
