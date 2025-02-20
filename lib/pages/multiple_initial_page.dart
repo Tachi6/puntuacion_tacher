@@ -7,13 +7,19 @@ import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-class MultipleInitialPage extends StatelessWidget {
+class MultipleInitialPage extends StatefulWidget {
   const MultipleInitialPage({
     super.key, 
   });
 
   @override
+  State<MultipleInitialPage> createState() => _MultipleInitialPageState();
+}
+
+class _MultipleInitialPageState extends State<MultipleInitialPage> with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);    
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final styles = Theme.of(context).textTheme;
@@ -61,6 +67,9 @@ class MultipleInitialPage extends StatelessWidget {
       // bottomSheet: customMultipleBottomSheet,
     );
   }
+  
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class _CustomField extends StatelessWidget {

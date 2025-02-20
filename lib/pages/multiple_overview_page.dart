@@ -8,13 +8,17 @@ import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-class MultipleOverviewPage extends StatelessWidget {
-  const MultipleOverviewPage({
-    super.key, 
-  });
+class MultipleOverviewPage extends StatefulWidget {
+  const MultipleOverviewPage({super.key});
 
   @override
+  State<MultipleOverviewPage> createState() => _MultipleOverviewPageState();
+}
+
+class _MultipleOverviewPageState extends State<MultipleOverviewPage> with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final size = MediaQuery.of(context).size;
@@ -37,6 +41,9 @@ class MultipleOverviewPage extends StatelessWidget {
       ),
     );
   }
+  
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class UserMultipleTasteDetails extends StatelessWidget {

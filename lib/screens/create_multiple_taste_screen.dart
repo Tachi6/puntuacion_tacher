@@ -220,7 +220,7 @@ class _CustomBody extends StatelessWidget {
 
           const SizedBox(height: 10),
     
-          // const EnableTasteQuiz(), // TODO: activar quiz
+          const EnableTasteQuiz(),
     
           const AddHideWines(),
 

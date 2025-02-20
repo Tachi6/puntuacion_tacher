@@ -49,10 +49,10 @@ class Question {
 }
 
 class Answer {
-    final int? answerMouth;
-    final int? answerNose;
-    final int? answerEyes;
-    final int answerWine;
+    int? answerMouth;
+    int? answerNose;
+    int? answerEyes;
+    int answerWine;
     final String user;
 
     Answer({

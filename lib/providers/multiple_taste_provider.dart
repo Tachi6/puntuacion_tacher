@@ -49,6 +49,12 @@ class MultipleTasteProvider extends ChangeNotifier {
     return formNameKey.currentState?.validate() ?? false;
   }
 
+  List<Wines> wineListShuffled() {
+    final List<Wines> newWineList = [...winesMultipleTaste];
+    newWineList.shuffle();
+    return newWineList;
+  }
+
   void isSimpleQuiz(bool? quizType) {
     if (quizType == null) return;
 

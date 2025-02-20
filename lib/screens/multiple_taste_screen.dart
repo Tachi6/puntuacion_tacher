@@ -6,7 +6,6 @@ import 'package:puntuacion_tacher/mappers/mappers.dart';
 import 'package:puntuacion_tacher/pages/pages.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
-import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -109,15 +108,11 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       else {
         for (int i = 0; i < multipleTaste.winesMultipleTaste.length; i++) {
           final Wines wine = multipleTaste.winesMultipleTaste[i];
-        
-          final Widget tastePage = TacherScreen(
+
+          final Widget tastePage = MultipleTacherPage(
             appBarTitle: multipleTaste.multipleTaste.hidden ? 'Vino a catar a ciegas ${i + 1}' : wine.nombre,
-            onPressedBackButon: () {
-              Navigator.pop(context);
-              pageProvider.multiplePage = 0;
-              multipleTaste.resetSettings();
-            },
           );
+        
           tastePages = [...tastePages, tastePage];
         }
       }
@@ -127,30 +122,36 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
 
         ...tastePages,
         
-        // if (multipleTaste.multipleTaste.tasteQuiz != null) const QuizTastePage(), // TODO: activar quiz
+        if (multipleTaste.multipleTaste.tasteQuiz != null) const QuizTastePage(), // TODO: activar quiz
         
         const MultipleOverviewPage(),
       ];
     }
 
-    return Scaffold(
-      body: Container(
-        alignment: Alignment.center,
-        width: size.width,
-        height: size.height,
-        child: PageView(
-          physics: const ClampingScrollPhysics(),
-          controller: pageController,
-          children: tastePages(),
-          onPageChanged: (value) {
-            pageProvider.multiplePage = value;
-          }
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => QuizServices()),
+        ChangeNotifierProvider(create: (_) => QuizProvider(wineSequence: multipleTaste.multipleTaste.wineSequence, user: authService.userUuid)),
+      ],
+      child: Scaffold(
+        body: Container(
+          alignment: Alignment.center,
+          width: size.width,
+          height: size.height,
+          child: PageView(
+            physics: const ClampingScrollPhysics(),
+            controller: pageController,
+            children: tastePages(),
+            onPageChanged: (value) {
+              pageProvider.multiplePage = value;
+            }
+          ),
         ),
-      ),
-      bottomSheet: CustomMultipleBottomSheet(
-        pageController: pageController, 
-        onPressed: onPressedBottomSheetButton,
-        totalPages: tastePages().length,
+        bottomSheet: CustomMultipleBottomSheet(
+          pageController: pageController, 
+          onPressed: onPressedBottomSheetButton,
+          totalPages: tastePages().length,
+        ),
       ),
     );
   }

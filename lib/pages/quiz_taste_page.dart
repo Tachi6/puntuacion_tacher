@@ -1,23 +1,33 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
+
 import 'package:provider/provider.dart';
+
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-class QuizTastePage extends StatelessWidget {
+enum TasteNotesTypes {vista, nariz, boca}
+
+class QuizTastePage extends StatefulWidget {
   const QuizTastePage({super.key});
 
   @override
+  State<QuizTastePage> createState() => _QuizTastePageState();
+}
+
+class _QuizTastePageState extends State<QuizTastePage> with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     const double padding = 10;
     final double width = multipleTaste.winesMultipleTaste.length < 3
       ? (MediaQuery.of(context).size.width / 2) - ((padding * 3) / 2)
-      : (MediaQuery.of(context).size.width / 2) - (padding * 2);
+      : (MediaQuery.of(context).size.width / 2) - (padding * 2.25);
     final TextStyle? style = Theme.of(context).textTheme.bodyMedium;
 
     return Scaffold(
@@ -27,6 +37,9 @@ class QuizTastePage extends StatelessWidget {
         : AdvancedTasteQuiz(width: width, style: style, padding: padding),
     );
   }
+  
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class CustomLabelTest extends StatelessWidget {
@@ -63,48 +76,48 @@ class SimpleTasteQuiz extends StatelessWidget {
   final TextStyle? style;
   final double padding;
 
+  double obtainTextHeight(String text) {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: text, 
+        style: style,
+      ),
+      textDirection: TextDirection.ltr)
+    ..layout(minWidth: 0, maxWidth: width - (padding * 2) - 2); // 2 Border
+
+    return textPainter.size.height;
+  }
+
+  double textMaxHeight(List<Wines> wineList) {
+    List<double> textHeight = [];
+    for (Wines wine in wineList) {
+      double allTextHeight = 200; // 200 of 10 rows of label text
+
+      allTextHeight = allTextHeight + obtainTextHeight(wine.nombre);
+      allTextHeight = allTextHeight + obtainTextHeight(wine.bodega);
+      allTextHeight = allTextHeight + obtainTextHeight(wine.region);
+      allTextHeight = allTextHeight + obtainTextHeight(wine.tipo);
+      allTextHeight = allTextHeight + obtainTextHeight(wine.variedades);
+      allTextHeight = allTextHeight + obtainTextHeight(wine.graduacion);
+      allTextHeight = allTextHeight + obtainTextHeight(wine.notaVista);
+      allTextHeight = allTextHeight + obtainTextHeight(wine.notaNariz);
+      allTextHeight = allTextHeight + obtainTextHeight(wine.notaBoca);
+
+      textHeight.add(allTextHeight); 
+    }
+    return textHeight.max;
+  }
+
   @override
   Widget build(BuildContext context) {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleServices>(context);
-    final List<Wines> wineList = [...multipleTaste.winesMultipleTaste];
-    if (!multipleService.isMultipleTasted) wineList.shuffle();
+    List<Wines> wineList = [];
 
-    double obtainTextHeight(String text) {
-      final TextPainter textPainter = TextPainter(
-        text: TextSpan(
-          text: text, 
-          style: style,
-        ),
-        textDirection: TextDirection.ltr)
-      ..layout(minWidth: 0, maxWidth: width - (padding * 2) - 2); // 2 Border
-
-      return textPainter.size.height;
-    }
-
-    double textMaxHeight() {
-      List<double> textHeight = [];
-      for (Wines wine in wineList) {
-        double allTextHeight = 0;
-        allTextHeight = allTextHeight + obtainTextHeight(wine.nombre);
-        allTextHeight = allTextHeight + obtainTextHeight(wine.bodega);
-        allTextHeight = allTextHeight + obtainTextHeight(wine.region);
-        allTextHeight = allTextHeight + obtainTextHeight(wine.tipo);
-        allTextHeight = allTextHeight + obtainTextHeight(wine.variedades);
-        allTextHeight = allTextHeight + obtainTextHeight(wine.graduacion);
-        allTextHeight = allTextHeight + obtainTextHeight(wine.notaVista);
-        allTextHeight = allTextHeight + obtainTextHeight(wine.notaNariz);
-        allTextHeight = allTextHeight + obtainTextHeight(wine.notaBoca);
-        if (multipleService.isMultipleTasted) {
-          allTextHeight = allTextHeight + 50; 
-        }
-        textHeight.add(allTextHeight + 200); // 200 of 10 rows of label text
-      }
-      // To prevent context.pop on back button, then rowText is empty
-      if (wineList.isEmpty) return 0;
-      return textHeight.max;
-    }
+    !multipleService.isMultipleTasted
+      ? wineList = [...multipleTaste.wineListShuffled()]
+      : wineList = [...multipleTaste.winesMultipleTaste];
 
     return SingleChildScrollView(
       child: Stack(
@@ -121,9 +134,9 @@ class SimpleTasteQuiz extends StatelessWidget {
           ),
       
           Container(
-            // height: 1760,
-            height: textMaxHeight() + padding + 44 + 2 + 110, // top padding + 44 _CustomDropDownButton + 2 Border + 108 of container padding
-            padding: const EdgeInsets.only(top: 40, left: 10, bottom: 68),
+            // height: 1760, //TODO: hacer height mas dinamico
+            height: textMaxHeight(wineList) + padding + 44 + 2 + 110 + (multipleService.isMultipleTasted ? 50 : 0), // top padding + 44 _CustomDropDownButton + 2 Border + 108 of container padding + rows checkWine
+            padding: const EdgeInsets.only(top: 40, bottom: 68),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: wineList.length,
@@ -137,7 +150,10 @@ class SimpleTasteQuiz extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12)          
                   ),
                   padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                  margin: EdgeInsets.only(right: padding),
+                  margin: EdgeInsets.only(
+                    left: index == 0 ? padding : (padding / 2), 
+                    right: index == (wineList.length -1) ? padding : (padding / 2)
+                  ),
                   width: width,
                   child: SimpleQuizRow(style: style, wine: wine, index: index),
                 );
@@ -198,7 +214,11 @@ class SimpleQuizRow extends StatelessWidget {
 
         if (multipleService.isMultipleTasted) const SizedBox(height: 10),
 
-        _CustomDropDownButton(width: 125, style: style!),
+        _CustomDropDownButton(
+          width: 125, 
+          style: style!,
+          onSelected: (value) => context.read<QuizProvider>().completeAnswers(wineId: wine.id!, answerWine: value),
+        ),
       ],
     );
   }
@@ -216,26 +236,59 @@ class AdvancedTasteQuiz extends StatelessWidget {
   final TextStyle? style;
   final double padding;
 
+  List<Map<String, String>> wineIdNotasVista(MultipleServices multipleService, MultipleTasteProvider multipleTaste) {
+    List<Wines> wineList = [];
+
+    !multipleService.isMultipleTasted
+      ? wineList = [...multipleTaste.wineListShuffled()]
+      : wineList = [...multipleTaste.winesMultipleTaste];
+
+    final List<Map<String, String>> wineIdNotasVista = [];
+    for (Wines wine in wineList) {
+      wineIdNotasVista.add({
+        wine.id!: wine.notaVista,
+      });
+    }
+    return wineIdNotasVista;
+  }
+
+  List<Map<String, String>> wineIdNotasNariz(MultipleServices multipleService, MultipleTasteProvider multipleTaste) {
+    List<Wines> wineList = [];
+
+    !multipleService.isMultipleTasted
+      ? wineList = [...multipleTaste.wineListShuffled()]
+      : wineList = [...multipleTaste.winesMultipleTaste];
+
+    final List<Map<String, String>> wineIdNotasNariz = [];
+    for (Wines wine in wineList) {
+      wineIdNotasNariz.add({
+        wine.id!: wine.notaNariz
+      });
+    }
+    return wineIdNotasNariz;
+  }
+
+  List<Map<String, String>> wineIdNotasBoca(MultipleServices multipleService, MultipleTasteProvider multipleTaste) {
+    List<Wines> wineList = [];
+
+    !multipleService.isMultipleTasted
+      ? wineList = [...multipleTaste.wineListShuffled()]
+      : wineList = [...multipleTaste.winesMultipleTaste];
+
+    final List<Map<String, String>> wineIdNotasBoca = [];
+    for (Wines wine in wineList) {
+      wineIdNotasBoca.add({
+        wine.id!: wine.notaBoca
+      });
+    }
+    return wineIdNotasBoca;
+  }
+
   @override
   Widget build(BuildContext context) {
 
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final multipleService = Provider.of<MultipleServices>(context);
-    final List<Wines> wineList = [...multipleTaste.winesMultipleTaste];
-    if (!multipleService.isMultipleTasted) wineList.shuffle();
-
-    final List<String> notasVista = [];
-    for (Wines wine in wineList) {
-      notasVista.add(wine.notaVista);
-    }
-    final List<String> notasNariz = [];
-    for (Wines wine in wineList) {
-      notasNariz.add(wine.notaNariz);
-    }
-    final List<String> notasBoca = [];
-    for (Wines wine in wineList) {
-      notasBoca.add(wine.notaBoca);
-    }
+    final multipleService = context.read<MultipleServices>(); 
+    final multipleTaste = context.read<MultipleTasteProvider>();
 
     return SingleChildScrollView(
       child: Stack(
@@ -252,12 +305,11 @@ class AdvancedTasteQuiz extends StatelessWidget {
           ),
       
           Padding(
-            padding: const EdgeInsets.only(top: 40, left: 10, bottom: 68),
+            padding: const EdgeInsets.only(top: 40, bottom: 68),
             child: Column(
               children: [
                 AdvancedQuizRowSpecs(
                   label: 'Ficha Técnica',
-                  wineList: wineList, 
                   padding: padding, 
                   width: width, 
                   style: style
@@ -266,8 +318,8 @@ class AdvancedTasteQuiz extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 AdvancedQuizRowNotes(
-                  label: 'Cata Vista',
-                  rowText: notasVista, 
+                  tasteNotesTypes: TasteNotesTypes.vista,
+                  rowWineIdText: wineIdNotasVista(multipleService, multipleTaste), 
                   padding: padding, 
                   width: width, 
                   style: style
@@ -276,8 +328,8 @@ class AdvancedTasteQuiz extends StatelessWidget {
                 const SizedBox(height: 10),
       
                 AdvancedQuizRowNotes(
-                  label: 'Cata Nariz',
-                  rowText: notasNariz, 
+                  tasteNotesTypes: TasteNotesTypes.nariz,
+                  rowWineIdText: wineIdNotasNariz(multipleService, multipleTaste), 
                   padding: padding, 
                   width: width, 
                   style: style
@@ -286,11 +338,11 @@ class AdvancedTasteQuiz extends StatelessWidget {
                 const SizedBox(height: 10),
       
                 AdvancedQuizRowNotes(
-                  label: 'Cata Boca',
-                  rowText: notasBoca, 
+                  tasteNotesTypes: TasteNotesTypes.boca,
+                  rowWineIdText: wineIdNotasBoca(multipleService, multipleTaste), 
                   padding: padding, 
                   width: width, 
-                  style: style
+                  style: style,
                 ),
               ],
             ),
@@ -305,57 +357,59 @@ class AdvancedQuizRowSpecs extends StatelessWidget {
   const AdvancedQuizRowSpecs({
     super.key,
     required this.label,
-    required this.wineList,
     required this.padding,
     required this.width,
     required this.style,
   });
 
   final String label;
-  final List<Wines> wineList;
   final double padding;
   final double width;
   final TextStyle? style;
 
+  double obtainTextHeight(String text) {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: text, 
+        style: style,
+      ),
+      textDirection: TextDirection.ltr)
+    ..layout(minWidth: 0, maxWidth: width - (padding * 2) - 2); // 2 Border
+
+    return textPainter.size.height;
+  }
+
+  double textMaxHeight(List<Wines> wineList) {
+    List<double> textHeight = [];
+    for (Wines wine in wineList) {
+      double allTextHeight = 120; // 120 of 6 rows of label text
+
+      allTextHeight = allTextHeight + obtainTextHeight(wine.nombre);
+      allTextHeight = allTextHeight + obtainTextHeight(wine.bodega);
+      allTextHeight = allTextHeight + obtainTextHeight(wine.region);
+      allTextHeight = allTextHeight + obtainTextHeight(wine.tipo);
+      allTextHeight = allTextHeight + obtainTextHeight(wine.variedades);
+      allTextHeight = allTextHeight + obtainTextHeight(wine.graduacion);
+
+      textHeight.add(allTextHeight);
+    }
+    return textHeight.max;
+  }
+
   @override
   Widget build(BuildContext context) {
 
-    final multipleService = Provider.of<MultipleServices>(context);
+    final multipleService = context.read<MultipleServices>(); 
+    final multipleTaste = context.read<MultipleTasteProvider>();
+    List<Wines> wineList = [];
 
-    double obtainTextHeight(String text) {
-      final TextPainter textPainter = TextPainter(
-        text: TextSpan(
-          text: text, 
-          style: style,
-        ),
-        textDirection: TextDirection.ltr)
-      ..layout(minWidth: 0, maxWidth: width - (padding * 2) - 2); // 2 Border
-
-      return textPainter.size.height;
-    }
-
-    double textMaxHeight() {
-      List<double> textHeight = [];
-      for (Wines wine in wineList) {
-        double allTextHeight = 0;
-        allTextHeight = allTextHeight + obtainTextHeight(wine.nombre);
-        allTextHeight = allTextHeight + obtainTextHeight(wine.bodega);
-        allTextHeight = allTextHeight + obtainTextHeight(wine.region);
-        allTextHeight = allTextHeight + obtainTextHeight(wine.tipo);
-        allTextHeight = allTextHeight + obtainTextHeight(wine.variedades);
-        allTextHeight = allTextHeight + obtainTextHeight(wine.graduacion);
-        if (multipleService.isMultipleTasted) {
-          allTextHeight = allTextHeight + 50; 
-        }
-        textHeight.add(allTextHeight + 120); // 120 of 6 rows of label text
-      }
-      // To prevent context.pop on back button, then rowText is empty
-      if (wineList.isEmpty) return 0;
-      return textHeight.max;
-    }
+    !multipleService.isMultipleTasted
+      ? wineList = [...multipleTaste.wineListShuffled()]
+      : wineList = [...multipleTaste.winesMultipleTaste];
 
     return SizedBox(
-      height: textMaxHeight() + padding + 44 + 2, // top padding + 44 _CustomDropDownButton + 2 Border
+      // TODO: simpllificar height dinamicxamente
+      height: textMaxHeight(wineList) + padding + 44 + 2 + (multipleService.isMultipleTasted ? 50 : 0), // top padding + 44 _CustomDropDownButton + 2 Border
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: wineList.length,
@@ -370,7 +424,10 @@ class AdvancedQuizRowSpecs extends StatelessWidget {
             ),
             width: width,
             padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-            margin: EdgeInsets.only(right: padding),
+            margin: EdgeInsets.only(
+              left: index == 0 ? padding : (padding / 2), 
+              right: index == (wineList.length -1) ? padding : (padding / 2)
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -395,7 +452,11 @@ class AdvancedQuizRowSpecs extends StatelessWidget {
 
                 if (multipleService.isMultipleTasted) const SizedBox(height: 10),
             
-                _CustomDropDownButton(width: 125, style: style!),
+                _CustomDropDownButton(
+                  width: 125, 
+                  style: style!,
+                  onSelected: (value) => context.read<QuizProvider>().completeAnswers(wineId: wine.id!, answerWine: value),
+                ),
               ],
             ),
           );
@@ -409,25 +470,27 @@ class AdvancedQuizRowSpecs extends StatelessWidget {
 class AdvancedQuizRowNotes extends StatelessWidget {
   const AdvancedQuizRowNotes({
     super.key,
-    required this.label,
-    required this.rowText,
+    required this.tasteNotesTypes,
+    required this.rowWineIdText,
     required this.padding,
     required this.width,
     required this.style,
+    this.onSelected,
   });
 
-  final String label;
-  final List<String> rowText;
+  final TasteNotesTypes tasteNotesTypes;
+  final List<Map<String, String>> rowWineIdText;
   final double padding;
   final double width;
   final TextStyle? style;
+  final Function(int?)? onSelected;
 
   double textMaxHeight() {
     List<double> textHeight = [];
-    for (String text in rowText) {
+    for (Map<String, String> wineIdText in rowWineIdText) {
       final TextPainter textPainter = TextPainter(
         text: TextSpan(
-          text: text, 
+          text: wineIdText.values.first, 
           style: style
         ),
         textDirection: TextDirection.ltr)
@@ -435,9 +498,18 @@ class AdvancedQuizRowNotes extends StatelessWidget {
       
       textHeight.add(textPainter.size.height);
     }
-    // To prevent context.pop on back button, then rowText is empty
-    if (rowText.isEmpty) return 0;
     return textHeight.max;
+  }
+  
+  String get label {
+    switch (tasteNotesTypes) {
+      case TasteNotesTypes.vista:
+        return 'Cata Vista';
+      case TasteNotesTypes.nariz:
+        return 'Cata Nariz';
+      case TasteNotesTypes.boca:
+        return 'Cata Boca';
+    }
   }
 
   @override
@@ -449,10 +521,11 @@ class AdvancedQuizRowNotes extends StatelessWidget {
       height: textMaxHeight() + padding + 20 + 44 + 2 + (multipleService.isMultipleTasted ? 50 : 0), // top padding + 20 Label text + 44 _CustomDropDownButton + 2 Border
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: rowText.length,
+        itemCount: rowWineIdText.length,
         itemBuilder: (context, index) {
-      
-          final String text = rowText[index];
+          
+          final String wineId = rowWineIdText[index].keys.first;
+          final String text = rowWineIdText[index].values.first;
       
           return Container(
             decoration: BoxDecoration(
@@ -461,7 +534,10 @@ class AdvancedQuizRowNotes extends StatelessWidget {
             ),
             width: width,
             padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-            margin: EdgeInsets.only(right: padding),
+            margin: EdgeInsets.only(
+              left: index == 0 ? padding : (padding / 2), 
+              right: index == (rowWineIdText.length -1) ? padding : (padding / 2)
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -476,22 +552,38 @@ class AdvancedQuizRowNotes extends StatelessWidget {
 
                 if (multipleService.isMultipleTasted) const SizedBox(height: 10),
             
-                _CustomDropDownButton(width: 125, style: style!),
+                _CustomDropDownButton(
+                  width: 125, 
+                  style: style!,
+                  onSelected: (value) {
+                    switch (tasteNotesTypes) {
+                      case TasteNotesTypes.vista:
+                        context.read<QuizProvider>().completeAnswers(wineId: wineId, answerEyes: value);
+                        break;
+                      case TasteNotesTypes.nariz:
+                        context.read<QuizProvider>().completeAnswers(wineId: wineId, answerNose: value);
+                        break;
+                      case TasteNotesTypes.boca:
+                        context.read<QuizProvider>().completeAnswers(wineId: wineId, answerMouth: value);                
+                        break;
+                    }
+                  }
+                ),
               ],
             ),
           );
         },
-      
       ),
     );
   }
 }
 
 class _CustomDropDownButton extends StatefulWidget {
-  const _CustomDropDownButton({required this.width, required this.style});
+  const _CustomDropDownButton({required this.width, required this.style, this.onSelected});
 
   final double width;
   final TextStyle style;
+  final Function(int?)? onSelected;
 
   @override
   State<_CustomDropDownButton> createState() => _CustomDropDownButtonState();
@@ -501,17 +593,22 @@ class _CustomDropDownButtonState extends State<_CustomDropDownButton> {
 
   int selectedWine = 1;
 
-  final List<int> wineNumbers = [10, 20, 30, 40, 50];
-
   @override
   Widget build(BuildContext context) {
 
     final multipleService = Provider.of<MultipleServices>(context);
 
+    final List<int> wineNumbers = List.generate(
+      context.read<MultipleTasteProvider>().winesMultipleTaste.length, 
+      (index) => index + 1, 
+      growable: false,
+    );
+
     return Container(
       width: double.infinity,
       alignment: Alignment.center,
       child: DropdownMenu(
+        hintText: ' Escoge',
         enabled: multipleService.isMultipleTasted ? false : true,
         alignmentOffset: const Offset(-1, 0),
         width: widget.width,
@@ -533,9 +630,8 @@ class _CustomDropDownButtonState extends State<_CustomDropDownButton> {
             borderSide: BorderSide.none,
           ),
           constraints: BoxConstraints.tight(const Size.fromHeight(44)),
-          contentPadding: const EdgeInsets.only(top: 0, bottom: 0, right: 0, left: 17),
+          contentPadding: const EdgeInsets.only(top: 0, bottom: 0, right: 0, left: 8),
         ),
-        initialSelection: wineNumbers[0],
         dropdownMenuEntries: wineNumbers.map((int number) {
           return DropdownMenuEntry(
             label: 'Vino ${number.toString()}',
@@ -547,10 +643,7 @@ class _CustomDropDownButtonState extends State<_CustomDropDownButton> {
             labelWidget: Text('Vino ${number.toString()}', style: widget.style)
           );
         }).toList(),
-        // onSelected: (value) {
-        //   selectedWine = value!;
-        //   setState(() {});
-        // },
+        onSelected: widget.onSelected,
       ),
     );
   }

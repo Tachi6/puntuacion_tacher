@@ -69,8 +69,8 @@ class CreateEditWineFormProvider extends ChangeNotifier {
   }
 
   loadUser() async {
-     String? localId = await storage.read(key: 'localId');
-     user = localId!;
+    String? localId = await storage.read(key: 'localId');
+    user = localId!;
   }
 
   void setWineToEdit(Wines wineToEdit) {
