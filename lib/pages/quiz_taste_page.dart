@@ -42,28 +42,6 @@ class _QuizTastePageState extends State<QuizTastePage> with AutomaticKeepAliveCl
   bool get wantKeepAlive => true;
 }
 
-class CustomLabelTest extends StatelessWidget {
-  const CustomLabelTest({
-    super.key,
-    required this.label,
-    required this.padding,
-    required this.style,
-  });
-
-  final String label;
-  final double padding;
-  final TextStyle? style;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: padding),
-      alignment: Alignment.centerLeft,
-      child: Text(label, style: style!.copyWith(fontWeight: FontWeight.bold)),
-    );
-  }
-}
-
 class SimpleTasteQuiz extends StatelessWidget {
   const SimpleTasteQuiz({
     super.key,
@@ -118,6 +96,13 @@ class SimpleTasteQuiz extends StatelessWidget {
     !multipleService.isMultipleTasted
       ? wineList = [...multipleTaste.wineListShuffled()]
       : wineList = [...multipleTaste.winesMultipleTaste];
+    
+    String customLabel() {
+      if (multipleService.isMultipleTasted) {
+        return 'Cata Quiz - ${context.read<QuizProvider>().obtainPuntuation()}';
+      }
+      return 'Cata Quiz';
+    }
 
     return SingleChildScrollView(
       child: Stack(
@@ -125,7 +110,7 @@ class SimpleTasteQuiz extends StatelessWidget {
           Align(
             alignment: Alignment.topCenter,
             child: Text(
-              'Cata Quiz', // TODO: poner aciertos 5/6 por ejemplo
+              customLabel(),
               style: style!.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
@@ -210,7 +195,11 @@ class SimpleQuizRow extends StatelessWidget {
 
         if (multipleService.isMultipleTasted) const SizedBox(height: 20),
 
-        if (multipleService.isMultipleTasted) Text('Vino correcto: ${(index + 1).toString()}', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+        if (multipleService.isMultipleTasted) Text(
+          'Vino correcto: ${context.read<QuizProvider>().obtainCorrectAnswer(wine.id!)}', 
+          style: style!.copyWith(fontWeight: FontWeight.bold), 
+          textAlign: TextAlign.center
+        ),
 
         if (multipleService.isMultipleTasted) const SizedBox(height: 10),
 
@@ -218,6 +207,10 @@ class SimpleQuizRow extends StatelessWidget {
           width: 125, 
           style: style!,
           onSelected: (value) => context.read<QuizProvider>().completeAnswers(wineId: wine.id!, answerWine: value),
+          correctAnswer: context.read<QuizProvider>().obtainCorrectAnswer(wine.id!),
+          userAnswer: multipleService.isMultipleTasted 
+            ? context.read<QuizProvider>().obtainUserAnswer(wine.id!).answerWine
+            : null,
         ),
       ],
     );
@@ -290,13 +283,20 @@ class AdvancedTasteQuiz extends StatelessWidget {
     final multipleService = context.read<MultipleServices>(); 
     final multipleTaste = context.read<MultipleTasteProvider>();
 
+    String customLabel() {
+      if (multipleService.isMultipleTasted) {
+        return 'Cata Quiz - ${context.read<QuizProvider>().obtainPuntuation()}';
+      }
+      return 'Cata Quiz';
+    }
+
     return SingleChildScrollView(
       child: Stack(
         children: [
           Align(
             alignment: Alignment.topCenter,
             child: Text(
-              'Cata Quiz', 
+              customLabel(), 
               style: style!.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
@@ -448,7 +448,11 @@ class AdvancedQuizRowSpecs extends StatelessWidget {
 
                 if (multipleService.isMultipleTasted) const SizedBox(height: 20),
 
-                if (multipleService.isMultipleTasted) Text('Vino correcto: ${(index + 1).toString()}', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                if (multipleService.isMultipleTasted) Text(
+                  'Vino correcto: ${context.read<QuizProvider>().obtainCorrectAnswer(wine.id!)}',
+                  style: style!.copyWith(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center
+                ),
 
                 if (multipleService.isMultipleTasted) const SizedBox(height: 10),
             
@@ -456,6 +460,10 @@ class AdvancedQuizRowSpecs extends StatelessWidget {
                   width: 125, 
                   style: style!,
                   onSelected: (value) => context.read<QuizProvider>().completeAnswers(wineId: wine.id!, answerWine: value),
+                  correctAnswer: context.read<QuizProvider>().obtainCorrectAnswer(wine.id!),
+                  userAnswer: multipleService.isMultipleTasted 
+                    ? context.read<QuizProvider>().obtainUserAnswer(wine.id!).answerWine
+                    : null,
                 ),
               ],
             ),
@@ -517,6 +525,17 @@ class AdvancedQuizRowNotes extends StatelessWidget {
 
     final multipleService = Provider.of<MultipleServices>(context);
 
+    int? getUserAnswer(String wineId) {
+      switch (tasteNotesTypes) {
+        case TasteNotesTypes.vista:
+          return context.read<QuizProvider>().obtainUserAnswer(wineId).answerEyes;
+        case TasteNotesTypes.nariz:
+          return context.read<QuizProvider>().obtainUserAnswer(wineId).answerNose;
+        case TasteNotesTypes.boca:
+          return context.read<QuizProvider>().obtainUserAnswer(wineId).answerMouth;                
+      }
+    }
+
     return SizedBox(
       height: textMaxHeight() + padding + 20 + 44 + 2 + (multipleService.isMultipleTasted ? 50 : 0), // top padding + 20 Label text + 44 _CustomDropDownButton + 2 Border
       child: ListView.builder(
@@ -548,7 +567,11 @@ class AdvancedQuizRowNotes extends StatelessWidget {
 
                 if (multipleService.isMultipleTasted) const SizedBox(height: 20),
 
-                if (multipleService.isMultipleTasted) Text('Vino correcto: ${(index + 1).toString()}', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                if (multipleService.isMultipleTasted) Text(
+                  'Vino correcto: ${context.read<QuizProvider>().obtainCorrectAnswer(wineId)}',
+                  style: style!.copyWith(fontWeight: FontWeight.bold), 
+                  textAlign: TextAlign.center
+                ),
 
                 if (multipleService.isMultipleTasted) const SizedBox(height: 10),
             
@@ -567,7 +590,11 @@ class AdvancedQuizRowNotes extends StatelessWidget {
                         context.read<QuizProvider>().completeAnswers(wineId: wineId, answerMouth: value);                
                         break;
                     }
-                  }
+                  },
+                  correctAnswer: context.read<QuizProvider>().obtainCorrectAnswer(wineId),
+                  userAnswer: multipleService.isMultipleTasted 
+                    ? getUserAnswer(wineId)
+                    : null,
                 ),
               ],
             ),
@@ -579,19 +606,25 @@ class AdvancedQuizRowNotes extends StatelessWidget {
 }
 
 class _CustomDropDownButton extends StatefulWidget {
-  const _CustomDropDownButton({required this.width, required this.style, this.onSelected});
+  const _CustomDropDownButton({
+    required this.width, 
+    required this.style, 
+    this.onSelected,
+    required this.correctAnswer,
+    this.userAnswer,  
+  });
 
   final double width;
   final TextStyle style;
   final Function(int?)? onSelected;
+  final int correctAnswer;
+  final int? userAnswer;
 
   @override
   State<_CustomDropDownButton> createState() => _CustomDropDownButtonState();
 }
 
 class _CustomDropDownButtonState extends State<_CustomDropDownButton> {
-
-  int selectedWine = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -604,16 +637,29 @@ class _CustomDropDownButtonState extends State<_CustomDropDownButton> {
       growable: false,
     );
 
+    Color? isCorrectAnswer() {
+      if (widget.userAnswer == null) return null;
+      if (widget.userAnswer == widget.correctAnswer) return Colors.green;
+      if (widget.userAnswer != widget.correctAnswer) return Colors.red;
+      return null;
+    }
+
     return Container(
       width: double.infinity,
       alignment: Alignment.center,
       child: DropdownMenu(
-        hintText: ' Escoge',
-        enabled: multipleService.isMultipleTasted ? false : true,
+        hintText: multipleService.isMultipleTasted 
+          ? 'Vino ${widget.userAnswer.toString()}' 
+          : ' Escoge',
+        enabled: multipleService.isMultipleTasted 
+          ? false 
+          : true,
         alignmentOffset: const Offset(-1, 0),
         width: widget.width,
         textAlign: TextAlign.center,
-        textStyle: widget.style.copyWith(fontWeight: FontWeight.bold, color: null), // TODO: change color if is right
+        textStyle: widget.style.copyWith(
+          fontWeight: FontWeight.bold, 
+        ),
         trailingIcon: Transform.translate(
           offset: const Offset(0, -2),
           child: const Icon(Icons.arrow_drop_down)
@@ -631,6 +677,10 @@ class _CustomDropDownButtonState extends State<_CustomDropDownButton> {
           ),
           constraints: BoxConstraints.tight(const Size.fromHeight(44)),
           contentPadding: const EdgeInsets.only(top: 0, bottom: 0, right: 0, left: 8),
+          hintStyle: widget.style.copyWith(
+            fontWeight: FontWeight.bold, 
+            color: isCorrectAnswer(),
+          ),
         ),
         dropdownMenuEntries: wineNumbers.map((int number) {
           return DropdownMenuEntry(

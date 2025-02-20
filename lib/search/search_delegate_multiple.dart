@@ -181,10 +181,10 @@ class SearchDelegateMultiple extends SearchDelegate{
             // Para cata con contraseña
             if (_filtro[index].password != null) {
               final bool? isCorrectPassword = await enterPasswordBox(context, _filtro[index]);
-              if (isCorrectPassword == null) {
-                return;
-              }
+              if (isCorrectPassword == null) return;
+          
               if (isCorrectPassword && context.mounted) {
+                context.read<QuizServices>().loadQuiz(_filtro[index].name);
                 close(context, _filtro[index].copy());
                 return;
               }
@@ -195,6 +195,7 @@ class SearchDelegateMultiple extends SearchDelegate{
               return;
             }
             // Para cata sin contraseña
+            context.read<QuizServices>().loadQuiz(_filtro[index].name);
             close(context, _filtro[index].copy());
           },
         );

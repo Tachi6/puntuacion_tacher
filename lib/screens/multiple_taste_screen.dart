@@ -122,7 +122,7 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
 
         ...tastePages,
         
-        if (multipleTaste.multipleTaste.tasteQuiz != null) const QuizTastePage(), // TODO: activar quiz
+        if (multipleTaste.multipleTaste.tasteQuiz != null) const QuizTastePage(),
         
         const MultipleOverviewPage(),
       ];
@@ -130,8 +130,11 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => QuizServices()),
-        ChangeNotifierProvider(create: (_) => QuizProvider(wineSequence: multipleTaste.multipleTaste.wineSequence, user: authService.userUuid)),
+        ChangeNotifierProvider(create: (_) => QuizProvider(
+          wineSequence: multipleTaste.multipleTaste.wineSequence,
+          selectedQuestionList: context.read<QuizServices>().selectedQuestionsList,
+          user: authService.userUuid,
+        )),
       ],
       child: Scaffold(
         body: Container(

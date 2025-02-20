@@ -529,10 +529,10 @@ class MultipleActionsButtons extends StatelessWidget {
               multipleTaste.multipleTaste.name = multipleTaste.multipleName;
               // Subo a Firebase la cata multiple
               await multipleService.createMultipleTaste(multipleTaste.initMultiple());
-              // Compruebo si hay quiz y lo subo si es true // TODO: activar quiz
-              // if (multipleTaste.tasteQuiz.values.contains(true)) {
-                //await quizService.createQuiz(multipleName: multipleTaste.multipleName, wineList: multipleTaste.winesMultipleTaste);
-              // }
+              // Compruebo si esta activado el quiz y lo subo si es true
+              if (multipleTaste.tasteQuiz.values.contains(true) && context.mounted) {
+                await context.read<QuizServices>().createQuiz(multipleName: multipleTaste.multipleName, wineList: multipleTaste.winesMultipleTaste);
+              }
               // Cierro bottomsheet
               if (multipleTaste.winesMultipleTaste.length > 1 && context.mounted) Navigator.pop(context);
               multipleTaste.resetSettings();
@@ -559,9 +559,9 @@ class MultipleActionsButtons extends StatelessWidget {
 
               // Subo a Firebase la cata multiple
               await multipleService.createMultipleTaste(multipleTaste.initMultiple());
-              // Compruebo si hay quiz y lo subo si es true
-              if (multipleTaste.tasteQuiz.values.contains(true)) {
-                //await quizService.createQuiz(multipleName: multipleTaste.multipleName, wineList: multipleTaste.winesMultipleTaste);
+              // Compruebo si hay quiz activado y lo subo si es true
+              if (multipleTaste.tasteQuiz.values.contains(true) && context.mounted) {
+                await context.read<QuizServices>().createQuiz(multipleName: multipleTaste.multipleName, wineList: multipleTaste.winesMultipleTaste);
               }
               // Lo comprueblo por si se ha quedado la variable en true antes
               multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userUuid);

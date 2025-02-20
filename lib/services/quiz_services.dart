@@ -10,32 +10,40 @@ class QuizServices extends ChangeNotifier {
 
   final String _baseUrl = 'puntos-tacher-default-rtdb.europe-west1.firebasedatabase.app';
 
+  List<Question> selectedQuestionsList = [];
+
   final storage = const FlutterSecureStorage();
 
-  void createQuiz({required String multipleName, required List<Wines> wineList}) async {
+  Future<void> createQuiz({required String multipleName, required List<Wines> wineList}) async {
 
     final String jsonType = 'quiz/$multipleName.json';
     Map<String, Question> bodyMap = {};
+    List<Question> tempQuestions = [];
 
     for (int i = 0; i < wineList.length; i++) {
       final Wines wine = wineList[i];
+      final Question question = Question(
+        correctAnswer: i + 1, 
+        wineId: wine.id!,
+        answer: {},
+      );
       final Map<String, Question> tempBodyMap = {
-        wine.id!: Question(
-          correctAnswer: i + 1, 
-          wineId: wine.id!,
-          answer: {},
-        )
+        wine.id!: question
       };
       bodyMap = {...bodyMap, ...tempBodyMap};
+      tempQuestions = [...tempQuestions, question];
     }
     // final Quiz quiz = Quiz(quiz: bodyMap); 
     final url = Uri.https(_baseUrl, jsonType, {
       'auth': await storage.read(key: 'idToken') ?? ''
     });
     await http.put(url, body: json.encode(bodyMap));
+
+    selectedQuestionsList = tempQuestions;
+    notifyListeners();
   }
 
-  void loadQuiz(String multipleName) async {
+  Future<void> loadQuiz(String multipleName) async {
     final String jsonType = 'quiz/$multipleName.json';
     
     final url = Uri.https(_baseUrl, jsonType, {
@@ -43,22 +51,22 @@ class QuizServices extends ChangeNotifier {
     });
     final resp = await http.get(url);
 
-    List<Question> tempMap = [];
+    List<Question> tempQuestions = [];
 
     final Map<String, dynamic> quizResponse = json.decode(resp.body);
     // Añado al listado cada una de las catas multiples
     quizResponse.forEach((key, value) {
       final tempQuestion = Question.fromJson(value);
-      tempMap.add(tempQuestion);
+      tempQuestions.add(tempQuestion);
     });
 
-    tempMap.sort((a, b) => a.correctAnswer.compareTo(b.correctAnswer));  
+    tempQuestions.sort((a, b) => a.correctAnswer.compareTo(b.correctAnswer));  
 
-    print(tempMap[0].wineId);
-    print(tempMap[1].wineId);
+    selectedQuestionsList = tempQuestions;
+    notifyListeners();
   }
 
-  void uploadUserQuiz({required String multipleName, required List<Wines> wineList}) async { 
+  Future<void> uploadUserQuiz({required String multipleName, required List<Wines> wineList}) async { 
     // TODO: receive map of answers
 
     final userUuid = await storage.read(key: 'localId') ?? '';
