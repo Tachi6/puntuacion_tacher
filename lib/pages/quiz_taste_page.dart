@@ -110,21 +110,27 @@ class SimpleTasteQuiz extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.topCenter,
-            child: Text(
-              customLabel(),
-              style: style!.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
+            child: Column(
+              children: [
+                Text(
+                  customLabel(),
+                  style: style!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+
+                if (multipleService.isMultipleTasted) const _OtherUsersQuiz(),
+              ],
             ),
           ),
 
-          if (multipleService.isMultipleTasted) _OtherUsersQuiz(),
+          
       
           Container(
             // height: 1760, //TODO: hacer height mas dinamico
-            height: textMaxHeight(wineList, multipleTaste) + padding + 44 + 2 + 110 + (multipleService.isMultipleTasted ? 30 : 0), // top padding + 44 _CustomDropDownButton + 2 Border + 108 of container padding + rows checkWine
-            padding: const EdgeInsets.only(top: 40, bottom: 68),
+            height: textMaxHeight(wineList, multipleTaste) + padding + 44 + 2 + 110 + (multipleService.isMultipleTasted ? (30 + 55) : 0), // top padding + 44 _CustomDropDownButton + 2 Border + 108 of container padding + rows checkWine
+            padding: EdgeInsets.only(top: 40 + (multipleService.isMultipleTasted ? 55 : 0), bottom: 68),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: wineList.length,
@@ -303,19 +309,23 @@ class AdvancedTasteQuiz extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.topCenter,
-            child: Text(
-              customLabel(), 
-              style: style!.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
+            child: Column(
+              children: [
+                Text(
+                  customLabel(), 
+                  style: style!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+
+                if (multipleService.isMultipleTasted) const _OtherUsersQuiz(),
+              ],
             ),
           ),
-
-          if (multipleService.isMultipleTasted) _OtherUsersQuiz(),
       
           Padding(
-            padding: const EdgeInsets.only(top: 40, bottom: 68),
+            padding: EdgeInsets.only(top: 40 + (multipleService.isMultipleTasted ? 55 : 0), bottom: 68),
             child: Column(
               children: [
                 if (multipleTaste.multipleTaste.hidden) AdvancedQuizRowSpecs(

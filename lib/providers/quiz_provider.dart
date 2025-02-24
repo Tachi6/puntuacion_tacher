@@ -12,8 +12,7 @@ class QuizProvider extends ChangeNotifier {
 
   List<Question> userQuestionsList = [];
 
-  QuizProvider({required this.wineSequence, required this.selectedQuestionList, required this.user}){
-    print('creo instancia');
+  QuizProvider({required this.wineSequence, required this.selectedQuestionList, required this.user}){   
     if(selectedQuestionList.first.answer != null && !selectedQuestionList.first.answer!.containsKey(user)) {
       for (int i = 0; i < wineSequence.length; i++) {
         final String wineId = wineSequence[i];
@@ -29,7 +28,7 @@ class QuizProvider extends ChangeNotifier {
         );
         userQuestionsList = [...userQuestionsList, tempQuestion]; 
       }
-    } 
+    }
   }
 
   void completeAnswers({required String wineId, int? answerMouth, int? answerNose, int? answerEyes, int? answerWine}) {
@@ -121,11 +120,19 @@ class QuizProvider extends ChangeNotifier {
     List<String> usersAnsweredList = [];  
     selectedQuestionList.first.answer!.forEach((key, value) => usersAnsweredList.add(key));
 
-    List<Map<String, String>> userPuntuation = [];
+    List<String> correctAnswersUsers = [];
 
     for (String selectedUser in usersAnsweredList) {
+      correctAnswersUsers.add('${obtainPuntuation(selectedUser)}%$selectedUser');
+    }
+    correctAnswersUsers.sort((a, b) => b.compareTo(a));
+
+    List<Map<String, String>> userPuntuation = [];
+
+    for (String element in correctAnswersUsers) {
+      final elementSplitted = element.split('%');
       final Map<String, String> userTempPuntuation = {
-        selectedUser: obtainPuntuation(selectedUser),
+        elementSplitted[1]: elementSplitted[0],
       };
       userPuntuation.add(userTempPuntuation);
     }
