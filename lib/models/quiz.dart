@@ -22,7 +22,7 @@ class Quiz {
 
 class Question {
     final int correctAnswer;
-    final Map<String, Answer> answer;
+    final Map<String, Answer>? answer;
     final String wineId;
 
     Question({
@@ -37,13 +37,13 @@ class Question {
 
     factory Question.fromJson(Map<String, dynamic> json) => Question(
         correctAnswer: json["correctAnswer"],
-        answer: Map.from(json["answer"]).map((k, v) => MapEntry<String, Answer>(k, Answer.fromJson(v))),
+        answer: Map.from(json["answer"] ?? {}).map((k, v) => MapEntry<String, Answer>(k, Answer.fromJson(v))),
         wineId: json["wineId"],
     );
 
     Map<String, dynamic> toJson() => {
         "correctAnswer": correctAnswer,
-        "answer": Map.from(answer).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
+        "answer": answer == null ? {} : Map.from(answer!).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
         "wineId": wineId,
     };
 }
@@ -52,14 +52,14 @@ class Answer {
     int? answerMouth;
     int? answerNose;
     int? answerEyes;
-    int answerWine;
+    int? answerWine;
     final String user;
 
     Answer({
         this.answerMouth,
         this.answerNose,
         this.answerEyes,
-        required this.answerWine,
+        this.answerWine,
         required this.user,
     });
 

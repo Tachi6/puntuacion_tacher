@@ -31,7 +31,7 @@ class _QuizTastePageState extends State<QuizTastePage> with AutomaticKeepAliveCl
     final TextStyle? style = Theme.of(context).textTheme.bodyMedium;
 
     return Scaffold(
-      appBar: const CustomMultipleAppBar(),
+      appBar: const CustomMultipleAppBar(), // TODO: RefreshIcon
       body: multipleTaste.multipleTaste.tasteQuiz! == 'simple' 
         ? SimpleTasteQuiz(width: width, style: style, padding: padding)
         : AdvancedTasteQuiz(width: width, style: style, padding: padding),
@@ -66,17 +66,18 @@ class SimpleTasteQuiz extends StatelessWidget {
     return textPainter.size.height;
   }
 
-  double textMaxHeight(List<Wines> wineList) {
+  double textMaxHeight(List<Wines> wineList, MultipleTasteProvider multipleTaste) {
     List<double> textHeight = [];
     for (Wines wine in wineList) {
-      double allTextHeight = 200; // 200 of 10 rows of label text
+      final double labelsHeight = multipleTaste.multipleTaste.hidden ? (20 * 9) : (3 * 20); // rows of label text of 20px height
+      double allTextHeight = labelsHeight + 10; // 10px of separation of spec and notes
 
-      allTextHeight = allTextHeight + obtainTextHeight(wine.nombre);
-      allTextHeight = allTextHeight + obtainTextHeight(wine.bodega);
-      allTextHeight = allTextHeight + obtainTextHeight(wine.region);
-      allTextHeight = allTextHeight + obtainTextHeight(wine.tipo);
-      allTextHeight = allTextHeight + obtainTextHeight(wine.variedades);
-      allTextHeight = allTextHeight + obtainTextHeight(wine.graduacion);
+      if (multipleTaste.multipleTaste.hidden) allTextHeight = allTextHeight + obtainTextHeight(wine.nombre);
+      if (multipleTaste.multipleTaste.hidden) allTextHeight = allTextHeight + obtainTextHeight(wine.bodega);
+      if (multipleTaste.multipleTaste.hidden) allTextHeight = allTextHeight + obtainTextHeight(wine.region);
+      if (multipleTaste.multipleTaste.hidden) allTextHeight = allTextHeight + obtainTextHeight(wine.tipo);
+      if (multipleTaste.multipleTaste.hidden) allTextHeight = allTextHeight + obtainTextHeight(wine.variedades);
+      if (multipleTaste.multipleTaste.hidden) allTextHeight = allTextHeight + obtainTextHeight(wine.graduacion);
       allTextHeight = allTextHeight + obtainTextHeight(wine.notaVista);
       allTextHeight = allTextHeight + obtainTextHeight(wine.notaNariz);
       allTextHeight = allTextHeight + obtainTextHeight(wine.notaBoca);
@@ -117,10 +118,12 @@ class SimpleTasteQuiz extends StatelessWidget {
               ),
             ),
           ),
+
+          if (multipleService.isMultipleTasted) _OtherUsersQuiz(),
       
           Container(
             // height: 1760, //TODO: hacer height mas dinamico
-            height: textMaxHeight(wineList) + padding + 44 + 2 + 110 + (multipleService.isMultipleTasted ? 50 : 0), // top padding + 44 _CustomDropDownButton + 2 Border + 108 of container padding + rows checkWine
+            height: textMaxHeight(wineList, multipleTaste) + padding + 44 + 2 + 110 + (multipleService.isMultipleTasted ? 30 : 0), // top padding + 44 _CustomDropDownButton + 2 Border + 108 of container padding + rows checkWine
             padding: const EdgeInsets.only(top: 40, bottom: 68),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -167,23 +170,30 @@ class SimpleQuizRow extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final multipleService = Provider.of<MultipleServices>(context);
+    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('Vino', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),  
-        Text(wine.nombre, style: style, textAlign: TextAlign.center),
-        Text('Bodega', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),  
-        Text(wine.bodega, style: style, textAlign: TextAlign.center),
-        Text('Region', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-        Text(wine.region, style: style, textAlign: TextAlign.center),
-        Text('Tipo', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),  
-        Text(wine.tipo, style: style, textAlign: TextAlign.center),
-        Text('Variedades', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-        Text(wine.variedades, style: style, textAlign: TextAlign.center),
-        Text('Graduacion', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-        Text('${wine.graduacion}% vol.', style: style, textAlign: TextAlign.center),
-        Text('', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+        if (multipleTaste.multipleTaste.hidden) Column(
+          children: [
+            Text('Vino', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),  
+            Text(wine.nombre, style: style, textAlign: TextAlign.center),
+            Text('Bodega', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),  
+            Text(wine.bodega, style: style, textAlign: TextAlign.center),
+            Text('Region', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+            Text(wine.region, style: style, textAlign: TextAlign.center),
+            Text('Tipo', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),  
+            Text(wine.tipo, style: style, textAlign: TextAlign.center),
+            Text('Variedades', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+            Text(wine.variedades, style: style, textAlign: TextAlign.center),
+            Text('Graduacion', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+            Text('${wine.graduacion}% vol.', style: style, textAlign: TextAlign.center),
+            const SizedBox(height: 10),
+            // Text('', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+          ],
+        ),
+
         Text('Cata Vista', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
         Text(wine.notaVista, style: style, textAlign: TextAlign.center),
         Text('Cata Nariz', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
@@ -193,15 +203,13 @@ class SimpleQuizRow extends StatelessWidget {
                 
         const Spacer(),
 
-        if (multipleService.isMultipleTasted) const SizedBox(height: 20),
+        if (multipleService.isMultipleTasted) const SizedBox(height: 10),
 
         if (multipleService.isMultipleTasted) Text(
           'Vino correcto: ${context.read<QuizProvider>().obtainCorrectAnswer(wine.id!)}', 
           style: style!.copyWith(fontWeight: FontWeight.bold), 
           textAlign: TextAlign.center
         ),
-
-        if (multipleService.isMultipleTasted) const SizedBox(height: 10),
 
         _CustomDropDownButton(
           width: 125, 
@@ -303,19 +311,21 @@ class AdvancedTasteQuiz extends StatelessWidget {
               ),
             ),
           ),
+
+          if (multipleService.isMultipleTasted) _OtherUsersQuiz(),
       
           Padding(
             padding: const EdgeInsets.only(top: 40, bottom: 68),
             child: Column(
               children: [
-                AdvancedQuizRowSpecs(
+                if (multipleTaste.multipleTaste.hidden) AdvancedQuizRowSpecs(
                   label: 'Ficha Técnica',
                   padding: padding, 
                   width: width, 
                   style: style
                 ),
       
-                const SizedBox(height: 10),
+                if (multipleTaste.multipleTaste.hidden) const SizedBox(height: 10),
 
                 AdvancedQuizRowNotes(
                   tasteNotesTypes: TasteNotesTypes.vista,
@@ -409,7 +419,7 @@ class AdvancedQuizRowSpecs extends StatelessWidget {
 
     return SizedBox(
       // TODO: simpllificar height dinamicxamente
-      height: textMaxHeight(wineList) + padding + 44 + 2 + (multipleService.isMultipleTasted ? 50 : 0), // top padding + 44 _CustomDropDownButton + 2 Border
+      height: textMaxHeight(wineList) + padding + 44 + 2 + (multipleService.isMultipleTasted ? 30 : 0), // top padding + 44 _CustomDropDownButton + 2 Border
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: wineList.length,
@@ -446,15 +456,13 @@ class AdvancedQuizRowSpecs extends StatelessWidget {
                   
                 const Spacer(),
 
-                if (multipleService.isMultipleTasted) const SizedBox(height: 20),
+                if (multipleService.isMultipleTasted) const SizedBox(height: 10),
 
                 if (multipleService.isMultipleTasted) Text(
                   'Vino correcto: ${context.read<QuizProvider>().obtainCorrectAnswer(wine.id!)}',
                   style: style!.copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center
                 ),
-
-                if (multipleService.isMultipleTasted) const SizedBox(height: 10),
             
                 _CustomDropDownButton(
                   width: 125, 
@@ -537,7 +545,7 @@ class AdvancedQuizRowNotes extends StatelessWidget {
     }
 
     return SizedBox(
-      height: textMaxHeight() + padding + 20 + 44 + 2 + (multipleService.isMultipleTasted ? 50 : 0), // top padding + 20 Label text + 44 _CustomDropDownButton + 2 Border
+      height: textMaxHeight() + padding + 20 + 44 + 2 + (multipleService.isMultipleTasted ? 30 : 0), // top padding + 20 Label text + 44 _CustomDropDownButton + 2 Border
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: rowWineIdText.length,
@@ -565,16 +573,14 @@ class AdvancedQuizRowNotes extends StatelessWidget {
                   
                 const Spacer(),
 
-                if (multipleService.isMultipleTasted) const SizedBox(height: 20),
+                if (multipleService.isMultipleTasted) const SizedBox(height: 10),
 
                 if (multipleService.isMultipleTasted) Text(
                   'Vino correcto: ${context.read<QuizProvider>().obtainCorrectAnswer(wineId)}',
                   style: style!.copyWith(fontWeight: FontWeight.bold), 
                   textAlign: TextAlign.center
                 ),
-
-                if (multipleService.isMultipleTasted) const SizedBox(height: 10),
-            
+          
                 _CustomDropDownButton(
                   width: 125, 
                   style: style!,
@@ -694,6 +700,55 @@ class _CustomDropDownButtonState extends State<_CustomDropDownButton> {
           );
         }).toList(),
         onSelected: widget.onSelected,
+      ),
+    );
+  }
+}
+
+class _OtherUsersQuiz extends StatelessWidget {
+  const _OtherUsersQuiz();
+
+  @override
+  Widget build(BuildContext context) {
+
+    final QuizProvider quizProvider = context.read<QuizProvider>();
+    final chipStyle = Theme.of(context).textTheme.bodySmall;
+
+    final List<Map<String, String>> usersPuntuation = quizProvider.otherUsersQuiz();
+
+    return Container(
+      height: 65,
+      alignment: Alignment.center,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: usersPuntuation.length,
+        itemBuilder: (context, index) {
+
+          final user = usersPuntuation[index].keys.first;
+          final puntuation = usersPuntuation[index].values.first;
+
+          return Container(
+            margin: EdgeInsets.only(left: 10, right: index + 1 == usersPuntuation.length ? 10 : 0),
+            child: FilterChip.elevated(
+              showCheckmark: false,
+              label: SizedBox(
+                height: 32,
+                child: Column(
+                  children: [
+                    Text(user),
+                
+                    Text(puntuation),
+                  ],
+                ),
+              ),
+              labelStyle: chipStyle,
+              // selected: otherTaste[index].fecha == wineTaste?.fecha,
+              onSelected: (value) {
+
+              } 
+            ),
+          );
+        },
       ),
     );
   }

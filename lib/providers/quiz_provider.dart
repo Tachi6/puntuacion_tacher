@@ -10,10 +10,11 @@ class QuizProvider extends ChangeNotifier {
   final List<Question> selectedQuestionList;
   final String user;
 
-  List<Question> questionsList = [];
+  List<Question> userQuestionsList = [];
 
   QuizProvider({required this.wineSequence, required this.selectedQuestionList, required this.user}){
-    if(!selectedQuestionList.first.answer.containsKey(user)) {
+    print('creo instancia');
+    if(selectedQuestionList.first.answer != null && !selectedQuestionList.first.answer!.containsKey(user)) {
       for (int i = 0; i < wineSequence.length; i++) {
         final String wineId = wineSequence[i];
         final Question tempQuestion = Question(
@@ -26,36 +27,13 @@ class QuizProvider extends ChangeNotifier {
             ),
           },
         );
-        questionsList = [...questionsList, tempQuestion]; 
+        userQuestionsList = [...userQuestionsList, tempQuestion]; 
       }
-    } else {
-      questionsList = [...selectedQuestionList];
-    }
-
+    } 
   }
 
-  // QuizProvider({required this.wineQuestions}) {
-  //   loadUser();
-  //   wineQuestions.forEach((key, value) {
-  //     value.answer = {
-  //       user: Answer.copyWith(user),
-  //     };
-  //   });
-  // }
-
-  // QuizProvider({required this.quizCopy}) {
-  //   loadUser();
-  //   quizCopy.quiz.forEach((key, value) {
-  //     value.answer = {
-  //       user: Answer(
-  //         user: user,
-  //       ),
-  //     };
-  //   });
-  // }
-
   void completeAnswers({required String wineId, int? answerMouth, int? answerNose, int? answerEyes, int? answerWine}) {
-    final Answer oldAnswer = questionsList.firstWhere((element) => element.wineId == wineId).answer[user]!;
+    final Answer oldAnswer = userQuestionsList.firstWhere((element) => element.wineId == wineId).answer![user]!;
 
     oldAnswer.answerMouth = answerMouth ?? oldAnswer.answerMouth;
     oldAnswer.answerNose = answerNose ?? oldAnswer.answerNose;
@@ -74,32 +52,55 @@ class QuizProvider extends ChangeNotifier {
     //   checker = {...checker, ...mapeo};
     // }
 
-    print(json.encode(questionsList));
+    print(json.encode(userQuestionsList));
     notifyListeners();
   }
 
   Answer obtainUserAnswer(String wineId) {
-    return questionsList.firstWhere((element) => element.wineId == wineId).answer[user]!;
+    return selectedQuestionList.firstWhere((element) => element.wineId == wineId).answer![user]!;
   }
 
   int obtainCorrectAnswer(String wineId) {
-    return questionsList.firstWhere((element) => element.wineId == wineId).correctAnswer;
+    return selectedQuestionList.firstWhere((element) => element.wineId == wineId).correctAnswer;
   }
 
-  String obtainPuntuation() {
+  String obtainPuntuation([String? otherUser]) {
     final List<Map<int, List<int>>> checkAnswers = [];
 
-    for (Question question in questionsList) {
+    List<Question> newQuestionList = [];
+
+    final String checkUser = otherUser ?? user;
+
+    for (Question question in selectedQuestionList) {
+      question.answer!.forEach((key, value) {
+        if (key == checkUser) {
+          Question tempQuestionMap = Question(
+            correctAnswer: question.correctAnswer, 
+            wineId: question.wineId,
+            answer: {
+              checkUser: Answer(
+                answerWine: question.answer?[checkUser]?.answerWine, 
+                answerEyes: question.answer?[checkUser]?.answerEyes, 
+                answerNose: question.answer?[checkUser]?.answerNose, 
+                answerMouth: question.answer?[checkUser]?.answerMouth, 
+                user: checkUser,
+              ),
+            } 
+          );
+          newQuestionList = [...newQuestionList, tempQuestionMap];
+        }
+      });
+    }
+
+    for (Question question in newQuestionList) {
       Map<int, List<int>> tempAnswersMap = {
         question.correctAnswer: []
       };
-      question.answer.forEach((key, value) {
-        if (key == user) {
-          tempAnswersMap[question.correctAnswer]!.add(value.answerWine);
-          if (value.answerEyes != null) tempAnswersMap[question.correctAnswer]!.add(value.answerEyes!);
-          if (value.answerNose != null) tempAnswersMap[question.correctAnswer]!.add(value.answerNose!);
-          if (value.answerMouth != null) tempAnswersMap[question.correctAnswer]!.add(value.answerMouth!);
-        }
+      question.answer!.forEach((key, value) {
+        if (value.answerWine != null) tempAnswersMap[question.correctAnswer]!.add(value.answerWine!);
+        if (value.answerEyes != null) tempAnswersMap[question.correctAnswer]!.add(value.answerEyes!);
+        if (value.answerNose != null) tempAnswersMap[question.correctAnswer]!.add(value.answerNose!);
+        if (value.answerMouth != null) tempAnswersMap[question.correctAnswer]!.add(value.answerMouth!);
       });
 
       checkAnswers.add(tempAnswersMap);
@@ -114,6 +115,22 @@ class QuizProvider extends ChangeNotifier {
     }
 
     return '$correctAnswers / $questionsNumber';
+  }
+
+  List<Map<String, String>> otherUsersQuiz() {
+    List<String> usersAnsweredList = [];  
+    selectedQuestionList.first.answer!.forEach((key, value) => usersAnsweredList.add(key));
+
+    List<Map<String, String>> userPuntuation = [];
+
+    for (String selectedUser in usersAnsweredList) {
+      final Map<String, String> userTempPuntuation = {
+        selectedUser: obtainPuntuation(selectedUser),
+      };
+      userPuntuation.add(userTempPuntuation);
+    }
+
+    return userPuntuation;    
   }
 
   void clearQuiz() {

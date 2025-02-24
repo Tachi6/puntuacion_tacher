@@ -57,7 +57,7 @@ class DetailsScreen extends StatelessWidget {
             ),
       
             Padding(
-              padding: EdgeInsets.only(bottom: bottomPadding),
+              padding: EdgeInsets.only(bottom: bottomPadding + 5),
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: _OtherTasteChipList(wine: wine, chipListHeight: chipListHeight),
@@ -714,7 +714,6 @@ class _OtherTasteChipList extends StatelessWidget {
     
     return Container(
       height: chipListHeight,
-      padding: const EdgeInsets.only(left: 10, bottom: 5),
       alignment: Alignment.center,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -723,8 +722,8 @@ class _OtherTasteChipList extends StatelessWidget {
 
           final displayName = userService.obtainDisplayName(otherTaste[index].user);
 
-          return Padding(
-            padding: const EdgeInsets.only(right: 10), 
+          return Container(
+            margin: EdgeInsets.only(left: 10, right: index + 1 == otherTaste.length ? 10 : 0),
             child: FilterChip.elevated(
               showCheckmark: false,
               label: SizedBox(

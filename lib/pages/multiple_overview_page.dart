@@ -207,8 +207,7 @@ class _OtherUsersTaste extends StatelessWidget {
     final styles = Theme.of(context).textTheme;
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
 
-    return Container(
-      margin: const EdgeInsets.only(left: 10),
+    return SizedBox(
       height: 40,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -218,8 +217,8 @@ class _OtherUsersTaste extends StatelessWidget {
           final userService = Provider.of<UserServices>(context);
           final String displayName = userService.obtainDisplayName(multipleTaste.otherUsersTaste()[index]); // TODO comprobar que funciona
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
+          return Container(
+            margin: EdgeInsets.only(left: 10, right: index + 1 == multipleTaste.otherUsersTaste().length ? 10 : 0),
             child: FilterChip.elevated(
               showCheckmark: false,
               label: Text(displayName),
