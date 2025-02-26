@@ -9,7 +9,7 @@ import 'package:puntuacion_tacher/services/services.dart';
 
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-enum TasteNotesTypes {vista, nariz, boca}
+enum QuizTypes {vino, vista, nariz, boca}
 
 class QuizTastePage extends StatefulWidget {
   const QuizTastePage({super.key});
@@ -149,7 +149,7 @@ class SimpleTasteQuiz extends StatelessWidget {
                     right: index == (wineList.length -1) ? padding : (padding / 2)
                   ),
                   width: width,
-                  child: SimpleQuizRow(style: style, wine: wine, index: index),
+                  child: SimpleQuizRow(style: style, wine: wine, index: index, wineList: wineList),
                 );
               },
             ),
@@ -165,12 +165,14 @@ class SimpleQuizRow extends StatelessWidget {
     super.key,
     required this.style,
     required this.wine,
-    required this.index,
+    required this.index, 
+    required this.wineList,
   });
 
   final TextStyle? style;
   final Wines wine;
   final int index;
+  final List<Wines> wineList;
 
   @override
   Widget build(BuildContext context) {
@@ -220,11 +222,9 @@ class SimpleQuizRow extends StatelessWidget {
         _CustomDropDownButton(
           width: 125, 
           style: style!,
-          onSelected: (value) => context.read<QuizProvider>().completeAnswers(wineId: wine.id!, answerWine: value),
-          correctAnswer: context.read<QuizProvider>().obtainCorrectAnswer(wine.id!),
-          userAnswer: multipleService.isMultipleTasted 
-            ? context.read<QuizProvider>().obtainUserAnswer(wine.id!).answerWine
-            : null,
+          quizTypes: QuizTypes.vino,
+          wineId: wine.id!,
+          wineList: wineList,
         ),
       ],
     );
@@ -243,59 +243,22 @@ class AdvancedTasteQuiz extends StatelessWidget {
   final TextStyle? style;
   final double padding;
 
-  List<Map<String, String>> wineIdNotasVista(MultipleServices multipleService, MultipleTasteProvider multipleTaste) {
-    List<Wines> wineList = [];
-
-    !multipleService.isMultipleTasted
-      ? wineList = [...multipleTaste.wineListShuffled()]
-      : wineList = [...multipleTaste.winesMultipleTaste];
-
-    final List<Map<String, String>> wineIdNotasVista = [];
-    for (Wines wine in wineList) {
-      wineIdNotasVista.add({
-        wine.id!: wine.notaVista,
-      });
-    }
-    return wineIdNotasVista;
-  }
-
-  List<Map<String, String>> wineIdNotasNariz(MultipleServices multipleService, MultipleTasteProvider multipleTaste) {
-    List<Wines> wineList = [];
-
-    !multipleService.isMultipleTasted
-      ? wineList = [...multipleTaste.wineListShuffled()]
-      : wineList = [...multipleTaste.winesMultipleTaste];
-
-    final List<Map<String, String>> wineIdNotasNariz = [];
-    for (Wines wine in wineList) {
-      wineIdNotasNariz.add({
-        wine.id!: wine.notaNariz
-      });
-    }
-    return wineIdNotasNariz;
-  }
-
-  List<Map<String, String>> wineIdNotasBoca(MultipleServices multipleService, MultipleTasteProvider multipleTaste) {
-    List<Wines> wineList = [];
-
-    !multipleService.isMultipleTasted
-      ? wineList = [...multipleTaste.wineListShuffled()]
-      : wineList = [...multipleTaste.winesMultipleTaste];
-
-    final List<Map<String, String>> wineIdNotasBoca = [];
-    for (Wines wine in wineList) {
-      wineIdNotasBoca.add({
-        wine.id!: wine.notaBoca
-      });
-    }
-    return wineIdNotasBoca;
-  }
-
   @override
   Widget build(BuildContext context) {
 
     final multipleService = context.read<MultipleServices>(); 
     final multipleTaste = context.read<MultipleTasteProvider>();
+
+    List<Wines> wineList(MultipleServices multipleService, MultipleTasteProvider multipleTaste) {
+      List<Wines> wineList = [];
+
+      !multipleService.isMultipleTasted
+        ? wineList = [...multipleTaste.wineListShuffled()]
+        : wineList = [...multipleTaste.winesMultipleTaste];
+
+      return wineList;
+    }
+
 
     String customLabel() {
       if (multipleService.isMultipleTasted) {
@@ -329,7 +292,6 @@ class AdvancedTasteQuiz extends StatelessWidget {
             child: Column(
               children: [
                 if (multipleTaste.multipleTaste.hidden) AdvancedQuizRowSpecs(
-                  label: 'Ficha Técnica',
                   padding: padding, 
                   width: width, 
                   style: style
@@ -338,31 +300,31 @@ class AdvancedTasteQuiz extends StatelessWidget {
                 if (multipleTaste.multipleTaste.hidden) const SizedBox(height: 10),
 
                 AdvancedQuizRowNotes(
-                  tasteNotesTypes: TasteNotesTypes.vista,
-                  rowWineIdText: wineIdNotasVista(multipleService, multipleTaste), 
-                  padding: padding, 
-                  width: width, 
-                  style: style
-                ),
-      
-                const SizedBox(height: 10),
-      
-                AdvancedQuizRowNotes(
-                  tasteNotesTypes: TasteNotesTypes.nariz,
-                  rowWineIdText: wineIdNotasNariz(multipleService, multipleTaste), 
-                  padding: padding, 
-                  width: width, 
-                  style: style
-                ),
-      
-                const SizedBox(height: 10),
-      
-                AdvancedQuizRowNotes(
-                  tasteNotesTypes: TasteNotesTypes.boca,
-                  rowWineIdText: wineIdNotasBoca(multipleService, multipleTaste), 
+                  quizType: QuizTypes.vista,
                   padding: padding, 
                   width: width, 
                   style: style,
+                  wineList: wineList(multipleService, multipleTaste),
+                ),
+      
+                const SizedBox(height: 10),
+      
+                AdvancedQuizRowNotes(
+                  quizType: QuizTypes.nariz,
+                  padding: padding, 
+                  width: width, 
+                  style: style,
+                  wineList: wineList(multipleService, multipleTaste),
+                ),
+      
+                const SizedBox(height: 10),
+      
+                AdvancedQuizRowNotes(
+                  quizType: QuizTypes.boca, 
+                  padding: padding, 
+                  width: width, 
+                  style: style,
+                  wineList: wineList(multipleService, multipleTaste),
                 ),
               ],
             ),
@@ -376,13 +338,11 @@ class AdvancedTasteQuiz extends StatelessWidget {
 class AdvancedQuizRowSpecs extends StatelessWidget {
   const AdvancedQuizRowSpecs({
     super.key,
-    required this.label,
     required this.padding,
     required this.width,
     required this.style,
   });
 
-  final String label;
   final double padding;
   final double width;
   final TextStyle? style;
@@ -477,11 +437,9 @@ class AdvancedQuizRowSpecs extends StatelessWidget {
                 _CustomDropDownButton(
                   width: 125, 
                   style: style!,
-                  onSelected: (value) => context.read<QuizProvider>().completeAnswers(wineId: wine.id!, answerWine: value),
-                  correctAnswer: context.read<QuizProvider>().obtainCorrectAnswer(wine.id!),
-                  userAnswer: multipleService.isMultipleTasted 
-                    ? context.read<QuizProvider>().obtainUserAnswer(wine.id!).answerWine
-                    : null,
+                  quizTypes: QuizTypes.vino,
+                  wineId: wine.id!,
+                  wineList: wineList,
                 ),
               ],
             ),
@@ -496,24 +454,49 @@ class AdvancedQuizRowSpecs extends StatelessWidget {
 class AdvancedQuizRowNotes extends StatelessWidget {
   const AdvancedQuizRowNotes({
     super.key,
-    required this.tasteNotesTypes,
-    required this.rowWineIdText,
+    required this.quizType,
+    required this.wineList,
     required this.padding,
     required this.width,
     required this.style,
-    this.onSelected,
   });
 
-  final TasteNotesTypes tasteNotesTypes;
-  final List<Map<String, String>> rowWineIdText;
+  final QuizTypes quizType;
+  final List<Wines> wineList;
   final double padding;
   final double width;
   final TextStyle? style;
-  final Function(int?)? onSelected;
 
-  double textMaxHeight() {
+  List<Map<String, String>> wineIdNotas() {
+
+    final List<Map<String, String>> wineIdNotas = [];
+    for (Wines wine in wineList) {
+      late String notas;
+      switch (quizType) {
+        case QuizTypes.vino:
+          notas = '';
+          break;
+        case QuizTypes.vista:
+          notas = wine.notaVista;
+          break;
+        case QuizTypes.nariz:
+          notas = wine.notaNariz;
+          break;
+        case QuizTypes.boca:
+          notas = wine.notaBoca;
+          break;
+      }
+
+      wineIdNotas.add({
+        wine.id!: notas,
+      });
+    }
+    return wineIdNotas;
+  }
+
+  double textMaxHeight(MultipleServices multipleService, MultipleTasteProvider multipleTaste) {
     List<double> textHeight = [];
-    for (Map<String, String> wineIdText in rowWineIdText) {
+    for (Map<String, String> wineIdText in wineIdNotas()) {
       final TextPainter textPainter = TextPainter(
         text: TextSpan(
           text: wineIdText.values.first, 
@@ -528,12 +511,14 @@ class AdvancedQuizRowNotes extends StatelessWidget {
   }
   
   String get label {
-    switch (tasteNotesTypes) {
-      case TasteNotesTypes.vista:
+    switch (quizType) {
+      case QuizTypes.vino:
+        return 'Cata';
+      case QuizTypes.vista:
         return 'Cata Vista';
-      case TasteNotesTypes.nariz:
+      case QuizTypes.nariz:
         return 'Cata Nariz';
-      case TasteNotesTypes.boca:
+      case QuizTypes.boca:
         return 'Cata Boca';
     }
   }
@@ -542,28 +527,18 @@ class AdvancedQuizRowNotes extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final multipleService = Provider.of<MultipleServices>(context);
-
-    int? getUserAnswer(String wineId) {
-      switch (tasteNotesTypes) {
-        case TasteNotesTypes.vista:
-          return context.read<QuizProvider>().obtainUserAnswer(wineId).answerEyes;
-        case TasteNotesTypes.nariz:
-          return context.read<QuizProvider>().obtainUserAnswer(wineId).answerNose;
-        case TasteNotesTypes.boca:
-          return context.read<QuizProvider>().obtainUserAnswer(wineId).answerMouth;                
-      }
-    }
-
+    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    
     return SizedBox(
-      height: textMaxHeight() + padding + 20 + 44 + 2 + (multipleService.isMultipleTasted ? 30 : 0), // top padding + 20 Label text + 44 _CustomDropDownButton + 2 Border
+      height: textMaxHeight(multipleService, multipleTaste) + padding + 20 + 44 + 2 + (multipleService.isMultipleTasted ? 30 : 0), // top padding + 20 Label text + 44 _CustomDropDownButton + 2 Border
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: rowWineIdText.length,
+        itemCount: wineIdNotas().length,
         itemBuilder: (context, index) {
           
-          final String wineId = rowWineIdText[index].keys.first;
-          final String text = rowWineIdText[index].values.first;
-      
+          final String wineId = wineIdNotas()[index].keys.first;
+          final String text = wineIdNotas()[index].values.first;
+
           return Container(
             decoration: BoxDecoration(
               border: Border.all(width: 1),
@@ -573,7 +548,7 @@ class AdvancedQuizRowNotes extends StatelessWidget {
             padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
             margin: EdgeInsets.only(
               left: index == 0 ? padding : (padding / 2), 
-              right: index == (rowWineIdText.length -1) ? padding : (padding / 2)
+              right: index == (wineIdNotas().length -1) ? padding : (padding / 2)
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -594,23 +569,9 @@ class AdvancedQuizRowNotes extends StatelessWidget {
                 _CustomDropDownButton(
                   width: 125, 
                   style: style!,
-                  onSelected: (value) {
-                    switch (tasteNotesTypes) {
-                      case TasteNotesTypes.vista:
-                        context.read<QuizProvider>().completeAnswers(wineId: wineId, answerEyes: value);
-                        break;
-                      case TasteNotesTypes.nariz:
-                        context.read<QuizProvider>().completeAnswers(wineId: wineId, answerNose: value);
-                        break;
-                      case TasteNotesTypes.boca:
-                        context.read<QuizProvider>().completeAnswers(wineId: wineId, answerMouth: value);                
-                        break;
-                    }
-                  },
-                  correctAnswer: context.read<QuizProvider>().obtainCorrectAnswer(wineId),
-                  userAnswer: multipleService.isMultipleTasted 
-                    ? getUserAnswer(wineId)
-                    : null,
+                  quizTypes: quizType,
+                  wineId: wineId,
+                  wineList: wineList,
                 ),
               ],
             ),
@@ -625,16 +586,16 @@ class _CustomDropDownButton extends StatefulWidget {
   const _CustomDropDownButton({
     required this.width, 
     required this.style, 
-    this.onSelected,
-    required this.correctAnswer,
-    this.userAnswer,  
+    required this.quizTypes,
+    required this.wineId,
+    required this.wineList,
   });
 
   final double width;
   final TextStyle style;
-  final Function(int?)? onSelected;
-  final int correctAnswer;
-  final int? userAnswer;
+  final QuizTypes quizTypes;
+  final String wineId;
+  final List<Wines> wineList;
 
   @override
   State<_CustomDropDownButton> createState() => _CustomDropDownButtonState();
@@ -646,70 +607,134 @@ class _CustomDropDownButtonState extends State<_CustomDropDownButton> {
   Widget build(BuildContext context) {
 
     final multipleService = Provider.of<MultipleServices>(context);
+    final multipleTaste = context.read<MultipleTasteProvider>();
+    final quizProvider = context.watch<QuizProvider>();
 
-    final List<int> wineNumbers = List.generate(
-      context.read<MultipleTasteProvider>().winesMultipleTaste.length, 
-      (index) => index + 1, 
+    final correctAnswer = quizProvider.obtainCorrectAnswer(widget.wineId);
+
+    void onselected(int? value) {
+      switch (widget.quizTypes) {
+        case QuizTypes.vino:
+          quizProvider.completeAnswers(wineId: widget.wineId, answerWine: value);
+          break;
+        case QuizTypes.vista:
+          quizProvider.completeAnswers(wineId: widget.wineId, answerEyes: value);
+          break;
+        case QuizTypes.nariz:
+          quizProvider.completeAnswers(wineId: widget.wineId, answerNose: value);
+          break;
+        case QuizTypes.boca:
+          quizProvider.completeAnswers(wineId: widget.wineId, answerMouth: value);                
+          break;
+      }
+    }
+
+    int? userAnswer() {
+      final Answer? answer = quizProvider.obtainUserAnswer(widget.wineId);
+      switch (widget.quizTypes) {
+        case QuizTypes.vino:
+          return answer?.answerWine;
+        case QuizTypes.vista:
+          return answer?.answerEyes;
+        case QuizTypes.nariz:
+          return answer?.answerNose;
+        case QuizTypes.boca:
+          return answer?.answerMouth;
+      }
+    }
+
+    final List<Map<int, String>> wineNumberNameList = List.generate(
+      widget.wineList.length, 
+      (index) => {
+        index + 1: widget.wineList[index].nombre
+      }, 
       growable: false,
     );
 
-    Color? isCorrectAnswer() {
-      if (widget.userAnswer == null) return null;
-      if (widget.userAnswer == widget.correctAnswer) return Colors.green;
-      if (widget.userAnswer != widget.correctAnswer) return Colors.red;
+    Color? answerColor() {
+      if (userAnswer() == null) return null;
+      if (userAnswer() == correctAnswer) return const Color.fromARGB(255, 0, 161, 80);
+      if (userAnswer() != correctAnswer) return const Color.fromARGB(255, 255, 17, 0);
       return null;
     }
 
-    return Container(
-      width: double.infinity,
-      alignment: Alignment.center,
-      child: DropdownMenu(
-        hintText: multipleService.isMultipleTasted 
-          ? 'Vino ${widget.userAnswer.toString()}' 
-          : ' Escoge',
-        enabled: multipleService.isMultipleTasted 
-          ? false 
-          : true,
-        alignmentOffset: const Offset(-1, 0),
-        width: widget.width,
-        textAlign: TextAlign.center,
-        textStyle: widget.style.copyWith(
-          fontWeight: FontWeight.bold, 
-        ),
-        trailingIcon: Transform.translate(
-          offset: const Offset(0, -2),
-          child: const Icon(Icons.arrow_drop_down)
-        ),
-        selectedTrailingIcon: Transform.translate(
-          offset: const Offset(0, -2),
-          child: const Icon(Icons.arrow_drop_up)
-        ),
-        menuStyle: const MenuStyle(
-          padding: WidgetStatePropertyAll(EdgeInsets.all(0)),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: const OutlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
-          constraints: BoxConstraints.tight(const Size.fromHeight(44)),
-          contentPadding: const EdgeInsets.only(top: 0, bottom: 0, right: 0, left: 8),
-          hintStyle: widget.style.copyWith(
+    return Transform.translate(
+      offset: Offset(multipleTaste.multipleTaste.hidden ? 0 : 14, 0),
+      child: Container(
+        width: double.infinity,
+        alignment: Alignment.center,
+        child: DropdownMenu<Map<int, String>>(
+          hintText: multipleService.isMultipleTasted 
+            ? multipleTaste.multipleTaste.hidden
+              ? 'Vino ${userAnswer().toString()}'
+              : wineNumberNameList[userAnswer()! - 1].values.first 
+            : ' Escoge',
+          enabled: multipleService.isMultipleTasted 
+            ? false 
+            : true,
+          alignmentOffset: const Offset(-1, 0),
+          width: widget.width,
+          textAlign: TextAlign.center,
+          textStyle: widget.style.copyWith(
             fontWeight: FontWeight.bold, 
-            color: isCorrectAnswer(),
           ),
-        ),
-        dropdownMenuEntries: wineNumbers.map((int number) {
-          return DropdownMenuEntry(
-            label: 'Vino ${number.toString()}',
-            value: number,
-            style: const ButtonStyle(
-              fixedSize: WidgetStatePropertyAll(Size.fromHeight(44)),
-              padding: WidgetStatePropertyAll(EdgeInsets.only(left: 18)),
+          trailingIcon: Transform.translate(
+            offset: const Offset(0, -2),
+            child: const Icon(Icons.arrow_drop_down)
+          ),
+          selectedTrailingIcon: Transform.translate(
+            offset: const Offset(0, -2),
+            child: const Icon(Icons.arrow_drop_up)
+          ),
+          menuStyle: const MenuStyle(
+            padding: WidgetStatePropertyAll(EdgeInsets.all(0)),
+          ),
+          expandedInsets: multipleTaste.multipleTaste.hidden
+            ? null
+            : EdgeInsets.zero,
+          inputDecorationTheme: InputDecorationTheme(
+            border: const OutlineInputBorder(
+              borderSide: BorderSide.none,
             ),
-            labelWidget: Text('Vino ${number.toString()}', style: widget.style)
-          );
-        }).toList(),
-        onSelected: widget.onSelected,
+            constraints: BoxConstraints.tight(const Size.fromHeight(44)),
+            contentPadding: multipleTaste.multipleTaste.hidden
+              ? const EdgeInsets.only(top: 0, bottom: 0, right: 0, left: 8)
+              : const EdgeInsets.only(top: 0, bottom: 0, right: 0, left: 0),
+            hintStyle: widget.style.copyWith(
+              fontWeight: FontWeight.bold, 
+              color: answerColor(),
+            ),
+          ),
+          dropdownMenuEntries: wineNumberNameList.map((Map<int, String> item) {
+            return DropdownMenuEntry(
+              // label: 'Vino ${number.toString()}',
+              label: multipleTaste.multipleTaste.hidden
+                ? 'Vino ${item.keys.first}'
+                : item.values.first,
+              value: item,
+              style: ButtonStyle(
+                fixedSize: const WidgetStatePropertyAll(Size.fromHeight(44)),
+                padding: WidgetStatePropertyAll(multipleTaste.multipleTaste.hidden 
+                  ? const EdgeInsets.only(left: 18) 
+                  : const EdgeInsets.symmetric(horizontal: 5)
+                ),
+              ),
+              // labelWidget: Text('Vino ${number.toString()}', style: widget.style)
+              labelWidget: Text(
+                multipleTaste.multipleTaste.hidden
+                  ? 'Vino ${item.keys.first}'
+                  : item.values.first,
+                style: widget.style,
+                textAlign: multipleTaste.multipleTaste.hidden
+                  ? null 
+                  : TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            );
+          }).toList(),
+          onSelected: (value) => onselected(value?.keys.first),
+        ),
       ),
     );
   }
@@ -721,7 +746,7 @@ class _OtherUsersQuiz extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final QuizProvider quizProvider = context.read<QuizProvider>();
+    final QuizProvider quizProvider = context.watch<QuizProvider>();
     final chipStyle = Theme.of(context).textTheme.bodySmall;
 
     final List<Map<String, String>> usersPuntuation = quizProvider.otherUsersQuiz();
@@ -752,9 +777,9 @@ class _OtherUsersQuiz extends StatelessWidget {
                 ),
               ),
               labelStyle: chipStyle,
-              // selected: otherTaste[index].fecha == wineTaste?.fecha,
+              selected: user == quizProvider.selectedUser,
               onSelected: (value) {
-
+                quizProvider.selectedUser = user;
               } 
             ),
           );

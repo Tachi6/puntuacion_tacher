@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
@@ -7,60 +5,58 @@ import 'package:puntuacion_tacher/models/models.dart';
 class QuizProvider extends ChangeNotifier {
 
   final List<String> wineSequence;
-  final List<Question> selectedQuestionList;
-  final String user;
+  final List<Question> defaultQuestionList;
+  final String defaultUser;
 
-  List<Question> userQuestionsList = [];
+  late String _selectedUser;
 
-  QuizProvider({required this.wineSequence, required this.selectedQuestionList, required this.user}){   
-    if(selectedQuestionList.first.answer != null && !selectedQuestionList.first.answer!.containsKey(user)) {
+  List<Question> editingQuestionList = [];
+
+  QuizProvider({required this.wineSequence, required this.defaultQuestionList, required this.defaultUser}){
+    _selectedUser = defaultUser;
+
+    if(defaultQuestionList.first.answer != null && !defaultQuestionList.first.answer!.containsKey(defaultUser)) {
       for (int i = 0; i < wineSequence.length; i++) {
         final String wineId = wineSequence[i];
         final Question tempQuestion = Question(
           correctAnswer: i + 1, 
           wineId: wineId,
           answer: {
-            user: Answer(
+            defaultUser: Answer(
               answerWine: -1, 
-              user: user
+              user: defaultUser
             ),
           },
         );
-        userQuestionsList = [...userQuestionsList, tempQuestion]; 
+        editingQuestionList = [...editingQuestionList, tempQuestion]; 
       }
     }
   }
 
+  String get selectedUser => _selectedUser;
+
+  set selectedUser(String value) {
+    _selectedUser = value;
+    notifyListeners();
+  }
+
   void completeAnswers({required String wineId, int? answerMouth, int? answerNose, int? answerEyes, int? answerWine}) {
-    final Answer oldAnswer = userQuestionsList.firstWhere((element) => element.wineId == wineId).answer![user]!;
+    final Answer oldAnswer = editingQuestionList.firstWhere((element) => element.wineId == wineId).answer![defaultUser]!;
 
     oldAnswer.answerMouth = answerMouth ?? oldAnswer.answerMouth;
     oldAnswer.answerNose = answerNose ?? oldAnswer.answerNose;
     oldAnswer.answerEyes = answerEyes ?? oldAnswer.answerEyes;
     oldAnswer.answerWine = answerWine ?? oldAnswer.answerWine;
 
-    // Map<int, List<int>> checker = {};
-    // for (Question question in questionsList) {
-    //   final Map<int, List<int>> mapeo = {
-    //     question.correctAnswer: [
-    //       question.answer[user]!.answerEyes!,
-    //       question.answer[user]!.answerNose!,
-    //       question.answer[user]!.answerMouth!,
-    //     ]
-    //   };
-    //   checker = {...checker, ...mapeo};
-    // }
-
-    print(json.encode(userQuestionsList));
     notifyListeners();
   }
 
-  Answer obtainUserAnswer(String wineId) {
-    return selectedQuestionList.firstWhere((element) => element.wineId == wineId).answer![user]!;
+  Answer? obtainUserAnswer(String wineId) {
+    return defaultQuestionList.firstWhere((element) => element.wineId == wineId).answer?[selectedUser] ?? Answer(user: selectedUser);
   }
 
   int obtainCorrectAnswer(String wineId) {
-    return selectedQuestionList.firstWhere((element) => element.wineId == wineId).correctAnswer;
+    return defaultQuestionList.firstWhere((element) => element.wineId == wineId).correctAnswer;
   }
 
   String obtainPuntuation([String? otherUser]) {
@@ -68,9 +64,9 @@ class QuizProvider extends ChangeNotifier {
 
     List<Question> newQuestionList = [];
 
-    final String checkUser = otherUser ?? user;
+    final String checkUser = otherUser ?? defaultUser;
 
-    for (Question question in selectedQuestionList) {
+    for (Question question in defaultQuestionList) {
       question.answer!.forEach((key, value) {
         if (key == checkUser) {
           Question tempQuestionMap = Question(
@@ -118,12 +114,12 @@ class QuizProvider extends ChangeNotifier {
 
   List<Map<String, String>> otherUsersQuiz() {
     List<String> usersAnsweredList = [];  
-    selectedQuestionList.first.answer!.forEach((key, value) => usersAnsweredList.add(key));
+    defaultQuestionList.first.answer!.forEach((key, value) => usersAnsweredList.add(key));
 
     List<String> correctAnswersUsers = [];
 
-    for (String selectedUser in usersAnsweredList) {
-      correctAnswersUsers.add('${obtainPuntuation(selectedUser)}%$selectedUser');
+    for (String user in usersAnsweredList) {
+      correctAnswersUsers.add('${obtainPuntuation(user)}%$user');
     }
     correctAnswersUsers.sort((a, b) => b.compareTo(a));
 

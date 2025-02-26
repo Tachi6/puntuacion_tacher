@@ -132,8 +132,8 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       providers: [
         ChangeNotifierProvider(create: (_) => QuizProvider(
           wineSequence: multipleTaste.multipleTaste.wineSequence,
-          selectedQuestionList: context.read<QuizServices>().selectedQuestionsList,
-          user: authService.userUuid,
+          defaultQuestionList: context.read<QuizServices>().selectedQuestionsList,
+          defaultUser: authService.userUuid,
         )),
       ],
       child: Scaffold(
