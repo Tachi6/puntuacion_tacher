@@ -5,17 +5,25 @@ import 'package:puntuacion_tacher/models/models.dart';
 class QuizProvider extends ChangeNotifier {
 
   final List<String> wineSequence;
-  final List<Question> defaultQuestionList;
+  List<Question> defaultQuestionList;
   final String defaultUser;
+  final String? quizType;
+  final bool hidden;
 
   late String _selectedUser;
 
   List<Question> editingQuestionList = [];
 
-  QuizProvider({required this.wineSequence, required this.defaultQuestionList, required this.defaultUser}){
+  QuizProvider({
+    required this.wineSequence, 
+    required this.defaultQuestionList, 
+    required this.defaultUser,
+    required this.quizType, 
+    required this.hidden, 
+  }){
     _selectedUser = defaultUser;
 
-    if(defaultQuestionList.first.answer != null && !defaultQuestionList.first.answer!.containsKey(defaultUser)) {
+    if (defaultQuestionList.first.answer != null && !defaultQuestionList.first.answer!.containsKey(defaultUser)) {
       for (int i = 0; i < wineSequence.length; i++) {
         final String wineId = wineSequence[i];
         final Question tempQuestion = Question(
@@ -23,8 +31,11 @@ class QuizProvider extends ChangeNotifier {
           wineId: wineId,
           answer: {
             defaultUser: Answer(
-              answerWine: -1, 
-              user: defaultUser
+              user: defaultUser,
+              answerWine: (!hidden && quizType == 'advanced') ? null : -1,
+              answerEyes: quizType == 'advanced' ? -1 : null,
+              answerNose: quizType == 'advanced' ? -1 : null,
+              answerMouth: quizType == 'advanced' ? -1 : null,
             ),
           },
         );
@@ -37,6 +48,11 @@ class QuizProvider extends ChangeNotifier {
 
   set selectedUser(String value) {
     _selectedUser = value;
+    notifyListeners();
+  }
+
+  void reloadQuestions(List<Question> questionsReloaded) {
+    defaultQuestionList = [...questionsReloaded];
     notifyListeners();
   }
 
@@ -64,28 +80,28 @@ class QuizProvider extends ChangeNotifier {
 
     List<Question> newQuestionList = [];
 
-    final String checkUser = otherUser ?? defaultUser;
+      final String checkUser = otherUser ?? defaultUser;
 
-    for (Question question in defaultQuestionList) {
-      question.answer!.forEach((key, value) {
-        if (key == checkUser) {
-          Question tempQuestionMap = Question(
-            correctAnswer: question.correctAnswer, 
-            wineId: question.wineId,
-            answer: {
-              checkUser: Answer(
-                answerWine: question.answer?[checkUser]?.answerWine, 
-                answerEyes: question.answer?[checkUser]?.answerEyes, 
-                answerNose: question.answer?[checkUser]?.answerNose, 
-                answerMouth: question.answer?[checkUser]?.answerMouth, 
-                user: checkUser,
-              ),
-            } 
-          );
-          newQuestionList = [...newQuestionList, tempQuestionMap];
-        }
-      });
-    }
+      for (Question question in defaultQuestionList) {
+        question.answer!.forEach((key, value) {
+          if (key == checkUser) {
+            Question tempQuestionMap = Question(
+              correctAnswer: question.correctAnswer, 
+              wineId: question.wineId,
+              answer: {
+                checkUser: Answer(
+                  answerWine: question.answer?[checkUser]?.answerWine, 
+                  answerEyes: question.answer?[checkUser]?.answerEyes, 
+                  answerNose: question.answer?[checkUser]?.answerNose, 
+                  answerMouth: question.answer?[checkUser]?.answerMouth, 
+                  user: checkUser,
+                ),
+              } 
+            );
+            newQuestionList = [...newQuestionList, tempQuestionMap];
+          }
+        });
+      }
 
     for (Question question in newQuestionList) {
       Map<int, List<int>> tempAnswersMap = {
@@ -136,36 +152,19 @@ class QuizProvider extends ChangeNotifier {
     return userPuntuation;    
   }
 
-  void clearQuiz() {
-    //TODO: hacer metodo y llamarlo al salir o enviar
+  bool isValidQuiz() {
+    List<int> answers = [];
+
+    for (Question question in editingQuestionList) {
+      question.answer!.forEach((key, value) {
+        if (value.answerWine != null) answers.add(value.answerWine!);
+        if (value.answerEyes != null) answers.add(value.answerEyes!);
+        if (value.answerNose != null) answers.add(value.answerNose!);
+        if (value.answerMouth != null) answers.add(value.answerMouth!);
+      });
+    }
+
+    if (answers.contains(-1)) return false;
+    return true;
   }
-
-  // updateAnswer({required String wineId, required Answer updatedAnswer}) {
-
-  //   final Answer oldAnswer = questionsList;
-  //   final Question questionResponse = Question(
-  //     answer: {
-  //       user: answer
-  //     }, 
-  //     wineId: wineId,
-  //   );
-  //   // final Answer newAnswer = wineIdAnswer.values.first;
-    
-  //   if (newAnswer.answerEyes != null) {
-  //     oldAnswer.answerEyes = newAnswer.answerEyes;
-  //   }
-  //   if (newAnswer.answerMouth != null) {
-  //     oldAnswer.answerMouth = newAnswer.answerMouth;
-  //   }
-  //   if (newAnswer.answerNose != null) {
-  //     oldAnswer.answerNose = newAnswer.answerNose;
-  //   }
-  //   if (newAnswer.answerWine != null) {
-  //     oldAnswer.answerWine = newAnswer.answerWine;
-  //   }
-
-  //   print(wineQuestions[wineIdAnswer.keys.first]!.answer[user]!);
-
-  //   notifyListeners(); 
-  // }
 }

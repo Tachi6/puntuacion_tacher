@@ -770,7 +770,7 @@ class _OtherUsersQuiz extends StatelessWidget {
                 height: 32,
                 child: Column(
                   children: [
-                    Text(user),
+                    Text(context.read<UserServices>().obtainDisplayName(user)),
                 
                     Text(puntuation),
                   ],

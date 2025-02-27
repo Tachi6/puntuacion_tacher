@@ -90,6 +90,11 @@ class ChangeDisplayNameBox extends StatelessWidget {
                     return;
                   }
     
+                  if (authService.tempDisplayName.contains('%')) {
+                    NotificationServices.showSnackbar('% NO ES UN CARACTER PERMITIDO', context);
+                    return;
+                  }
+    
                   if (await userService.isUniqueDisplayName(authService.tempDisplayName)) {
                     await authService.changeDisplayName(authService.tempDisplayName);
                     await userService.updateUuidDisplayName(authService.tempDisplayName);

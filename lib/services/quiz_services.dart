@@ -66,29 +66,24 @@ class QuizServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> uploadUserQuiz({required String multipleName, required List<Wines> wineList}) async { 
-    // TODO: receive map of answers
+  Future<void> uploadUserQuiz({required String multipleName, required List<Question> questionList}) async { 
 
-    final userUuid = await storage.read(key: 'localId') ?? '';
+    for (Question question in questionList) {
 
-    for (Wines wine in wineList) {
-
-      final Map<String, Answer> answerMap = {
-        userUuid: Answer(
-          answerWine: 9, 
-          user: userUuid,
-        ),
-      };
-
-      final String jsonType = 'quiz/$multipleName/${wine.id}/answer.json';
+      final String jsonType = 'quiz/$multipleName/${question.wineId}/answer.json';
 
       final url = Uri.https(_baseUrl, jsonType, {
         'auth': await storage.read(key: 'idToken') ?? ''
       });
 
-      await http.patch(url, body: json.encode(answerMap));
-    }
+      await http.patch(url, body: json.encode(question.answer));
 
+      final int questionIndex = questionList.indexWhere((element) => element.wineId == question.wineId);
+
+      selectedQuestionsList[questionIndex].answer == null
+        ? selectedQuestionsList[questionIndex].answer = question.answer!
+        : selectedQuestionsList[questionIndex].answer!.addEntries(question.answer!.entries);
+    }
   }
 
 }

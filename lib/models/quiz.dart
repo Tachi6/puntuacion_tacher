@@ -22,7 +22,7 @@ class Quiz {
 
 class Question {
     final int correctAnswer;
-    final Map<String, Answer>? answer;
+    Map<String, Answer>? answer;
     final String wineId;
 
     Question({

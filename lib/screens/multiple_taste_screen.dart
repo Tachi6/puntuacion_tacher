@@ -9,14 +9,37 @@ import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-class MultipleTasteScreen extends StatefulWidget {
+class MultipleTasteScreen extends StatelessWidget {
   const MultipleTasteScreen({super.key});
 
   @override
-  State<MultipleTasteScreen> createState() => _MultipleTasteScreenState();
+  Widget build(BuildContext context) {
+
+    final Multiple multipleTaste = context.read<MultipleTasteProvider>().multipleTaste;
+
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => QuizProvider(
+          wineSequence: multipleTaste.wineSequence,
+          defaultQuestionList: context.read<QuizServices>().selectedQuestionsList,
+          defaultUser: context.read<AuthServices>().userUuid,
+          quizType: multipleTaste.tasteQuiz,
+          hidden: multipleTaste.hidden,
+        )),
+      ],
+      child: const MultipleTasteScreenBody(),
+    );
+  }
 }
 
-class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
+class MultipleTasteScreenBody extends StatefulWidget {
+  const MultipleTasteScreenBody({super.key});
+
+  @override
+  State<MultipleTasteScreenBody> createState() => _MultipleTasteScreenBodyState();
+}
+
+class _MultipleTasteScreenBodyState extends State<MultipleTasteScreenBody> {
 
   late PageController pageController;  
 
@@ -44,8 +67,10 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
     final multipleService = Provider.of<MultipleServices>(context);
     final winesService = Provider.of<WineServices>(context);
     final pageProvider = Provider.of<ScreensProvider>(context);
+    final quizService = context.watch<QuizServices>();
+    final quizProvider = context.watch<QuizProvider>();
 
-    void onPressedBottomSheetButton() async {
+    void onPressedBottomSheetButton({required bool isValidQuiz, required List<Question> questionList}) async {
       if (multipleService.isMultipleTasted) {
         Navigator.pop(context);
         multipleTaste.resetSettings();
@@ -56,11 +81,16 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
         NotificationServices.showSnackbar('RELLENA TODOS LOS CAMPOS', context);
         return;
       }
+      if (!isValidQuiz) {
+        NotificationServices.showSnackbar('RELLENA TODOS LOS CAMPOS', context);
+        return;
+      }
 
-      final int newPageIndex = multipleTaste.winesMultipleTaste.length + 1; // TODO: contar la pagina del quiz????
-      pageProvider.multiplePage = newPageIndex;
+      final int quizPage = multipleTaste.multipleTaste.tasteQuiz != null ? 1 : 0;
+      final int maxPageIndex = multipleTaste.winesMultipleTaste.length + 1 + quizPage;
+      pageProvider.multiplePage = maxPageIndex;
       pageController.animateToPage(
-        newPageIndex, 
+        maxPageIndex, 
         duration: const Duration(milliseconds: 250), 
         curve: Curves.easeInOut,           
       );
@@ -76,10 +106,15 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       multipleTaste.calculateAverageRatings();
       // Activo 2 paginas del overview
       multipleTaste.overview = true;
+      // Subir Quiz en el caso de que la haya
+      if (multipleTaste.multipleTaste.tasteQuiz != null && context.mounted) {
+        await quizService.uploadUserQuiz(multipleName: multipleTaste.multipleTaste.name, questionList: questionList);
+        quizProvider.reloadQuestions(quizService.selectedQuestionsList);
+      }
       // Desactivar que vuelvan a catar y moverme a la nueva ultima pagina
       multipleService.isMultipleTasted = true;
-      pageController.jumpToPage(1); // TODO: contar la pagina del quiz
-      pageProvider.multiplePage = 1; // TODO: contar la pagina del quiz
+      pageController.jumpToPage(1 + quizPage); // TODO: brinca la pantalla
+      pageProvider.multiplePage = 1 + quizPage; // TODO: brinca la pantalla
       // Subo WineTaste del usuario
       await multipleService.createUserMultipleTaste(multipleName: multipleTaste.multipleTaste.name, userMultipleTaste: multipleTaste.userMultipleTaste);
       // Subo AverageRatings
@@ -128,33 +163,29 @@ class _MultipleTasteScreenState extends State<MultipleTasteScreen> {
       ];
     }
 
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => QuizProvider(
-          wineSequence: multipleTaste.multipleTaste.wineSequence,
-          defaultQuestionList: context.read<QuizServices>().selectedQuestionsList,
-          defaultUser: authService.userUuid,
-        )),
-      ],
-      child: Scaffold(
-        body: Container(
-          alignment: Alignment.center,
-          width: size.width,
-          height: size.height,
-          child: PageView(
-            physics: const ClampingScrollPhysics(),
-            controller: pageController,
-            children: tastePages(),
-            onPageChanged: (value) {
-              pageProvider.multiplePage = value;
-            }
-          ),
+    return Scaffold(
+      body: Container(
+        alignment: Alignment.center,
+        width: size.width,
+        height: size.height,
+        child: PageView(
+          physics: const ClampingScrollPhysics(),
+          controller: pageController,
+          children: tastePages(),
+          onPageChanged: (value) {
+            pageProvider.multiplePage = value;
+          }
         ),
-        bottomSheet: CustomMultipleBottomSheet(
-          pageController: pageController, 
-          onPressed: onPressedBottomSheetButton,
-          totalPages: tastePages().length,
-        ),
+      ),
+      bottomSheet: CustomMultipleBottomSheet(
+        pageController: pageController, 
+        onPressed: () {
+          onPressedBottomSheetButton(
+            isValidQuiz: context.read<QuizProvider>().isValidQuiz(),
+            questionList: context.read<QuizProvider>().editingQuestionList,
+          );
+        },
+        totalPages: tastePages().length,
       ),
     );
   }
