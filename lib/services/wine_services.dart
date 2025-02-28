@@ -24,8 +24,6 @@ class WineServices extends ChangeNotifier {
   List<Wines> winesByRate = [];
   List<Wines> winesByName = [];
   List<WineTaste> winesTaste = [];
-  Wines? _selectedWine;
-  List<Wines> latest = [];
 
   bool isLoading = true;
   bool isSaving = false;
@@ -147,15 +145,6 @@ class WineServices extends ChangeNotifier {
     return otherUsersTastedWines;
   }
 
-  Wines? get selectedWine {
-     return _selectedWine;
-   }
-
-  set selectedWine(Wines? wine) {
-    _selectedWine = wine;
-    notifyListeners();
-  }
-
   Future<Wines> loadWine(String wineId) async {
 
     final String jsonType = 'wines/$wineId.json';
@@ -169,7 +158,6 @@ class WineServices extends ChangeNotifier {
 
     // Wines update
     winesByIndex[int.parse(wineId)] = wine;
-    notifyListeners();
     updateWinesByRate();
     updateWinesByName();   
     notifyListeners();
@@ -181,21 +169,18 @@ class WineServices extends ChangeNotifier {
 
     isSaving = true;
     notifyListeners();
-    
-    await loadWines();
 
     final String jsonUpdateType = 'wines/${wine.id}.json';
     final url = Uri.https(_baseUrl, jsonUpdateType, {
       'auth': await storage.read(key: 'idToken') ?? ''
     });
-    final resp = await http.put(url, body: wine.toJson());
+    final resp = await http.patch(url, body: wine.toJson());
 
-    // Actualizar el listado de productos
+    // Actualizar el listado local de productos
     final int wineId = int.parse(wine.id!);
     winesByIndex[wineId] = wine;
     updateWinesByRate();
     updateWinesByName();   
-
     isSaving = false;
     notifyListeners();
 
@@ -203,6 +188,8 @@ class WineServices extends ChangeNotifier {
   }
 
   Future<String> createWine(Wines wine) async {
+    // Actualizo vinos para que el id sea correcto
+    await loadWines();
     // Assigno nueva id
     final String lastWineIndex = winesByIndex.length.toString();
     final idLenght = lastWineIndex.length;
@@ -224,7 +211,6 @@ class WineServices extends ChangeNotifier {
     notifyListeners();
 
     return newId;
-    // return resp.body;
   }
 
   Future<String> saveTastedWine(WineTaste wineTaste) async {
@@ -262,86 +248,4 @@ class WineServices extends ChangeNotifier {
       
     return true;
   }
-
-  Future<String> likesCount(Wines wine) async {
-
-    loadWinesTaste();
-
-    if (wine.likes == null) {
-      wine.likes = 1;
-    }
-    else {
-      wine.likes = wine.likes! + 1;
-    }
-    notifyListeners();
-
-    final String jsonUpdateType = 'latest/${wine.id}.json';
-    final url = Uri.https(_baseUrl, jsonUpdateType, {
-      'auth': await storage.read(key: 'idToken') ?? ''
-    });
-    final resp = await http.put(url, body: wine.toJson());
-
-    return resp.body;
-  }
-
-  // void createNewJson() async {
-  //   int wineCount = 0;
-
-  //   final String repeatedDate = "2022-01-01T00:00:00.000000";
-
-  //   // Map<String, Wines> tempJsonMap = {};
-
-  //   for (Wines wine in winesByRate) {
-  //     for (int i = 0; i < wine.fechas!.length; i++) { 
-  //       if (repeatedDate == wine.fechas![i]) wineCount++;
-
-  //       // final double ratingVista = ((wine.puntuacionesVista![i] * 7) / 5).round().toDouble();
-  //       // final double ratingNariz = ((wine.puntuacionesNariz![i] * 9) / 5).round().toDouble();
-  //       // final double ratingBoca = ((wine.puntuacionesBoca![i] * 9) / 5).round().toDouble();
-
-  //       final String newDate = (repeatedDate == wine.fechas![i]) 
-  //         ? repeatedDate.replaceRange(26 - wineCount.toString().length, 26, wineCount.toString())
-  //         : wine.fechas![i];
-
-  //       wine.fechas![i] = newDate.replaceAll('.', ':');
-
-  //       // Map<String, Wines> tempMap = {
-  //       //   wine.id!: wine,
-  //       // };
-
-  //       // Map<String, WineTaste> tempMap = {
-  //       //   newDate.replaceAll('.', ':'): WineTaste(
-  //       //     fecha: newDate.replaceAll('.', ':'), 
-  //       //     id: wine.id!, 
-  //       //     nombre: wine.nombre, 
-  //       //     user: wine.usuarios![i] == '' ? 'admin@tacher.com' : wine.usuarios![i], 
-  //       //     ratingVista: ratingVista,
-  //       //     ratingNariz: ratingNariz,
-  //       //     ratingBoca: ratingBoca, 
-  //       //     ratingPuntos: obtainRatingPuntospuntos(
-  //       //       ratingVista: ratingVista,
-  //       //       ratingNariz: ratingNariz,
-  //       //       ratingBoca: ratingBoca,
-  //       //       puntosFinal: wine.puntuaciones![i],
-  //       //     ), 
-  //       //     puntosVista: wine.puntuacionesVista![i], 
-  //       //     puntosNariz: wine.puntuacionesNariz![i], 
-  //       //     puntosBoca: wine.puntuacionesBoca![i], 
-  //       //     puntosFinal: wine.puntuaciones![i],
-  //       //     notasVista: wine.notasVista![i],
-  //       //     notasNariz: wine.notasNariz![i],
-  //       //     notasBoca: wine.notasBoca![i],
-  //       //     comentarios: wine.comentarios![i],
-  //       //   )
-  //       // };
-
-  //       // tempJsonMap = {...tempJsonMap, ...tempMap};
-  //     }
-
-  //     await updateWine(wine);
-  //   }
-    
-  //   // return jsonEncode(tempJsonMap);    
-  // }
-
 }

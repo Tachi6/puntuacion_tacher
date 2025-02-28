@@ -31,7 +31,12 @@ class _QuizTastePageState extends State<QuizTastePage> with AutomaticKeepAliveCl
     final TextStyle? style = Theme.of(context).textTheme.bodyMedium;
 
     return Scaffold(
-      appBar: const CustomMultipleAppBar(), // TODO: RefreshIcon
+      appBar: CustomMultipleAppBar(
+        refreshQuiz: () async {
+          final reloadedQuestions = await context.read<QuizServices>().loadQuiz(multipleTaste.multipleTaste.name);
+          if (context.mounted) context.read<QuizProvider>().reloadQuestions(reloadedQuestions);
+        }
+      ), // TODO: RefreshIcon
       body: multipleTaste.multipleTaste.tasteQuiz! == 'simple' 
         ? SimpleTasteQuiz(width: width, style: style, padding: padding)
         : AdvancedTasteQuiz(width: width, style: style, padding: padding),

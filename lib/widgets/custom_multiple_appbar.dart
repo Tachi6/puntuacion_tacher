@@ -2,14 +2,22 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 
 class CustomMultipleAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomMultipleAppBar({super.key, this.allowActionButtons = false});
+  const CustomMultipleAppBar({
+    super.key, 
+    this.allowActionButtons = false, 
+    this.refreshQuiz,
+    this.refreshOverview,
+    this.changeOverview
+  });
 
   final bool allowActionButtons;
+  final void Function()? refreshQuiz;
+  final void Function()? refreshOverview;
+  final void Function()? changeOverview;
 
   @override
   Widget build(BuildContext context) {
@@ -47,22 +55,22 @@ class CustomMultipleAppBar extends StatelessWidget implements PreferredSizeWidge
           ),
         ),
    
-        multipleService.isMultipleTasted && allowActionButtons && multipleTaste.overview
+        (multipleService.isMultipleTasted && multipleTaste.overview && refreshOverview != null && refreshQuiz == null) 
           ? IconButton(
-            onPressed: () async {
-              final Multiple multipleUpdated = await multipleService.loadMultipleToUpdate(multipleTaste.multipleName);
-              multipleTaste.initLoadedMultipleTaste(multipleUpdated);
-            },
+            onPressed: refreshOverview,
             icon: const Icon(Icons.refresh_rounded)
           )
           : const SizedBox(width: 48),
 
-        multipleService.isMultipleTasted && allowActionButtons
-          ? IconButton(
-            onPressed: () => multipleTaste.overview = !multipleTaste.overview,
-            icon: const Icon(Icons.autorenew_rounded)
-          )
-          : const SizedBox(width: 48),
+        if (multipleService.isMultipleTasted && changeOverview != null) IconButton(
+          onPressed: changeOverview,
+          icon: const Icon(Icons.autorenew_rounded)
+        ),
+
+        if (refreshQuiz != null) IconButton(
+          onPressed: refreshQuiz,
+          icon: const Icon(Icons.refresh_rounded)
+        ),
       ]
     );
   }
