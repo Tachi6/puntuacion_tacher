@@ -27,7 +27,7 @@ class CustomMultipleBottomSheet extends StatelessWidget {
     final List<String> multiplePageLabels = [
       'Inicio',
       if (!context.read<MultipleServices>().isMultipleTasted) 
-        ...List.generate(context.read<MultipleTasteProvider>().winesMultipleTaste.length, (index) => 'Cata ${index + 1}'),
+        ...List.generate(context.read<MultipleTasteProvider>().winesMultipleTaste.length, (_) => 'Cata'),
       if (context.read<MultipleTasteProvider>().multipleTaste.tasteQuiz != null) 'Quiz',
       'Final',
     ];
@@ -101,7 +101,7 @@ class CustomMultipleBottomSheet extends StatelessWidget {
                 child: Text(
                   multiplePageLabels[screenProvider.multiplePage + 1],
                   // screenProvider.multiplePage == (totalPages - 2) ? 'Final' : 'Cata', 
-                  style: const TextStyle(fontSize: 12)
+                  style: const TextStyle(fontSize: 12),
                 ),
               ),
             ],
