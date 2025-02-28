@@ -4,6 +4,7 @@ class ScreensProvider extends ChangeNotifier {
 
   int _currentScreen = 0;
   int _multiplePage = 0;
+  List<String> _multiplePageLabels = [];
   
   int get currentScreen => _currentScreen;
 
@@ -16,6 +17,13 @@ class ScreensProvider extends ChangeNotifier {
 
   set multiplePage(int screen) {
     _multiplePage = screen;
+    notifyListeners();
+  }
+
+  List<String> get multiplePageLabels => _multiplePageLabels;
+
+  set multiplePageLabels(List<String> labels) {
+    _multiplePageLabels = labels;
     notifyListeners();
   }
 }

@@ -50,6 +50,7 @@ class _MultipleTasteScreenBodyState extends State<MultipleTasteScreenBody> {
       initialPage: 0,
       keepPage: true,
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) => getPageLabels(context));
   }
 
   @override
@@ -57,6 +58,15 @@ class _MultipleTasteScreenBodyState extends State<MultipleTasteScreenBody> {
     pageController.dispose();
     super.dispose();
   }
+
+  void getPageLabels(BuildContext context) {
+    context.read<ScreensProvider>().multiplePageLabels = [
+      'Inicio',
+      if (!context.read<MultipleServices>().isMultipleTasted) ...List.generate(context.read<MultipleTasteProvider>().winesMultipleTaste.length, (index) => 'Cata'),
+      if (context.read<MultipleTasteProvider>().multipleTaste.tasteQuiz != null) 'Quiz',
+      'Final',
+    ];
+  }  
 
   @override
   Widget build(BuildContext context) {
