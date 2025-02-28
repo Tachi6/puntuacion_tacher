@@ -19,7 +19,7 @@ class SearchTasteWine extends StatelessWidget {
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
 
     final textEditingController = TextEditingController(
-      text: winesService.selectedWine?.nombre ?? '', 
+      text: wineForm.wine.nombre
     );
 
     void onPressed() async {
@@ -28,12 +28,10 @@ class SearchTasteWine extends StatelessWidget {
         final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
 
         if (wineSearched != null) {
-          winesService.selectedWine = wineSearched;
-          wineForm.setWineToEdit(winesService.selectedWine!);
+          wineForm.setEditSearchedWine(wineSearched);
           taste.showContinueButton = true;
         }
         else {
-          winesService.selectedWine = null;
           taste.showContinueButton = false;
         }
       }
@@ -85,7 +83,6 @@ class SearchTasteWine extends StatelessWidget {
                         wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
                         final String wineId = await winesService.createWine(wineForm.wine);
                         wineForm.wine.id = wineId;
-                        winesService.selectedWine = wineForm.wine;
                         taste.showContinueButton = true;
                         if (context.mounted) Navigator.pop(context, 'Guardar');
                         wineForm.autovalidateMode = AutovalidateMode.disabled;

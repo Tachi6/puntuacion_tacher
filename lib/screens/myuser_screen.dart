@@ -180,7 +180,7 @@ class MyUserBody extends StatelessWidget {
                   otherTasteProvider.isChangingSelectedWineTaste = false;
 
                   final routeDetails = MaterialPageRoute(
-                    builder: (context) => DetailsScreen(wine: wine, email: authService.userUuid, source: 'email-$index'));
+                    builder: (context) => DetailsScreen(wine: wine.copy(), email: authService.userUuid, source: 'email-$index'));
                   Navigator.push(context, routeDetails);
                 },
               );

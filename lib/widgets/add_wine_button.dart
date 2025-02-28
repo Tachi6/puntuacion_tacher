@@ -27,7 +27,6 @@ class AddWineButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final winesService = Provider.of<WineServices>(context, listen: true);
     final colors = Theme.of(context).colorScheme;
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
 
@@ -38,9 +37,7 @@ class AddWineButton extends StatelessWidget {
         size: 22
       ),
       onPressed: () {
-        wineForm.setDefaultCreateWine();
-        winesService.selectedWine = wineForm.wine;
-        winesService.loadWines();
+        wineForm.setCreateNewWine();
         showGeneralDialog(
           context: context,
           barrierDismissible: false, 
@@ -79,7 +76,7 @@ class CreateWineDialog extends StatelessWidget {
       cancelText: 'Cancelar', 
       saveText: 'Guardar',
       onPressedCancel: () {
-        wineForm.setDefaultCreateWine();
+        wineForm.setCreateNewWine();
         Navigator.pop(context, 'Cancelar');
         wineForm.autovalidateMode = AutovalidateMode.disabled;
       },

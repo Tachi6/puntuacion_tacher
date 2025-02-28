@@ -35,7 +35,7 @@ class ValorationCards extends StatelessWidget {
             otherTasteProvider.isChangingSelectedWineTaste = false;
             
             final routeDetails = MaterialPageRoute(
-              builder: (context) => DetailsScreen(wine: wine, email: 'latest', source:'latest-$index'));
+              builder: (context) => DetailsScreen(wine: wine.copy(), email: 'latest', source:'latest-$index'));
             Navigator.push(context, routeDetails);
           },
           child: Padding(
@@ -148,41 +148,6 @@ class CustomBodyTile extends StatelessWidget {
                   child: SizedBox(
                   ),
                 ),
-            
-                // Container(
-                //   // color: Colors.amber,
-                //   alignment: Alignment.bottomRight,
-                //   child: Transform.translate(
-                //     offset: const Offset(4, 8),
-                //     child: Row(
-                //       crossAxisAlignment: CrossAxisAlignment.center,
-                //       children: [
-                //         IconButton(
-                //           alignment: Alignment.bottomRight,
-                //           iconSize: 24,
-                //           onPressed: () {
-                //             winesService.likesCount(wine);
-                //             // TODO implementar likes en server
-                //           },
-                //           icon: const Icon(Icons.thumb_up,
-                //             color: Color.fromARGB(255, 114, 47, 55)
-                //           )
-                //         ),
-                //         Transform.translate(
-                //           offset: const Offset(-4, 6),
-                //           child: Container(
-                //             alignment: Alignment.bottomLeft,
-                //             width: 16,
-                //             child: Text(
-                //               wine.likes == null ? '' : wine.likes.toString(),
-                //               style: TextStyle(color: redColor(), fontSize: 8),
-                //             ),
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
               ],
             ),     
           ],

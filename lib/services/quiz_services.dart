@@ -43,7 +43,7 @@ class QuizServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadQuiz(String multipleName) async {
+  Future<List<Question>> loadQuiz(String multipleName) async {
     final String jsonType = 'quiz/$multipleName.json';
     
     final url = Uri.https(_baseUrl, jsonType, {
@@ -64,6 +64,8 @@ class QuizServices extends ChangeNotifier {
 
     selectedQuestionsList = tempQuestions;
     notifyListeners();
+
+    return selectedQuestionsList;
   }
 
   Future<void> uploadUserQuiz({required String multipleName, required List<Question> questionList}) async { 

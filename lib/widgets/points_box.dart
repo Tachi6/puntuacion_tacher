@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/screens/home_screen.dart';
-import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class PointsBox extends StatelessWidget {
@@ -21,7 +20,6 @@ class PointsBox extends StatelessWidget {
     final taste = Provider.of<VisibleOptionsProvider>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: true);
     final screenProvider = Provider.of<ScreensProvider>(context);
-    final winesService = Provider.of<WineServices>(context);
     final styles = Theme.of(context).textTheme;
 
     return PopScope(
@@ -55,7 +53,6 @@ class PointsBox extends StatelessWidget {
           Navigator.pop(context);
           // Limpio el taste_screen
           taste.clearWidgets();
-          winesService.selectedWine = null;
           // Vuelvo a pantalla de inicio
           screenProvider.currentScreen = 0;
           final routeDetails = MaterialPageRoute(

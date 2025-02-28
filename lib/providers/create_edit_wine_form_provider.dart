@@ -29,12 +29,11 @@ class CreateEditWineFormProvider extends ChangeNotifier {
   String user = '';
 
   CreateEditWineFormProvider() {
-    setDefaultCreateWine();
+    setCreateNewWine();
     loadUser();
   }
 
-  void setDefaultCreateWine() {
-
+  void setCreateNewWine() {
     wine = Wines(
       id: '-1', 
       anada: -1, 
@@ -73,8 +72,8 @@ class CreateEditWineFormProvider extends ChangeNotifier {
     user = localId!;
   }
 
-  void setWineToEdit(Wines wineToEdit) {
-    wine = wineToEdit;
+  void setEditSearchedWine(Wines defaultWine) {
+    wine = defaultWine;
     notifyListeners();
   }
   
@@ -184,7 +183,7 @@ class CreateEditWineFormProvider extends ChangeNotifier {
     clearNotas();
     clearComentarios();
     setDefaultRatings();
-    setDefaultCreateWine();
+    setCreateNewWine();
     notifyListeners();
   }
 }

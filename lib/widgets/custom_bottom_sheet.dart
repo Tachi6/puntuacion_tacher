@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 
 class CustomBottomSheet extends StatelessWidget {
   const CustomBottomSheet({
     super.key, 
-    this.wine,
     required this.widgetButton, 
     this.leading, 
     this.trailing,
   });
 
-  final Wines? wine;
   final Widget widgetButton;
   final Widget? leading;
   final Widget? trailing;

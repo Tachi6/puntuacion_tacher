@@ -50,7 +50,7 @@ class ListBestScreen extends StatelessWidget {
                     }
 
                     final routeDetails = MaterialPageRoute(
-                      builder: (context) => DetailsScreen(wine: wines[index], source: 'best-$index')
+                      builder: (context) => DetailsScreen(wine: wines[index].copy(), source: 'best-$index')
                     );
                     Navigator.push(context, routeDetails);
                   },

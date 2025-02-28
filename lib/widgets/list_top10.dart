@@ -39,7 +39,7 @@ class ListTop10 extends StatelessWidget {
               }
 
               final routeDetails = MaterialPageRoute(
-                builder: (context) => DetailsScreen(wine: wines[index], source: 'top10-$index'));
+                builder: (context) => DetailsScreen(wine: wines[index].copy(), source: 'top10-$index'));
               Navigator.push(context, routeDetails);
             },
             child: _WinePosterTop10(wine: wines[index], index: index),

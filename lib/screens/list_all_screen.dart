@@ -68,7 +68,7 @@ class ListAllScreen extends StatelessWidget {
                   if (context.mounted) {
                     final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
                     final routeDetails = MaterialPageRoute(
-                      builder: (context) => DetailsScreen(wine:wineSearched, source: 'search')
+                      builder: (context) => DetailsScreen(wine:wineSearched.copy(), source: 'search')
                     );
                     
                     if (wineSearched != null && context.mounted) Navigator.push(context, routeDetails);
@@ -139,7 +139,7 @@ class _ListAllBody extends StatelessWidget {
             }
 
             final routeDetails = MaterialPageRoute(
-              builder: (context) => DetailsScreen(wine: wines[index], source: 'list'));
+              builder: (context) => DetailsScreen(wine: wines[index].copy(), source: 'list'));
             Navigator.push(context, routeDetails);
           },
         );

@@ -20,6 +20,7 @@ class _MultipleOverviewPageState extends State<MultipleOverviewPage> with Automa
   Widget build(BuildContext context) {
     super.build(context);
 
+    final multipleService = Provider.of<MultipleServices>(context);
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final size = MediaQuery.of(context).size;
     final statusBarHeight = View.of(context).padding.top / View.of(context).devicePixelRatio;
@@ -29,7 +30,14 @@ class _MultipleOverviewPageState extends State<MultipleOverviewPage> with Automa
     final newHeight = size.height - statusBarHeight - 48 - 58 - 160 - 40 - 5;
 
     return Scaffold(
-      appBar: const CustomMultipleAppBar(allowActionButtons: true),
+      appBar: CustomMultipleAppBar(
+        refreshOverview: () async {
+          final Multiple multipleUpdated = await multipleService.loadMultipleToUpdate(multipleTaste.multipleName);
+          multipleTaste.initLoadedMultipleTaste(multipleUpdated);
+        },
+        changeOverview: () => multipleTaste.overview = !multipleTaste.overview,
+        allowActionButtons: true
+      ),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 250),
         layoutBuilder: (currentChild, previousChildren) {

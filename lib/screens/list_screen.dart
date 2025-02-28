@@ -49,17 +49,12 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
 
                     final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
                     final routeDetails = MaterialPageRoute(
-                      builder: (context) => DetailsScreen(wine:wineSearched, source: 'search')
+                      builder: (context) => DetailsScreen(wine:wineSearched.copy(), source: 'search')
                     );
                     if (wineSearched != null && context.mounted) Navigator.push(context, routeDetails);
                   }
                 },
-                // onPressed: () {
-                //   winesService.loadWines();
-                  
-                //   showSearch(context: context, delegate: WineSearch(winesService.winesByIndex));
-                // },
-                icon: Icon(Icons.search)
+                icon: const Icon(Icons.search)
               ),
 
               // TODO select best views

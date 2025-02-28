@@ -255,17 +255,14 @@ class _SingleTacherScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: true);
-    final winesService = Provider.of<WineServices>(context);
 
     return TacherScreen(
       appBarTitle: wineForm.wine.nombre == '' ? 'Vino catado a ciegas' : wineForm.wine.nombre,
       onPressedBackButon: () {
         wineForm.resetSettings();
-        winesService.selectedWine = null;
         Navigator.pop(context);
       }, 
       bottomSheet: CustomBottomSheet(
-        wine: wineForm.wine,
         widgetButton: AnimatedSwitcher(
           duration: const Duration(milliseconds: 250),
           layoutBuilder: (currentChild, previousChildren) {
@@ -318,13 +315,13 @@ class SendTasteButton extends StatelessWidget {
           NotificationServices.showSnackbar('RELLENA TODOS LOS CAMPOS', context);
           return;
         }
-        // Actualizo wine desde server
+        // Actualizo info del wine desde server
         final Wines wineFromServer = await winesService.loadWine(wineForm.wine.id!);
         // Mando updates de los diferentes campos al wine y creo el wineTaste
         wineForm.addUpdatesToWine(wineFromServer);
-        winesService.selectedWine = wineFromServer;
+        // Creo el wineTaste
         final WineTaste wineTaste = WineTasteMapper.winesToWinesTaste(
-          wine: winesService.selectedWine!,
+          wine: wineForm.wine,
           ratingVista: wineForm.ratingVista,
           ratingNariz: wineForm.ratingNariz,
           ratingBoca: wineForm.ratingBoca,
@@ -332,16 +329,10 @@ class SendTasteButton extends StatelessWidget {
         );
         // Lanzo la confirmacion
         if (context.mounted) showCustomDialog(context, child: PointsBox(wine: wineForm.wine, puntuacionFinal: wineForm.puntosFinal));
-        // Mando wine al servidor
-        if (wineForm.wine.id == '-1') {
-          final String newId = await winesService.createWine(winesService.selectedWine!);
-          wineTaste.id = newId;
-          await winesService.saveTastedWine(wineTaste);
-        }
-        else {
-          await winesService.updateWine(winesService.selectedWine!);
-          await winesService.saveTastedWine(wineTaste);
-        }
+        // Actualizo el server con wine y añado nuevo wineTaste
+        await winesService.updateWine(wineForm.wine);
+        await winesService.saveTastedWine(wineTaste);
+        // }
       },
       child: const Text('Enviar Valoración'),
     );
@@ -380,8 +371,7 @@ class HiddenTasteButtons extends StatelessWidget {
             if (context.mounted) {
               final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
               if (wineSearched != null) {
-                winesService.selectedWine = wineSearched;
-                wineForm.setWineToEdit(wineSearched);
+                wineForm.setEditSearchedWine(wineSearched);
                 taste.showContinueButton = true;
               }
             }
@@ -405,11 +395,9 @@ class HiddenTasteButtons extends StatelessWidget {
           ),
           onPressed: () {
               final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: false);
-              final winesService = Provider.of<WineServices>(context, listen: false);
               final taste = Provider.of<VisibleOptionsProvider>(context, listen: false);
 
-              wineForm.setDefaultCreateWine();
-              winesService.selectedWine = null;
+              wineForm.setCreateNewWine();
                     
               showDialog(
                 barrierDismissible: false,
@@ -423,16 +411,13 @@ class HiddenTasteButtons extends StatelessWidget {
                       cancelText: 'Cancelar',
                       onPressedSave: () {
                         if (wineForm.isValidForm()) {
-                
                           wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
-                          
-                          winesService.selectedWine = wineForm.wine;
                           taste.showContinueButton = true;
                           Navigator.pop(context, 'Guardar');
                         }
                       },
                       onPressedCancel: () {
-                        wineForm.setDefaultCreateWine();
+                        wineForm.setCreateNewWine();
                         Navigator.pop(context, 'Cancelar');
                       },
                       content: CreateNewWineForm(wineForm),
