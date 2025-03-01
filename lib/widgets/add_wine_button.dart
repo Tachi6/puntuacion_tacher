@@ -228,9 +228,9 @@ class TextFormFieldGraduacion extends StatelessWidget {
     return TextFormField(
       initialValue: wine.graduacion == '' ? '' : wine.graduacion.toString(),
       inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,1}')),
+        FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?[\,\.]?\d{0,1}')),
       ],
-      keyboardType: TextInputType.number,
+      keyboardType: TextInputType.text,
       maxLines: 1,
       style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
       decoration: _customInputDecorationText('Graduación'),
@@ -245,7 +245,7 @@ class TextFormFieldGraduacion extends StatelessWidget {
         }
         return null;
       },
-      onChanged: (value) => wine.graduacion = value,
+      onChanged: (value) => wine.graduacion = value.replaceAll(',', '.'),
     );
   }
 }
