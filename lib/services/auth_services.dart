@@ -87,12 +87,12 @@ class AuthServices extends ChangeNotifier {
 
     if (decodedResp.containsKey('idToken')) {
       await storage.write(key: 'email', value: email);
-      userUuid = decodedResp['localId'];
-      userEmail = email;
       await storage.write(key: 'password', value: password);
       await storage.write(key: 'idToken', value: decodedResp['idToken']);
       await storage.write(key: 'displayName', value: decodedResp['displayName']);
       await storage.write(key: 'localId', value: decodedResp['localId']);
+      userUuid = decodedResp['localId'];
+      userEmail = email;
       if (decodedResp['displayName'] != '') {
         userDisplayName = decodedResp['displayName'];
         userInitial = decodedResp['displayName'][0].toUpperCase();

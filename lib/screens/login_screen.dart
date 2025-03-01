@@ -17,9 +17,9 @@ class LoginScreen extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     return LoginBackground(
-      widget: const LoginForm(), 
+      widget: const LoginForm(),
       backgroundColor: colors.surface,
-    ); 
+    );
   }
 }
 
@@ -28,7 +28,7 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
+
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
@@ -78,22 +78,19 @@ class LoginRegisterForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final authService = Provider.of<AuthServices>(context, listen: false);
-    final winesService = Provider.of<WineServices>(context, listen: false);
-    final multipleService = Provider.of<MultipleServices>(context, listen: false);
-    final userService = Provider.of<UserServices>(context, listen: false);
+    final authService = Provider.of<AuthServices>(context);
     final loginForm = Provider.of<LoginProvider>(context);
     final colors = Theme.of(context).colorScheme;
 
     Future<void> sendLoginForm() async {
       FocusManager.instance.primaryFocus?.unfocus(); // quitar teclado
-        
+
       if ( !loginForm.isValidForm() ) return;
 
       loginForm.isLoading = true;
 
       final String? errorMessage;
-      
+
       loginForm.isRegister
         ? errorMessage = await authService.createUser(loginForm.email, loginForm.password)
         : errorMessage = await authService.loginUser(loginForm.email, loginForm.password);
@@ -102,13 +99,8 @@ class LoginRegisterForm extends StatelessWidget {
 
         if (!context.mounted) return;
 
-        await userService.loadUsers();
-        await winesService.loadWines();
-        await winesService.loadWinesTaste();
-        await multipleService.loadMultiples();
-        
         final newRoute = MaterialPageRoute(
-          builder: (context) => authService.userDisplayName == '' ? const EnterDisplayNameScreen() : const HomeScreen()
+          builder: (context) => authService.userDisplayName == '' ? const EnterDisplayNameScreen() : const CheckAuthScreen()
         );
         if (context.mounted) Navigator.pushReplacement(context, newRoute);
         // FOR NOT VIEW 'ingresar' MESSAGE IF THERE ARE A LOGOUT
@@ -122,14 +114,14 @@ class LoginRegisterForm extends StatelessWidget {
         NotificationServices.showSnackbar(errorMessage, context);
         loginForm.isLoading = false;
       }
-    }     
+    }
 
     return Form(
       key: loginForm.loginFormKey,
       autovalidateMode: AutovalidateMode.onUnfocus,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [              
+        children: [
           LoginTextFormField(
             obscureText: false,
             textInputType: TextInputType.emailAddress,
@@ -147,9 +139,9 @@ class LoginRegisterForm extends StatelessWidget {
                 : 'Formato de correo electrónico no válido';
             },
           ),
-              
+
           const SizedBox(height: 20),
-              
+
           LoginTextFormField(
             obscureText: loginForm.passwordObscure,
             textInputType: TextInputType.visiblePassword,
@@ -160,7 +152,7 @@ class LoginRegisterForm extends StatelessWidget {
             suffixIcon: IconButton(
               onPressed: () {
                 loginForm.passwordObscure = !loginForm.passwordObscure;
-              }, 
+              },
               icon: Icon(loginForm.passwordObscure
                 ? Icons.visibility_off_outlined
                 : Icons.visibility_outlined,
@@ -168,7 +160,7 @@ class LoginRegisterForm extends StatelessWidget {
               ),
             ),
             onChanged: (value) => loginForm.password = value,
-            onFieldSubmitted: (_) => sendLoginForm(),            
+            onFieldSubmitted: (_) => sendLoginForm(),
             validator: (value) {
               if (value != null && value.length >= 6) {
                 return null;
@@ -178,7 +170,7 @@ class LoginRegisterForm extends StatelessWidget {
               }
             },
           ),
-              
+
           const SizedBox(height: 40),
 
           AnimatedSwitcher(
@@ -190,12 +182,12 @@ class LoginRegisterForm extends StatelessWidget {
               ? SendLoginForm(key: const ValueKey('register_button'), onPressed: () async => sendLoginForm())
               : SendLoginForm(key: const ValueKey('login_button'), onPressed: () async => sendLoginForm()),
           ),
-    
+
           const SizedBox(height: 10),
-  
+
           TextButton(
             onPressed: () => loginForm.isRegister = !loginForm.isRegister,
-            child: 
+            child:
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 1250),
               layoutBuilder: (currentChild, previousChildren) {
@@ -209,9 +201,9 @@ class LoginRegisterForm extends StatelessWidget {
                   )
                 : Text(
                   key: const ValueKey('new_account_text'),
-                  'Crear una nueva cuenta', 
+                  'Crear una nueva cuenta',
                   style: TextStyle(color: colors.surface, fontWeight: FontWeight.bold)
-                  ), 
+                  ),
             ),
           ),
         ],
@@ -226,11 +218,11 @@ class LoginTextFormField extends StatelessWidget {
     required this.obscureText,
     this.textInputType,
     this.textInputAction,
-    required this.hintText, 
+    required this.hintText,
     required this.labelText,
     required this.icon,
-    this.suffixIcon, 
-    this.onChanged, 
+    this.suffixIcon,
+    this.onChanged,
     this.validator,
     this.onFieldSubmitted,
   });
@@ -320,20 +312,20 @@ class SendLoginForm extends StatelessWidget {
     return GestureDetector(
       child: CustomElevatedButton(
         width: 150,
-        onPressed: loginForm.isLoading 
-          ? null 
-          : onPressed,      
-        child: loginForm.isRegister 
+        onPressed: loginForm.isLoading
+          ? null
+          : onPressed,
+        child: loginForm.isRegister
           ? Text(
             key: const ValueKey('register_text'),
-            loginForm.isLoading ? 'Registrando' : 'Registrar', 
+            loginForm.isLoading ? 'Registrando' : 'Registrar',
             style: TextStyle(color: colors.primary, fontSize: 16)
           )
           : Text(
             key: const ValueKey('login_text'),
-            loginForm.isLoading ? 'Ingresando' : 'Ingresar', 
+            loginForm.isLoading ? 'Ingresando' : 'Ingresar',
             style: TextStyle(color: colors.primary, fontSize: 16)
-          ), 
+          ),
       ),
     );
   }

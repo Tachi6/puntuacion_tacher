@@ -100,7 +100,7 @@ class ChangeDisplayNameBox extends StatelessWidget {
                     await userService.updateUuidDisplayName(authService.tempDisplayName);
                     
                     final newRoute = MaterialPageRoute(
-                      builder: (context) => authService.userDisplayName == '' ? const EnterDisplayNameScreen() : const HomeScreen()
+                      builder: (context) => const CheckAuthScreen()
                     );
                     if (context.mounted) Navigator.pushReplacement(context, newRoute);
                     return;
