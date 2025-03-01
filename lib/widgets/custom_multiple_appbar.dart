@@ -62,6 +62,8 @@ class CustomMultipleAppBar extends StatelessWidget implements PreferredSizeWidge
           )
           : const SizedBox(width: 48),
 
+        if (!multipleService.isMultipleTasted && refreshQuiz == null) const SizedBox(width: 48),
+        
         if (multipleService.isMultipleTasted && changeOverview != null) IconButton(
           onPressed: changeOverview,
           icon: const Icon(Icons.autorenew_rounded)
