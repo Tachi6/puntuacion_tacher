@@ -346,7 +346,6 @@ class HiddenTasteButtons extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final winesService = Provider.of<WineServices>(context);
-    final taste = Provider.of<VisibleOptionsProvider>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
     final colors = Theme.of(context).colorScheme;
 
@@ -372,7 +371,6 @@ class HiddenTasteButtons extends StatelessWidget {
               final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
               if (wineSearched != null) {
                 wineForm.setEditSearchedWine(wineSearched);
-                taste.showContinueButton = true;
               }
             }
           },
@@ -394,9 +392,6 @@ class HiddenTasteButtons extends StatelessWidget {
             ],
           ),
           onPressed: () {
-              final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: false);
-              final taste = Provider.of<VisibleOptionsProvider>(context, listen: false);
-
               wineForm.setCreateNewWine();
                     
               showDialog(
@@ -409,11 +404,24 @@ class HiddenTasteButtons extends StatelessWidget {
                       title: 'Añadir vino al listado',
                       saveText: 'Guardar',
                       cancelText: 'Cancelar',
-                      onPressedSave: () {
+                      onPressedSave: () async {
+                        wineForm.autovalidateMode = AutovalidateMode.always;
+                        if (wineForm.wine.imagenVino != null && wineForm.wine.imagenVino != '') {
+                          final urlChecked = await winesService.isValidImage(wineForm.wine.imagenVino); // TODO circle progress de espera al await
+                          if (!urlChecked && context.mounted) {
+                            NotificationServices.showFlushBar('URL DE IMAGEN INCORRECTA', context);
+                            return;
+                          }
+                        }
+
                         if (wineForm.isValidForm()) {
                           wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
-                          taste.showContinueButton = true;
-                          Navigator.pop(context, 'Guardar');
+                          final String wineId = await winesService.createWine(wineForm.wine);
+                          wineForm.wine.id = wineId;
+                          // To chnage view and show enviar button
+                          wineForm.notifylisteners();
+                          if (context.mounted) Navigator.pop(context, 'Guardar');
+                          wineForm.autovalidateMode = AutovalidateMode.disabled;
                         }
                       },
                       onPressedCancel: () {

@@ -72,6 +72,10 @@ class CreateEditWineFormProvider extends ChangeNotifier {
     user = localId!;
   }
 
+  void notifylisteners() {
+    notifyListeners();
+  }
+
   void setEditSearchedWine(Wines defaultWine) {
     wine = defaultWine;
     notifyListeners();
