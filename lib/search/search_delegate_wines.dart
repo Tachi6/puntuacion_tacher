@@ -177,7 +177,7 @@ class NoResultsWine extends StatelessWidget {
               ? CustomElevatedButton(
                   width: 170,
                   height: 35, 
-                  onPressed: () {
+                  onPressed: () async {
                     // TODO pensar como hacrelo para varios sitios
 
 

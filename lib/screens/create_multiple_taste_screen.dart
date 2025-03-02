@@ -515,7 +515,7 @@ class MultipleActionsButtons extends StatelessWidget {
           CustomElevatedButton(
             width: 105,
             child: const Text('Guardar'),
-            onPressed: () async {
+            onPressed: () async { // TODO: isSending
               // Valido campo descripcion
               if (multipleTaste.multipleTaste.description.isEmpty || multipleTaste.multipleTaste.description.trim().isEmpty) {
                 NotificationServices.showSnackbar('La descripcion de la cata es obligatoria', context);
@@ -544,7 +544,7 @@ class MultipleActionsButtons extends StatelessWidget {
           CustomElevatedButton(
             width: 105,
             child: const Text('Realizar'),
-            onPressed: () async {
+            onPressed: () async { // TODO: isSending
               // Valido campo descripcion
               if (multipleTaste.multipleTaste.description.isEmpty || multipleTaste.multipleTaste.description.trim().isEmpty) {
                 NotificationServices.showSnackbar('La descripcion de la cata es obligatoria', context);

@@ -15,7 +15,7 @@ class CustomMultipleBottomSheet extends StatelessWidget {
   });
 
   final PageController pageController;
-  final void Function()? onPressed;
+  final Future<void> Function()? onPressed;
   final int totalPages;
 
   @override
@@ -40,7 +40,7 @@ class CustomMultipleBottomSheet extends StatelessWidget {
         child: Text(
           multipleService.isMultipleTasted
             ? 'Salir'
-            : 'Enviar Valoración',
+            : 'Enviar Valoración', // TODO: isSending
         ),
       ),
 

@@ -189,7 +189,7 @@ class _MultipleTasteScreenBodyState extends State<MultipleTasteScreenBody> {
       ),
       bottomSheet: CustomMultipleBottomSheet(
         pageController: pageController, 
-        onPressed: () {
+        onPressed: () async {
           onPressedBottomSheetButton(
             isValidQuiz: context.read<QuizProvider>().isValidQuiz(),
             questionList: context.read<QuizProvider>().editingQuestionList,

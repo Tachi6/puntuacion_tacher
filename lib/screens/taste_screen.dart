@@ -179,7 +179,7 @@ class _ContinueButton extends StatelessWidget {
       if (taste.showContinueButton) {
         return CustomElevatedButton(
           width: 150, 
-          onPressed: () {
+          onPressed: () async {
             if (taste.tasteMultiple == TasteOptionsMultiple.acceder) {
               final routeList = MaterialPageRoute(
                 builder: (context) => const PopScope(
@@ -309,7 +309,7 @@ class SendTasteButton extends StatelessWidget {
     return CustomElevatedButton(
       width: 170,
       height: 100/3,
-      onPressed: () async {
+      onPressed: () async { // TODO: isSending
         // Verifico si se has rellenado todos los campos del formulario
         if (!wineForm.isValidRating()) {
           NotificationServices.showSnackbar('RELLENA TODOS LOS CAMPOS', context);
@@ -391,7 +391,7 @@ class HiddenTasteButtons extends StatelessWidget {
               Text('Añadir', style: TextStyle(fontSize: 14, color: colors.outline), textAlign: TextAlign.center),
             ],
           ),
-          onPressed: () {
+          onPressed: () async {
               wineForm.setCreateNewWine();
                     
               showDialog(

@@ -307,7 +307,7 @@ class SettingsEndButtons extends StatelessWidget {
           Text('Logout', style: TextStyle(fontSize: 14), textAlign: TextAlign.center),
         ],
       ),
-      onPressed: () {
+      onPressed: () async {
         screenProvider.currentScreen = 0;
         screenProvider.multiplePage = 0;
         themeColor.setDefaultTheme();

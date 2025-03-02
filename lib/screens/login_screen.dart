@@ -298,7 +298,7 @@ class LoginTextFormField extends StatelessWidget {
 class SendLoginForm extends StatelessWidget {
   const SendLoginForm({super.key, this.onPressed});
 
-  final void Function()? onPressed;
+  final Future<void> Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -309,17 +309,15 @@ class SendLoginForm extends StatelessWidget {
     return GestureDetector(
       child: CustomElevatedButton(
         width: 150,
-        onPressed: loginForm.isLoading
+        onPressed: loginForm.isLoading 
           ? null
           : onPressed,
         child: loginForm.isRegister
           ? Text(
-            key: const ValueKey('register_text'),
             loginForm.isLoading ? 'Registrando' : 'Registrar',
             style: TextStyle(color: colors.primary, fontSize: 16)
           )
           : Text(
-            key: const ValueKey('login_text'),
             loginForm.isLoading ? 'Ingresando' : 'Ingresar',
             style: TextStyle(color: colors.primary, fontSize: 16)
           ),

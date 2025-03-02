@@ -49,7 +49,7 @@ class NotesCommentsBox extends StatelessWidget {
           width: 145,
           height: 42.5,
           color: colors.surfaceContainerHighest,
-          onPressed: () {
+          onPressed: () async {
             showBox(context, wineForm);
           },
           child: Text(titulo, style: TextStyle(color: colors.onSurface),),
