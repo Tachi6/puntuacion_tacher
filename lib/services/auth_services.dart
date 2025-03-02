@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 enum UserLoginStatus {notLogged, logged, registering}
 
 class AuthServices extends ChangeNotifier {
+  AuthServices() {print(_isUserLogued);}
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   
@@ -189,16 +190,21 @@ class AuthServices extends ChangeNotifier {
     final String? idToken = await storage.read(key: 'idToken');
     if (idToken == null) return UserLoginStatus.notLogged;
 
+    if (isUserLogued) {
+      await loadData();
+      return UserLoginStatus.logged;
+    }
+
     final String? email = await storage.read(key: 'email');
     final String? password = await storage.read(key: 'password');
     final String? resp = await loginUser(email!, password!);
     if (resp != null) return UserLoginStatus.notLogged;
     
     final String? displayName = await storage.read(key: 'displayName');
-    await loadData();
     if (displayName == '') return UserLoginStatus.registering;
 
     await Future.delayed(const Duration(milliseconds: 500));
+    await loadData();
     return UserLoginStatus.logged;
   }
 

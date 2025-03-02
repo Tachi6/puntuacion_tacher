@@ -97,21 +97,18 @@ class LoginRegisterForm extends StatelessWidget {
 
       if (errorMessage == null) {
 
-        if (!context.mounted) return;
-
         final newRoute = MaterialPageRoute(
           builder: (context) => authService.userDisplayName == '' ? const EnterDisplayNameScreen() : const CheckAuthScreen()
         );
         if (context.mounted) Navigator.pushReplacement(context, newRoute);
         // FOR NOT VIEW 'ingresar' MESSAGE IF THERE ARE A LOGOUT
-        await Future.delayed(const Duration(seconds: 1), () {
+        await Future.delayed(const Duration(milliseconds: 250), () {
           loginForm.isLoading = false;
           loginForm.isRegister = false;
         });
       }
       else {
-        if (!context.mounted) return;
-        NotificationServices.showSnackbar(errorMessage, context);
+        if (context.mounted) NotificationServices.showSnackbar(errorMessage, context);
         loginForm.isLoading = false;
       }
     }
