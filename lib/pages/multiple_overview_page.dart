@@ -31,12 +31,21 @@ class _MultipleOverviewPageState extends State<MultipleOverviewPage> with Automa
 
     return Scaffold(
       appBar: CustomMultipleAppBar(
-        refreshOverview: () async {
-          final Multiple multipleUpdated = await multipleService.loadMultipleToUpdate(multipleTaste.multipleName);
-          multipleTaste.initLoadedMultipleTaste(multipleUpdated);
-        },
-        changeOverview: () => multipleTaste.overview = !multipleTaste.overview,
-        allowActionButtons: true
+        actionButton1: multipleService.isMultipleTasted && multipleTaste.overview 
+          ? IconButton(
+            onPressed: () async {
+              final Multiple multipleUpdated = await multipleService.loadMultipleToUpdate(multipleTaste.multipleName);
+              multipleTaste.initLoadedMultipleTaste(multipleUpdated);
+            },
+            icon: const Icon(Icons.refresh_rounded),
+          )
+          : null,
+        actionButton2: multipleService.isMultipleTasted 
+          ? IconButton(
+            onPressed: () => multipleTaste.overview = !multipleTaste.overview,
+            icon: const Icon(Icons.autorenew_rounded)
+          )
+          : null,
       ),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 250),
@@ -223,7 +232,7 @@ class _OtherUsersTaste extends StatelessWidget {
         itemBuilder: (context, index) {
 
           final userService = Provider.of<UserServices>(context);
-          final String displayName = userService.obtainDisplayName(multipleTaste.otherUsersTaste()[index]); // TODO comprobar que funciona
+          final String displayName = userService.obtainDisplayName(multipleTaste.otherUsersTaste()[index]);
 
           return Container(
             margin: EdgeInsets.only(left: 10, right: index + 1 == multipleTaste.otherUsersTaste().length ? 10 : 0),

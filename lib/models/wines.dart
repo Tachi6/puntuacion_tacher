@@ -10,7 +10,6 @@ class Wines {
   String graduacion;
   String? id;
   String? imagenVino;
-  int? likes;
   String? logoBodega;
   String nombre;
   String notaBoca;
@@ -43,7 +42,6 @@ class Wines {
     required this.graduacion,
     this.id,
     this.imagenVino,
-    this.likes,
     this.logoBodega,
     required this.nombre,
     required this.notaBoca,
@@ -81,7 +79,6 @@ class Wines {
     graduacion: json["graduacion"],
     id: json["id"],
     imagenVino: json["imagenVino"],
-    likes: json["likes"],
     logoBodega: json["logoBodega"],
     nombre: json["nombre"],
     notaBoca: json["notaBoca"],
@@ -115,7 +112,6 @@ class Wines {
     "graduacion": graduacion,
     "id": id,
     "imagenVino": imagenVino,
-    "likes": likes,
     "logoBodega": logoBodega,
     "nombre": '$vino $anada',
     "notaBoca": notaBoca,
@@ -148,7 +144,6 @@ class Wines {
     graduacion: graduacion,
     id: id,
     imagenVino: imagenVino,
-    // likes: likes // TODO creo que no es necesario mandar el like en el copy, pues solo es para catar
     logoBodega: logoBodega,
     nombre: nombre,
     notaBoca: notaBoca,

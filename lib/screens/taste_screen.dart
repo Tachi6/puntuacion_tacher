@@ -226,7 +226,6 @@ class _ContinueButton extends StatelessWidget {
               Navigator.push(context, newRoute);
               // Para que cuadre la desaparicion del boton con el final de la animacion
               Future.delayed(const Duration(milliseconds: 300), () => taste.showContinueButton = false);
-              return;
             }
           },
         );
@@ -335,7 +334,6 @@ class SendTasteButton extends StatelessWidget {
         await winesService.saveTastedWine(wineTaste);
         // Lanzo la confirmacion
         if (context.mounted) showCustomDialog(context, child: PointsBox(wine: wineForm.wine, puntuacionFinal: wineForm.puntosFinal));
-        return;
       },
     );
   }

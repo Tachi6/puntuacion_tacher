@@ -24,6 +24,7 @@ class _QuizTastePageState extends State<QuizTastePage> with AutomaticKeepAliveCl
     super.build(context);
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final multipleService = Provider.of<MultipleServices>(context);
     const double padding = 10;
     final double width = multipleTaste.winesMultipleTaste.length < 3
       ? (MediaQuery.of(context).size.width / 2) - ((padding * 3) / 2)
@@ -32,12 +33,16 @@ class _QuizTastePageState extends State<QuizTastePage> with AutomaticKeepAliveCl
 
     return Scaffold(
       appBar: CustomMultipleAppBar(
-        allowActionButtons: true,
-        refreshQuiz: () async {
-          final reloadedQuestions = await context.read<QuizServices>().loadQuiz(multipleTaste.multipleTaste.name);
-          if (context.mounted) context.read<QuizProvider>().reloadQuestions(reloadedQuestions);
-        }
-      ), // TODO: RefreshIcon
+        actionButton2: multipleService.isMultipleTasted 
+          ? IconButton(
+            onPressed: () async {
+              final reloadedQuestions = await context.read<QuizServices>().loadQuiz(multipleTaste.multipleTaste.name);
+              if (context.mounted) context.read<QuizProvider>().reloadQuestions(reloadedQuestions);
+            },
+            icon: const Icon(Icons.refresh_rounded)
+          )
+          : null,
+      ),
       body: multipleTaste.multipleTaste.tasteQuiz! == 'simple' 
         ? SimpleTasteQuiz(width: width, style: style, padding: padding)
         : AdvancedTasteQuiz(width: width, style: style, padding: padding),

@@ -51,7 +51,7 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton> {
           isSending = true;
           setState(() {});
           await widget.onPressed!();
-          isSending = true;
+          isSending = false;
           setState(() {});
         },
       child: widget.customLabel ?? Text(

@@ -4,7 +4,7 @@ class WineTaste {
   String fecha;
   String id;
   String nombre;
-  String user; // TODO deberia venir email + displayName????
+  String user;
   double ratingVista;
   double ratingNariz;
   double ratingBoca;

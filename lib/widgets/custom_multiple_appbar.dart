@@ -3,27 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
-import 'package:puntuacion_tacher/services/services.dart';
 
 class CustomMultipleAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomMultipleAppBar({
     super.key, 
-    required this.allowActionButtons, 
-    this.refreshQuiz,
-    this.refreshOverview,
-    this.changeOverview
+    this.actionButton1,
+    this.actionButton2,
   });
 
-  final bool allowActionButtons;
-  final void Function()? refreshQuiz;
-  final void Function()? refreshOverview;
-  final void Function()? changeOverview;
+  final Widget? actionButton1;
+  final Widget? actionButton2;
 
   @override
   Widget build(BuildContext context) {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final multipleService = Provider.of<MultipleServices>(context);
     final screenProvider = Provider.of<ScreensProvider>(context);
     final size = MediaQuery.of(context).size;
     
@@ -54,27 +48,10 @@ class CustomMultipleAppBar extends StatelessWidget implements PreferredSizeWidge
             style: const TextStyle(fontSize: 20, height: 1.1)
           ),
         ),
-   
-        (multipleService.isMultipleTasted && multipleTaste.overview && refreshOverview != null && refreshQuiz == null) 
-          ? IconButton(
-            onPressed: refreshOverview,
-            icon: const Icon(Icons.refresh_rounded)
-          )
-          : const SizedBox(width: 48),
 
-        if (!multipleService.isMultipleTasted && refreshQuiz == null) const SizedBox(width: 48),
-        
-        if (multipleService.isMultipleTasted && changeOverview != null) IconButton(
-          onPressed: changeOverview,
-          icon: const Icon(Icons.autorenew_rounded)
-        ),
+        actionButton1 ?? const SizedBox(width: 48),
 
-        if (refreshQuiz != null) IconButton(
-          onPressed: refreshQuiz,
-          icon: const Icon(Icons.refresh_rounded)
-        ),
-
-        if (!allowActionButtons) const SizedBox(width: 48),
+        actionButton2 ?? const SizedBox(width: 48),
       ]
     );
   }
