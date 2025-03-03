@@ -32,6 +32,7 @@ class _QuizTastePageState extends State<QuizTastePage> with AutomaticKeepAliveCl
 
     return Scaffold(
       appBar: CustomMultipleAppBar(
+        allowActionButtons: true,
         refreshQuiz: () async {
           final reloadedQuestions = await context.read<QuizServices>().loadQuiz(multipleTaste.multipleTaste.name);
           if (context.mounted) context.read<QuizProvider>().reloadQuestions(reloadedQuestions);

@@ -8,7 +8,7 @@ import 'package:puntuacion_tacher/services/services.dart';
 class CustomMultipleAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomMultipleAppBar({
     super.key, 
-    this.allowActionButtons = false, 
+    required this.allowActionButtons, 
     this.refreshQuiz,
     this.refreshOverview,
     this.changeOverview
@@ -73,6 +73,8 @@ class CustomMultipleAppBar extends StatelessWidget implements PreferredSizeWidge
           onPressed: refreshQuiz,
           icon: const Icon(Icons.refresh_rounded)
         ),
+
+        if (!allowActionButtons) const SizedBox(width: 48),
       ]
     );
   }

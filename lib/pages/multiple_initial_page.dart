@@ -25,7 +25,9 @@ class _MultipleInitialPageState extends State<MultipleInitialPage> with Automati
     final styles = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: const CustomMultipleAppBar(),
+      appBar: const CustomMultipleAppBar(
+        allowActionButtons: false,
+      ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         height: double.infinity,
