@@ -188,11 +188,7 @@ class _ContinueButton extends StatelessWidget {
                   child: MultipleTasteScreen()
                 ),
               );
-              // TODO implements hidden???
-              // if (multipleSearched.hidden) {
-              //   multipleTaste.winesHiddenNumber = multipleSearched.wines.keys.length;
-              //   multipleTaste.addHiddenWines();
-              // }
+
               multipleTaste.initLoadedMultipleTaste(multipleService.loadMultipleTaste(multipleTaste.multipleName).copy());
               List<Wines> winesMultipleTaste = [];
               multipleTaste.multipleTaste.wines.forEach((key, value) {

@@ -68,11 +68,11 @@ class ChangeDisplayNameBox extends StatelessWidget {
                 ),
               ),
               
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
     
               const DisplayNameTextFormField(),
     
-              const SizedBox(height: 40),
+              const SizedBox(height: 35),
     
               CustomElevatedButton(
                 width: 150,
