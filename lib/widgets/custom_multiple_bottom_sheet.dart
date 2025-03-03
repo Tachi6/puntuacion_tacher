@@ -37,11 +37,12 @@ class CustomMultipleBottomSheet extends StatelessWidget {
         width: 170,
         height: 100/3,
         onPressed: onPressed,
-        child: Text(
-          multipleService.isMultipleTasted
-            ? 'Salir'
-            : 'Enviar Valoración', // TODO: isSending
-        ),
+        label: multipleService.isMultipleTasted
+          ? 'Salir'
+          : 'Valorar',
+        isSendingLabel: multipleService.isMultipleTasted
+          ? 'Salir'
+          : 'Valorando',
       ),
 
       leading: screenProvider.multiplePage == 0 

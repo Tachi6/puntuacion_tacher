@@ -12,7 +12,8 @@ class CustomAlertDialog extends StatelessWidget {
     this.onPressedCancel, 
     this.onPressedSave, 
     this.cancelText, 
-    this.saveText
+    this.saveText,
+    this.textAlign,
   });
 
   final String title;
@@ -21,6 +22,7 @@ class CustomAlertDialog extends StatelessWidget {
   final VoidCallback? onPressedSave;
   final String? cancelText;
   final String? saveText;
+  final TextAlign? textAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class CustomAlertDialog extends StatelessWidget {
         : colors.surfaceContainerLow,
       insetPadding: const EdgeInsets.all(20),
       actionsPadding: const EdgeInsets.only(bottom: 12, right: 16),
-      title: Text(title),
+      title: Text(title, textAlign: textAlign),
       content: content,
       actions: [
         if (cancelText != null) TextButton(

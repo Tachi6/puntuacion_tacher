@@ -76,8 +76,10 @@ class ChangeDisplayNameBox extends StatelessWidget {
     
               CustomElevatedButton(
                 width: 150,
-                child: Text('Comenzar', style: TextStyle(color: colors.primary, fontSize: 16)),
-                onPressed: () async { // TODO: isSending
+                label: 'Comenzar',
+                isSendingLabel: 'Comenzando',
+                style: TextStyle(color: colors.primary, fontSize: 16),
+                onPressed: () async {
                   FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
     
                   if (authService.tempDisplayName == '') {

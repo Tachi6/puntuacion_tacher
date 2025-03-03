@@ -299,7 +299,8 @@ class SettingsEndButtons extends StatelessWidget {
     return CustomElevatedButton(
       width: 135,
       height: 30,
-      child: const Row(
+      label: 'Logout',
+      customLabel: const Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [

@@ -80,7 +80,7 @@ class _MultipleTasteScreenBodyState extends State<MultipleTasteScreenBody> {
     final quizService = context.watch<QuizServices>();
     final quizProvider = context.watch<QuizProvider>();
 
-    void onPressedBottomSheetButton({required bool isValidQuiz, required List<Question> questionList}) async {
+    Future<void> onPressedBottomSheetButton({required bool isValidQuiz, required List<Question> questionList}) async {
       if (multipleService.isMultipleTasted) {
         Navigator.pop(context);
         multipleTaste.resetSettings();

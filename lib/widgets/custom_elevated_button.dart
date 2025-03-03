@@ -6,8 +6,10 @@ class CustomElevatedButton extends StatefulWidget {
   final double? height;
   final Color? color;
   final Future<void> Function()? onPressed;
-  final Widget child;
-  final Widget? isLoadingchild;
+  final String label;
+  final String? isSendingLabel;
+  final TextStyle? style;
+  final Widget? customLabel;
 
   const CustomElevatedButton({
     super.key, 
@@ -15,8 +17,10 @@ class CustomElevatedButton extends StatefulWidget {
     this.height, 
     this.color, 
     this.onPressed, 
-    required this.child,
-    this.isLoadingchild,
+    required this.label,
+    this.isSendingLabel,
+    this.style,
+    this.customLabel,
   });
 
   @override
@@ -25,7 +29,7 @@ class CustomElevatedButton extends StatefulWidget {
 
 class _CustomElevatedButtonState extends State<CustomElevatedButton> {
 
-  bool isLoading = false;
+  bool isSending = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,16 +45,21 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton> {
         backgroundColor: WidgetStatePropertyAll(widget.color ?? colors.surfaceContainerHigh),
         shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius))),
       ),
-      onPressed: () async {
-        isLoading = true;
-        setState(() {});
-        await widget.onPressed!();
-        isLoading = true;
-        setState(() {});
-      },
-      child: (isLoading && widget.isLoadingchild != null)  
-        ? widget.isLoadingchild
-        : widget.child,
+      onPressed: isSending 
+        ? null
+        : () async {
+          isSending = true;
+          setState(() {});
+          await widget.onPressed!();
+          isSending = true;
+          setState(() {});
+        },
+      child: widget.customLabel ?? Text(
+        isSending 
+          ? widget.isSendingLabel ?? widget.label 
+          : widget.label,
+        style: widget.style,
+      ),
     );
   }
 }

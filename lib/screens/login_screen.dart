@@ -96,7 +96,6 @@ class LoginRegisterForm extends StatelessWidget {
         : errorMessage = await authService.loginUser(loginForm.email, loginForm.password);
 
       if (errorMessage == null) {
-
         final newRoute = MaterialPageRoute(
           builder: (context) => authService.userDisplayName == '' ? const EnterDisplayNameScreen() : const CheckAuthScreen()
         );
@@ -309,18 +308,10 @@ class SendLoginForm extends StatelessWidget {
     return GestureDetector(
       child: CustomElevatedButton(
         width: 150,
-        onPressed: loginForm.isLoading 
-          ? null
-          : onPressed,
-        child: loginForm.isRegister
-          ? Text(
-            loginForm.isLoading ? 'Registrando' : 'Registrar',
-            style: TextStyle(color: colors.primary, fontSize: 16)
-          )
-          : Text(
-            loginForm.isLoading ? 'Ingresando' : 'Ingresar',
-            style: TextStyle(color: colors.primary, fontSize: 16)
-          ),
+        onPressed: onPressed,
+        label: loginForm.isRegister ? 'Registrar' : 'Ingresar',
+        isSendingLabel: loginForm.isRegister ? 'Registrando' : 'Ingresando',
+        style: TextStyle(color: colors.primary, fontSize: 16),
       ),
     );
   }

@@ -25,7 +25,8 @@ class PointsBox extends StatelessWidget {
     return PopScope(
       canPop: false,
       child: CustomAlertDialog(
-        title: 'Valoración', 
+        title: 'Valoración',
+        textAlign: TextAlign.center,
         content: SizedBox(
           width: 250,
           child: Column(

@@ -182,7 +182,7 @@ class NoResultsWine extends StatelessWidget {
 
 
                   },
-                  child: const Text('Añadir vino'),
+                  label: 'Añadir vino',
                 )
               : const SizedBox(
                 height: 35

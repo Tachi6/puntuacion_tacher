@@ -334,7 +334,7 @@ class NoResultsMultiple extends StatelessWidget {
                 );
                 Navigator.push(context, routeDetails);
               },
-              child: const Text('Crear cata múltiple'),
+             label: 'Crear cata múltiple',
             )
             : const SizedBox(
               height: 35,

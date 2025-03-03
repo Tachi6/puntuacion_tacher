@@ -178,7 +178,8 @@ class _ContinueButton extends StatelessWidget {
     Widget showContinueButton() {
       if (taste.showContinueButton) {
         return CustomElevatedButton(
-          width: 150, 
+          width: 150,
+          label: 'Continuar',
           onPressed: () async {
             if (taste.tasteMultiple == TasteOptionsMultiple.acceder) {
               final routeList = MaterialPageRoute(
@@ -213,7 +214,7 @@ class _ContinueButton extends StatelessWidget {
 
             if (taste.showThirdWidget) {
               // To reset RatingBox if multiple taste is used
-              screenProvider.multiplePage = 0;
+              screenProvider.multiplePage = 0; // TODO: poner provider mas abajo
 
               final newRoute = MaterialPageRoute(
                 builder: (context) => const PopScope(
@@ -223,11 +224,11 @@ class _ContinueButton extends StatelessWidget {
               );
         
               Navigator.push(context, newRoute);
-              taste.showContinueButton = false;
+              // Para que cuadre la desaparicion del boton con el final de la animacion
+              Future.delayed(const Duration(milliseconds: 300), () => taste.showContinueButton = false);
               return;
             }
           },
-          child: const Text('Continuar'),
         );
       }
       return const SizedBox();
@@ -309,7 +310,9 @@ class SendTasteButton extends StatelessWidget {
     return CustomElevatedButton(
       width: 170,
       height: 100/3,
-      onPressed: () async { // TODO: isSending
+      label: 'Valorar',
+      isSendingLabel: 'Valorando',
+      onPressed: () async {
         // Verifico si se has rellenado todos los campos del formulario
         if (!wineForm.isValidRating()) {
           NotificationServices.showSnackbar('RELLENA TODOS LOS CAMPOS', context);
@@ -327,14 +330,13 @@ class SendTasteButton extends StatelessWidget {
           ratingBoca: wineForm.ratingBoca,
           ratingPuntos: wineForm.ratingPuntos,              
         );
-        // Lanzo la confirmacion
-        if (context.mounted) showCustomDialog(context, child: PointsBox(wine: wineForm.wine, puntuacionFinal: wineForm.puntosFinal));
         // Actualizo el server con wine y añado nuevo wineTaste
         await winesService.updateWine(wineForm.wine);
         await winesService.saveTastedWine(wineTaste);
-        // }
+        // Lanzo la confirmacion
+        if (context.mounted) showCustomDialog(context, child: PointsBox(wine: wineForm.wine, puntuacionFinal: wineForm.puntosFinal));
+        return;
       },
-      child: const Text('Enviar Valoración'),
     );
   }
 }
@@ -354,8 +356,9 @@ class HiddenTasteButtons extends StatelessWidget {
       children: [
         CustomElevatedButton(
           width: 120,
-          height: 100/3, 
-          child: Row(
+          height: 100/3,
+          label: 'Buscar', 
+          customLabel: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(Icons.search, color: colors.outline),
@@ -381,7 +384,8 @@ class HiddenTasteButtons extends StatelessWidget {
         CustomElevatedButton(
           width: 120,
           height: 100/3,
-          child: Row(
+          label: 'Añadir',
+          customLabel: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(Icons.add, color: colors.outline),
