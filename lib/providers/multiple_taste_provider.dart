@@ -49,6 +49,21 @@ class MultipleTasteProvider extends ChangeNotifier {
     return formNameKey.currentState?.validate() ?? false;
   }
 
+  bool isNotReadyForQuiz() { // TODO: hacer funcionar, poder editar vino
+    List<bool> isEmptyField = [];
+    
+    for (Wines wine in winesMultipleTaste) {
+      if (wine.variedades == '') isEmptyField.add(true);
+      if (wine.graduacion == '') isEmptyField.add(true);
+      if (wine.notaVista == '') isEmptyField.add(true);
+      if (wine.notaNariz == '') isEmptyField.add(true);
+      if (wine.notaBoca == '') isEmptyField.add(true);      
+    }
+
+    return isEmptyField.contains(true);
+  }
+
+
   List<Wines> wineListShuffled() {
     final List<Wines> newWineList = [...winesMultipleTaste];
     newWineList.shuffle();

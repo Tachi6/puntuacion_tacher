@@ -513,7 +513,7 @@ class MultipleActionsButtons extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           CustomElevatedButton(
-            width: 105,
+            width: 120,
             label: 'Guardar',
             isSendingLabel: 'Guardando',
             onPressed: () async {
@@ -524,6 +524,10 @@ class MultipleActionsButtons extends StatelessWidget {
               }
               if (multipleTaste.multipleTaste.description.trim().length < 10) {
                 NotificationServices.showSnackbar('La descripcion de la cata muy corta', context);
+                return;
+              }
+              if (multipleTaste.isNotReadyForQuiz()) {
+                NotificationServices.showSnackbar('La informacion opcional de los vinos es obligatoria para el quiz', context);
                 return;
               }
               // Asigno nombre de cata definitivamente
@@ -543,7 +547,7 @@ class MultipleActionsButtons extends StatelessWidget {
           ),
 
           CustomElevatedButton(
-            width: 105,
+            width: 120,
             label: 'Entrar',
             isSendingLabel: 'Entrando',
             onPressed: () async {
@@ -554,6 +558,10 @@ class MultipleActionsButtons extends StatelessWidget {
               }
               if (multipleTaste.multipleTaste.description.trim().length < 10) {
                 NotificationServices.showSnackbar('La descripcion de la cata muy corta', context);
+                return;
+              }
+              if (multipleTaste.isNotReadyForQuiz()) {
+                NotificationServices.showSnackbar('El quiz necesita la informacion opcional de los vinos', context);
                 return;
               }
               // Asigno nombre de cata definitivamente

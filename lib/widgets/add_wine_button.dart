@@ -189,6 +189,31 @@ class CreateNewWineForm extends StatelessWidget {
               ),
          
               TextFormFieldGraduacion(wine: wine),
+
+              TextFormFieldText(
+                label: 'Notas de cata Vista', 
+                initialValue: wine.notaVista, 
+                onChanged: (value) => wine.notaVista = value, 
+                maxLines: 3, 
+                validator: null
+              ),
+
+              TextFormFieldText(
+                label: 'Notas de cata Nariz', 
+                initialValue: wine.notaNariz, 
+                onChanged: (value) => wine.notaNariz = value, 
+                maxLines: 3, 
+                validator: null
+              ),
+
+              TextFormFieldText(
+                label: 'Notas de cata Boca', 
+                initialValue: wine.notaBoca, 
+                onChanged: (value) => wine.notaBoca = value, 
+                maxLines: 3, 
+                validator: null
+              ),
+
           
               TextFormFieldText(
                 label: 'Descripción', 
@@ -200,8 +225,16 @@ class CreateNewWineForm extends StatelessWidget {
           
               TextFormFieldText(
                 label: 'Imagen del vino (url)', 
-                initialValue: '', 
+                initialValue: wine.imagenVino ?? '', 
                 onChanged: (value) => wine.imagenVino = value,
+                maxLines: 1, 
+                validator: null,
+              ),
+          
+              TextFormFieldText(
+                label: 'Logo de la bodega (url)', 
+                initialValue: wine.logoBodega ?? '', 
+                onChanged: (value) => wine.logoBodega = value,
                 maxLines: 1, 
                 validator: null,
               ),
