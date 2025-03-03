@@ -96,14 +96,6 @@ class _MultipleTasteScreenBodyState extends State<MultipleTasteScreenBody> {
         return;
       }
 
-      final int quizPage = multipleTaste.multipleTaste.tasteQuiz != null ? 1 : 0;
-      final int maxPageIndex = multipleTaste.winesMultipleTaste.length + 1 + quizPage;
-      pageProvider.multiplePage = maxPageIndex;
-      pageController.animateToPage(
-        maxPageIndex, 
-        duration: const Duration(milliseconds: 250), 
-        curve: Curves.easeInOut,           
-      );
       // Mando aviso de cata enviada
       NotificationServices.showSnackbar('Cata múltiple enviada', context);
       // Cargo la cata multiples para tener los ultimos cambios
@@ -121,10 +113,6 @@ class _MultipleTasteScreenBodyState extends State<MultipleTasteScreenBody> {
         await quizService.uploadUserQuiz(multipleName: multipleTaste.multipleTaste.name, questionList: questionList);
         quizProvider.reloadQuestions(quizService.selectedQuestionsList);
       }
-      // Desactivar que vuelvan a catar y moverme a la nueva ultima pagina
-      multipleService.isMultipleTasted = true;
-      pageController.jumpToPage(1 + quizPage); // TODO: brinca la pantalla
-      pageProvider.multiplePage = 1 + quizPage; // TODO: brinca la pantalla
       // Subo WineTaste del usuario
       await multipleService.createUserMultipleTaste(multipleName: multipleTaste.multipleTaste.name, userMultipleTaste: multipleTaste.userMultipleTaste);
       // Subo AverageRatings
@@ -135,6 +123,16 @@ class _MultipleTasteScreenBodyState extends State<MultipleTasteScreenBody> {
         await winesService.updateWine(WinesMapper.wineTasteToWines(wineTaste, wineFromServer, authService.userUuid));
         await winesService.saveTastedWine(wineTaste);
       }
+      // Desactivar que vuelvan a catar y moverme a la nueva ultima pagina
+      multipleService.isMultipleTasted = true;
+      final int quizPage = multipleTaste.multipleTaste.tasteQuiz != null ? 1 : 0;
+      final int maxPageIndex = 1 + quizPage;
+      pageProvider.multiplePage = maxPageIndex;
+      pageController.animateToPage(
+        maxPageIndex, 
+        duration: const Duration(milliseconds: 250), 
+        curve: Curves.easeInOut,           
+      );
     }
 
     List<Widget> tastePages() {
