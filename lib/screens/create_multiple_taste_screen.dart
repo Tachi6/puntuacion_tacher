@@ -48,9 +48,6 @@ class CreateMultipleTasteScreen extends StatelessWidget{
         scrolledUnderElevation: 0,
         forceMaterialTransparency: true,
       ),
-      // floatingActionButton: FloatingActionButton(onPressed: () => quizServices.createQuiz(multipleName: multipleTaste.multipleName, wineList: multipleTaste.winesMultipleTaste)),
-      // floatingActionButton: FloatingActionButton(onPressed: () => quizServices.uploadUserQuiz(multipleName: multipleTaste.multipleName, wineList: multipleTaste.winesMultipleTaste)),
-      // floatingActionButton: FloatingActionButton(onPressed: () => quizServices.loadQuiz(multipleTaste.multipleName)),
       body: Stack(
         children: [
           BottomImageBackground(image: 'assets/initial-multiple-background.jpg', opacity: opacity, bottomPadding: bottomPadding),
@@ -526,7 +523,7 @@ class MultipleActionsButtons extends StatelessWidget {
                 NotificationServices.showSnackbar('La descripcion de la cata muy corta', context);
                 return;
               }
-              if (multipleTaste.isNotReadyForQuiz()) {
+              if (multipleTaste.multipleTaste.tasteQuiz != null && multipleTaste.isNotReadyForQuiz()) {
                 NotificationServices.showSnackbar('La informacion opcional de los vinos es obligatoria para el quiz', context);
                 return;
               }
@@ -560,7 +557,7 @@ class MultipleActionsButtons extends StatelessWidget {
                 NotificationServices.showSnackbar('La descripcion de la cata muy corta', context);
                 return;
               }
-              if (multipleTaste.isNotReadyForQuiz()) {
+              if (multipleTaste.multipleTaste.tasteQuiz != null && multipleTaste.isNotReadyForQuiz()) {
                 NotificationServices.showSnackbar('El quiz necesita la informacion opcional de los vinos', context);
                 return;
               }

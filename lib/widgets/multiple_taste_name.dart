@@ -65,13 +65,13 @@ class _MultipleTasteNameState extends State<MultipleTasteName> {
                       if (value == '') {
                         return 'El nombre de la cata no puede estar vacio';
                       }
-                      const List<String> invalidCharacters = ['.', '\$', '#', '[', ']', '/'];
+                      const List<String> invalidCharacters = ['.', '\$', '#', '[', ']', '/', '<', '>', '&'];
                       bool isInvalidName = false; 
                       for (var character in invalidCharacters) {
                         if (value!.contains(character)) isInvalidName = true;
                       }
                       if (isInvalidName) {
-                        return 'Los caracteres . \$ # [ ] / no son permitidos.';
+                        return 'Los caracteres . \$ # [ ] / < > & no son permitidos.';
                       }
                       return null;
                     },
