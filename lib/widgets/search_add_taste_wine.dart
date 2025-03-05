@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/search/search_delegate_wines.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-class SearchTasteWine extends StatelessWidget {
+class SearchAddTasteWine extends StatelessWidget {
 
-  const SearchTasteWine({super.key});
+  const SearchAddTasteWine({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,7 @@ class SearchTasteWine extends StatelessWidget {
     );
 
     void onPressed() async {
+      wineForm.resetSettings();
       winesService.loadWines();
       if (context.mounted) {
         final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
@@ -64,30 +66,31 @@ class SearchTasteWine extends StatelessWidget {
 
               Row(
                 children: [
-                  SearchWineButton(
+                  CustomIconButton(
+                    icon: Icons.search,
                     onPressed: onPressed,
                   ),
 
-                  AddWineButton(
-                    onPressedSave: () async {
-                      wineForm.autovalidateMode = AutovalidateMode.always;
-                      if (wineForm.wine.imagenVino != null && wineForm.wine.imagenVino != '') {
-                        final urlChecked = await winesService.isValidImage(wineForm.wine.imagenVino); // TODO circle progress de espera al await
-                        if (!urlChecked && context.mounted) {
-                          NotificationServices.showFlushBar('URL DE IMAGEN INCORRECTA', context);
-                          return;
-                        }
-                      }
+                  CustomIconButton(
+                    icon: Icons.add,
+                    onPressed: () {
+                      wineForm.resetSettings();
 
-                      if (wineForm.isValidForm()) {
-                        wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
-                        final String wineId = await winesService.createWine(wineForm.wine);
-                        wineForm.wine.id = wineId;
-                        taste.showContinueButton = true;
-                        if (context.mounted) Navigator.pop(context, 'Guardar');
-                        wineForm.autovalidateMode = AutovalidateMode.disabled;
-                      }
-                    }, 
+                      final newRoute = MaterialPageRoute(
+                        builder: (context) => CreateEditWineScreen(
+                          saveEndAction: () {
+                            final newRoute = MaterialPageRoute(
+                              builder: (context) => const PopScope(
+                                canPop: false,
+                                child: SingleTacherScreen()
+                              ),
+                            );
+                            Navigator.pushReplacement(context, newRoute);
+                          },
+                        ),
+                      );
+                      Navigator.push(context, newRoute);
+                    }
                   ),
                 ],
               ),

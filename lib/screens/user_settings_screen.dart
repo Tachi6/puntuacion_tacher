@@ -301,10 +301,11 @@ class SettingsEndButtons extends StatelessWidget {
       height: 30,
       label: 'Logout',
       customLabel: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Icon(Icons.logout_outlined),
+          
           Text('Logout', style: TextStyle(fontSize: 14), textAlign: TextAlign.center),
         ],
       ),
@@ -312,7 +313,7 @@ class SettingsEndButtons extends StatelessWidget {
         screenProvider.currentScreen = 0;
         screenProvider.multiplePage = 0;
         themeColor.setDefaultTheme();
-        Navigator.popAndPushNamed(context, 'login');
+        Navigator.pushReplacementNamed(context, 'login');
         authService.logout();
       },
     );

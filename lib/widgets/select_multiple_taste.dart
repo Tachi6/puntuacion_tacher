@@ -64,10 +64,11 @@ class SelectMultipleTaste extends StatelessWidget {
                   onTap: onPressed,
                 ),
               ),
-    
-              SearchWineButton(
+
+              CustomIconButton(
                 onPressed: onPressed,
-              ),
+                icon: Icons.search, 
+              ),  
             ],
           ), 
         ],  

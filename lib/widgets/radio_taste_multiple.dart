@@ -31,6 +31,7 @@ class _RadioWidgetMultipleState extends State<RadioWidgetMultiple> {
   Widget build(BuildContext context) {
 
     final taste = Provider.of<VisibleOptionsProvider>(context);
+    final wineForm = Provider.of<CreateEditWineFormProvider>(context);
     final colors = Theme.of(context).colorScheme;
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     
@@ -51,6 +52,8 @@ class _RadioWidgetMultipleState extends State<RadioWidgetMultiple> {
               value: TasteOptionsMultiple.organizar, 
               groupValue: _taste, 
               onChanged: (TasteOptionsMultiple? value) {
+
+                wineForm.resetSettings();
                 _taste = value;
                 taste.tasteMultiple = value!;
                 multipleTaste.multipleName = '';
@@ -69,6 +72,8 @@ class _RadioWidgetMultipleState extends State<RadioWidgetMultiple> {
               value: TasteOptionsMultiple.acceder, 
               groupValue: _taste, 
               onChanged: (TasteOptionsMultiple? value) {
+
+                wineForm.resetSettings();
                 _taste = value;
                 taste.tasteMultiple = value!;
                 setState(() {});

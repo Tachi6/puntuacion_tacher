@@ -19,7 +19,7 @@ class _ValorationsScreenState extends State<ValorationsScreen> with AutomaticKee
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-      ),     
+      ),
       body: const ValorationCards(),
     );
   }

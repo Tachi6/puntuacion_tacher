@@ -14,6 +14,8 @@ export 'package:puntuacion_tacher/screens/tacher_screen.dart';
 export 'package:puntuacion_tacher/screens/taste_screen.dart';
 export 'package:puntuacion_tacher/screens/user_settings_screen.dart';
 export 'package:puntuacion_tacher/screens/valorations_screen.dart';
+export 'package:puntuacion_tacher/screens/create_edit_wine_screen.dart';
+export 'package:puntuacion_tacher/screens/single_tacher_screen.dart';
 
 
 

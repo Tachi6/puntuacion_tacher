@@ -545,8 +545,8 @@ class MultipleActionsButtons extends StatelessWidget {
 
           CustomElevatedButton(
             width: 120,
-            label: 'Entrar',
-            isSendingLabel: 'Entrando',
+            label: 'Acceder',
+            isSendingLabel: 'Accediendo',
             onPressed: () async {
               // Valido campo descripcion
               if (multipleTaste.multipleTaste.description.isEmpty || multipleTaste.multipleTaste.description.trim().isEmpty) {
@@ -600,8 +600,6 @@ class AddHideWines extends StatelessWidget {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final winesService = Provider.of<WineServices>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: false);
-    final taste = Provider.of<VisibleOptionsProvider>(context, listen: false);
-    final colors = Theme.of(context).colorScheme;
     final styles = Theme.of(context).textTheme;
 
     return Container(
@@ -617,7 +615,7 @@ class AddHideWines extends StatelessWidget {
             offset: const Offset(5, 0),
             child: Row(
               children: [
-                SearchWineButton(
+                CustomIconButton(
                   onPressed: () async {
                     winesService.loadWines();
                     if (context.mounted) {
@@ -631,39 +629,35 @@ class AddHideWines extends StatelessWidget {
                       if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
                     }
                   },
+                  icon: Icons.search,
                 ),
-                
-                AddWineButton(
-                  onPressedSave: () async {
-                    if (wineForm.wine.imagenVino != null && wineForm.wine.imagenVino != '') {
-                      final urlChecked = await winesService.isValidImage(wineForm.wine.imagenVino); // TODO circle progress de espera al await
-                      if (!urlChecked && context.mounted) {
-                        NotificationServices.showFlushBar('URL DE IMAGEN INCORRECTA', context);
-                        return;
-                      }
-                    }
 
-                    if (wineForm.isValidForm()) {
-                      wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
-                      final String wineId = await winesService.createWine(wineForm.wine);
-                      wineForm.wine.id = wineId;
-                      multipleTaste.addWine(wineForm.wine.copy());
-                      if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
-                      taste.showContinueButton = true;
-                      if (context.mounted) Navigator.pop(context, 'Guardar');
-                    }
+                CustomIconButton(
+                  onPressed: () async {
+                    wineForm.resetSettings();
+
+                    final newRoute = MaterialPageRoute(
+                      builder: (context) => PopScope(
+                        canPop: false,
+                        child: CreateEditWineScreen(
+                          saveEndAction: () {
+                            multipleTaste.addWine(wineForm.wine.copy());
+                            if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    );
+                    Navigator.push(context, newRoute);
                   },
+                  icon: Icons.add, 
                 ),
-            
-                IconButton(
+           
+                CustomIconButton(
                   onPressed: () => multipleTaste.hideAllWines(),
-                  icon: Icon(
-                    multipleTaste.multipleTaste.hidden
-                      ? Icons.visibility_off_rounded
-                      : Icons.visibility_rounded,
-                    color: colors.onSurface,
-                    size: 22
-                  ),
+                  icon: multipleTaste.multipleTaste.hidden
+                    ? Icons.visibility_off_rounded
+                    : Icons.visibility_rounded,
                 ),
               ],
             ),

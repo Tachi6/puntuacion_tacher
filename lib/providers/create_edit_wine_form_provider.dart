@@ -65,6 +65,8 @@ class CreateEditWineFormProvider extends ChangeNotifier {
     );
 
     notifyListeners();
+
+    print('Vino limpiado');
   }
 
   loadUser() async {
@@ -72,9 +74,10 @@ class CreateEditWineFormProvider extends ChangeNotifier {
     user = localId!;
   }
 
-  void notifylisteners() {
+  void setWineId(String wineId) {
+    wine.id = wineId;
     notifyListeners();
-  }
+  }    
 
   void setEditSearchedWine(Wines defaultWine) {
     wine = defaultWine;

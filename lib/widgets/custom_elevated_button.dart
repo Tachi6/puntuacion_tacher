@@ -41,6 +41,7 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton> {
     return ElevatedButton(
       style: ButtonStyle(
         fixedSize: WidgetStatePropertyAll(Size(widget.width, widget.height ?? defaultHeight)),
+        padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 15)),
         elevation: const WidgetStatePropertyAll(1),
         backgroundColor: WidgetStatePropertyAll(widget.color ?? colors.surfaceContainerHigh),
         shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius))),

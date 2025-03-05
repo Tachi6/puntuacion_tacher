@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
-import 'package:puntuacion_tacher/screens/home_screen.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class PointsBox extends StatelessWidget {
@@ -56,12 +55,9 @@ class PointsBox extends StatelessWidget {
           taste.clearWidgets();
           // Vuelvo a pantalla de inicio
           screenProvider.currentScreen = 0;
-          final routeDetails = MaterialPageRoute(
-            builder: (context) => const HomeScreen()
-          );
-          Navigator.pushReplacement(context, routeDetails);
-          // Elimino registros para poder valorar de nuevo (retaso para que cambie de pagina)
-          await Future.delayed(const Duration(milliseconds: 300));
+          // Cierro y elimino ventana de Tacher del context
+          if (context.mounted) Navigator.pop(context);
+          // Elimino registros para poder valorar de nuevo
           wineForm.resetSettings();
         },
       )

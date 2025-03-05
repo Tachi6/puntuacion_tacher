@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
-class SearchWineButton extends StatelessWidget {
-  const SearchWineButton({
-    super.key,
+class CustomIconButton extends StatelessWidget {
+  const CustomIconButton({
+    super.key, 
+    required this.icon,
     required this.onPressed,
   });
 
+  final IconData icon;
   final void Function()? onPressed;
 
   @override
@@ -16,7 +18,7 @@ class SearchWineButton extends StatelessWidget {
     return IconButton(
       onPressed: onPressed,
       icon: Icon(
-        Icons.search, 
+        icon, 
         color: colors.onSurface,
         size: 22
       ),

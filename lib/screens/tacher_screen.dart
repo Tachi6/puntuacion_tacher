@@ -53,6 +53,7 @@ class _TacherScreenState extends State<TacherScreen> with AutomaticKeepAliveClie
             ? const SingleChildScrollView(child: _CustomTacherBody(isLittleScreen: true))
             : const _CustomTacherBody(isLittleScreen: false),
           bottomSheet: widget.bottomSheet,
+          resizeToAvoidBottomInset: false,
         ),
       ],
     );

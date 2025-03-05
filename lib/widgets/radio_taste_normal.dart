@@ -51,7 +51,7 @@ class _RadioWidgetNormalState extends State<RadioWidgetNormal> {
               groupValue: _taste, 
               onChanged: (TasteOptionsNormal? value) {
 
-                wineForm.setCreateNewWine();
+                wineForm.resetSettings();
                 _taste = value;
                 taste.tasteNormal = value!;
                 taste.showContinueButton = false;
@@ -70,6 +70,8 @@ class _RadioWidgetNormalState extends State<RadioWidgetNormal> {
               value: TasteOptionsNormal.ciega, 
               groupValue: _taste, 
               onChanged: (TasteOptionsNormal? value) {
+
+                wineForm.resetSettings();
                 _taste = value;
                 taste.tasteNormal = value!;
                 taste.showContinueButton = true;
