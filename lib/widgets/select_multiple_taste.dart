@@ -13,7 +13,7 @@ class SelectMultipleTaste extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final taste = Provider.of<VisibleOptionsProvider>(context);
+    final taste = Provider.of<TasteOptionsProvider>(context);
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleServices>(context);
 

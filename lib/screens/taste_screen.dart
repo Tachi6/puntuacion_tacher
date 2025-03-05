@@ -112,7 +112,7 @@ class _ThirdFormWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final taste = Provider.of<VisibleOptionsProvider>(context);
+    final taste = Provider.of<TasteOptionsProvider>(context);
 
     Widget thirdRowWidget() {
       if (taste.showThirdWidget && taste.tasteNormal == TasteOptionsNormal.vino) return const SearchAddTasteWine();
@@ -140,7 +140,7 @@ class _SecondFormWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final taste = Provider.of<VisibleOptionsProvider>(context);
+    final taste = Provider.of<TasteOptionsProvider>(context);
 
     Widget secondRowWidget() {
       if (taste.showSecondWidget && taste.taste == TasteOptions.unica) return const RadioTasteNormal();
@@ -166,7 +166,7 @@ class _ContinueButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final taste = Provider.of<VisibleOptionsProvider>(context);
+    final taste = Provider.of<TasteOptionsProvider>(context);
     final authService = Provider.of<AuthServices>(context);
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleServices>(context);
@@ -202,8 +202,8 @@ class _ContinueButton extends StatelessWidget {
               }
               // Navego a siguiente pantalla
               Navigator.push(context, routeList);
-              taste.showContinueButton = false;
-              return;
+              // Limpio pagina del tastescreen
+              taste.clearOptions();
             }
 
             if (taste.showThirdWidget) {
@@ -216,10 +216,10 @@ class _ContinueButton extends StatelessWidget {
                   child: SingleTacherScreen()
                 ),
               );
-        
+              // Navego a siguiente pantalla
               Navigator.push(context, newRoute);
-              // Para que cuadre la desaparicion del boton con el final de la animacion
-              Future.delayed(const Duration(milliseconds: 300), () => taste.showContinueButton = false);
+              // Limpio pagina del tastescreen
+              taste.clearOptions();
             }
           },
         );

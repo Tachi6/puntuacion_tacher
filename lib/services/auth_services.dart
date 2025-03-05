@@ -8,7 +8,6 @@ import 'package:http/http.dart' as http;
 enum UserLoginStatus {notLogged, logged, registering}
 
 class AuthServices extends ChangeNotifier {
-  AuthServices() {print(_isUserLogued);}
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   

@@ -46,8 +46,8 @@ class NotesCommentsBox extends StatelessWidget {
       child: Container(
         alignment: Alignment.topLeft,
         child: CustomElevatedButton(
-          width: 145,
-          height: 42.5,
+          width: 150,
+          height: 45,
           color: colors.surfaceContainerHighest,
           label: titulo,
           onPressed: () async {

@@ -69,8 +69,7 @@ class SendTasteButton extends StatelessWidget {
     final winesService = Provider.of<WineServices>(context);
 
     return CustomElevatedButton(
-      width: 170,
-      height: 100/3,
+      width: 120,
       label: 'Valorar',
       isSendingLabel: 'Valorando',
       onPressed: () async {
@@ -116,7 +115,6 @@ class HiddenTasteButtons extends StatelessWidget {
       children: [
         CustomElevatedButton(
           width: 120,
-          height: 100/3,
           label: 'Buscar', 
           customLabel: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -142,7 +140,6 @@ class HiddenTasteButtons extends StatelessWidget {
                   
         CustomElevatedButton(
           width: 120,
-          height: 100/3,
           label: 'Añadir',
           customLabel: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -154,57 +151,16 @@ class HiddenTasteButtons extends StatelessWidget {
             ],
           ),
           onPressed: () async {
-              wineForm.setCreateNewWine();
+            wineForm.setCreateNewWine();
 
-              final newRoute = MaterialPageRoute(
-                builder: (context) => CreateEditWineScreen(
-                  saveEndAction: () {
-                    Navigator.pop(context);
-                  }
-                ),
-              );
-              Navigator.push(context, newRoute);
-
-                    
-              // showDialog(
-              //   barrierDismissible: false,
-              //   context: context,
-              //   builder: (BuildContext context) {
-              //     return PopScope(
-              //       canPop: false,
-              //       child: CustomAlertDialog(
-              //         title: 'Añadir vino al listado',
-              //         saveText: 'Guardar',
-              //         cancelText: 'Cancelar',
-              //         onPressedSave: () async {
-              //           wineForm.autovalidateMode = AutovalidateMode.always;
-              //           if (wineForm.wine.imagenVino != null && wineForm.wine.imagenVino != '') {
-              //             final urlChecked = await winesService.isValidImage(wineForm.wine.imagenVino); // TODO circle progress de espera al await
-              //             if (!urlChecked && context.mounted) {
-              //               NotificationServices.showFlushBar('URL DE IMAGEN INCORRECTA', context);
-              //               return;
-              //             }
-              //           }
-
-              //           if (wineForm.isValidForm()) {
-              //             wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
-              //             final String wineId = await winesService.createWine(wineForm.wine);
-              //             wineForm.wine.id = wineId;
-              //             // To chnage view and show enviar button
-              //             wineForm.notifylisteners();
-              //             if (context.mounted) Navigator.pop(context, 'Guardar');
-              //             wineForm.autovalidateMode = AutovalidateMode.disabled;
-              //           }
-              //         },
-              //         onPressedCancel: () {
-              //           wineForm.setCreateNewWine();
-              //           Navigator.pop(context, 'Cancelar');
-              //         },
-              //         content: CreateNewWineForm(wineForm),
-              //       ),
-              //     );
-              //   },
-              // );
+            final newRoute = MaterialPageRoute(
+              builder: (context) => CreateEditWineScreen(
+                saveEndAction: () {
+                  Navigator.pop(context);
+                }
+              ),
+            );
+            Navigator.push(context, newRoute);
           },
         ),
       ],

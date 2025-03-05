@@ -16,7 +16,7 @@ class PointsBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final taste = Provider.of<VisibleOptionsProvider>(context);
+    final taste = Provider.of<TasteOptionsProvider>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: true);
     final screenProvider = Provider.of<ScreensProvider>(context);
     final styles = Theme.of(context).textTheme;
@@ -52,7 +52,7 @@ class PointsBox extends StatelessWidget {
           // Cierro dialog
           Navigator.pop(context);
           // Limpio el taste_screen
-          taste.clearWidgets();
+          taste.clearOptions();
           // Vuelvo a pantalla de inicio
           screenProvider.currentScreen = 0;
           // Cierro y elimino ventana de Tacher del context

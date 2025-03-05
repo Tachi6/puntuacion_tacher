@@ -110,10 +110,7 @@ class SearchDelegateMultiple extends SearchDelegate{
   Widget buildResults(BuildContext context) {
 
     if(_filtro.isEmpty) {
-      return const NoResultsMultiple(
-        titleLabel: 'Cata múltiple no encontrada',
-        buttonLabel: 'Crear cata múltiple',
-      ); //noResultsMultiple(context);
+      return const NoResultsMultiple();
     } 
 
     return ListView.builder(
@@ -163,10 +160,7 @@ class SearchDelegateMultiple extends SearchDelegate{
     }).toList();
 
     if(_filtro.isEmpty) {
-      return const NoResultsMultiple(
-        titleLabel: 'Cata múltiple no encontrada',
-        buttonLabel: 'Crear cata múltiple',
-      ); //noResultsMultiple(context);
+      return const NoResultsMultiple();
     } 
 
     return ListView.builder(
@@ -290,14 +284,7 @@ class MultipleWineImage extends StatelessWidget {
 }
 
 class NoResultsMultiple extends StatelessWidget {
-  const NoResultsMultiple({
-    super.key, 
-    this.titleLabel, 
-    this.buttonLabel
-  });
-
-  final String? titleLabel;
-  final String? buttonLabel;
+  const NoResultsMultiple({super.key});
 
   @override
   Widget build(BuildContext context) {   
@@ -311,9 +298,11 @@ class NoResultsMultiple extends StatelessWidget {
           Container(
             alignment: Alignment.center,
             height: 40,
-            child: titleLabel != null 
-              ? Text(titleLabel!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16))
-              : null
+            child: const Text(
+              'Cata múltiple no encontrada', 
+              textAlign: TextAlign.center, 
+              style: TextStyle(fontSize: 16)
+            ),
           ),
           
           const SizedBox(height: 20),
@@ -322,23 +311,19 @@ class NoResultsMultiple extends StatelessWidget {
       
           const SizedBox(height: 20),
           
-          buttonLabel != null 
-            ? CustomElevatedButton(
-              width: 170,
-              height: 35, 
-              onPressed: () async {
-                Navigator.pop(context);
+          CustomElevatedButton(
+            width: 160,
+            height: 40, 
+            onPressed: () async {
+              Navigator.pop(context);
 
-                final routeDetails = MaterialPageRoute(
-                  builder: (context) => const CreateMultipleTasteScreen(),
-                );
-                Navigator.push(context, routeDetails);
-              },
-             label: 'Crear cata múltiple',
-            )
-            : const SizedBox(
-              height: 35,
-            )
+              final routeDetails = MaterialPageRoute(
+                builder: (context) => const CreateMultipleTasteScreen(),
+              );
+              Navigator.push(context, routeDetails);
+            },
+            label: 'Crear cata múltiple',
+          ),
         ],
       ),
     );

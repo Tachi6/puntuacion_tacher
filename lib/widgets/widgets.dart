@@ -2,7 +2,6 @@
 export 'package:puntuacion_tacher/widgets/custom_multiple_bottom_sheet.dart';
 export 'package:puntuacion_tacher/widgets/custom_multiple_appbar.dart';
 export 'package:puntuacion_tacher/widgets/bottom_image_background.dart';
-export 'package:puntuacion_tacher/widgets/coming_soon.dart';
 export 'package:puntuacion_tacher/widgets/custom_alert_dialog.dart';
 export 'package:puntuacion_tacher/widgets/custom_bottom_navigation_bar.dart';
 export 'package:puntuacion_tacher/widgets/custom_bottom_sheet.dart';
@@ -14,7 +13,6 @@ export 'package:puntuacion_tacher/widgets/list_best.dart';
 export 'package:puntuacion_tacher/widgets/list_top10.dart';
 export 'package:puntuacion_tacher/widgets/load_wine_image.dart';
 export 'package:puntuacion_tacher/widgets/login_background.dart';
-export 'package:puntuacion_tacher/widgets/material_box_button_style.dart';
 export 'package:puntuacion_tacher/widgets/multiple_taste_name.dart';
 export 'package:puntuacion_tacher/widgets/notes_comments_box.dart';
 export 'package:puntuacion_tacher/widgets/points_box.dart';

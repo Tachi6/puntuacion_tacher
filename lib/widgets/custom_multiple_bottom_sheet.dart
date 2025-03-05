@@ -34,8 +34,7 @@ class CustomMultipleBottomSheet extends StatelessWidget {
 
     return CustomBottomSheet(
       widgetButton: CustomElevatedButton(
-        width: 170,
-        height: 100/3,
+        width: 120,
         onPressed: onPressed,
         label: multipleService.isMultipleTasted
           ? 'Salir'

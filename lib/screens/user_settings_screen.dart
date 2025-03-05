@@ -297,15 +297,14 @@ class SettingsEndButtons extends StatelessWidget {
     final screenProvider = Provider.of<ScreensProvider>(context, listen: true);
 
     return CustomElevatedButton(
-      width: 135,
-      height: 30,
+      width: 120,
       label: 'Logout',
       customLabel: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(Icons.logout_outlined),
-          
+
           Text('Logout', style: TextStyle(fontSize: 14), textAlign: TextAlign.center),
         ],
       ),

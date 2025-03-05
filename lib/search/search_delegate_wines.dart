@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:diacritic/diacritic.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -63,9 +65,7 @@ class SearchDelegateWines extends SearchDelegate{
   Widget buildResults(BuildContext context) {
 
     if(_filtro.isEmpty) {
-      return NoResultsWine(
-        titleLabel: titleLabel,
-      );
+      return const NoResultsWine();
     }
 
     return ListView.builder(
@@ -89,7 +89,6 @@ class SearchDelegateWines extends SearchDelegate{
 
     final winesService = Provider.of<WineServices>(context);
 
-    // if (query.isEmpty) return const NoResultsWine();
     if (query.isEmpty) {
       _filtro = winesList;
     }
@@ -99,9 +98,7 @@ class SearchDelegateWines extends SearchDelegate{
     }).toList();
 
     if(_filtro.isEmpty) {
-      return NoResultsWine(
-        titleLabel: titleLabel,
-      );
+      return const NoResultsWine();
     }
 
     return ListView.builder(
@@ -138,19 +135,14 @@ class SingleWineImage extends StatelessWidget {
 }
 
 class NoResultsWine extends StatelessWidget {
-  const NoResultsWine({
-    super.key, 
-    this.titleLabel, 
-    this.buttonLabel,
-    this.needButton,
-  });
-
-  final String? titleLabel;
-  final String? buttonLabel;
-  final bool? needButton;
+  const NoResultsWine({super.key});
 
   @override
-  Widget build(BuildContext context) {   
+  Widget build(BuildContext context) {
+
+    final taste = Provider.of<TasteOptionsProvider>(context);
+    final wineForm = Provider.of<CreateEditWineFormProvider>(context);
+ 
     return Center(
       child: SingleChildScrollView(
         child: Column(
@@ -162,9 +154,11 @@ class NoResultsWine extends StatelessWidget {
             Container(
               alignment: Alignment.center,
               height: 40,
-              child: titleLabel != null
-                ? Text(titleLabel!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16))
-                : null,
+              child: const Text(
+                'Vino no encontrado', 
+                textAlign: TextAlign.center, 
+                style: TextStyle(fontSize: 16)
+              ),
             ),
             
             const SizedBox(height: 20),
@@ -173,20 +167,32 @@ class NoResultsWine extends StatelessWidget {
         
             const SizedBox(height: 20),
         
-            buttonLabel != null 
-              ? CustomElevatedButton(
-                  width: 170,
-                  height: 35, 
-                  onPressed: () async {
-                    // TODO pensar como hacrelo para varios sitios
+            CustomElevatedButton(
+              width: 160,
+              height: 40, 
+              onPressed: () async {
+                Navigator.pop(context);
 
+                wineForm.resetSettings();
 
-                  },
-                  label: 'Añadir vino',
-                )
-              : const SizedBox(
-                height: 35
-              ),
+                final newRoute = MaterialPageRoute(
+                  builder: (context) => CreateEditWineScreen(
+                    saveEndAction: () {
+                      final newRoute = MaterialPageRoute(
+                        builder: (context) => const PopScope(
+                          canPop: false,
+                          child: SingleTacherScreen()
+                        ),
+                      );
+                      Navigator.pushReplacement(context, newRoute);
+                      taste.clearOptions();
+                    },
+                  ),
+                );
+                Navigator.push(context, newRoute);
+              },
+              label: 'Crear nuevo vino',
+            )
           ],
         ),
       ),

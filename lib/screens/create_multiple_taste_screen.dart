@@ -129,26 +129,6 @@ class _CustomAppBar extends StatelessWidget {
 class _CustomBody extends StatelessWidget {
   const _CustomBody();
 
-  void showCustomDialog(BuildContext context, {required Widget child}) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: false, 
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return PopScope(
-          canPop: false,
-          child: child,
-        );
-      },
-      transitionDuration: const Duration(milliseconds: 300),
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return ScaleTransition(
-          scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
-          child: child
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -501,6 +481,7 @@ class MultipleActionsButtons extends StatelessWidget {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleServices>(context);
     final authService = Provider.of<AuthServices>(context);
+    final taste = Provider.of<TasteOptionsProvider>(context);
 
     return Container(
       height: 58,
@@ -580,6 +561,7 @@ class MultipleActionsButtons extends StatelessWidget {
                 builder: (context) => const MultipleTasteScreen()
               );
               if (context.mounted) Navigator.pushReplacement(context, routeList);
+              taste.clearOptions();
             },
           ),
 

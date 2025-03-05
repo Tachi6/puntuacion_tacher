@@ -16,7 +16,7 @@ class SearchAddTasteWine extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final winesService = Provider.of<WineServices>(context);
-    final taste = Provider.of<VisibleOptionsProvider>(context);
+    final taste = Provider.of<TasteOptionsProvider>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
 
     final textEditingController = TextEditingController(
@@ -32,9 +32,6 @@ class SearchAddTasteWine extends StatelessWidget {
         if (wineSearched != null) {
           wineForm.setEditSearchedWine(wineSearched);
           taste.showContinueButton = true;
-        }
-        else {
-          taste.showContinueButton = false;
         }
       }
     }
@@ -86,6 +83,7 @@ class SearchAddTasteWine extends StatelessWidget {
                               ),
                             );
                             Navigator.pushReplacement(context, newRoute);
+                            taste.clearOptions();
                           },
                         ),
                       );

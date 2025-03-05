@@ -43,8 +43,6 @@ class MultipleServices extends ChangeNotifier {
     // Asigno nuevo listado
     multipleTasteList = tempMultipleTasteList;
 
-    print('catas multiple cargadas');
-
     notifyListeners();
   }
 
@@ -59,8 +57,6 @@ class MultipleServices extends ChangeNotifier {
     // Añado al listado cada una de las catas multiples
     // Asigno nuevo listado
     multipleTasteList = [...multipleTasteList, multipleUpdated];
-
-    print('catas multiple unica cargada');
 
     notifyListeners();
     

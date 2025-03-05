@@ -37,13 +37,13 @@ class CreateEditWineScreen extends StatelessWidget {
             icon: const Icon(Icons.arrow_back)
           ),
         ),
-        body: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, bottom: wineForm.isValidForm() ? 58 : 0),
-          child: const SingleChildScrollView(
+        body: const Padding(
+          padding: EdgeInsets.only(left: 20, right: 20, bottom: 58),
+          child: SingleChildScrollView(
             child: CreateEditWineForm()  
           ),
         ),
-        bottomSheet: wineForm.isValidForm() ? _FixedBottomSheet(saveEndAction) : null,
+        bottomSheet: _FixedBottomSheet(saveEndAction), // TODO hacer desaparecer y aparecer
         resizeToAvoidBottomInset: false,
       ),
     );
@@ -90,13 +90,17 @@ class _FixedBottomSheet extends StatelessWidget {
               if (wineForm.wine.imagenVino != null && wineForm.wine.imagenVino != '') {
                 final urlChecked = await winesService.isValidImage(wineForm.wine.imagenVino);
                 if (!urlChecked && context.mounted) {
-                  NotificationServices.showFlushBar('URL DE IMAGEN INCORRECTA', context);
+                  NotificationServices.showFlushBar('URL DE IMAGEN DE VINO INCORRECTA', context);
                   return;
                 }
               }
-
-              // TODO: url logo bodega
-    
+              if (wineForm.wine.logoBodega != null && wineForm.wine.logoBodega != '') {
+                final urlChecked = await winesService.isValidImage(wineForm.wine.logoBodega);
+                if (!urlChecked && context.mounted) {
+                  NotificationServices.showFlushBar('URL DE LOGO BODEGA INCORRECTA', context);
+                  return;
+                }
+              }
               if (wineForm.isValidForm()) {
                 wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
                 final String wineId = await winesService.createWine(wineForm.wine);
@@ -139,7 +143,7 @@ class CreateEditWineForm extends StatelessWidget {
     return Form(
       key: wineFormProvider.formKey,
       autovalidateMode: wineFormProvider.autovalidateMode,
-      child: Column(
+      child: Column( // TODO:gestionar scroll para que suba mas
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -175,13 +179,13 @@ class CreateEditWineForm extends StatelessWidget {
           TextFormFieldSearch(
             label: 'Region', 
             wine: wine, 
-            autocompleteWidth: size.width * 0.8
+            autocompleteWidth: size.width - 40
           ),
     
           TextFormFieldSearch(
             label: 'Tipo', 
             wine: wine, 
-            autocompleteWidth: size.width * 0.8
+            autocompleteWidth: size.width - 40
           ),
           
           TextFormFieldText(
@@ -451,7 +455,7 @@ class TextFormFieldSearch extends StatelessWidget {
       },
       fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
         
-        // if (label == 'Region') {
+        // if (label == 'Region') { // TODO: esto comentado es necesario???
         //   fieldTextEditingController.text = wine.region;
         // }
 
@@ -508,8 +512,8 @@ class TextFormFieldSearch extends StatelessWidget {
                     onTap: () => onSelected(option),
                     title: Text(option, style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),),
                     tileColor: themeColor.isDarkMode
-                      ? colors.surfaceContainer
-                      : colors.surfaceContainerLow,
+                      ? colors.inverseSurface
+                      : colors.surface,
                   );
                 },
               ),
