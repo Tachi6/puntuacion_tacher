@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
 
-
 enum TasteOptions { empty, unica, multiple }
 
 class RadioTaste extends StatelessWidget {
@@ -13,24 +12,8 @@ class RadioTaste extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const RadioWidget();
-  }
-}
 
-class RadioWidget extends StatefulWidget {
-  const RadioWidget({super.key});
-
-  @override
-  State<RadioWidget> createState() => _RadioWidgetState();
-}
-
-class _RadioWidgetState extends State<RadioWidget> {
-  TasteOptions? _taste;  //  = TasteOptions.normal
-
-  @override
-  Widget build(BuildContext context) {
-
-    final taste = Provider.of<VisibleOptionsProvider>(context);
+    final taste = Provider.of<TasteOptionsProvider>(context);
     final colors = Theme.of(context).colorScheme;
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
         
@@ -51,13 +34,11 @@ class _RadioWidgetState extends State<RadioWidget> {
                   contentPadding: const EdgeInsets.all(0),
                   subtitle: Text('Catar un único vino', style: TextStyle(fontSize:12, color: colors.outline)),
                   title: const Text('Cata única', style: TextStyle(fontSize: 14)),
-                  value: TasteOptions.unica, 
-                  groupValue: _taste, 
+                  value: TasteOptions.unica,
+                  groupValue: taste.taste, 
                   onChanged: (TasteOptions? value) {
-                    _taste = value;
                     taste.taste = value!;
                     multipleTaste.multipleName = '';
-                    setState(() {});
                   },
                 ),
               ),
@@ -69,11 +50,9 @@ class _RadioWidgetState extends State<RadioWidget> {
                   subtitle: Text('Catar varios vinos', style: TextStyle(fontSize: 12, color: colors.outline)),
                   title: const Text('Cata múltiple', style: TextStyle(fontSize: 14)),
                   value: TasteOptions.multiple, 
-                  groupValue: _taste, 
+                  groupValue: taste.taste, 
                   onChanged: (TasteOptions? value) {
-                    _taste = value;
                     taste.taste = value!;
-                    setState(() {});
                   },
                 ),
               ),

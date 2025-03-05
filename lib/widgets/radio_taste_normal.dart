@@ -13,24 +13,8 @@ class RadioTasteNormal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const RadioWidgetNormal();
-  }
-}
 
-class RadioWidgetNormal extends StatefulWidget {
-  const RadioWidgetNormal({super.key});
-
-  @override
-  State<RadioWidgetNormal> createState() => _RadioWidgetNormalState();
-}
-
-class _RadioWidgetNormalState extends State<RadioWidgetNormal> {
-  TasteOptionsNormal? _taste;  //  = TasteOptions.normal
-
-  @override
-  Widget build(BuildContext context) {
-
-    final taste = Provider.of<VisibleOptionsProvider>(context);
+    final taste = Provider.of<TasteOptionsProvider>(context);
     final colors = Theme.of(context).colorScheme;
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
 
@@ -48,15 +32,11 @@ class _RadioWidgetNormalState extends State<RadioWidgetNormal> {
               subtitle: Text('Catar vino del listado o añadirlo', style: TextStyle(fontSize:12, color: colors.outline)),
               title: const Text('Cata con referencia', style: TextStyle(fontSize: 14)),
               value: TasteOptionsNormal.vino, 
-              groupValue: _taste, 
+              groupValue: taste.tasteNormal, 
               onChanged: (TasteOptionsNormal? value) {
-
                 wineForm.resetSettings();
-                _taste = value;
                 taste.tasteNormal = value!;
                 taste.showContinueButton = false;
-
-                setState(() {});
               },
             ),
           ),
@@ -68,15 +48,11 @@ class _RadioWidgetNormalState extends State<RadioWidgetNormal> {
               subtitle: Text('Catar sin referencias del vino', style: TextStyle(fontSize: 12, color: colors.outline)),
               title: const Text('Cata a ciegas individual', style: TextStyle(fontSize: 14)),
               value: TasteOptionsNormal.ciega, 
-              groupValue: _taste, 
+              groupValue: taste.tasteNormal, 
               onChanged: (TasteOptionsNormal? value) {
-
                 wineForm.resetSettings();
-                _taste = value;
                 taste.tasteNormal = value!;
                 taste.showContinueButton = true;
-
-                setState(() {});
               },
             ),
           )

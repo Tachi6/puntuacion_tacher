@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-class VisibleOptionsProvider extends ChangeNotifier {
+class TasteOptionsProvider extends ChangeNotifier {
 
   TasteOptions _taste = TasteOptions.empty;
   TasteOptionsNormal _tasteNormal = TasteOptionsNormal.empty;
@@ -23,7 +23,6 @@ class VisibleOptionsProvider extends ChangeNotifier {
     _showSecondWidget = true;
     _showThirdWidget = false;
     _showContinueButton = false;
-
     notifyListeners();
   }
 
@@ -58,10 +57,8 @@ class VisibleOptionsProvider extends ChangeNotifier {
 
   set showThirdWidget(bool value) {
     _showThirdWidget = value;
-
     notifyListeners();
   }
-
 
   bool get showSecondWidget {
     return _showSecondWidget;
@@ -69,7 +66,6 @@ class VisibleOptionsProvider extends ChangeNotifier {
 
   set showSecondWidget(bool value) {
     _showSecondWidget = value;
-
     notifyListeners();
   }
 
@@ -79,19 +75,16 @@ class VisibleOptionsProvider extends ChangeNotifier {
 
   set showContinueButton(bool value) {
     _showContinueButton = value;
-
     notifyListeners();
   }
 
-  void clearWidgets() {
-    _showContinueButton = false;
-    _showThirdWidget = false;
-    _tasteMultiple = TasteOptionsMultiple.empty;
-    _tasteNormal = TasteOptionsNormal.empty;
-    _showSecondWidget = false;
+  void clearOptions() {
     _taste = TasteOptions.empty;
-
+    _tasteNormal = TasteOptionsNormal.empty;
+    _tasteMultiple = TasteOptionsMultiple.empty;
+    _showSecondWidget = false;
+    _showThirdWidget = false;
+    _showContinueButton = false;
     notifyListeners();
   }
-
 }

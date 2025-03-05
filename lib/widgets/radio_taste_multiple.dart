@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
 
-
 enum TasteOptionsMultiple { empty, acceder, organizar }
 
 class RadioTasteMultiple extends StatelessWidget {
@@ -13,24 +12,8 @@ class RadioTasteMultiple extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const RadioWidgetMultiple();
-  }
-}
 
-class RadioWidgetMultiple extends StatefulWidget {
-  const RadioWidgetMultiple({super.key});
-
-  @override
-  State<RadioWidgetMultiple> createState() => _RadioWidgetMultipleState();
-}
-
-class _RadioWidgetMultipleState extends State<RadioWidgetMultiple> {
-  TasteOptionsMultiple? _taste;  //  = TasteOptions.normal
-
-  @override
-  Widget build(BuildContext context) {
-
-    final taste = Provider.of<VisibleOptionsProvider>(context);
+    final taste = Provider.of<TasteOptionsProvider>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
     final colors = Theme.of(context).colorScheme;
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
@@ -50,15 +33,12 @@ class _RadioWidgetMultipleState extends State<RadioWidgetMultiple> {
               subtitle: Text('Crea una nueva cata múltiple', style: TextStyle(fontSize: 12, color: colors.outline)),
               title: const Text('Crear cata múltiple', style: TextStyle(fontSize: 14)),
               value: TasteOptionsMultiple.organizar, 
-              groupValue: _taste, 
+              groupValue: taste.tasteMultiple, 
               onChanged: (TasteOptionsMultiple? value) {
-
                 wineForm.resetSettings();
-                _taste = value;
                 taste.tasteMultiple = value!;
                 multipleTaste.multipleName = '';
                 taste.showContinueButton = false;
-                setState(() {});
               },
             ),
           ),
@@ -70,13 +50,10 @@ class _RadioWidgetMultipleState extends State<RadioWidgetMultiple> {
               subtitle: Text('Accede a una cata múltiple ya creada', style: TextStyle(fontSize:12, color: colors.outline)),
               title: const Text('Acceder a cata mútiple', style: TextStyle(fontSize: 14)),
               value: TasteOptionsMultiple.acceder, 
-              groupValue: _taste, 
+              groupValue: taste.tasteMultiple, 
               onChanged: (TasteOptionsMultiple? value) {
-
                 wineForm.resetSettings();
-                _taste = value;
                 taste.tasteMultiple = value!;
-                setState(() {});
               },
             ),
           ),
