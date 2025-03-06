@@ -9,8 +9,6 @@ enum UserLoginStatus {notLogged, logged, registering}
 
 class AuthServices extends ChangeNotifier {
 
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  
   final String _baseUrl = 'identitytoolkit.googleapis.com';
   final String _firebaseToken = 'AIzaSyAgjYaZLrRcGjzh0nDCYnFMeP5pMDnq_zA';
   final String _unencodedPathRegister = '/v1/accounts:signUp';
@@ -25,10 +23,6 @@ class AuthServices extends ChangeNotifier {
   bool _isUserLogued = false;
 
   final storage = const FlutterSecureStorage();
-
-  bool isValidLoginRegister() {
-    return formKey.currentState?.validate() ?? false;
-  }
 
   // Si retornamos algo es un error, sino todo esta bien
   Future<String?> createUser(String email, String password) async {

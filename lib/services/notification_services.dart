@@ -4,8 +4,6 @@ import 'package:another_flushbar/flushbar.dart';
 
 class NotificationServices {
 
-  // static GlobalKey<ScaffoldMessengerState> messengerKey = GlobalKey<ScaffoldMessengerState>();
-
   static showSnackbar(String message, BuildContext context) {
     final snackBar = SnackBar(
       padding: const EdgeInsets.symmetric(vertical: 19),
