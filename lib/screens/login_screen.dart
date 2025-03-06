@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
-import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -87,8 +86,6 @@ class LoginRegisterForm extends StatelessWidget {
 
       if ( !loginForm.isValidForm() ) return;
 
-      loginForm.isLoading = true;
-
       final String? errorMessage;
 
       loginForm.isRegister
@@ -96,19 +93,14 @@ class LoginRegisterForm extends StatelessWidget {
         : errorMessage = await authService.loginUser(loginForm.email, loginForm.password);
 
       if (errorMessage == null) {
-        final newRoute = MaterialPageRoute(
-          builder: (context) => authService.userDisplayName == '' ? const EnterDisplayNameScreen() : const CheckAuthScreen()
-        );
-        if (context.mounted) Navigator.pushReplacement(context, newRoute);
+        if (context.mounted) Navigator.popAndPushNamed(context, 'checkingAuth');
         // FOR NOT VIEW 'ingresar' MESSAGE IF THERE ARE A LOGOUT
         await Future.delayed(const Duration(milliseconds: 250), () {
-          loginForm.isLoading = false;
           loginForm.isRegister = false;
         });
       }
       else {
         if (context.mounted) NotificationServices.showSnackbar(errorMessage, context);
-        loginForm.isLoading = false;
       }
     }
 

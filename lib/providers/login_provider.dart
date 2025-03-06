@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class LoginProvider extends ChangeNotifier {
@@ -10,16 +9,9 @@ class LoginProvider extends ChangeNotifier {
   String email = '';
   String password = '';
 
-  bool _isLoading = false;
   bool _isRegister = false;
 
-  bool get isLoading => _isLoading;
   bool get isRegister => _isRegister;
-
-  set isLoading( bool value ) {
-    _isLoading = value;
-    notifyListeners();
-  }
 
   set isRegister( bool value ) {
     _isRegister = value;
@@ -36,5 +28,4 @@ class LoginProvider extends ChangeNotifier {
     _passwordObscure = value;
     notifyListeners();
   }
-
 }
