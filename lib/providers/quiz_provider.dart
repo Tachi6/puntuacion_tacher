@@ -21,25 +21,26 @@ class QuizProvider extends ChangeNotifier {
     required this.quizType, 
     required this.hidden, 
   }){
-    _selectedUser = defaultUser;
-
-    if (defaultQuestionList.first.answer != null && !defaultQuestionList.first.answer!.containsKey(defaultUser)) {
-      for (int i = 0; i < wineSequence.length; i++) {
-        final String wineId = wineSequence[i];
-        final Question tempQuestion = Question(
-          correctAnswer: i + 1, 
-          wineId: wineId,
-          answer: {
-            defaultUser: Answer(
-              user: defaultUser,
-              answerWine: (!hidden && quizType == 'advanced') ? null : -1,
-              answerEyes: quizType == 'advanced' ? -1 : null,
-              answerNose: quizType == 'advanced' ? -1 : null,
-              answerMouth: quizType == 'advanced' ? -1 : null,
-            ),
-          },
-        );
-        editingQuestionList = [...editingQuestionList, tempQuestion]; 
+    if (quizType != null) {
+      _selectedUser = defaultUser;
+      if (defaultQuestionList.first.answer != null && !defaultQuestionList.first.answer!.containsKey(defaultUser)) {
+        for (int i = 0; i < wineSequence.length; i++) {
+          final String wineId = wineSequence[i];
+          final Question tempQuestion = Question(
+            correctAnswer: i + 1, 
+            wineId: wineId,
+            answer: {
+              defaultUser: Answer(
+                user: defaultUser,
+                answerWine: (!hidden && quizType == 'advanced') ? null : -1,
+                answerEyes: quizType == 'advanced' ? -1 : null,
+                answerNose: quizType == 'advanced' ? -1 : null,
+                answerMouth: quizType == 'advanced' ? -1 : null,
+              ),
+            },
+          );
+          editingQuestionList = [...editingQuestionList, tempQuestion]; 
+        }
       }
     }
   }
