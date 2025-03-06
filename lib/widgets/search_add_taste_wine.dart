@@ -87,8 +87,8 @@ class _SearchAddTasteWineState extends State<SearchAddTasteWine> {
                   CustomIconButton(
                     icon: Icons.add,
                     onPressed: () {
-                      textEditingController.text = '';
-                      
+                      textEditingController.clear();
+
                       wineForm.resetSettings();
 
                       final newRoute = MaterialPageRoute(

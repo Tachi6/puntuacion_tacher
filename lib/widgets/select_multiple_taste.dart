@@ -7,9 +7,28 @@ import 'package:puntuacion_tacher/search/search.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-class SelectMultipleTaste extends StatelessWidget {
+class SelectMultipleTaste extends StatefulWidget {
   const SelectMultipleTaste({super.key});
 
+  @override
+  State<SelectMultipleTaste> createState() => _SelectMultipleTasteState();
+}
+
+class _SelectMultipleTasteState extends State<SelectMultipleTaste> {
+
+  late TextEditingController textEditingController;
+
+  @override
+  void initState() {
+    super.initState();
+    textEditingController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    textEditingController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -17,24 +36,19 @@ class SelectMultipleTaste extends StatelessWidget {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleServices>(context);
 
-    final nameSearchedController = TextEditingController(
-      text: multipleTaste.multipleName, 
-    );
-
     void onPressed() async {
       multipleService.loadMultiples();
-      // Multiple? multipleSearched;
       if (context.mounted) {
         final multipleSearched = await showSearch(context: context, delegate: SearchDelegateMultiple(multipleList: multipleService.multipleTasteList));
 
         if (multipleSearched != null) {
           multipleTaste.multipleName = multipleSearched.name;
-          nameSearchedController.clear();
+          textEditingController.text= multipleSearched.name;
           taste.showContinueButton = true;
         }
         else {
           multipleTaste.multipleName = '';
-          nameSearchedController.clear();
+          textEditingController.clear();
           taste.showContinueButton = false;
         }
       }
@@ -51,7 +65,7 @@ class SelectMultipleTaste extends StatelessWidget {
             children: [
               Expanded(
                 child: TextFormField(
-                  controller: nameSearchedController,
+                  controller: textEditingController,
                   readOnly: true,
                   style: const TextStyle(fontSize: 14),
                   canRequestFocus: false,
