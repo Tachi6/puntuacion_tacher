@@ -8,20 +8,35 @@ import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-class SearchAddTasteWine extends StatelessWidget {
+class SearchAddTasteWine extends StatefulWidget {
 
   const SearchAddTasteWine({super.key});
 
+  @override
+  State<SearchAddTasteWine> createState() => _SearchAddTasteWineState();
+}
+
+class _SearchAddTasteWineState extends State<SearchAddTasteWine> {
+
+  late TextEditingController textEditingController;
+
+  @override
+  void initState() {
+    super.initState();
+    textEditingController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    textEditingController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
 
     final winesService = Provider.of<WineServices>(context);
     final taste = Provider.of<TasteOptionsProvider>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
-
-    final textEditingController = TextEditingController(
-      text: wineForm.wine.nombre
-    );
 
     void onPressed() async {
       wineForm.resetSettings();
@@ -31,6 +46,7 @@ class SearchAddTasteWine extends StatelessWidget {
 
         if (wineSearched != null) {
           wineForm.setEditSearchedWine(wineSearched);
+          textEditingController.text = wineForm.wine.nombre;
           taste.showContinueButton = true;
         }
       }
@@ -71,6 +87,8 @@ class SearchAddTasteWine extends StatelessWidget {
                   CustomIconButton(
                     icon: Icons.add,
                     onPressed: () {
+                      textEditingController.text = '';
+                      
                       wineForm.resetSettings();
 
                       final newRoute = MaterialPageRoute(
