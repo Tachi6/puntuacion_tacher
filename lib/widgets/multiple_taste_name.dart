@@ -62,13 +62,16 @@ class _MultipleTasteNameState extends State<MultipleTasteName> {
                       floatingLabelStyle: TextStyle(color: Colors.grey[600], fontSize: 14),
                     ),
                     validator: (value) {
-                      if (value == '') {
+                      if (value == null || value.trim() == '') {
                         return 'El nombre de la cata no puede estar vacio';
+                      }
+                      if (value.trim().length < 4) {
+                        return 'El nombre de la cata es demasiado corto';
                       }
                       const List<String> invalidCharacters = ['.', '\$', '#', '[', ']', '/', '<', '>', '&'];
                       bool isInvalidName = false; 
                       for (var character in invalidCharacters) {
-                        if (value!.contains(character)) isInvalidName = true;
+                        if (value.contains(character)) isInvalidName = true;
                       }
                       if (isInvalidName) {
                         return 'Los caracteres . \$ # [ ] / < > & no son permitidos.';
