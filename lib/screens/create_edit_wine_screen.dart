@@ -81,6 +81,7 @@ class _FixedBottomSheet extends StatelessWidget {
       color: colors.surfaceContainerLow,
       child: Container(
         height: 58 + bottomPadding,
+        padding: EdgeInsets.only(bottom: bottomPadding),
         alignment: Alignment.center,
         width: double.infinity,
         child: Row(
