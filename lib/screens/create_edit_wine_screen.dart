@@ -166,6 +166,8 @@ class CreateEditWineForm extends StatelessWidget {
     final winesService = Provider.of<WineServices>(context, listen: true);
     final Wines wine = wineFormProvider.wine;
     final Size size = MediaQuery.of(context).size;
+    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
+    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;    
 
     return Form(
       key: wineFormProvider.formKey,
@@ -300,7 +302,7 @@ class CreateEditWineForm extends StatelessWidget {
             textInputAction: TextInputAction.done,
           ),
       
-          const SizedBox(height: 68),
+          SizedBox(height: 68 + bottomPadding),
         ]
       )
     );
