@@ -192,9 +192,7 @@ class WineServices extends ChangeNotifier {
     await loadWines();
     // Assigno nueva id
     final String lastWineIndex = winesByIndex.length.toString();
-    final idLenght = lastWineIndex.length;
-    const defaultNewId = "00000000000000000000";
-    final newId = defaultNewId.replaceRange(20 - idLenght, 20, lastWineIndex);
+    final newId = lastWineIndex.padLeft(20, '0');
     wine.id = newId;
 
     final String jsonCreateType = 'wines/${wine.id}.json';
