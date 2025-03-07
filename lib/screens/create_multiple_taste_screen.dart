@@ -45,8 +45,8 @@ class CreateMultipleTasteScreen extends StatelessWidget{
         toolbarHeight: 48,
         titleSpacing: 0,
         title: const _CustomAppBar(),
-        scrolledUnderElevation: 0,
-        forceMaterialTransparency: true,
+        // scrolledUnderElevation: 0,
+        // forceMaterialTransparency: true,
       ),
       body: Stack(
         children: [
@@ -134,6 +134,7 @@ class _CustomBody extends StatelessWidget {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final styles = Theme.of(context).textTheme;
+    final size = MediaQuery.of(context).size;
 
     Timer? timer;
 
@@ -141,72 +142,75 @@ class _CustomBody extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       height: double.infinity,
       width: double.infinity,
-      child: Column(
-        children: [
-          const SizedBox(height: 10),
-      
-          TextFormField(
-            maxLines: null,
-            style: styles.bodySmall,
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.fromLTRB(16, 16, 12, 10),
-              labelText: 'Descripcion de la cata a realizar',
-              labelStyle: styles.bodySmall,
-              floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(width: 1)
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+        
+            TextFormField(
+              maxLines: null,
+              style: styles.bodySmall,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.fromLTRB(16, 16, 12, 10),
+                labelText: 'Descripcion de la cata a realizar',
+                labelStyle: styles.bodySmall,
+                floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(width: 1)
+                ),
               ),
+              onChanged: (value) {
+                timer?.cancel();
+                timer = Timer(const Duration(milliseconds: 500), () {
+                  multipleTaste.multipleTaste.description = value;
+                },);
+              },
+              onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
             ),
-            onChanged: (value) {
-              timer?.cancel();
-              timer = Timer(const Duration(milliseconds: 500), () {
-                multipleTaste.multipleTaste.description = value;
-              },);
-            },
-            onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
-          ),
-      
-          const SizedBox(height: 20),
-      
-          TextFormField(    
-            style: styles.bodySmall,
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.fromLTRB(16, 16, 12, 10),
-              labelText: 'Contraseña de la cata (opcional)',
-              labelStyle: styles.bodySmall,
-              floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(width: 1)
+        
+            const SizedBox(height: 20),
+        
+            TextFormField(    
+              style: styles.bodySmall,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.fromLTRB(16, 16, 12, 10),
+                labelText: 'Contraseña de la cata (opcional)',
+                labelStyle: styles.bodySmall,
+                floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(width: 1)
+                ),
               ),
+              onChanged: (value) {
+                final String encryptedPassword = EncryptionService().encryptData(value);
+                
+                multipleTaste.multipleTaste.password = encryptedPassword;
+              },
+              onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
             ),
-            onChanged: (value) {
-              final String encryptedPassword = EncryptionService().encryptData(value);
-              
-              multipleTaste.multipleTaste.password = encryptedPassword;
-            },
-            onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
-          ),
-
-          const SizedBox(height: 20),
-
-          const DateTextFormField(),
-
-          const SizedBox(height: 10),
-    
-          const EnableTasteQuiz(),
-    
-          const AddHideWines(),
-
-          const SizedBox(height: 10),
-
-          const Expanded(
-            child: ListViewMultipleWines()
-          ),        
-        ],
+        
+            const SizedBox(height: 20),
+        
+            const DateTextFormField(),
+        
+            const SizedBox(height: 10),
+            
+            const EnableTasteQuiz(),
+            
+            const AddHideWines(),
+        
+            const SizedBox(height: 10),
+        
+            SizedBox(
+              height: size.height * 0.85,
+              child: const ListViewMultipleWines()
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -599,7 +603,13 @@ class AddHideWines extends StatelessWidget {
               children: [
                 CustomIconButton(
                   onPressed: () async {
+                    if (multipleTaste.winesMultipleTaste.length > 12) {
+                      NotificationServices.showSnackbar('No se permiten mas de 12 vinos', context);
+                      return;
+                    }
+
                     winesService.loadWines();
+
                     if (context.mounted) {
                       final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
                       // Compruebo si el vino ya esta añadido al listado
@@ -616,6 +626,11 @@ class AddHideWines extends StatelessWidget {
 
                 CustomIconButton(
                   onPressed: () async {
+                    if (multipleTaste.winesMultipleTaste.length > 12) {
+                      NotificationServices.showSnackbar('No se permiten mas de 12 vinos', context);
+                      return;
+                    }
+
                     wineForm.resetSettings();
 
                     final newRoute = MaterialPageRoute(
