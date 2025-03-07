@@ -69,6 +69,8 @@ class _FixedBottomSheet extends StatelessWidget {
     final winesService = Provider.of<WineServices>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
     final colors = Theme.of(context).colorScheme;
+    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
+    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
 
     return Material(
       elevation: 1,
@@ -78,7 +80,7 @@ class _FixedBottomSheet extends StatelessWidget {
       ),
       color: colors.surfaceContainerLow,
       child: Container(
-        height: 58,
+        height: 58 + bottomPadding,
         alignment: Alignment.center,
         width: double.infinity,
         child: Row(
