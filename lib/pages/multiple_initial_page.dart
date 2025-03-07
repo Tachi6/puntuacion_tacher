@@ -72,7 +72,7 @@ class _MultipleInitialPageState extends State<MultipleInitialPage> with Automati
   bool get wantKeepAlive => true;
 }
 
-class _CustomField extends StatelessWidget {
+class _CustomField extends StatefulWidget {
   const _CustomField({
     required this.text, 
     required this.label
@@ -82,12 +82,31 @@ class _CustomField extends StatelessWidget {
   final String label;
 
   @override
+  State<_CustomField> createState() => _CustomFieldState();
+}
+
+class _CustomFieldState extends State<_CustomField> {
+
+  late TextEditingController textEditingController;
+
+  @override
+  void initState() {
+    super.initState();
+    textEditingController = TextEditingController(
+      text: widget.text,
+    );
+  }
+
+  @override
+  void dispose() {
+    textEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     final styles = Theme.of(context).textTheme;
-    final TextEditingController textEditingController = TextEditingController(
-      text: text,
-    );
 
     return TextField(
       autofocus: false,
@@ -99,7 +118,7 @@ class _CustomField extends StatelessWidget {
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(16, 16, 12, 10),
         labelStyle: styles.bodySmall,
-        labelText: label,
+        labelText: widget.label,
         floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
         floatingLabelBehavior: FloatingLabelBehavior.always,
         border: OutlineInputBorder(
