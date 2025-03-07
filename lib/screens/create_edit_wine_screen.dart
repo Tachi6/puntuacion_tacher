@@ -1,8 +1,8 @@
-import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
+import 'package:diacritic/diacritic.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
@@ -22,30 +22,37 @@ class CreateEditWineScreen extends StatelessWidget {
 
     return PopScope(
       canPop: false,
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          toolbarHeight: 48,
-          titleSpacing: 0,
-          title: const Text('Crear vino'),
-          leading: IconButton(
-            onPressed: () {
-              FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
-              wineForm.resetSettings();
-              Navigator.pop(context);
-              wineForm.autovalidateMode = AutovalidateMode.disabled;
-            }, 
-            icon: const Icon(Icons.arrow_back)
+      child: Stack(
+        children: [
+          Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              toolbarHeight: 48,
+              titleSpacing: 0,
+              title: const Text('Crear vino'),
+              leading: IconButton(
+                onPressed: () {
+                  FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
+                  wineForm.resetSettings();
+                  Navigator.pop(context);
+                  wineForm.autovalidateMode = AutovalidateMode.disabled;
+                }, 
+                icon: const Icon(Icons.arrow_back)
+              ),
+            ),
+            body: const Padding(
+              padding: EdgeInsets.only(left: 10, right: 10),
+              child: SingleChildScrollView(
+                child: CreateEditWineForm()  
+              ),
+            ),
           ),
-        ),
-        body: const Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, bottom: 58),
-          child: SingleChildScrollView(
-            child: CreateEditWineForm()  
+
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: _FixedBottomSheet(saveEndAction),
           ),
-        ),
-        bottomSheet: _FixedBottomSheet(saveEndAction), // TODO hacer desaparecer y aparecer
-        resizeToAvoidBottomInset: false,
+        ],
       ),
     );
   }
@@ -61,66 +68,82 @@ class _FixedBottomSheet extends StatelessWidget {
 
     final winesService = Provider.of<WineServices>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
+    final colors = Theme.of(context).colorScheme;
 
-    return Container(
-      height: 58,
-      alignment: Alignment.center,
-      width: double.infinity,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          CustomElevatedButton(
-            width: 120,
-            label: 'Cancelar',
-            onPressed: () async {
-              FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
-              wineForm.resetSettings();
-              Navigator.pop(context);
-              wineForm.autovalidateMode = AutovalidateMode.disabled;
-            },
-          ),
-    
-          CustomElevatedButton(
-            width: 120,
-            label: 'Guardar',
-            isSendingLabel: 'Guardando',
-            onPressed: () async {
-              FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
-
-              wineForm.autovalidateMode = AutovalidateMode.always;
-              if (wineForm.wine.imagenVino != null && wineForm.wine.imagenVino != '') {
-                final urlChecked = await winesService.isValidImage(wineForm.wine.imagenVino);
-                if (!urlChecked && context.mounted) {
-                  NotificationServices.showFlushBar('URL DE IMAGEN DE VINO INCORRECTA', context);
-                  return;
-                }
-              }
-              if (wineForm.wine.logoBodega != null && wineForm.wine.logoBodega != '') {
-                final urlChecked = await winesService.isValidImage(wineForm.wine.logoBodega);
-                if (!urlChecked && context.mounted) {
-                  NotificationServices.showFlushBar('URL DE LOGO BODEGA INCORRECTA', context);
-                  return;
-                }
-              }
-              if (wineForm.isValidForm()) {
-                wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
-                final String wineId = await winesService.createWine(wineForm.wine);
-                wineForm.setWineId(wineId);
-                if (context.mounted) saveEndAction();
+    return Material(
+      elevation: 1,
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(28),
+        topRight: Radius.circular(28),
+      ),
+      color: colors.surfaceContainerLow,
+      child: Container(
+        height: 58,
+        alignment: Alignment.center,
+        width: double.infinity,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            CustomElevatedButton(
+              width: 120,
+              label: 'Cancelar',
+              onPressed: () async {
+                FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
+                wineForm.resetSettings();
+                Navigator.pop(context);
                 wineForm.autovalidateMode = AutovalidateMode.disabled;
+              },
+            ),
+      
+            CustomElevatedButton(
+              width: 120,
+              label: 'Guardar',
+              isSendingLabel: 'Guardando',
+              onPressed: () async {
+                FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
+                wineForm.autovalidateMode = AutovalidateMode.always;
+                
+                if (wineForm.wine.imagenVino != null && wineForm.wine.imagenVino != '') {
+                  final urlChecked = await winesService.isValidImage(wineForm.wine.imagenVino);
+                  if (!urlChecked && context.mounted) {
+                    NotificationServices.showSnackbar('URL DE IMAGEN DE VINO INCORRECTA', context);
+                    return;
+                  }
+                }
+                if (wineForm.wine.logoBodega != null && wineForm.wine.logoBodega != '') {
+                  final urlChecked = await winesService.isValidImage(wineForm.wine.logoBodega);
+                  if (!urlChecked && context.mounted) {
+                    NotificationServices.showSnackbar('URL DE LOGO BODEGA INCORRECTA', context);
+                    return;
+                  }
+                }
+                if (wineForm.isValidForm()) {
+                  wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
+                  final String wineId = await winesService.createWine(wineForm.wine);
+                  wineForm.setWineId(wineId);
+                  if (context.mounted) saveEndAction();
+                  wineForm.autovalidateMode = AutovalidateMode.disabled;
+                }
               }
-            }
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-InputDecoration _customInputDecorationText(String label) {
+InputDecoration _customInputDecorationText(String label, TextTheme styles) {
   return InputDecoration(
     labelText: label,
-    labelStyle: const TextStyle(fontSize: 14),
+    labelStyle: styles.bodySmall,
+    contentPadding: const EdgeInsets.fromLTRB(16, 16, 12, 10),
+    floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+    floatingLabelBehavior: FloatingLabelBehavior.always,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: const BorderSide(width: 1)
+    ),
   );
 }
 
@@ -148,7 +171,7 @@ class CreateEditWineForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
 
           const Text('Ficha técnica del vino', style: TextStyle(fontSize: 16, overflow: TextOverflow.ellipsis)),
     
@@ -159,11 +182,11 @@ class CreateEditWineForm extends StatelessWidget {
             validator: (value) {
               if(value!.isEmpty) return 'Este campo es obligatorio';
         
-              final String wineCheckname = '${wine.vino.toLowerCase()}${wine.anada}${wine.tipo}${wine.region}';
+              final String wineCheckname = '${removeDiacritics(wine.vino.replaceAll(' ', '').toLowerCase())}${wine.anada}${wine.tipo}${wine.region}';
               final bool isWineCreated = winesService.winesByIndex.any((element) {
-                return '${element.vino.toLowerCase()}${element.anada}${element.tipo}${element.region}' == wineCheckname;
+                return '${removeDiacritics(element.vino.replaceAll(' ', '').toLowerCase())}${element.anada}${element.tipo}${element.region}' == wineCheckname;
               },);
-        
+
               if (isWineCreated) return 'El vino ya se encuentra en nuestra base de datos';
         
               return null;
@@ -180,17 +203,17 @@ class CreateEditWineForm extends StatelessWidget {
           TextFormFieldSearch(
             label: 'Region', 
             wine: wine, 
-            autocompleteWidth: size.width - 40
+            autocompleteWidth: size.width - 20
           ),
     
           TextFormFieldSearch(
             label: 'Tipo', 
             wine: wine, 
-            autocompleteWidth: size.width - 40
+            autocompleteWidth: size.width - 20
           ),
           
           TextFormFieldText(
-            label: 'Añada', 
+            label: 'Añada',
             initialValue: wine.anada == -1 ? '' : wine.anada.toString(), 
             onChanged: (value) {
               if (value != '') wine.anada = int.parse(value);
@@ -207,13 +230,12 @@ class CreateEditWineForm extends StatelessWidget {
             }, 
             textInputFormatter: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,1}'))], 
             textInputType: TextInputType.number,
+            textInputAction: TextInputAction.done,
           ),
     
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
           
           const Text('Información opcional', style: TextStyle(fontSize: 16, overflow: TextOverflow.ellipsis)),
-          
-          const SizedBox(height: 5),
           
           TextFormFieldText(
             label: 'Variedades', 
@@ -272,9 +294,10 @@ class CreateEditWineForm extends StatelessWidget {
             onChanged: (value) => wine.logoBodega = value,
             maxLines: 1, 
             validator: null,
+            textInputAction: TextInputAction.done,
           ),
       
-          const SizedBox(height: 25),
+          const SizedBox(height: 68),
         ]
       )
     );
@@ -291,27 +314,34 @@ class TextFormFieldGraduacion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      initialValue: wine.graduacion == '' ? '' : wine.graduacion.toString(),
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?[\,\.]?\d{0,1}')),
-      ],
-      keyboardType: TextInputType.text,
-      maxLines: 1,
-      style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
-      decoration: _customInputDecorationText('Graduación'),
-      validator: (value) {
-        if (value == '') {
+
+    final styles = Theme.of(context).textTheme;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: TextFormField(
+        initialValue: wine.graduacion == '' ? '' : wine.graduacion.toString(),
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?[\,\.]?\d{0,1}')),
+        ],
+        keyboardType: TextInputType.text,
+        textInputAction: TextInputAction.next,
+        maxLines: 1,
+        style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+        decoration: _customInputDecorationText('Graduación', styles),
+        validator: (value) {
+          if (value == '') {
+            return null;
+          }
+          double graduation = double.parse(value!);
+      
+          if (graduation > 28 || graduation < 1) {
+            return 'Valor alcohólico incorrecto';
+          }
           return null;
-        }
-        double graduation = double.parse(value!);
-    
-        if (graduation > 28 || graduation < 1) {
-          return 'Valor alcohólico incorrecto';
-        }
-        return null;
-      },
-      onChanged: (value) => wine.graduacion = value.replaceAll(',', '.'),
+        },
+        onChanged: (value) => wine.graduacion = value.replaceAll(',', '.'),
+      ),
     );
   }
 }
@@ -326,35 +356,41 @@ class TextFormFieldAnada extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      initialValue: wine.anada == -1 ? '' : wine.anada.toString(),
-      inputFormatters: [ // r'^(\d+)?\.?\d{0,1}'
-        FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,1}')),
-      ],
-      keyboardType: TextInputType.number,
-      maxLines: 1,
-      style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
-      decoration: _customInputDecorationText('Añada'),
-      validator: (value) {
-            
-        if (value == '') {
-          return 'Este campo es obligatorio';
-        }
-            
-        final int anada = int.parse(value!);
-        final year = DateTime.now().toUtc().year;
-            
-        if (anada < 1950 || anada > year ) {
-          return 'Añada no válida';
-        }
-        return null;
-      },
-      onChanged: (value) {
-        if (value != '') { 
-          // final int anada = int.parse(value);
-          wine.anada = int.parse(value);
-        }
-      },
+
+    final styles = Theme.of(context).textTheme;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: TextFormField(
+        initialValue: wine.anada == -1 ? '' : wine.anada.toString(),
+        inputFormatters: [ // r'^(\d+)?\.?\d{0,1}'
+          FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,1}')),
+        ],
+        keyboardType: TextInputType.number,
+        maxLines: 1,
+        style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+        decoration: _customInputDecorationText('Añada', styles),
+        validator: (value) {
+              
+          if (value == '') {
+            return 'Este campo es obligatorio';
+          }
+              
+          final int anada = int.parse(value!);
+          final year = DateTime.now().toUtc().year;
+              
+          if (anada < 1950 || anada > year ) {
+            return 'Añada no válida';
+          }
+          return null;
+        },
+        onChanged: (value) {
+          if (value != '') { 
+            // final int anada = int.parse(value);
+            wine.anada = int.parse(value);
+          }
+        },
+      ),
     );
   }
 }
@@ -369,6 +405,7 @@ class TextFormFieldText extends StatelessWidget {
     this.validator,
     this.textInputFormatter,
     this.textInputType,
+    this.textInputAction, 
   });
 
   final String label;
@@ -378,20 +415,28 @@ class TextFormFieldText extends StatelessWidget {
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? textInputFormatter;
   final TextInputType? textInputType;
+  final TextInputAction? textInputAction;
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      keyboardType: textInputType,
-      inputFormatters: textInputFormatter,
-      textCapitalization: TextCapitalization.sentences,
-      initialValue: initialValue,
-      minLines: 1,
-      maxLines: maxLines,
-      style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
-      decoration: _customInputDecorationText(label),
-      validator: validator,
-      onChanged: onChanged,
+
+    final styles = Theme.of(context).textTheme;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: TextFormField(
+        keyboardType: textInputType,
+        textInputAction: textInputAction ?? TextInputAction.next,
+        inputFormatters: textInputFormatter,
+        textCapitalization: TextCapitalization.sentences,
+        initialValue: initialValue,
+        minLines: 1,
+        maxLines: maxLines,
+        style: styles.bodySmall!.copyWith(overflow: TextOverflow.ellipsis),
+        decoration: _customInputDecorationText(label, styles),
+        validator: validator,
+        onChanged: onChanged,
+      ),
     );
   }
 }
@@ -422,84 +467,98 @@ class TextFormFieldSearch extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
     final size = MediaQuery.of(context).size;
+    final styles = Theme.of(context).textTheme;
 
-    return Autocomplete<String>(
-      // initialValue: TextEditingValue(text: label == 'Region' ? wine.region : wine.tipo), // TODO: para editar???
-      optionsBuilder: (TextEditingValue textEditingValue) {
-        if (textEditingValue.text == '') {
-          return const Iterable<String>.empty();
-        }
-        return selectList.where((String option) {
-          return removeDiacritics(option.trim().toLowerCase())
-            .startsWith(removeDiacritics(textEditingValue.text.trim().toLowerCase()));
-        });
-      },
-      onSelected: (String selection) {
-        if (label == 'Region') {
-          wine.region = selection;
-        }
-        if (label == 'Tipo') {
-          wine.tipo = selection;
-        }
-      },
-      fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
-        
-        // if (label == 'Region') { // TODO: no se si lo necesito, quizas para editar vinos
-        //   fieldTextEditingController.text = wine.region;
-        // }
-        // if (label == 'Tipo') {
-        //   fieldTextEditingController.text = wine.tipo;
-        // }
-
-        return TextFormField(
-          scrollPadding: EdgeInsets.only(bottom: size.height * 0.361), // TODO comprobar que estos valores funcionan bien en todos los dispositivos
-          textCapitalization: TextCapitalization.sentences,
-          maxLines: 1,
-          style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Este campo es obligatorio';
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: Autocomplete<String>(
+        // initialValue: TextEditingValue(text: label == 'Region' ? wine.region : wine.tipo), // TODO: para editar???
+        optionsBuilder: (TextEditingValue textEditingValue) {
+          if (textEditingValue.text == '') {
+            return const Iterable<String>.empty();
+          }
+          return selectList.where((String option) {
+            if (label == 'Region') {
+              return removeDiacritics(option.trim().toLowerCase())
+                .startsWith(removeDiacritics(textEditingValue.text.trim().toLowerCase()));
             }
-
-            final bool validateList = selectList.contains(value);
-
-            if (!validateList) {
-              return 'Selecciona un valor del listado';
-            }
-            return null;
-          },
-          decoration: _customInputDecorationText(label),
-          controller: fieldTextEditingController,
-          focusNode: fieldFocusNode,
-        );
-      },
-      optionsViewBuilder:(BuildContext context, AutocompleteOnSelected<String>onSelected, Iterable<String>options) {
-        return Align(
-          alignment: Alignment.topLeft,
-          child: Material(
-            child: SizedBox(
-              height: options.length * 56,
-              width: autocompleteWidth,
-              child: ListView.builder(
-                padding: const EdgeInsetsDirectional.all(0),
-                shrinkWrap: true,
-                itemCount: options.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final String option = options.elementAt(index);
-                  return ListTile(
-                    contentPadding: const EdgeInsets.only(left: 20,right: 20),
-                    onTap: () => onSelected(option),
-                    title: Text(option, style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),),
-                    tileColor: themeColor.isDarkMode
-                      ? colors.inverseSurface
-                      : colors.surface,
-                  );
-                },
+            return removeDiacritics(option.trim().toLowerCase())
+              .contains(removeDiacritics(textEditingValue.text.trim().toLowerCase()));
+          });
+        },
+        onSelected: (String selection) {
+          if (label == 'Region') {
+            wine.region = selection;
+          }
+          if (label == 'Tipo') {
+            wine.tipo = selection;
+          }
+        },
+        fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
+          
+          // if (label == 'Region') { // TODO: no se si lo necesito, quizas para editar vinos
+          //   fieldTextEditingController.text = wine.region;
+          // }
+          // if (label == 'Tipo') {
+          //   fieldTextEditingController.text = wine.tipo;
+          // }
+      
+          return TextFormField(
+            textInputAction: TextInputAction.next,
+            scrollPadding: EdgeInsets.only(bottom: size.height * 0.361), // TODO comprobar que estos valores funcionan bien en todos los dispositivos
+            textCapitalization: TextCapitalization.sentences,
+            maxLines: 1,
+            style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Este campo es obligatorio';
+              }
+      
+              final bool validateList = selectList.contains(value);
+      
+              if (!validateList) {
+                return 'Selecciona un valor del listado';
+              }
+              return null;
+            },
+            decoration: _customInputDecorationText(label, styles),
+            controller: fieldTextEditingController,
+            focusNode: fieldFocusNode,
+          );
+        },
+        optionsViewBuilder:(BuildContext context, AutocompleteOnSelected<String>onSelected, Iterable<String>options) {
+          return Align(
+            alignment: Alignment.topLeft,
+            child: Material(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: colors.surfaceContainerHigh,
+                  borderRadius: BorderRadius.circular(12),
+                  //border: Border.all(width: 1)
+                ),
+                height: options.length * 56,
+                width: autocompleteWidth,
+                child: ListView.builder(
+                  padding: const EdgeInsetsDirectional.all(0),
+                  shrinkWrap: true,
+                  itemCount: options.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final String option = options.elementAt(index);
+                    return ListTile(
+                      contentPadding: const EdgeInsets.only(left: 20,right: 20),
+                      onTap: () => onSelected(option),
+                      title: Text(option, style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),),
+                      tileColor: themeColor.isDarkMode
+                        ? colors.inverseSurface
+                        : colors.surface,
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
