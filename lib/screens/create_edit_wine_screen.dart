@@ -1,3 +1,4 @@
+import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -406,19 +407,12 @@ class TextFormFieldSearch extends StatelessWidget {
   List<String> get selectList{
 
     List<String> selectedList = [];
-
       if (label == 'Region') {
         selectedList = ItemsAddWineForm.region;
       }
-
-      if (label == 'Añada') {
-        selectedList = ItemsAddWineForm.anada();
-      }
-
       if (label == 'Tipo') {
         selectedList = ItemsAddWineForm.tipos;
       }
-
     return selectedList;
   }
 
@@ -430,25 +424,20 @@ class TextFormFieldSearch extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Autocomplete<String>(
+      // initialValue: TextEditingValue(text: label == 'Region' ? wine.region : wine.tipo), // TODO: para editar???
       optionsBuilder: (TextEditingValue textEditingValue) {
         if (textEditingValue.text == '') {
           return const Iterable<String>.empty();
         }
         return selectList.where((String option) {
-          return option
-            .toLowerCase()
-            .contains(textEditingValue.text.toLowerCase());
+          return removeDiacritics(option.trim().toLowerCase())
+            .startsWith(removeDiacritics(textEditingValue.text.trim().toLowerCase()));
         });
       },
       onSelected: (String selection) {
         if (label == 'Region') {
           wine.region = selection;
         }
-
-        if (label == 'Añada') {
-          wine.anada = int.parse(selection);
-        }
-
         if (label == 'Tipo') {
           wine.tipo = selection;
         }
@@ -458,16 +447,6 @@ class TextFormFieldSearch extends StatelessWidget {
         // if (label == 'Region') { // TODO: no se si lo necesito, quizas para editar vinos
         //   fieldTextEditingController.text = wine.region;
         // }
-
-        // if (label == 'Añada') {
-        //   if (wine.anada == -1){
-        //     fieldTextEditingController.text = '';
-        //   }
-        //   else {
-        //     fieldTextEditingController.text = wine.anada.toString();
-        //   }
-        // }
-
         // if (label == 'Tipo') {
         //   fieldTextEditingController.text = wine.tipo;
         // }
