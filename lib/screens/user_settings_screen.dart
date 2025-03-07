@@ -39,7 +39,7 @@ class UserSettingsScreen extends StatelessWidget {
                 IconButton(
                   onPressed: () async {
                     FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
-                    
+                 
                     if (authService.tempDisplayName == authService.userDisplayName) {
                       Navigator.pop(context);
                       return;
@@ -60,19 +60,32 @@ class UserSettingsScreen extends StatelessWidget {
                       return;
                     }
 
+                    userService.isLoading = true;
+
                     if (await userService.isUniqueDisplayName(authService.tempDisplayName)) {
                       await authService.changeDisplayName(authService.tempDisplayName);
                       await userService.updateUuidDisplayName(authService.tempDisplayName);
                       if (context.mounted) NotificationServices.showSnackbar('NOMBRE DE USUARIO ACTUALIZADO', context);
                       if (context.mounted) Navigator.pop(context);
+                      userService.isLoading = false;
                       return;
                     }
                     else {
                       if (context.mounted) NotificationServices.showSnackbar('NOMBRE DE USUARIO YA UTILIZADO', context);
+                      userService.isLoading = false;
                       return;
                     }
                   }, 
-                  icon: const Icon(Icons.arrow_back_rounded),
+                  icon: userService.isLoading
+                    ? Container(
+                      height: 20,
+                      width: 20,
+                      alignment: Alignment.center,
+                      child: const CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    )
+                    : const Icon(Icons.arrow_back_rounded),
                 ),
                 
                 const Spacer(),
@@ -230,7 +243,7 @@ class _UserSettingsBody extends StatelessWidget {
                   SettingsOptions(
                     leading: Icons.palette_rounded, 
                     title: 'Tema de color',
-                    content: DropdownMenu(
+                    content: DropdownMenu(                     
                       width: 173,
                       label: Center(
                         child: Transform.translate(
@@ -243,7 +256,14 @@ class _UserSettingsBody extends StatelessWidget {
                       enableFilter: false,
                       leadingIcon: const SizedBox(width: 32,), //48
                       textStyle: const TextStyle(fontSize: 14),
-                      trailingIcon: const SizedBox(), // 32
+                      trailingIcon: Transform.translate(
+                        offset: const Offset(0, -6),
+                        child: const Icon(Icons.arrow_drop_down)
+                      ), // 32
+                      selectedTrailingIcon: Transform.translate(
+                        offset: const Offset(0, -6),
+                        child: const Icon(Icons.arrow_drop_up)
+                      ),
                       expandedInsets: const EdgeInsets.all(0),
                       inputDecorationTheme: const InputDecorationTheme(
                         border: InputBorder.none,
@@ -253,6 +273,7 @@ class _UserSettingsBody extends StatelessWidget {
                       ),
                       dropdownMenuEntries: themeColor.dropDownThemeEntries(),
                       menuStyle: MenuStyle(
+                        backgroundColor: WidgetStatePropertyAll(colors.surfaceContainerHigh),
                         alignment: Alignment.lerp(Alignment.centerLeft, Alignment.centerRight, 0.17)
                       ),
                       onSelected: (color) => themeColor.setThemeColor(color!),

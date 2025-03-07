@@ -24,6 +24,7 @@ class MultipleTasteProvider extends ChangeNotifier {
     'simple': false,
     'advanced': false,
   };
+  bool _isLoading = false;
 
   Multiple multipleTaste = Multiple(
     name: '',
@@ -37,6 +38,13 @@ class MultipleTasteProvider extends ChangeNotifier {
   int pageIndex = 0;
 
   GlobalKey<FormState> formNameKey = GlobalKey<FormState>();
+
+  bool get isLoading => _isLoading;
+
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
   
   Future<void> obtainUser() async {
     const storage = FlutterSecureStorage();

@@ -89,26 +89,39 @@ class _MultipleTasteNameState extends State<MultipleTasteName> {
           
               IconButton(
                 onPressed: () async {
+                  multipleTaste.isLoading = true;
+
                   if (await multipleService.isMultipleNameUsed(multipleTaste.multipleName) && context.mounted) {
                     NotificationServices.showSnackbar('El nombre de la cata ya ha sido utilizado.', context);
+                    multipleTaste.isLoading = false;
                     return;
                   }
-                  final routeList = MaterialPageRoute(
-                    builder: (context) => const PopScope(
-                      canPop: false,
-                      child: CreateMultipleTasteScreen(),
-                    ),
-                  );
                   if (multipleTaste.isValidForm()) {
+                    final routeList = MaterialPageRoute(
+                      builder: (context) => const PopScope(
+                        canPop: false,
+                        child: CreateMultipleTasteScreen(),
+                      ),
+                    );
                     Navigator.push(context, routeList);
+                    multipleTaste.isLoading = false;
                     nameController.clear();
                   }
-                }, 
-                icon: Icon(
-                  Icons.check, 
-                  color: colors.onSurface,
-                  size: 22
-                ),
+                },
+                icon: multipleTaste.isLoading 
+                  ? Container(
+                    height: 18.33,
+                    width: 18.33,
+                    alignment: Alignment.center,
+                    child: const CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  )
+                  : Icon(
+                    Icons.check, 
+                    color: colors.onSurface,
+                    size: 22
+                  ),
               ),
             ],
           ),

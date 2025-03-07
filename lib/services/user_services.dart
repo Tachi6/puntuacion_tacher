@@ -11,9 +11,18 @@ class UserServices extends ChangeNotifier  {
   final String _jsonUuidType = 'uuid.json';
   final String _jsonUserType = 'users.json';
 
+  bool _isLoading = false;
+
   final storage = const FlutterSecureStorage();
 
   Map<String, dynamic> users = {};
+
+  bool get isLoading => _isLoading;
+
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
 
   Future<void> loadUsers() async {
 
