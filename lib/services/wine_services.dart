@@ -130,7 +130,7 @@ class WineServices extends ChangeNotifier {
     return userTastedWines;
   }
 
-  List<WineTaste> otherWineTaste(Wines wine, String? date, bool swapCheck) {
+  List<WineTaste> otherWineTaste(Wines wine, String date, bool swapCheck) {
     List<WineTaste> otherUsersTastedWines = [];
     for (var wineTaste in winesTaste) {
       if(wineTaste.id == wine.id) {
@@ -138,7 +138,7 @@ class WineServices extends ChangeNotifier {
       }
     }
 
-    if (!swapCheck) {
+    if (date != 'ficha_tecnica' && !swapCheck) {
       final userIndex = otherUsersTastedWines.indexWhere((element) => element.fecha == date);
       if (userIndex != 0) otherUsersTastedWines.swap(0, userIndex);
     }

@@ -98,7 +98,7 @@ class _ContainerSliverAppBar extends StatelessWidget {
               wine: wine,
             );
           }
-          return _ErrorLogoImage(
+          return _ErrorOrNoLogoImage(
             wine: wine, 
           );
         },
@@ -174,8 +174,8 @@ class _CustomLogoImage extends StatelessWidget {
   }
 }
 
-class _ErrorLogoImage extends StatelessWidget {
-  const _ErrorLogoImage({
+class _ErrorOrNoLogoImage extends StatelessWidget {
+  const _ErrorOrNoLogoImage({
     required this.wine,
   });
 
