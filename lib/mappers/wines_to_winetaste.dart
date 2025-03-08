@@ -1,7 +1,7 @@
 import 'package:puntuacion_tacher/models/models.dart';
 
 class WineTasteMapper {
-  static winesToWinesTaste({
+  static tastedWineToWinesTaste({
     required Wines wine,
     required double ratingVista,
     required double ratingNariz,
@@ -24,5 +24,26 @@ class WineTasteMapper {
     notasNariz: wine.notasNariz!.last,
     notasBoca: wine.notasBoca!.last,
     comentarios: wine.comentarios!.last,
+  );
+
+  static wineSpecsToWinesTaste({
+    required Wines wine,
+  }) => WineTaste(
+    fecha: 'ficha_tecnica', 
+    id: wine.id!, 
+    nombre: wine.nombre, 
+    user: 'Ficha técnica', 
+    ratingVista: -1,
+    ratingNariz: -1,
+    ratingBoca:-1,
+    ratingPuntos: -1,
+    puntosVista: wine.puntuacionVista, 
+    puntosNariz: wine.puntuacionNariz, 
+    puntosBoca: wine.puntuacionBoca, 
+    puntosFinal: wine.puntuacionFinal,
+    notasVista: wine.notaVista,
+    notasNariz: wine.notaNariz,
+    notasBoca: wine.notaBoca,
+    comentarios: wine.descripcion
   );
 }

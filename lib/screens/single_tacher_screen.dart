@@ -83,7 +83,7 @@ class SendTasteButton extends StatelessWidget {
         // Mando updates de los diferentes campos al wine y creo el wineTaste
         wineForm.addUpdatesToWine(wineFromServer);
         // Creo el wineTaste
-        final WineTaste wineTaste = WineTasteMapper.winesToWinesTaste(
+        final WineTaste wineTaste = WineTasteMapper.tastedWineToWinesTaste(
           wine: wineForm.wine,
           ratingVista: wineForm.ratingVista,
           ratingNariz: wineForm.ratingNariz,

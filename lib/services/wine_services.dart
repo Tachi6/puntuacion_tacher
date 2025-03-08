@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:puntuacion_tacher/mappers/mappers.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
 
@@ -137,10 +138,12 @@ class WineServices extends ChangeNotifier {
       }
     }
 
-    if (date != null && !swapCheck) {
+    if (!swapCheck) {
       final userIndex = otherUsersTastedWines.indexWhere((element) => element.fecha == date);
       if (userIndex != 0) otherUsersTastedWines.swap(0, userIndex);
     }
+
+    otherUsersTastedWines = [WineTasteMapper.wineSpecsToWinesTaste(wine: wine), ...otherUsersTastedWines];
 
     return otherUsersTastedWines;
   }
