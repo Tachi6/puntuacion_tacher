@@ -253,7 +253,7 @@ class CreateEditWineForm extends StatelessWidget {
           TextFormFieldGraduacion(wine: wine),
         
           TextFormFieldText(
-            label: 'Notas de cata Vista', 
+            label: 'Notas de cata Vista oficial', 
             initialValue: wine.notaVista, 
             onChanged: (value) => wine.notaVista = value, 
             maxLines: 3, 
@@ -261,7 +261,7 @@ class CreateEditWineForm extends StatelessWidget {
           ),
         
           TextFormFieldText(
-            label: 'Notas de cata Nariz', 
+            label: 'Notas de cata Nariz oficial', 
             initialValue: wine.notaNariz, 
             onChanged: (value) => wine.notaNariz = value, 
             maxLines: 3, 
@@ -269,7 +269,7 @@ class CreateEditWineForm extends StatelessWidget {
           ),
         
           TextFormFieldText(
-            label: 'Notas de cata Boca', 
+            label: 'Notas de cata Boca oficial', 
             initialValue: wine.notaBoca, 
             onChanged: (value) => wine.notaBoca = value, 
             maxLines: 3, 
@@ -278,7 +278,7 @@ class CreateEditWineForm extends StatelessWidget {
         
       
           TextFormFieldText(
-            label: 'Descripción', 
+            label: 'Descripción oficial', 
             initialValue: wine.descripcion, 
             onChanged: (value) => wine.descripcion = value,
             maxLines: 3, 
@@ -291,6 +291,7 @@ class CreateEditWineForm extends StatelessWidget {
             onChanged: (value) => wine.imagenVino = value,
             maxLines: 1, 
             validator: null,
+            textInputType: TextInputType.url,
           ),
       
           TextFormFieldText(
@@ -299,6 +300,7 @@ class CreateEditWineForm extends StatelessWidget {
             onChanged: (value) => wine.logoBodega = value,
             maxLines: 1, 
             validator: null,
+            textInputType: TextInputType.url,
             textInputAction: TextInputAction.done,
           ),
       
@@ -329,7 +331,7 @@ class TextFormFieldGraduacion extends StatelessWidget {
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?[\,\.]?\d{0,1}')),
         ],
-        keyboardType: TextInputType.text,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
         textInputAction: TextInputAction.next,
         maxLines: 1,
         style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
@@ -338,7 +340,7 @@ class TextFormFieldGraduacion extends StatelessWidget {
           if (value == '') {
             return null;
           }
-          double graduation = double.parse(value!);
+          double graduation = double.parse(value!.replaceAll(',', '.'));
       
           if (graduation > 28 || graduation < 1) {
             return 'Valor alcohólico incorrecto';
@@ -430,7 +432,7 @@ class TextFormFieldText extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: TextFormField(
-        keyboardType: textInputType,
+        keyboardType: textInputType ?? TextInputType.text,
         textInputAction: textInputAction ?? TextInputAction.next,
         inputFormatters: textInputFormatter,
         textCapitalization: TextCapitalization.sentences,
