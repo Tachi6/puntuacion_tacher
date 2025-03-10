@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
 import 'package:diacritic/diacritic.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
@@ -42,7 +43,7 @@ class CreateEditWineScreen extends StatelessWidget {
             ),
             body: const SingleChildScrollView(
               padding: EdgeInsets.only(left: 10, right: 10),
-              child: CreateEditWineForm()  
+              child: CreateEditWineForm(),
             ),
           ),
 
@@ -165,7 +166,7 @@ class CreateEditWineForm extends StatelessWidget {
     final Wines wine = wineFormProvider.wine;
     final Size size = MediaQuery.of(context).size;
     final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
-    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;    
+    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
 
     return Form(
       key: wineFormProvider.formKey,
@@ -302,7 +303,9 @@ class CreateEditWineForm extends StatelessWidget {
             textInputAction: TextInputAction.done,
           ),
       
-          SizedBox(height: 58 + 10 + bottomPadding),
+          KeyboardVisibilityBuilder(
+            builder: (BuildContext context, isKeyboardVisible) => SizedBox(height: isKeyboardVisible ? 10 + bottomPadding : 58 + 10 + bottomPadding)),
+          // SizedBox(height: 58 + 10 + bottomPadding),
         ]
       )
     );
@@ -410,7 +413,7 @@ class TextFormFieldText extends StatelessWidget {
     this.validator,
     this.textInputFormatter,
     this.textInputType,
-    this.textInputAction, 
+    this.textInputAction,
   });
 
   final String label;
