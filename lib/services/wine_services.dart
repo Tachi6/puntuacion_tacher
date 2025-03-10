@@ -240,6 +240,10 @@ class WineServices extends ChangeNotifier {
   Future<bool> isValidImage(String? url) async {
     if (url == null) return false;
 
+    final List<String> acceptedFormats = ['.jpg', '.gif', '.png', '.webp'];
+    final isValidFormat = acceptedFormats.any((element) => url.endsWith(element));
+    if (!isValidFormat) return false;
+
     final bool isURLValid = Uri.parse(url).host.isNotEmpty;
     if (!isURLValid) return false; 
 

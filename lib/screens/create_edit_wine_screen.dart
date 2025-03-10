@@ -40,11 +40,9 @@ class CreateEditWineScreen extends StatelessWidget {
                 icon: const Icon(Icons.arrow_back)
               ),
             ),
-            body: const Padding(
+            body: const SingleChildScrollView(
               padding: EdgeInsets.only(left: 10, right: 10),
-              child: SingleChildScrollView(
-                child: CreateEditWineForm()  
-              ),
+              child: CreateEditWineForm()  
             ),
           ),
 
@@ -109,14 +107,14 @@ class _FixedBottomSheet extends StatelessWidget {
                 if (wineForm.wine.imagenVino != null && wineForm.wine.imagenVino != '') {
                   final urlChecked = await winesService.isValidImage(wineForm.wine.imagenVino);
                   if (!urlChecked && context.mounted) {
-                    NotificationServices.showSnackbar('URL DE IMAGEN DE VINO INCORRECTA', context);
+                    NotificationServices.showSnackbar('IMAGEN DE VINO ERRONEA O FORMATO NO ACEPTADO', context);
                     return;
                   }
                 }
                 if (wineForm.wine.logoBodega != null && wineForm.wine.logoBodega != '') {
                   final urlChecked = await winesService.isValidImage(wineForm.wine.logoBodega);
                   if (!urlChecked && context.mounted) {
-                    NotificationServices.showSnackbar('URL DE LOGO BODEGA INCORRECTA', context);
+                    NotificationServices.showSnackbar('LOGO BODEGA ERRONEO O FORMATO NO ACEPTADO', context);
                     return;
                   }
                 }
@@ -304,7 +302,7 @@ class CreateEditWineForm extends StatelessWidget {
             textInputAction: TextInputAction.done,
           ),
       
-          SizedBox(height: 68 + bottomPadding),
+          SizedBox(height: 58 + 10 + bottomPadding),
         ]
       )
     );
