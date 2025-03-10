@@ -41,7 +41,8 @@ class MultipleTasteScreenBody extends StatefulWidget {
 
 class _MultipleTasteScreenBodyState extends State<MultipleTasteScreenBody> {
 
-  late PageController pageController;  
+  late PageController pageController;
+  bool isChangingTastePages = false;
 
   @override
   void initState() {
@@ -124,15 +125,19 @@ class _MultipleTasteScreenBodyState extends State<MultipleTasteScreenBody> {
         await winesService.saveTastedWine(wineTaste);
       }
       // Desactivar que vuelvan a catar y moverme a la nueva ultima pagina
-      multipleService.isMultipleTasted = true;
       final int quizPage = multipleTaste.multipleTaste.tasteQuiz != null ? 1 : 0;
-      final int maxPageIndex = 1 + quizPage;
-      pageProvider.multiplePage = maxPageIndex;
       pageController.animateToPage(
-        maxPageIndex, 
+        multipleTaste.winesMultipleTaste.length + 1 + quizPage, 
         duration: const Duration(milliseconds: 250), 
         curve: Curves.easeInOut,           
       );
+      await Future.delayed(const Duration(milliseconds: 500));
+      isChangingTastePages = true;
+      setState(() {});
+      pageProvider.multiplePage = 1 + quizPage;
+      multipleService.isMultipleTasted = true;
+      isChangingTastePages = false;
+      setState(() {});
     }
 
     List<Widget> tastePages() {
@@ -181,7 +186,7 @@ class _MultipleTasteScreenBodyState extends State<MultipleTasteScreenBody> {
           controller: pageController,
           children: tastePages(),
           onPageChanged: (value) {
-            pageProvider.multiplePage = value;
+            if (!isChangingTastePages) pageProvider.multiplePage = value;
           }
         ),
       ),
