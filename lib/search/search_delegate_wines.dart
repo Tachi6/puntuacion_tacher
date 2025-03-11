@@ -65,7 +65,7 @@ class SearchDelegateWines extends SearchDelegate{
   Widget buildResults(BuildContext context) {
 
     if(_filtro.isEmpty) {
-      return const NoResultsWine();
+      return NoResultsWine(needButton: needButton);
     }
 
     return ListView.builder(
@@ -98,7 +98,7 @@ class SearchDelegateWines extends SearchDelegate{
     }).toList();
 
     if(_filtro.isEmpty) {
-      return const NoResultsWine();
+      return NoResultsWine(needButton: needButton);
     }
 
     return ListView.builder(
@@ -135,7 +135,9 @@ class SingleWineImage extends StatelessWidget {
 }
 
 class NoResultsWine extends StatelessWidget {
-  const NoResultsWine({super.key});
+  const NoResultsWine({super.key, this.needButton});
+
+  final bool? needButton;
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +169,7 @@ class NoResultsWine extends StatelessWidget {
         
             const SizedBox(height: 20),
         
-            CustomElevatedButton(
+            if (needButton != null) CustomElevatedButton(
               width: 160,
               height: 40, 
               onPressed: () async {
@@ -177,7 +179,7 @@ class NoResultsWine extends StatelessWidget {
 
                 final newRoute = MaterialPageRoute(
                   builder: (context) => CreateEditWineScreen(
-                    saveEndAction: () {
+                    saveEndAction: () { // TODO: enviar lo que quiero que haga el boton desde cada pagina que lo mande
                       final newRoute = MaterialPageRoute(
                         builder: (context) => const PopScope(
                           canPop: false,
@@ -192,7 +194,9 @@ class NoResultsWine extends StatelessWidget {
                 Navigator.push(context, newRoute);
               },
               label: 'Crear nuevo vino',
-            )
+            ),
+
+            if (needButton == null) const SizedBox(height: 40),
           ],
         ),
       ),

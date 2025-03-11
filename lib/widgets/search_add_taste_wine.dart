@@ -42,7 +42,10 @@ class _SearchAddTasteWineState extends State<SearchAddTasteWine> {
       wineForm.resetSettings();
       winesService.loadWines();
       if (context.mounted) {
-        final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
+        final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
+          winesList: winesService.winesByName,
+          needButton: true  
+        ));
 
         if (wineSearched != null) {
           wineForm.setEditSearchedWine(wineSearched);
