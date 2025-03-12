@@ -128,7 +128,22 @@ class HiddenTasteButtons extends StatelessWidget {
           onPressed: () async {
             winesService.loadWines();
             if (context.mounted) {
-              final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
+              final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
+                winesList: winesService.winesByName,
+                onPressed: () async {
+                  // Cerrar ventana de creacion
+                  Navigator.pop(context);
+                  // Navegar a la pagina de creacion
+                  final newRoute = MaterialPageRoute(
+                    builder: (context) => CreateEditWineScreen(
+                      saveEndAction: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  );
+                  Navigator.push(context, newRoute);
+                },  
+              ));
               if (wineSearched != null) {
                 wineForm.setEditSearchedWine(wineSearched);
               }

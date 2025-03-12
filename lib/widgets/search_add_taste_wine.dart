@@ -44,7 +44,28 @@ class _SearchAddTasteWineState extends State<SearchAddTasteWine> {
       if (context.mounted) {
         final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
           winesList: winesService.winesByName,
-          needButton: true  
+          onPressed: () async {
+            // Cerrar ventana de creacion
+            Navigator.pop(context);
+            // Resetear wineFormProvider
+            wineForm.resetSettings();
+            // Navegar a la pagina de creacion
+            final newRoute = MaterialPageRoute(
+              builder: (context) => CreateEditWineScreen(
+                saveEndAction: () {
+                  final newRoute = MaterialPageRoute(
+                    builder: (context) => const PopScope(
+                      canPop: false,
+                      child: SingleTacherScreen()
+                    ),
+                  );
+                  Navigator.pushReplacement(context, newRoute);
+                  taste.clearOptions();
+                },
+              ),
+            );
+            Navigator.push(context, newRoute);
+          },  
         ));
 
         if (wineSearched != null) {

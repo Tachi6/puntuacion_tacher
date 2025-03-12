@@ -611,7 +611,26 @@ class AddHideWines extends StatelessWidget {
                     winesService.loadWines();
 
                     if (context.mounted) {
-                      final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
+                      final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
+                        winesList: winesService.winesByName,
+                        onPressed: () async {
+                          // Cerrar ventana de creacion
+                          Navigator.pop(context);
+                          // Resetear wineFormProvider
+                          wineForm.resetSettings();
+                          // Navegar a la pagina de creacion
+                          final newRoute = MaterialPageRoute(
+                            builder: (context) => CreateEditWineScreen(
+                              saveEndAction: () {
+                                multipleTaste.addWine(wineForm.wine.copy());
+                                if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
+                                Navigator.pop(context);
+                              },
+                            ),
+                          );
+                          Navigator.push(context, newRoute);
+                        },  
+                      ));
                       // Compruebo si el vino ya esta añadido al listado
                       if (context.mounted && multipleTaste.winesMultipleTaste.any((element) => element.id == wineSearched.id)) {
                         NotificationServices.showSnackbar('Vino duplicado', context);

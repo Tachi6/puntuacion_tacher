@@ -5,16 +5,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:diacritic/diacritic.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
-import 'package:puntuacion_tacher/providers/providers.dart';
-import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class SearchDelegateWines extends SearchDelegate{
-  SearchDelegateWines({required this.winesList, this.needButton});
+  SearchDelegateWines({required this.winesList, this.onPressed});
 
   final List<Wines> winesList;
-  final bool? needButton;
+  final Future<void> Function()? onPressed;
   final String titleLabel = 'Vino no encontrado en base de datos';
 
   List<Wines> _filtro = [];
@@ -65,7 +63,7 @@ class SearchDelegateWines extends SearchDelegate{
   Widget buildResults(BuildContext context) {
 
     if(_filtro.isEmpty) {
-      return NoResultsWine(needButton: needButton);
+      return NoResultsWine(onPressed: onPressed);
     }
 
     return ListView.builder(
@@ -98,7 +96,7 @@ class SearchDelegateWines extends SearchDelegate{
     }).toList();
 
     if(_filtro.isEmpty) {
-      return NoResultsWine(needButton: needButton);
+      return NoResultsWine(onPressed: onPressed);
     }
 
     return ListView.builder(
@@ -135,16 +133,12 @@ class SingleWineImage extends StatelessWidget {
 }
 
 class NoResultsWine extends StatelessWidget {
-  const NoResultsWine({super.key, this.needButton});
+  const NoResultsWine({super.key, this.onPressed});
 
-  final bool? needButton;
+  final Future<void> Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
-
-    final taste = Provider.of<TasteOptionsProvider>(context);
-    final wineForm = Provider.of<CreateEditWineFormProvider>(context);
- 
     return Center(
       child: SingleChildScrollView(
         child: Column(
@@ -168,35 +162,16 @@ class NoResultsWine extends StatelessWidget {
             const SingleWineImage(),
         
             const SizedBox(height: 20),
-        
-            if (needButton != null) CustomElevatedButton(
-              width: 160,
-              height: 40, 
-              onPressed: () async {
-                Navigator.pop(context);
 
-                wineForm.resetSettings();
-
-                final newRoute = MaterialPageRoute(
-                  builder: (context) => CreateEditWineScreen(
-                    saveEndAction: () { // TODO: enviar lo que quiero que haga el boton desde cada pagina que lo mande
-                      final newRoute = MaterialPageRoute(
-                        builder: (context) => const PopScope(
-                          canPop: false,
-                          child: SingleTacherScreen()
-                        ),
-                      );
-                      Navigator.pushReplacement(context, newRoute);
-                      taste.clearOptions();
-                    },
-                  ),
-                );
-                Navigator.push(context, newRoute);
-              },
-              label: 'Crear nuevo vino',
+            Visibility(
+              visible: onPressed != null,
+              child: CustomElevatedButton(
+                width: 160,
+                height: 40, 
+                onPressed: onPressed,
+                label: 'Crear nuevo vino',
+              ),
             ),
-
-            if (needButton == null) const SizedBox(height: 40),
           ],
         ),
       ),
