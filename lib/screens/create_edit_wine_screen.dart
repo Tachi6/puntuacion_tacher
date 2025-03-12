@@ -171,7 +171,7 @@ class CreateEditWineForm extends StatelessWidget {
     return Form(
       key: wineFormProvider.formKey,
       autovalidateMode: wineFormProvider.autovalidateMode,
-      child: Column( // TODO:gestionar scroll para que suba mas
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -248,8 +248,25 @@ class CreateEditWineForm extends StatelessWidget {
             maxLines: 2, 
             validator: null
           ),
-     
-          TextFormFieldGraduacion(wine: wine),
+
+          TextFormFieldText(
+            label: 'Graduación', 
+            initialValue: wine.graduacion, 
+            onChanged: (value) => wine.graduacion = value.replaceAll(',', '.'), 
+            validator: (value) {
+              if (value == '') {
+                return null;
+              }
+              double graduation = double.parse(value!.replaceAll(',', '.'));
+          
+              if (graduation > 28 || graduation < 1) {
+                return 'Valor alcohólico incorrecto';
+              }
+              return null;
+            },
+            textInputType: const TextInputType.numberWithOptions(decimal: true),
+            textInputFormatter: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?[\,\.]?\d{0,1}'))],
+          ),
         
           TextFormFieldText(
             label: 'Notas de cata Vista oficial', 
@@ -312,97 +329,6 @@ class CreateEditWineForm extends StatelessWidget {
   }
 }
 
-class TextFormFieldGraduacion extends StatelessWidget {
-  const TextFormFieldGraduacion({
-    super.key,
-    required this.wine,
-  });
-
-  final Wines wine;
-
-  @override
-  Widget build(BuildContext context) {
-
-    final styles = Theme.of(context).textTheme;
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: TextFormField(
-        initialValue: wine.graduacion == '' ? '' : wine.graduacion.toString(),
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?[\,\.]?\d{0,1}')),
-        ],
-        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        textInputAction: TextInputAction.next,
-        maxLines: 1,
-        style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
-        decoration: _customInputDecorationText('Graduación', styles),
-        validator: (value) {
-          if (value == '') {
-            return null;
-          }
-          double graduation = double.parse(value!.replaceAll(',', '.'));
-      
-          if (graduation > 28 || graduation < 1) {
-            return 'Valor alcohólico incorrecto';
-          }
-          return null;
-        },
-        onChanged: (value) => wine.graduacion = value.replaceAll(',', '.'),
-      ),
-    );
-  }
-}
-
-class TextFormFieldAnada extends StatelessWidget {
-  const TextFormFieldAnada({
-    super.key,
-    required this.wine,
-  });
-
-  final Wines wine;
-
-  @override
-  Widget build(BuildContext context) {
-
-    final styles = Theme.of(context).textTheme;
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: TextFormField(
-        initialValue: wine.anada == -1 ? '' : wine.anada.toString(),
-        inputFormatters: [ // r'^(\d+)?\.?\d{0,1}'
-          FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,1}')),
-        ],
-        keyboardType: TextInputType.number,
-        maxLines: 1,
-        style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
-        decoration: _customInputDecorationText('Añada', styles),
-        validator: (value) {
-              
-          if (value == '') {
-            return 'Este campo es obligatorio';
-          }
-              
-          final int anada = int.parse(value!);
-          final year = DateTime.now().toUtc().year;
-              
-          if (anada < 1950 || anada > year ) {
-            return 'Añada no válida';
-          }
-          return null;
-        },
-        onChanged: (value) {
-          if (value != '') { 
-            // final int anada = int.parse(value);
-            wine.anada = int.parse(value);
-          }
-        },
-      ),
-    );
-  }
-}
-
 class TextFormFieldText extends StatelessWidget {
   const TextFormFieldText({
     super.key,
@@ -429,6 +355,7 @@ class TextFormFieldText extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final styles = Theme.of(context).textTheme;
+    final size = MediaQuery.of(context).size;
 
     return Padding(
       padding: const EdgeInsets.only(top: 20),
@@ -437,6 +364,7 @@ class TextFormFieldText extends StatelessWidget {
         textInputAction: textInputAction ?? TextInputAction.next,
         inputFormatters: textInputFormatter,
         textCapitalization: TextCapitalization.sentences,
+        scrollPadding: EdgeInsets.only(bottom: size.height * 0.4),
         initialValue: initialValue,
         minLines: 1,
         maxLines: maxLines,
@@ -513,7 +441,7 @@ class TextFormFieldSearch extends StatelessWidget {
       
           return TextFormField(
             textInputAction: TextInputAction.next,
-            scrollPadding: EdgeInsets.only(bottom: size.height * 0.361), // TODO comprobar que estos valores funcionan bien en todos los dispositivos
+            scrollPadding: EdgeInsets.only(bottom: size.height * 0.4),
             textCapitalization: TextCapitalization.sentences,
             maxLines: 1,
             style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
