@@ -321,7 +321,14 @@ class CreateEditWineForm extends StatelessWidget {
           ),
       
           KeyboardVisibilityBuilder(
-            builder: (BuildContext context, isKeyboardVisible) => SizedBox(height: isKeyboardVisible ? 10 + bottomPadding : 58 + 10 + bottomPadding)),
+            builder: (BuildContext context, isKeyboardVisible) {
+              return SizedBox(
+                height: isKeyboardVisible 
+                  ? 15 
+                  : 58 + 15 + bottomPadding
+              );
+            }
+          ),
           // SizedBox(height: 58 + 10 + bottomPadding),
         ]
       )
