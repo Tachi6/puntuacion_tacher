@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/constants/environment.dart';
 
+import 'package:puntuacion_tacher/constants/environment.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
@@ -11,6 +12,9 @@ import 'package:puntuacion_tacher/services/services.dart';
 
 Future<void> main() async {
   await Environment.initEnvironment();
+
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   
   runApp(const AppState());
 }
