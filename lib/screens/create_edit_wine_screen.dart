@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
-import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
@@ -23,35 +22,38 @@ class CreateEditWineScreen extends StatelessWidget {
 
     return PopScope(
       canPop: false,
-      child: Stack(
-        children: [
-          Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              toolbarHeight: 48,
-              titleSpacing: 0,
-              title: const Text('Crear vino'),
-              leading: IconButton(
-                onPressed: () {
-                  FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
-                  wineForm.resetSettings();
-                  Navigator.pop(context);
-                  wineForm.autovalidateMode = AutovalidateMode.disabled;
-                }, 
-                icon: const Icon(Icons.arrow_back)
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                toolbarHeight: 48,
+                titleSpacing: 0,
+                title: const Text('Crear vino'),
+                leading: IconButton(
+                  onPressed: () {
+                    FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
+                    wineForm.resetSettings();
+                    Navigator.pop(context);
+                    wineForm.autovalidateMode = AutovalidateMode.disabled;
+                  }, 
+                  icon: const Icon(Icons.arrow_back)
+                ),
+              ),
+              body: const SingleChildScrollView(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: CreateEditWineForm(),
               ),
             ),
-            body: const SingleChildScrollView(
-              padding: EdgeInsets.only(left: 10, right: 10),
-              child: CreateEditWineForm(),
+        
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: _FixedBottomSheet(saveEndAction),
             ),
-          ),
-
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _FixedBottomSheet(saveEndAction),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -121,6 +123,8 @@ class _FixedBottomSheet extends StatelessWidget {
                 }
                 if (wineForm.isValidForm()) {
                   wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
+                  if (wineForm.wine.imagenVino == '') wineForm.wine.imagenVino = null;
+                  if (wineForm.wine.logoBodega == '') wineForm.wine.logoBodega = null;
                   final String wineId = await winesService.createWine(wineForm.wine);
                   wineForm.setWineId(wineId);
                   if (context.mounted) saveEndAction();
@@ -408,7 +412,6 @@ class TextFormFieldSearch extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final colors = Theme.of(context).colorScheme;
-    final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
     final size = MediaQuery.of(context).size;
     final styles = Theme.of(context).textTheme;
 
@@ -491,9 +494,6 @@ class TextFormFieldSearch extends StatelessWidget {
                       contentPadding: const EdgeInsets.only(left: 20,right: 20),
                       onTap: () => onSelected(option),
                       title: Text(option, style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),),
-                      tileColor: themeColor.isDarkMode
-                        ? colors.inverseSurface
-                        : colors.surface,
                     );
                   },
                 ),
