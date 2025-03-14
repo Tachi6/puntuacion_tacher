@@ -664,8 +664,8 @@ class _CustomDropDownButtonState extends State<_CustomDropDownButton> {
 
     Color? answerColor() {
       if (userAnswer() == null) return null;
-      if (userAnswer() == correctAnswer) return const Color.fromARGB(255, 0, 161, 80);
-      if (userAnswer() != correctAnswer) return const Color.fromARGB(255, 255, 17, 0);
+      if (userAnswer() == correctAnswer) return const Color.fromARGB(255, 0, 143, 57);
+      if (userAnswer() != correctAnswer) return const Color.fromARGB(255, 203, 50, 52);
       return null;
     }
 
