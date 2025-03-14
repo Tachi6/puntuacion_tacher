@@ -18,6 +18,7 @@ class ListTop10 extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final otherTasteProvider = Provider.of<OtherTasteProvider>(context);
+    final size = MediaQuery.of(context).size;
     
     return SizedBox(
       width: double.infinity,
@@ -29,7 +30,7 @@ class ListTop10 extends StatelessWidget {
         layout: SwiperLayout.DEFAULT,
         axisDirection: AxisDirection.right,
         itemHeight: 360,
-        itemWidth: 240,
+        itemWidth: size.width * 0.6,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
@@ -37,7 +38,7 @@ class ListTop10 extends StatelessWidget {
               if (otherTasteProvider.selectedWineTaste != null) {
                 otherTasteProvider.selectedWineTaste = null;
               }
-
+    
               final routeDetails = MaterialPageRoute(
                 builder: (context) => DetailsScreen(wine: wines[index].copy(), source: 'top10-$index'));
               Navigator.push(context, routeDetails);
@@ -62,6 +63,7 @@ class _WinePosterTop10 extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final colors = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
@@ -77,7 +79,7 @@ class _WinePosterTop10 extends StatelessWidget {
                 child: Container(
                   color: colors.surface,
                   height: 300,
-                  width: 240,
+                  width: size.width * 0.6,
                 ),
               ),
               
@@ -86,7 +88,7 @@ class _WinePosterTop10 extends StatelessWidget {
                 child: LoadWineImage(
                   wine: wine,
                   scale: 1,
-                  imageWidth: 240,
+                  imageWidth: size.width * 0.6,
                   source: 'top10-$index',
                 ),
               ),

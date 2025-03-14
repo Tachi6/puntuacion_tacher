@@ -103,6 +103,7 @@ class MyUserBody extends StatelessWidget {
 
               final WineTaste wineTaste = winesService.userWineTaste(authService.userUuid)[index];
               final wine = winesService.obtainWine(wineTaste.id);
+              final size = MediaQuery.of(context).size;
 
               return ListTile(
                 minVerticalPadding: 6,
@@ -114,7 +115,7 @@ class MyUserBody extends StatelessWidget {
                     LoadWineImage(
                       wine: wine,
                       scale: 2/6,
-                      imageWidth: 60,
+                      imageWidth: size.width * 0.12,
                       source: 'email-$index',
                     ),
                               
