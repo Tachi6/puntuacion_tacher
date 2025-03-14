@@ -27,4 +27,24 @@ class CustomDatetime {
     return '$weekDay, ${date.day} de $month de ${date.year}';
   }
 
+  String timeToNow(String customDate) {
+    final DateTime dateTimeNow = DateTime.now();
+    final DateTime dateTimePast = toDateTime(customDate);
+
+    final timeDifference = dateTimeNow.difference(dateTimePast);
+    final hours = timeDifference.inHours;
+    final days = timeDifference.inDays;
+
+    if (hours == 0) return 'ahora';
+    if (hours == 1) return '1 hora';
+    if (days == 0) return '$hours horas';
+    if (days == 1) return '1 día';
+    if (days < 7) return '$days dias';
+    if (days == 7) return '1 semana';
+    if (days > 7 && days < 28) return '${(days / 7).floor()} semanas';
+    if (days >= 28 && days <= 60) return '1 mes';
+    if (days > 60 && days <= 365) return '${(days / 30).floor()} meses';
+    if (days > 365 && days <= 730) return '1 año';
+    return '${(days / 365).floor()} años';
+  }
 }
