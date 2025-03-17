@@ -77,6 +77,8 @@ class UserMultipleTasteDetails extends StatelessWidget {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleServices>(context);
     final wineTasteList = multipleTaste.userMultipleTaste;
+    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
+    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
 
     return SizedBox(
       width: double.infinity,
@@ -124,7 +126,7 @@ class UserMultipleTasteDetails extends StatelessWidget {
             ),
           ),             
           // Height of BottomSHeet
-          const SizedBox(height: 58),
+          SizedBox(height: 58 + 10 + bottomPadding),
         ]
       ),
     );
@@ -176,14 +178,14 @@ class OverviewMultipleTaste extends StatelessWidget {
           ),
 
           const _OutsideTitle(label: 'Catas Realizadas'),
-             
+            
           const _OtherUsersTaste(),
 
           const SizedBox(height: 5),
 
           const _OutsideTitle(label: 'Valoraciones medias de cata'),  
 
-          _TasteHeader(newWidth: newWidth, lastLabel: 'Puntos'),   
+          _TasteHeader(newWidth: newWidth, lastLabel: 'Puntos'),
           
           SizedBox(
             height: newHeight / 2,
@@ -203,6 +205,7 @@ class OverviewMultipleTaste extends StatelessWidget {
                   boca: averageRatings[index].boca,
                   puntosOrFinal: averageRatings[index].puntos,
                   newWidth: newWidth,
+                  addEndSizedBox: wineTasteList.length - 1 == index ? true : null,
                 );
               },
             ),
@@ -262,6 +265,7 @@ class _CustomListItem extends StatelessWidget {
     this.tasteHeader,
     this.itemsDetailsNotes,
     this.itemsDetailsComments,
+    this.addEndSizedBox,
   });
 
   final int index;
@@ -274,11 +278,14 @@ class _CustomListItem extends StatelessWidget {
   final Widget? tasteHeader;
   final Widget? itemsDetailsNotes;
   final Widget? itemsDetailsComments;
+  final bool? addEndSizedBox;
 
   @override
   Widget build(BuildContext context) {
 
     final styles = Theme.of(context).textTheme;
+    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
+    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -331,7 +338,7 @@ class _CustomListItem extends StatelessWidget {
               ),
             ),
     
-          Container(
+            Container(
               width: newWidth * 0.16,
               alignment: Alignment.center,
               child: Text(
@@ -350,6 +357,8 @@ class _CustomListItem extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Divider(),
         ),
+
+        if (addEndSizedBox != null) SizedBox(height: bottomPadding + 10),
       ],
     );
   }

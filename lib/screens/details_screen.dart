@@ -374,6 +374,8 @@ class _WinePoster extends StatelessWidget {
     final otherTasteProvider = Provider.of<OtherTasteProvider>(context);
     final WineTaste wineTaste = otherTasteProvider.selectedWineTaste 
       ?? WineTasteMapper.wineSpecsToWinesTaste(wine: wine);
+    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
+    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
 
     return Container(
       padding: const EdgeInsets.only(left: 20, right: 20),
@@ -443,7 +445,7 @@ class _WinePoster extends StatelessWidget {
           
           if (wineTaste.notasBoca != '') _CustomLine(label: 'Cata Boca', text: wineTaste.notasBoca!, styles: styles),
 
-          SizedBox(height: chipListHeight + 15),
+          SizedBox(height: chipListHeight + 15 + bottomPadding),
         ],
       )
     );

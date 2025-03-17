@@ -103,6 +103,9 @@ class SimpleTasteQuiz extends StatelessWidget {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleServices>(context);
+    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
+    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
+
     List<Wines> wineList = [];
 
     !multipleService.isMultipleTasted
@@ -117,6 +120,7 @@ class SimpleTasteQuiz extends StatelessWidget {
     }
 
     return SingleChildScrollView(
+      padding: EdgeInsets.only(bottom: 10 + bottomPadding),
       child: Stack(
         children: [
           Align(
@@ -135,9 +139,7 @@ class SimpleTasteQuiz extends StatelessWidget {
               ],
             ),
           ),
-
-          
-      
+             
           Container(
             // height: 1760, //TODO: hacer height mas dinamico
             height: textMaxHeight(wineList, multipleTaste) + padding + 44 + 2 + 110 + (multipleService.isMultipleTasted ? (30 + 55) : 0), // top padding + 44 _CustomDropDownButton + 2 Border + 108 of container padding + rows checkWine
@@ -259,6 +261,8 @@ class AdvancedTasteQuiz extends StatelessWidget {
 
     final multipleService = context.read<MultipleServices>(); 
     final multipleTaste = context.read<MultipleTasteProvider>();
+    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
+    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
 
     List<Wines> wineList(MultipleServices multipleService, MultipleTasteProvider multipleTaste) {
       List<Wines> wineList = [];
@@ -279,6 +283,7 @@ class AdvancedTasteQuiz extends StatelessWidget {
     }
 
     return SingleChildScrollView(
+      padding: EdgeInsets.only(bottom: 10 + bottomPadding),
       child: Stack(
         children: [
           Align(
@@ -565,6 +570,7 @@ class AdvancedQuizRowNotes extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(label, style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+
                 Text(text, style: style, textAlign: TextAlign.center),
                   
                 const Spacer(),

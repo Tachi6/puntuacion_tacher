@@ -134,7 +134,8 @@ class _CustomBody extends StatelessWidget {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final styles = Theme.of(context).textTheme;
-    final size = MediaQuery.of(context).size;
+    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
+    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
 
     Timer? timer;
 
@@ -143,6 +144,7 @@ class _CustomBody extends StatelessWidget {
       height: double.infinity,
       width: double.infinity,
       child: SingleChildScrollView(
+        physics: const ScrollPhysics(),
         child: Column(
           children: [
             const SizedBox(height: 10),
@@ -206,7 +208,7 @@ class _CustomBody extends StatelessWidget {
             const SizedBox(height: 10),
         
             SizedBox(
-              height: size.height * 0.85,
+              height: multipleTaste.winesMultipleTaste.length * 52 + 58 + bottomPadding + 5,
               child: const ListViewMultipleWines()
             ),
           ],
@@ -362,6 +364,7 @@ class _ListViewMultipleWinesState extends State<ListViewMultipleWines> {
       children: [
         Expanded(
           child: ReorderableListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
             proxyDecorator: (child, index, animation) {
               return CustomMultipleWinesRow(
                 key: Key('move_$index'),
@@ -411,64 +414,59 @@ class CustomMultipleWinesRow extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
-    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
     final styles = Theme.of(context).textTheme;
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: index == maxIndex ? (58 + bottomPadding + 2) : 0),
-      child: Card(
-        key: key,
-        color: color,
-        margin: const EdgeInsets.symmetric(vertical: 2),
-        child: Row(
-          children: [
-            const SizedBox(width: 16),
-        
-            const Icon(Icons.menu),
-        
-            const SizedBox(width: 16),
-        
-            Expanded(
-              child: multipleTaste.multipleTaste.hidden
-                ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      // 'Vino a catar a ciegas $hideIndex', 
-                      'Vino a catar a ciegas ${index + 1}', 
-                      maxLines: 1, 
-                      overflow: TextOverflow.ellipsis, 
-                      style: styles.bodySmall!.copyWith(fontWeight: FontWeight.bold),
-                    ),
+    return Card(
+      key: key,
+      color: color,
+      margin: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          const SizedBox(width: 16),
       
-                    Text(
-                      '${multipleTaste.winesMultipleTaste[index].vino} ${multipleTaste.winesMultipleTaste[index].anada}', 
-                      maxLines: 1,
-                      textAlign: TextAlign.right,
-                      overflow: TextOverflow.ellipsis, 
-                      style: const TextStyle(fontSize: 10)
-                    ),
-                  ],
-                )
-                : Text(
-                  multipleTaste.winesMultipleTaste[index].nombre, 
-                  maxLines: 2, 
-                  overflow: TextOverflow.ellipsis, 
-                  style: styles.bodySmall!.copyWith(fontWeight: FontWeight.bold),
-                ),
-            ),
-        
-            IconButton(
-              icon: const Icon(Icons.remove),
-              onPressed: () {
-                multipleTaste.removeWine(multipleTaste.winesMultipleTaste[index]);
-                if (multipleTaste.winesMultipleTaste.length == 1) Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
+          const Icon(Icons.menu),
+      
+          const SizedBox(width: 16),
+      
+          Expanded(
+            child: multipleTaste.multipleTaste.hidden
+              ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    // 'Vino a catar a ciegas $hideIndex', 
+                    'Vino a catar a ciegas ${index + 1}', 
+                    maxLines: 1, 
+                    overflow: TextOverflow.ellipsis, 
+                    style: styles.bodySmall!.copyWith(fontWeight: FontWeight.bold),
+                  ),
+    
+                  Text(
+                    '${multipleTaste.winesMultipleTaste[index].vino} ${multipleTaste.winesMultipleTaste[index].anada}', 
+                    maxLines: 1,
+                    textAlign: TextAlign.right,
+                    overflow: TextOverflow.ellipsis, 
+                    style: const TextStyle(fontSize: 10)
+                  ),
+                ],
+              )
+              : Text(
+                multipleTaste.winesMultipleTaste[index].nombre, 
+                maxLines: 2, 
+                overflow: TextOverflow.ellipsis, 
+                style: styles.bodySmall!.copyWith(fontWeight: FontWeight.bold),
+              ),
+          ),
+      
+          IconButton(
+            icon: const Icon(Icons.remove),
+            onPressed: () {
+              multipleTaste.removeWine(multipleTaste.winesMultipleTaste[index]);
+              if (multipleTaste.winesMultipleTaste.length == 1) Navigator.pop(context);
+            },
+          ),
+        ],
       ),
     );
   }
@@ -603,7 +601,7 @@ class AddHideWines extends StatelessWidget {
               children: [
                 CustomIconButton(
                   onPressed: () async {
-                    if (multipleTaste.winesMultipleTaste.length > 12) {
+                    if (multipleTaste.winesMultipleTaste.length >= 12) {
                       NotificationServices.showSnackbar('No se permiten mas de 12 vinos', context);
                       return;
                     }
@@ -645,7 +643,7 @@ class AddHideWines extends StatelessWidget {
 
                 CustomIconButton(
                   onPressed: () async {
-                    if (multipleTaste.winesMultipleTaste.length > 12) {
+                    if (multipleTaste.winesMultipleTaste.length >= 12) {
                       NotificationServices.showSnackbar('No se permiten mas de 12 vinos', context);
                       return;
                     }

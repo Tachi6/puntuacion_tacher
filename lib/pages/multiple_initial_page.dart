@@ -23,6 +23,8 @@ class _MultipleInitialPageState extends State<MultipleInitialPage> with Automati
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final styles = Theme.of(context).textTheme;
+    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
+    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
 
     return Scaffold(
       appBar: const CustomMultipleAppBar(),
@@ -61,6 +63,8 @@ class _MultipleInitialPageState extends State<MultipleInitialPage> with Automati
                 winesMultipleTaste: multipleTaste.winesMultipleTaste,
               ),
             ),
+
+            SizedBox(height: bottomPadding + 10),
           ],
         ),
       ),
@@ -154,7 +158,7 @@ class _WinesListView extends StatelessWidget {
               ),
             ),
 
-            if (multipleTaste.multipleTaste.hidden) const SizedBox(height: 4),
+            if (multipleTaste.multipleTaste.hidden && !multipleService.isMultipleTasted) const SizedBox(height: 4),
         
             Container(
               width: double.infinity,
@@ -168,7 +172,7 @@ class _WinesListView extends StatelessWidget {
               ),
             ),
 
-            if (!multipleTaste.multipleTaste.hidden) Container(
+            if (!multipleTaste.multipleTaste.hidden || multipleService.isMultipleTasted) Container(
               width: double.infinity,
               padding: const EdgeInsets.only(top: 0, bottom: 6, left: 10, right: 10),
               alignment: Alignment.centerLeft,
@@ -178,7 +182,7 @@ class _WinesListView extends StatelessWidget {
               ),
             ),
 
-            if (!multipleTaste.multipleTaste.hidden) Container(
+            if (!multipleTaste.multipleTaste.hidden || multipleService.isMultipleTasted) Container(
               width: double.infinity,
               padding: const EdgeInsets.only(top: 0, bottom: 4, left: 10, right: 10),
               alignment: Alignment.centerLeft,
