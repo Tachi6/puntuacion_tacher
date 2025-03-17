@@ -126,11 +126,13 @@ class _MultipleTasteScreenBodyState extends State<MultipleTasteScreenBody> {
       }
       // Desactivar que vuelvan a catar y moverme a la nueva ultima pagina
       final int quizPage = multipleTaste.multipleTaste.tasteQuiz != null ? 1 : 0;
-      pageController.animateToPage(
-        multipleTaste.winesMultipleTaste.length + 1 + quizPage, 
-        duration: const Duration(milliseconds: 250), 
-        curve: Curves.easeInOut,           
-      );
+      if (pageProvider.multiplePage != multipleTaste.winesMultipleTaste.length + 1 + quizPage) {
+        pageController.animateToPage(
+          multipleTaste.winesMultipleTaste.length + 1 + quizPage, 
+          duration: const Duration(milliseconds: 250), 
+          curve: Curves.easeInOut,           
+        );
+      }
       await Future.delayed(const Duration(milliseconds: 500));
       isChangingTastePages = true;
       setState(() {});
