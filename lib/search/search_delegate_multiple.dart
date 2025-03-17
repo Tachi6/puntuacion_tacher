@@ -178,7 +178,7 @@ class SearchDelegateMultiple extends SearchDelegate{
               if (isCorrectPassword == null) return;
           
               if (isCorrectPassword && context.mounted) {
-                context.read<QuizServices>().loadQuiz(_filtro[index].name);
+                if (_filtro[index].tasteQuiz != null) context.read<QuizServices>().loadQuiz(_filtro[index].name); // TODO:loading???
                 close(context, _filtro[index].copy());
                 return;
               }
@@ -189,7 +189,7 @@ class SearchDelegateMultiple extends SearchDelegate{
               return;
             }
             // Para cata sin contraseña
-            context.read<QuizServices>().loadQuiz(_filtro[index].name);
+            if (_filtro[index].tasteQuiz != null) context.read<QuizServices>().loadQuiz(_filtro[index].name); // TODO:loading???
             close(context, _filtro[index].copy());
           },
         );
