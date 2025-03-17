@@ -71,11 +71,9 @@ class CreateMultipleTasteScreen extends StatelessWidget{
 
           const _CustomBody(),
         ],
-      ),      
+      ),
     );
   }
-
-
 }
 
 class _CustomAppBar extends StatelessWidget {
@@ -621,20 +619,28 @@ class AddHideWines extends StatelessWidget {
                             builder: (context) => CreateEditWineScreen(
                               saveEndAction: () {
                                 multipleTaste.addWine(wineForm.wine.copy());
-                                if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
-                                Navigator.pop(context);
+                                Navigator.pop(context, true);
                               },
                             ),
                           );
-                          Navigator.push(context, newRoute);
+                          final bool isSavedWine = await Navigator.push(context, newRoute);
+                          // Capturo true o false para ver si he añadido vino
+                          // final bool isSavedWine = await Navigator.push(context, newRoute);
+                          // if (!isSavedWine) return;
+                          // // Si hay vino mando verificar si es necesario el BottomSheet
+                          if (isSavedWine && context.mounted && multipleTaste.winesMultipleTaste.length == 2) viewBottomMenu(context);
                         },  
                       ));
+                      // Sino hay vino, salgo de la funcion
+                      if (wineSearched == null) return;
                       // Compruebo si el vino ya esta añadido al listado
                       if (context.mounted && multipleTaste.winesMultipleTaste.any((element) => element.id == wineSearched.id)) {
                         NotificationServices.showSnackbar('Vino duplicado', context);
                         return;
                       }
-                      if (wineSearched != null) multipleTaste.addWine(wineSearched);
+                      // Añado vino al multipleTaste
+                      multipleTaste.addWine(wineSearched);
+                      // Miro si es necesario el bottomsheet
                       if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
                     }
                   },
@@ -656,13 +662,16 @@ class AddHideWines extends StatelessWidget {
                         child: CreateEditWineScreen(
                           saveEndAction: () {
                             multipleTaste.addWine(wineForm.wine.copy());
-                            if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
-                            Navigator.pop(context);
+                            // Recibo true para saber que he añadido vino
+                            Navigator.pop(context, true);
                           },
                         ),
                       ),
                     );
-                    Navigator.push(context, newRoute);
+                    // Capturo true o false para ver si he añadido vino
+                    final bool isSavedWine = await Navigator.push(context, newRoute);
+                    // Si hay vino mando verificar si es necesario el BottomSheet
+                    if (isSavedWine && context.mounted && multipleTaste.winesMultipleTaste.length == 2) viewBottomMenu(context);
                   },
                   icon: Icons.add, 
                 ),

@@ -53,7 +53,10 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton> {
           setState(() {});
           await widget.onPressed!();
           isSending = false;
-          setState(() {});
+          // En create multiple taste pide que ponga esto al crear vino desde buscador
+          if (context.mounted) {
+            setState(() {});
+          }
         },
       child: widget.customLabel ?? Text(
         isSending 

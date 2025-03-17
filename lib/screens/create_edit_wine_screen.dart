@@ -36,7 +36,7 @@ class CreateEditWineScreen extends StatelessWidget {
                   onPressed: () {
                     FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
                     wineForm.resetSettings();
-                    Navigator.pop(context);
+                    Navigator.pop(context, false);
                     wineForm.autovalidateMode = AutovalidateMode.disabled;
                   }, 
                   icon: const Icon(Icons.arrow_back)
@@ -94,7 +94,7 @@ class _FixedBottomSheet extends StatelessWidget {
               onPressed: () async {
                 FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
                 wineForm.resetSettings();
-                Navigator.pop(context);
+                Navigator.pop(context, false);
                 wineForm.autovalidateMode = AutovalidateMode.disabled;
               },
             ),
