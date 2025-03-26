@@ -59,8 +59,8 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk 23
         targetSdk 34 // TODO: probar cuando va bien el teclado con los textfield y los saltos
-        versionCode 29
-        versionName "1.4.0"
+        versionCode 30
+        versionName "1.4.1"
     }
 
     signingConfigs {
