@@ -183,11 +183,6 @@ class AuthServices extends ChangeNotifier {
     final String? idToken = await storage.read(key: 'idToken');
     if (idToken == null) return UserLoginStatus.notLogged;
 
-    if (isUserLogued) {
-      await loadData();
-      return UserLoginStatus.logged;
-    }
-
     final String? email = await storage.read(key: 'email');
     final String? password = await storage.read(key: 'password');
     final String? resp = await loginUser(email!, password!);
