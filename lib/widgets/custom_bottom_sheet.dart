@@ -18,8 +18,7 @@ class CustomBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
-    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
+    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
     
     return Container(
       height: 58 + bottomPadding,

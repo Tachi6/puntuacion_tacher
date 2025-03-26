@@ -27,8 +27,8 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    
+    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     return Scaffold(
       appBar: AppBar(

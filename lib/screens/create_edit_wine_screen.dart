@@ -70,8 +70,7 @@ class _FixedBottomSheet extends StatelessWidget {
     final winesService = Provider.of<WineServices>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
     final colors = Theme.of(context).colorScheme;
-    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
-    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
+    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     return Material(
       elevation: 1,
@@ -169,8 +168,7 @@ class CreateEditWineForm extends StatelessWidget {
     final winesService = Provider.of<WineServices>(context, listen: true);
     final Wines wine = wineFormProvider.wine;
     final Size size = MediaQuery.of(context).size;
-    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
-    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
+    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     return Form(
       key: wineFormProvider.formKey,

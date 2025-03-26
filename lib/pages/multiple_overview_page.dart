@@ -77,8 +77,7 @@ class UserMultipleTasteDetails extends StatelessWidget {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleServices>(context);
     final wineTasteList = multipleTaste.userMultipleTaste;
-    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
-    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
+    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     return SizedBox(
       width: double.infinity,
@@ -284,8 +283,7 @@ class _CustomListItem extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final styles = Theme.of(context).textTheme;
-    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
-    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
+    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

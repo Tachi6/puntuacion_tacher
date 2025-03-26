@@ -33,8 +33,7 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
-    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
+    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
     const double chipListHeight = 65;
 
     return PopScope(
@@ -374,8 +373,7 @@ class _WinePoster extends StatelessWidget {
     final otherTasteProvider = Provider.of<OtherTasteProvider>(context);
     final WineTaste wineTaste = otherTasteProvider.selectedWineTaste 
       ?? WineTasteMapper.wineSpecsToWinesTaste(wine: wine);
-    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
-    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
+    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     return Container(
       padding: const EdgeInsets.only(left: 20, right: 20),

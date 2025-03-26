@@ -23,8 +23,7 @@ class _MultipleInitialPageState extends State<MultipleInitialPage> with Automati
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final styles = Theme.of(context).textTheme;
-    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
-    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
+    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     return Scaffold(
       appBar: const CustomMultipleAppBar(),

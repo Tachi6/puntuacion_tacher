@@ -103,8 +103,7 @@ class SimpleTasteQuiz extends StatelessWidget {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleServices>(context);
-    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
-    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
+    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     List<Wines> wineList = [];
 
@@ -261,8 +260,7 @@ class AdvancedTasteQuiz extends StatelessWidget {
 
     final multipleService = context.read<MultipleServices>(); 
     final multipleTaste = context.read<MultipleTasteProvider>();
-    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
-    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
+    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     List<Wines> wineList(MultipleServices multipleService, MultipleTasteProvider multipleTaste) {
       List<Wines> wineList = [];

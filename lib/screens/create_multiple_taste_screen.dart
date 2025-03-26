@@ -32,10 +32,9 @@ class CreateMultipleTasteScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
 
-    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
+    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
     final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
     final colors = Theme.of(context).colorScheme;
-    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
     final double opacity = 0.8;
 
     return Scaffold(
@@ -132,8 +131,7 @@ class _CustomBody extends StatelessWidget {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final styles = Theme.of(context).textTheme;
-    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
-    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
+    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     Timer? timer;
 

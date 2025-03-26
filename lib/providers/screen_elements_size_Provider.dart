@@ -2,12 +2,8 @@ import 'package:flutter/material.dart';
 
 class ScreenElementsSizeProvider extends ChangeNotifier {
 
-  double _bottomElementHeight = 0;
+  final double bottomElementHeight;
 
-  double get bottomElementHeight => _bottomElementHeight;
+  ScreenElementsSizeProvider({required this.bottomElementHeight});
 
-  set bottomElementHeight(double value) {
-    _bottomElementHeight = value;
-    notifyListeners();
-  }
 }

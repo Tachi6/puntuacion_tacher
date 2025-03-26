@@ -77,8 +77,7 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
   @override
   Widget build(BuildContext context) {
 
-    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context);
-    final double bottomPadding = screenElementsSizeProvider.bottomElementHeight;
+    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
     final Textos textos = Textos();
     var titleGroup = AutoSizeGroup();
     var bodyGroup = AutoSizeGroup();

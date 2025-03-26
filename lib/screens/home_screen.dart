@@ -21,12 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
   
   late PageController pageController;
 
-  void setElementsSize(BuildContext context) {
-    final screenElementsSizeProvider = Provider.of<ScreenElementsSizeProvider>(context, listen: false);
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
-    screenElementsSizeProvider.bottomElementHeight = bottomPadding;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -34,7 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
       initialPage: 0,
       keepPage: true,
     );
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) => setElementsSize(context));
   }
 
   @override

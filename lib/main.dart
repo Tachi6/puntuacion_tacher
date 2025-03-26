@@ -55,7 +55,6 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: ( _ ) => CreateEditWineFormProvider()),
         ChangeNotifierProvider(create: ( _ ) => ChangeThemeProvider()),
         ChangeNotifierProvider(create: ( _ ) => MultipleTasteProvider()),
-        ChangeNotifierProvider(create: ( _ ) => ScreenElementsSizeProvider()),
         ChangeNotifierProvider(create: ( _ ) => OtherTasteProvider()),
       ],
       child: const MyApp(),
@@ -68,35 +67,41 @@ class MyApp extends StatelessWidget{
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {   
-    return MaterialApp(
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('es', 'ES'),
-      ],
-      locale: const Locale('es', 'ES'),
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme().getTheme(context),
-      routes: {
-        'checkingAuth':(context) => const CheckAuthScreen(),
-        'login':(context) => MediaQuery.withNoTextScaling(child: const LoginScreen()),
-        'displayName':(context) => MediaQuery.withNoTextScaling(child: const EnterDisplayNameScreen()),
-        'home':(context) => MediaQuery.withNoTextScaling(child: const HomeScreen()), 
-      },
-      initialRoute: 'checkingAuth',
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(
-            textScaler: TextScaler.noScaling,
-            boldText: false, 
-          ),
-          child: child!,
-        );
-      },
+  Widget build(BuildContext context) {
+
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+
+    return ChangeNotifierProvider(
+      create: ( _ ) => ScreenElementsSizeProvider(bottomElementHeight: bottomPadding),
+      child: MaterialApp(
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('es', 'ES'),
+        ],
+        locale: const Locale('es', 'ES'),
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme().getTheme(context),
+        routes: {
+          'checkingAuth':(context) => const CheckAuthScreen(),
+          'login':(context) => MediaQuery.withNoTextScaling(child: const LoginScreen()),
+          'displayName':(context) => MediaQuery.withNoTextScaling(child: const EnterDisplayNameScreen()),
+          'home':(context) => MediaQuery.withNoTextScaling(child: const HomeScreen()), 
+        },
+        initialRoute: 'checkingAuth',
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: TextScaler.noScaling,
+              boldText: false, 
+            ),
+            child: child!,
+          );
+        },
+      ),
     );
   }
 }
