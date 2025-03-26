@@ -54,8 +54,8 @@ dependencies:
   provider: ^6.0.5
   shared_preferences: ^2.3.2
   source_span: ^1.9.1
-  syncfusion_flutter_datepicker: ^28.2.4
-  syncfusion_flutter_gauges: ^28.2.4
+  syncfusion_flutter_datepicker: ^29.1.33
+  syncfusion_flutter_gauges: ^29.1.33
   test_api: ^0.7.0
 
 dev_dependencies:

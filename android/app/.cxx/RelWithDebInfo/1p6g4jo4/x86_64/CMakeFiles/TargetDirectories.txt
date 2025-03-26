@@ -1,0 +1,2 @@
+C:/Users/David Gonzalez/Documents/Aplicaciones/puntuacion_tacher/android/app/.cxx/RelWithDebInfo/1p6g4jo4/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/David Gonzalez/Documents/Aplicaciones/puntuacion_tacher/android/app/.cxx/RelWithDebInfo/1p6g4jo4/x86_64/CMakeFiles/rebuild_cache.dir
