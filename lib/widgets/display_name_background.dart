@@ -8,36 +8,34 @@ class DisplayNameBackground extends StatelessWidget {
   const DisplayNameBackground({
     super.key, 
     required this.widget, 
-    required this.backgroundColor
   });
 
   final Widget widget;
-  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: backgroundColor,
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                opacity: 0.8,
-                fit: BoxFit.fitHeight,
-                alignment: Alignment.topCenter,
-                image: AssetImage('assets/enter_display_name_background.jpg'),
-              ), 
-            ),
+
+    final colors = Theme.of(context).colorScheme;
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            color: colors.surface,
+            image: const DecorationImage(
+              opacity: 0.8,
+              fit: BoxFit.fitHeight,
+              alignment: Alignment.topCenter,
+              image: AssetImage('assets/enter_display_name_background.jpg'),
+            ), 
           ),
-          
-          widget,
-        ],
-      ),
+        ),
+        
+        widget,
+      ],
     );
   }
 }

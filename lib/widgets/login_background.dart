@@ -18,24 +18,24 @@ class LoginBackground extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     return Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              color: colors.surface,
-              image: const DecorationImage(
-                opacity: 0.6,
-                fit: BoxFit.fitHeight,
-                alignment: Alignment.topCenter,
-                image: AssetImage('assets/login-background.jpg'),
-              ), 
-            ),
+      alignment: Alignment.center,
+      children: [
+        Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            color: colors.surface,
+            image: const DecorationImage(
+              opacity: 0.6,
+              fit: BoxFit.fitHeight,
+              alignment: Alignment.topCenter,
+              image: AssetImage('assets/login-background.jpg'),
+            ), 
           ),
-          
-          widget,          
-        ],
+        ),
+        
+        widget,          
+      ],
     );
   }
 }

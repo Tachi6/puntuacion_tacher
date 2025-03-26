@@ -25,7 +25,9 @@ class LoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
     final colors = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -38,7 +40,7 @@ class LoginForm extends StatelessWidget {
         children: [
           Positioned(
             right: 38,
-            top: 20,
+            top: 10,
             child: Text(
               'TasteApp', 
               style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold, color: colors.primary),
@@ -47,16 +49,17 @@ class LoginForm extends StatelessWidget {
 
           Positioned(
             right: 40,
-            top: 100,
+            top: 90,
             child: Text(
               'Tu rincón de amigos y... Vinos', 
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colors.primary),
             ),
           ),
 
-          const Positioned(
-            bottom: 30,
-            child: ContainerLoginForm()
+          Positioned(
+            bottom: (size.width * 0.15) / 2 + bottomPadding,
+            right: (size.width * 0.15) / 2,
+            child: const ContainerLoginForm()
           ),
         ],
       )
@@ -76,7 +79,6 @@ class ContainerLoginForm extends StatelessWidget {
     return Container(
       height: 310,
       width: size.width * 0.85,
-      margin: EdgeInsets.symmetric(horizontal: (size.width * 0.15) / 2),
       padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
       decoration: BoxDecoration(
         color: colors.onPrimaryFixedVariant.withAlpha((255 * 0.8).toInt()),
