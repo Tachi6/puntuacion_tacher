@@ -147,6 +147,7 @@ class OverviewMultipleTaste extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final userService = Provider.of<UserServices>(context);
     final wineTasteList = multipleTaste.anotherUserMultipleTaste(multipleTaste.userView);
 
     return SizedBox(
@@ -154,7 +155,11 @@ class OverviewMultipleTaste extends StatelessWidget {
       width: double.infinity,
       child: Column(
         children: [           
-          const _OutsideTitle(label: 'Resultado de cata'),
+          const _OtherUsersTaste(),
+
+          const SizedBox(height: 5),
+
+          _OutsideTitle(label: 'Cata de ${userService.obtainDisplayName(multipleTaste.userView)}'),
 
           _TasteHeader(newWidth: newWidth, lastLabel: 'Puntos'),
 
@@ -177,11 +182,7 @@ class OverviewMultipleTaste extends StatelessWidget {
             ),
           ),
 
-          const _OutsideTitle(label: 'Catas Realizadas'),
-            
-          const _OtherUsersTaste(),
-
-          const SizedBox(height: 5),
+          const Spacer(), 
 
           const _OutsideTitle(label: 'Valoraciones medias de cata'),  
 
