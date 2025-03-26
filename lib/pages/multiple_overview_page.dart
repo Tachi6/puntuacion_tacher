@@ -194,8 +194,7 @@ class OverviewMultipleTaste extends StatelessWidget {
               itemCount: wineTasteList.length,
               itemBuilder: (context, index) {
       
-                final List<AverageRatings> averageRatings = [];
-                multipleTaste.multipleTaste.averageRatings.forEach((key, value) => averageRatings.add(value));
+                final List<AverageRatings> averageRatings = multipleTaste.sortAverageRatings();
                 
                 return _CustomListItem(
                   index: index,

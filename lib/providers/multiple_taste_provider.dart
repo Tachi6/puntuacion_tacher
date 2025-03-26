@@ -298,6 +298,14 @@ class MultipleTasteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<AverageRatings> sortAverageRatings() {
+    List<AverageRatings> averageRatings = [];
+    for (String wineId in multipleTaste.wineSequence) {
+      averageRatings.add(multipleTaste.averageRatings[wineId]!);
+    }
+    return averageRatings;
+  }
+
   void clearwinesTaste() {
     userMultipleTaste.clear();
     notifyListeners();
