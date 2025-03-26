@@ -8,28 +8,24 @@ class LoginBackground extends StatelessWidget {
   const LoginBackground({
     super.key, 
     required this.widget, 
-    required this.backgroundColor
   });
 
   final Widget widget;
-  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
 
     final colors = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: backgroundColor,
-      body: Stack(
+    return Stack(
         alignment: Alignment.center,
         children: [
           Container(
             width: double.infinity,
             height: double.infinity,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
+            decoration: BoxDecoration(
+              color: colors.surface,
+              image: const DecorationImage(
                 opacity: 0.6,
                 fit: BoxFit.fitHeight,
                 alignment: Alignment.topCenter,
@@ -37,26 +33,9 @@ class LoginBackground extends StatelessWidget {
               ), 
             ),
           ),
-          Positioned(
-            right: 38,
-            top: 60,
-            child: Text(
-              'TasteApp', 
-              style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold, color: colors.primary),
-            ),
-          ),
-          Positioned(
-            right: 40,
-            top: 140,
-            child: Text(
-              'Tu rincón de amigos y... Vinos', 
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colors.primary),
-            ),
-          ),
           
           widget,          
         ],
-      ),
     );
   }
 }

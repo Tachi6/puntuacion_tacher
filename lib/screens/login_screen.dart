@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
 
@@ -12,12 +13,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final colors = Theme.of(context).colorScheme;
-
-    return LoginBackground(
-      widget: const LoginForm(),
-      backgroundColor: colors.surface,
+    return const LoginBackground(
+      widget: LoginForm(),
     );
   }
 }
@@ -27,22 +24,41 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
+
+    final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       backgroundColor: Colors.transparent,
-      body: Container(
-        padding: EdgeInsets.only(bottom: bottomPadding + 30),
-        alignment: Alignment.bottomCenter,
-        width: double.infinity,
-        height: double.infinity,
-        child: const SingleChildScrollView(
-          child: ContainerLoginForm(),
-        ),
+      body: Stack(
+        children: [
+          Positioned(
+            right: 38,
+            top: 20,
+            child: Text(
+              'TasteApp', 
+              style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold, color: colors.primary),
+            ),
+          ),
+
+          Positioned(
+            right: 40,
+            top: 100,
+            child: Text(
+              'Tu rincón de amigos y... Vinos', 
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colors.primary),
+            ),
+          ),
+
+          const Positioned(
+            bottom: 30,
+            child: ContainerLoginForm()
+          ),
+        ],
       )
     );
   }
@@ -58,8 +74,10 @@ class ContainerLoginForm extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Container(
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
+      height: 310,
       width: size.width * 0.85,
+      margin: EdgeInsets.symmetric(horizontal: (size.width * 0.15) / 2),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
       decoration: BoxDecoration(
         color: colors.onPrimaryFixedVariant.withAlpha((255 * 0.8).toInt()),
         borderRadius: BorderRadius.circular(16),
@@ -128,8 +146,6 @@ class LoginRegisterForm extends StatelessWidget {
             },
           ),
 
-          const SizedBox(height: 20),
-
           LoginTextFormField(
             obscureText: loginForm.passwordObscure,
             textInputType: TextInputType.visiblePassword,
@@ -159,7 +175,7 @@ class LoginRegisterForm extends StatelessWidget {
             },
           ),
 
-          const SizedBox(height: 40),
+          const SizedBox(height: 10),
 
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 1250),
@@ -175,6 +191,9 @@ class LoginRegisterForm extends StatelessWidget {
 
           TextButton(
             onPressed: () => loginForm.isRegister = !loginForm.isRegister,
+            style: const ButtonStyle(
+              overlayColor: WidgetStatePropertyAll(Colors.transparent)
+            ),
             child:
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 1250),
@@ -238,49 +257,53 @@ class LoginTextFormField extends StatelessWidget {
           selectionHandleColor: colors.onPrimaryFixedVariant,
         )
       ),
-      child: TextFormField(
-        obscureText: obscureText,
-        cursorErrorColor: colors.onErrorContainer,
-        cursorColor: colors.surface,
-        style: TextStyle(color: colors.surface),
-        keyboardType: textInputType,
-        textInputAction: textInputAction,
-        decoration: InputDecoration(
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
+      child: Container(
+        height: 80,
+        alignment: Alignment.topCenter,
+        child: TextFormField(
+          obscureText: obscureText,
+          cursorErrorColor: colors.onErrorContainer,
+          cursorColor: colors.surface,
+          style: TextStyle(color: colors.surface),
+          keyboardType: textInputType,
+          textInputAction: textInputAction,
+          decoration: InputDecoration(
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: colors.surface
+              ),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: colors.surface,
+                width: 2
+              )
+            ),
+            errorBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: colors.onPrimaryFixed,
+              )
+            ),
+            focusedErrorBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: colors.onPrimaryFixed,
+                width: 2,
+              )
+            ),
+            hintText: hintText,
+            hintStyle: TextStyle(color: Colors.grey.shade500),
+            labelText: labelText,
+            labelStyle: TextStyle(
               color: colors.surface
             ),
+            prefixIcon: Icon(icon, color: colors.surface, size: 18),
+            errorStyle: TextStyle(color: colors.onErrorContainer),
+            suffixIcon: suffixIcon,
           ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: colors.surface,
-              width: 2
-            )
-          ),
-          errorBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: colors.onPrimaryFixed,
-            )
-          ),
-          focusedErrorBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: colors.onPrimaryFixed,
-              width: 2,
-            )
-          ),
-          hintText: hintText,
-          hintStyle: TextStyle(color: Colors.grey.shade500),
-          labelText: labelText,
-          labelStyle: TextStyle(
-            color: colors.surface
-          ),
-          prefixIcon: Icon(icon, color: colors.surface, size: 18),
-          errorStyle: TextStyle(color: colors.onErrorContainer),
-          suffixIcon: suffixIcon,
+          onChanged: onChanged,
+          validator: validator,
+          onFieldSubmitted: onFieldSubmitted,
         ),
-        onChanged: onChanged,
-        validator: validator,
-        onFieldSubmitted: onFieldSubmitted,
       ),
     );
   }
