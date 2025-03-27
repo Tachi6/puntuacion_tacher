@@ -33,7 +33,10 @@ class LoginForm extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark
+        ),
       ),
       backgroundColor: Colors.transparent,
       body: Stack(

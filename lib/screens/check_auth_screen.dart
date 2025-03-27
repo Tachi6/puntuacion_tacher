@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
 
@@ -27,6 +28,14 @@ class CheckAuthScreen extends StatelessWidget {
     }
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark
+        ),
+      ),
       body: Center(
          child: FutureBuilder<UserLoginStatus>(
           future: authService.isUserLoggedLoadData(loadData), 

@@ -35,7 +35,10 @@ class ChangeDisplayName extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
-        systemOverlayStyle: SystemUiOverlayStyle.light,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark
+        ),
       ),
       backgroundColor: Colors.transparent,
       body: Stack(
