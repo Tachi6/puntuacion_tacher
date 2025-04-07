@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import 'package:provider/provider.dart';
 
@@ -25,7 +26,6 @@ class LoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
     final colors = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
 
@@ -60,7 +60,7 @@ class LoginForm extends StatelessWidget {
           ),
 
           Positioned(
-            bottom: (size.width * 0.15) / 2 + bottomPadding,
+            bottom: (size.width * 0.15) / 2,
             right: (size.width * 0.15) / 2,
             child: const ContainerLoginForm()
           ),
@@ -76,18 +76,24 @@ class ContainerLoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
     final colors = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
 
-    return Container(
-      height: 310,
-      width: size.width * 0.85,
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
-      decoration: BoxDecoration(
-        color: colors.onPrimaryFixedVariant.withAlpha((255 * 0.8).toInt()),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: const LoginRegisterForm(),
+    return  KeyboardVisibilityBuilder(
+      builder: (BuildContext context, isKeyboardVisible) {
+        return Container(
+          height: 310,
+          width: size.width * 0.85,
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
+          margin: EdgeInsets.only(bottom: isKeyboardVisible ? 0 : bottomPadding),
+          decoration: BoxDecoration(
+            color: colors.onPrimaryFixedVariant.withAlpha((255 * 0.8).toInt()),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: const LoginRegisterForm(),
+        );
+      }
     );
   }
 }
