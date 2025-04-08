@@ -178,8 +178,8 @@ class SearchDelegateMultiple extends SearchDelegate{
               if (isCorrectPassword == null) return;
           
               if (isCorrectPassword && context.mounted) {
-                if (_filtro[index].tasteQuiz != null) context.read<QuizServices>().loadQuiz(_filtro[index].name); // TODO:loading???
-                close(context, _filtro[index].copy());
+                if (_filtro[index].tasteQuiz != null) await context.read<QuizServices>().loadQuiz(_filtro[index].name);
+                if (context.mounted) close(context, _filtro[index].copy());
                 return;
               }
               if (!isCorrectPassword && context.mounted) {
@@ -189,8 +189,8 @@ class SearchDelegateMultiple extends SearchDelegate{
               return;
             }
             // Para cata sin contraseña
-            if (_filtro[index].tasteQuiz != null) context.read<QuizServices>().loadQuiz(_filtro[index].name); // TODO:loading???
-            close(context, _filtro[index].copy());
+            if (_filtro[index].tasteQuiz != null) await context.read<QuizServices>().loadQuiz(_filtro[index].name);
+            if (context.mounted) close(context, _filtro[index].copy());
           },
         );
       },
