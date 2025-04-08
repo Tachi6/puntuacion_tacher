@@ -362,7 +362,6 @@ class TextFormFieldText extends StatelessWidget {
         textInputAction: textInputAction ?? TextInputAction.next,
         inputFormatters: textInputFormatter,
         textCapitalization: TextCapitalization.sentences,
-        // scrollPadding: EdgeInsets.only(bottom: size.height * 0.4),
         initialValue: initialValue,
         minLines: 1,
         maxLines: maxLines,
@@ -437,7 +436,6 @@ class TextFormFieldSearch extends StatelessWidget {
       
           return TextFormField(
             textInputAction: TextInputAction.next,
-            // scrollPadding: EdgeInsets.only(bottom: size.height * 0.4),
             textCapitalization: TextCapitalization.sentences,
             maxLines: 1,
             style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
@@ -466,7 +464,6 @@ class TextFormFieldSearch extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: colors.surfaceContainerHigh,
                   borderRadius: BorderRadius.circular(12),
-                  //border: Border.all(width: 1)
                 ),
                 height: options.length * 56,
                 width: autocompleteWidth,
