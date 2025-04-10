@@ -399,6 +399,7 @@ class TextFormFieldSearch extends StatelessWidget {
 
     final colors = Theme.of(context).colorScheme;
     final styles = Theme.of(context).textTheme;
+    final size = MediaQuery.of(context).size;
 
     return Padding(
       padding: const EdgeInsets.only(top: 20),
@@ -438,6 +439,7 @@ class TextFormFieldSearch extends StatelessWidget {
             textInputAction: TextInputAction.next,
             textCapitalization: TextCapitalization.sentences,
             maxLines: 1,
+            scrollPadding: EdgeInsets.only(bottom: size.height * 0.47),
             style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
             validator: (value) {
               if (value == null || value.isEmpty) {
