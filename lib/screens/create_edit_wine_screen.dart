@@ -226,8 +226,11 @@ class CreateEditWineForm extends StatelessWidget {
     
           return null;                 
         }, 
-        textInputFormatter: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,1}'))], 
-        textInputType: TextInputType.number,
+        textInputFormatter: [
+          FilteringTextInputFormatter.deny(RegExp(r'\D')),
+          FilteringTextInputFormatter.allow(RegExp(r'^[0-9]{1,4}')),
+        ], 
+        textInputType: const TextInputType.numberWithOptions(decimal: false, signed: true),
         textInputAction: TextInputAction.done,
       ),
       
@@ -258,8 +261,8 @@ class CreateEditWineForm extends StatelessWidget {
           }
           return null;
         },
-        textInputType: const TextInputType.numberWithOptions(decimal: true),
-        textInputFormatter: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?[\,\.]?\d{0,1}'))],
+        textInputType: const TextInputType.numberWithOptions(decimal: true, signed: true),
+        textInputFormatter: [FilteringTextInputFormatter.allow(RegExp(r'^([0-9]{1,2})([\,\.]{0,1})([0-9]{0,1})'))],
       ),
     
       TextFormFieldText(
@@ -404,7 +407,7 @@ class TextFormFieldSearch extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: Autocomplete<String>(
-        // initialValue: TextEditingValue(text: label == 'Region' ? wine.region : wine.tipo), // TODO: para editar???
+        initialValue: TextEditingValue(text: label == 'Region' ? wine.region : wine.tipo), // TODO: para editar???
         optionsBuilder: (TextEditingValue textEditingValue) {
           if (textEditingValue.text == '') {
             return const Iterable<String>.empty();
