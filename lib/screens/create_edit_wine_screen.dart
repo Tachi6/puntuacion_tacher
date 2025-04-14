@@ -22,37 +22,27 @@ class CreateEditWineScreen extends StatelessWidget {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            Scaffold(
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-                toolbarHeight: 48,
-                titleSpacing: 0,
-                title: const Text('Crear vino'),
-                leading: IconButton(
-                  onPressed: () {
-                    FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
-                    wineForm.resetSettings();
-                    Navigator.pop(context, false);
-                    wineForm.autovalidateMode = AutovalidateMode.disabled;
-                  }, 
-                  icon: const Icon(Icons.arrow_back)
-                ),
-              ),
-              body: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: CreateEditWineForm(),
-              ),
-            ),
-        
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: _FixedBottomSheet(saveEndAction),
-            ),
-          ],
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          toolbarHeight: 48,
+          titleSpacing: 0,
+          title: const Text('Crear vino'),
+          leading: IconButton(
+            onPressed: () {
+              FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
+              wineForm.resetSettings();
+              Navigator.pop(context, false);
+              wineForm.autovalidateMode = AutovalidateMode.disabled;
+            }, 
+            icon: const Icon(Icons.arrow_back)
+          ),
         ),
+        body: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: CreateEditWineForm(),
+        ),
+        extendBody: true,
+        bottomNavigationBar: _FixedBottomSheet(saveEndAction),
       ),
     );
   }
@@ -317,7 +307,7 @@ class CreateEditWineForm extends StatelessWidget {
         textInputAction: TextInputAction.done,
       ),
 
-      const SizedBox(height: 58 + 10),
+      const SizedBox(height: 10),
     ];
 
     return Form(
