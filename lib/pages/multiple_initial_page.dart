@@ -23,14 +23,11 @@ class _MultipleInitialPageState extends State<MultipleInitialPage> with Automati
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final styles = Theme.of(context).textTheme;
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     return Scaffold(
       appBar: const CustomMultipleAppBar(),
-      body: Container(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        height: double.infinity,
-        width: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -41,29 +38,27 @@ class _MultipleInitialPageState extends State<MultipleInitialPage> with Automati
               label: 'Descripción', 
               text: multipleTaste.multipleTaste.description,
             ),
-
+        
             const SizedBox(height: 20),
-
+        
             _CustomField(
               label: 'Fecha límite de cata', 
               text: multipleTaste.multipleTaste.dateLimit != null 
                 ? CustomDatetime().toPlainText(multipleTaste.multipleTaste.dateLimit!)
                 : 'Sin fecha límite de cata',
             ),
-
+        
             const SizedBox(height: 15),
-
+        
             Text('Vinos a catar', textAlign: TextAlign.center, style: styles.titleMedium!.copyWith(fontWeight: FontWeight.bold)),
-
+        
             const SizedBox(height: 5),
-
-            Expanded(
-              child: _WinesListView(
-                winesMultipleTaste: multipleTaste.winesMultipleTaste,
-              ),
+                 
+            _WinesListView(
+              winesMultipleTaste: multipleTaste.winesMultipleTaste,
             ),
-
-            SizedBox(height: bottomPadding + 10),
+        
+            const SizedBox(height: 68),
           ],
         ),
       ),
@@ -146,6 +141,8 @@ class _WinesListView extends StatelessWidget {
     final multipleService = Provider.of<MultipleServices>(context);
 
     return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
       itemCount: winesMultipleTaste.length,
       itemBuilder: (context, index) {
         return Column(

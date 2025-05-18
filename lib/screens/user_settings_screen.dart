@@ -127,181 +127,186 @@ class _UserSettingsBody extends StatelessWidget {
 
     final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
     
-    return Container(
-      alignment: Alignment.topCenter,
-       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(width: 48),
-          
-              Hero(
-                tag: 'image_profile',
-                child: Material(
-                  type: MaterialType.transparency,
-                  child: CircleAvatar(
-                    backgroundColor: colors.onPrimaryFixedVariant,
-                    radius: 80,
-                    child: Text(
-                      authService.userInitial,
-                      style: TextStyle(color: colors.surface, fontSize: 100)
+    return SafeArea(
+      top: false,
+      child: Container(
+        alignment: Alignment.topCenter,
+         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(width: 48),
+            
+                Hero(
+                  tag: 'image_profile',
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: CircleAvatar(
+                      backgroundColor: colors.onPrimaryFixedVariant,
+                      radius: 80,
+                      child: Text(
+                        authService.userInitial,
+                        style: TextStyle(color: colors.surface, fontSize: 100)
+                      ),
                     ),
                   ),
                 ),
-              ),
-
-              // TODO to change imageprofile???
-              const SizedBox(width: 48),
-              // IconButton(
-              //   onPressed: () {
-              //     // TODO change user photo
-              //   }, 
-              //   icon: const Icon(Icons.edit_rounded))
-            ],
-          ),
-       
-          const SizedBox(height: 60),
-       
-          Material(
-            color: themeColor.isDarkMode
-              ? colors.surfaceContainerHighest
-              : colors.surfaceContainerHighest.withAlpha((255 * 0.6).toInt()),
-            shadowColor: colors.shadow,
-            elevation: 1,
-            borderRadius: BorderRadius.circular(15),
-            child: Container(
-              width: size.width * 0.85,
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  SettingsOptions(
-                    leading: Icons.alternate_email_rounded,
-                    title: 'Correo electrónico',
-                    content: Text(authService.userEmail, style: const TextStyle(fontSize: 14))
-                  ),
-                           
-                  SettingsOptions(
-                    leading: Icons.person_rounded, 
-                    title: 'Nombre de usuario', 
-                    content: TextFormField(
-                      initialValue: authService.userDisplayName,
-                      enableInteractiveSelection: false,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 14),
-                      decoration: const InputDecoration(
-                        isCollapsed: true,
-                        border: UnderlineInputBorder(borderSide: BorderSide.none),
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        alignLabelWithHint: true,
-                        errorStyle: TextStyle(fontSize: 0),
-                      ),
-                      onChanged: (value) {
-                        authService.tempDisplayName = value;
-                      },
+      
+                // TODO to change imageprofile???
+                const SizedBox(width: 48),
+                // IconButton(
+                //   onPressed: () {
+                //     // TODO change user photo
+                //   }, 
+                //   icon: const Icon(Icons.edit_rounded))
+              ],
+            ),
+         
+            const SizedBox(height: 60),
+         
+            Material(
+              color: themeColor.isDarkMode
+                ? colors.surfaceContainerHighest
+                : colors.surfaceContainerHighest.withAlpha((255 * 0.6).toInt()),
+              shadowColor: colors.shadow,
+              elevation: 1,
+              borderRadius: BorderRadius.circular(15),
+              child: Container(
+                width: size.width * 0.85,
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    SettingsOptions(
+                      leading: Icons.alternate_email_rounded,
+                      title: 'Correo electrónico',
+                      content: Text(authService.userEmail, style: const TextStyle(fontSize: 14))
                     ),
-                  ),
-                           
-                  SettingsOptions(
-                    leading: Icons.image_rounded, 
-                    title: 'Imagen de perfil', 
-                    content: Row(
-                      children: [
-                        const SizedBox(width: 6),
-              
-                        Icon(Icons.upload_file_rounded, color: colors.outline), // TODO cambiar color al implementar
-              
-                        Expanded(
-                          child: TextFormField(
-                            initialValue: 'Función no disponible',
-                            enabled: false,
-                            readOnly: true,
-                            enableInteractiveSelection: false,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 14, color: colors.outline),
-                            decoration: const InputDecoration(
-                              isCollapsed: true,
-                              border: UnderlineInputBorder(borderSide: BorderSide.none),
-                              floatingLabelBehavior: FloatingLabelBehavior.never,
-                              alignLabelWithHint: true,
+                             
+                    SettingsOptions(
+                      leading: Icons.person_rounded, 
+                      title: 'Nombre de usuario', 
+                      content: TextFormField(
+                        initialValue: authService.userDisplayName,
+                        enableInteractiveSelection: false,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 14),
+                        decoration: const InputDecoration(
+                          isCollapsed: true,
+                          border: UnderlineInputBorder(borderSide: BorderSide.none),
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          alignLabelWithHint: true,
+                          errorStyle: TextStyle(fontSize: 0),
+                        ),
+                        onChanged: (value) {
+                          authService.tempDisplayName = value;
+                        },
+                      ),
+                    ),
+                             
+                    SettingsOptions(
+                      leading: Icons.image_rounded, 
+                      title: 'Imagen de perfil', 
+                      content: Row(
+                        children: [
+                          const SizedBox(width: 6),
+                
+                          Icon(Icons.upload_file_rounded, color: colors.outline), // TODO cambiar color al implementar
+                
+                          Expanded(
+                            child: TextFormField(
+                              initialValue: 'Función no disponible',
+                              enabled: false,
+                              readOnly: true,
+                              enableInteractiveSelection: false,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 14, color: colors.outline),
+                              decoration: const InputDecoration(
+                                isCollapsed: true,
+                                border: UnderlineInputBorder(borderSide: BorderSide.none),
+                                floatingLabelBehavior: FloatingLabelBehavior.never,
+                                alignLabelWithHint: true,
+                              ),
+                              onChanged: (value) {
+                                
+                              },
                             ),
-                            onChanged: (value) {
-                              
-                            },
+                          ),
+                
+                          Icon(Icons.photo_camera_rounded, color: colors.outline), // TODO cambiar color al implementar
+                
+                          const SizedBox(width: 6),
+                        ],
+                      )
+                    ),
+                             
+                    SettingsOptions(
+                      leading: Icons.palette_rounded, 
+                      title: 'Tema de color',
+                      content: DropdownMenu(                     
+                        width: 173,
+                        label: Center(
+                          child: Transform.translate(
+                            offset: const Offset(4, 0), 
+                            child: Text(themeColor.getColorName()!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14))
                           ),
                         ),
-              
-                        Icon(Icons.photo_camera_rounded, color: colors.outline), // TODO cambiar color al implementar
-              
-                        const SizedBox(width: 6),
-                      ],
-                    )
-                  ),
-                           
-                  SettingsOptions(
-                    leading: Icons.palette_rounded, 
-                    title: 'Tema de color',
-                    content: DropdownMenu(                     
-                      width: 173,
-                      label: Center(
-                        child: Transform.translate(
-                          offset: const Offset(4, 0), 
-                          child: Text(themeColor.getColorName()!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14))
+                        initialSelection: themeColor.themeColor,
+                        enableSearch: false,
+                        enableFilter: false,
+                        leadingIcon: const SizedBox(width: 32,), //48
+                        textStyle: const TextStyle(fontSize: 14),
+                        trailingIcon: Transform.translate(
+                          offset: const Offset(0, -6),
+                          child: const Icon(Icons.arrow_drop_down)
+                        ), // 32
+                        selectedTrailingIcon: Transform.translate(
+                          offset: const Offset(0, -6),
+                          child: const Icon(Icons.arrow_drop_up)
+                        ),
+                        expandedInsets: const EdgeInsets.all(0),
+                        inputDecorationTheme: const InputDecorationTheme(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.all(0),
+                          isDense: true,
+                          isCollapsed: false,
+                        ),
+                        dropdownMenuEntries: themeColor.dropDownThemeEntries(),
+                        menuStyle: MenuStyle(
+                          backgroundColor: WidgetStatePropertyAll(colors.surfaceContainerHigh),
+                          alignment: Alignment.lerp(Alignment.centerLeft, Alignment.centerRight, 0.17)
+                        ),
+                        onSelected: (color) => themeColor.setThemeColor(color!),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => themeColor.setIsDarkMode(),
+                      child: SettingsOptions(
+                        leading: Icons.dark_mode_rounded, 
+                        title: 'Modo oscuro',
+                        content: Text(
+                          themeColor.isDarkMode
+                            ? 'Activado'
+                            : 'Desactivado', 
+                          style: const TextStyle(fontSize: 14)
                         ),
                       ),
-                      initialSelection: themeColor.themeColor,
-                      enableSearch: false,
-                      enableFilter: false,
-                      leadingIcon: const SizedBox(width: 32,), //48
-                      textStyle: const TextStyle(fontSize: 14),
-                      trailingIcon: Transform.translate(
-                        offset: const Offset(0, -6),
-                        child: const Icon(Icons.arrow_drop_down)
-                      ), // 32
-                      selectedTrailingIcon: Transform.translate(
-                        offset: const Offset(0, -6),
-                        child: const Icon(Icons.arrow_drop_up)
-                      ),
-                      expandedInsets: const EdgeInsets.all(0),
-                      inputDecorationTheme: const InputDecorationTheme(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(0),
-                        isDense: true,
-                        isCollapsed: false,
-                      ),
-                      dropdownMenuEntries: themeColor.dropDownThemeEntries(),
-                      menuStyle: MenuStyle(
-                        backgroundColor: WidgetStatePropertyAll(colors.surfaceContainerHigh),
-                        alignment: Alignment.lerp(Alignment.centerLeft, Alignment.centerRight, 0.17)
-                      ),
-                      onSelected: (color) => themeColor.setThemeColor(color!),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () => themeColor.setIsDarkMode(),
-                    child: SettingsOptions(
-                      leading: Icons.dark_mode_rounded, 
-                      title: 'Modo oscuro',
-                      content: Text(
-                        themeColor.isDarkMode
-                          ? 'Activado'
-                          : 'Desactivado', 
-                        style: const TextStyle(fontSize: 14)
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-    
-          const SizedBox(height: 20),
-    
-          const SettingsEndButtons(),
-        ],
-       ),
+      
+            const SizedBox(height: 20),
+      
+            const SettingsEndButtons(),
+      
+            SizedBox(height: (size.width * 0.15) / 2),
+          ],
+         ),
+      ),
     );
   }
 }

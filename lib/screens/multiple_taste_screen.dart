@@ -192,7 +192,7 @@ class _MultipleTasteScreenBodyState extends State<MultipleTasteScreenBody> {
           }
         ),
       ),
-      bottomSheet: CustomMultipleBottomSheet(
+      bottomNavigationBar: CustomMultipleBottomSheet(
         pageController: pageController, 
         onPressed: () async {
           onPressedBottomSheetButton(

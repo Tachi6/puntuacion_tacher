@@ -103,7 +103,6 @@ class SimpleTasteQuiz extends StatelessWidget {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleServices>(context);
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     List<Wines> wineList = [];
 
@@ -119,7 +118,7 @@ class SimpleTasteQuiz extends StatelessWidget {
     }
 
     return SingleChildScrollView(
-      padding: EdgeInsets.only(bottom: 10 + bottomPadding),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Stack(
         children: [
           Align(
@@ -260,7 +259,6 @@ class AdvancedTasteQuiz extends StatelessWidget {
 
     final multipleService = context.read<MultipleServices>(); 
     final multipleTaste = context.read<MultipleTasteProvider>();
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     List<Wines> wineList(MultipleServices multipleService, MultipleTasteProvider multipleTaste) {
       List<Wines> wineList = [];
@@ -281,7 +279,7 @@ class AdvancedTasteQuiz extends StatelessWidget {
     }
 
     return SingleChildScrollView(
-      padding: EdgeInsets.only(bottom: 10 + bottomPadding),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Stack(
         children: [
           Align(

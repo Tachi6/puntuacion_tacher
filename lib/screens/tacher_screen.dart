@@ -9,7 +9,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
-import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class TacherScreen extends StatefulWidget {
@@ -77,7 +76,6 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
   @override
   Widget build(BuildContext context) {
 
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
     final Textos textos = Textos();
     var titleGroup = AutoSizeGroup();
     var bodyGroup = AutoSizeGroup();
@@ -150,7 +148,10 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
     
         if (!widget.isLittleScreen) const Spacer(flex: 2),
         // Height of BottomSheet + Rating Box Bottom Padding + BottomElement Height
-        SizedBox(height: 68 + bottomPadding),
+        const SafeArea(
+          top: false,
+          child: SizedBox(height: 68)
+        ),
       ]
     );
   }

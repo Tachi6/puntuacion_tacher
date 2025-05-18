@@ -33,7 +33,6 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
     const double chipListHeight = 65;
 
     return PopScope(
@@ -56,11 +55,14 @@ class DetailsScreen extends StatelessWidget {
               ],
             ),
       
-            Padding(
-              padding: EdgeInsets.only(bottom: bottomPadding + 5),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: _OtherTasteChipList(wine: wine, chipListHeight: chipListHeight),
+            SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: _OtherTasteChipList(wine: wine, chipListHeight: chipListHeight),
+                ),
               ),
             ),
           ],
@@ -373,7 +375,6 @@ class _WinePoster extends StatelessWidget {
     final otherTasteProvider = Provider.of<OtherTasteProvider>(context);
     final WineTaste wineTaste = otherTasteProvider.selectedWineTaste 
       ?? WineTasteMapper.wineSpecsToWinesTaste(wine: wine);
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     return Container(
       padding: const EdgeInsets.only(left: 20, right: 20),
@@ -443,7 +444,10 @@ class _WinePoster extends StatelessWidget {
           
           if (wineTaste.notasBoca != '') _CustomLine(label: 'Cata Boca', text: wineTaste.notasBoca!, styles: styles),
 
-          SizedBox(height: chipListHeight + 15 + bottomPadding),
+          SafeArea(
+            top: false, 
+            child: SizedBox(height: chipListHeight + 10)
+          ),
         ],
       )
     );

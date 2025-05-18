@@ -32,7 +32,6 @@ class CreateMultipleTasteScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
 
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
     final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
     final colors = Theme.of(context).colorScheme;
     final double opacity = 0.8;
@@ -49,12 +48,15 @@ class CreateMultipleTasteScreen extends StatelessWidget{
       ),
       body: Stack(
         children: [
-          BottomImageBackground(image: 'assets/initial-multiple-background.jpg', opacity: opacity, bottomPadding: bottomPadding),
+          SafeArea(
+            top: false,
+            child: BottomImageBackground(image: 'assets/initial-multiple-background.jpg', opacity: opacity, bottomPadding: 0)
+          ),
 
           if (!themeColor.isDarkMode) Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: 58 + bottomPadding,
+              height: 58,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -131,7 +133,6 @@ class _CustomBody extends StatelessWidget {
 
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final styles = Theme.of(context).textTheme;
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     Timer? timer;
 
@@ -203,9 +204,12 @@ class _CustomBody extends StatelessWidget {
         
             const SizedBox(height: 10),
         
-            SizedBox(
-              height: multipleTaste.winesMultipleTaste.length * 52 + 58 + bottomPadding + 5,
-              child: const ListViewMultipleWines()
+            SafeArea(
+              top: false,
+              child: SizedBox(
+                height: multipleTaste.winesMultipleTaste.length * 52 + 58 + 5,
+                child: const ListViewMultipleWines()
+              ),
             ),
           ],
         ),

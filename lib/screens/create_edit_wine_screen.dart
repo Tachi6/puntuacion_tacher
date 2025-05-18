@@ -69,68 +69,68 @@ class _FixedBottomSheet extends StatelessWidget {
     final winesService = Provider.of<WineServices>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
     final colors = Theme.of(context).colorScheme;
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
-    return Material(
-      elevation: 1,
-      borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(28),
-        topRight: Radius.circular(28),
-      ),
-      color: colors.surfaceContainerLow,
-      child: Container(
-        height: 58 + bottomPadding,
-        padding: EdgeInsets.only(bottom: bottomPadding),
-        alignment: Alignment.center,
-        width: double.infinity,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            CustomElevatedButton(
-              width: 120,
-              label: 'Cancelar',
-              onPressed: () async {
-                FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
-                wineForm.resetSettings();
-                Navigator.pop(context, false);
-                wineForm.autovalidateMode = AutovalidateMode.disabled;
-              },
-            ),
-      
-            CustomElevatedButton(
-              width: 120,
-              label: 'Guardar',
-              isSendingLabel: 'Guardando',
-              onPressed: () async {
-                FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
-                wineForm.autovalidateMode = AutovalidateMode.always;
-                
-                if (wineForm.wine.imagenVino != null && wineForm.wine.imagenVino != '') {
-                  final urlChecked = await winesService.isValidImage(wineForm.wine.imagenVino);
-                  if (!urlChecked && context.mounted) {
-                    NotificationServices.showSnackbar('IMAGEN DE VINO ERRONEA O FORMATO NO ACEPTADO', context);
-                    return;
-                  }
-                }
-                if (wineForm.wine.logoBodega != null && wineForm.wine.logoBodega != '') {
-                  final urlChecked = await winesService.isValidImage(wineForm.wine.logoBodega);
-                  if (!urlChecked && context.mounted) {
-                    NotificationServices.showSnackbar('LOGO BODEGA ERRONEO O FORMATO NO ACEPTADO', context);
-                    return;
-                  }
-                }
-                if (wineForm.isValidForm()) {
-                  wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
-                  if (wineForm.wine.imagenVino == '') wineForm.wine.imagenVino = null;
-                  if (wineForm.wine.logoBodega == '') wineForm.wine.logoBodega = null;
-                  final String wineId = await winesService.createWine(wineForm.wine);
-                  wineForm.setWineId(wineId);
-                  if (context.mounted) saveEndAction();
+    return SafeArea(
+      top: false,
+      child: Material(
+        elevation: 1,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(28),
+          topRight: Radius.circular(28),
+        ),
+        color: colors.surfaceContainerLow,
+        child: SizedBox(
+          height: 58,
+          width: double.infinity,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CustomElevatedButton(
+                width: 120,
+                label: 'Cancelar',
+                onPressed: () async {
+                  FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
+                  wineForm.resetSettings();
+                  Navigator.pop(context, false);
                   wineForm.autovalidateMode = AutovalidateMode.disabled;
+                },
+              ),
+        
+              CustomElevatedButton(
+                width: 120,
+                label: 'Guardar',
+                isSendingLabel: 'Guardando',
+                onPressed: () async {
+                  FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
+                  wineForm.autovalidateMode = AutovalidateMode.always;
+                  
+                  if (wineForm.wine.imagenVino != null && wineForm.wine.imagenVino != '') {
+                    final urlChecked = await winesService.isValidImage(wineForm.wine.imagenVino);
+                    if (!urlChecked && context.mounted) {
+                      NotificationServices.showSnackbar('IMAGEN DE VINO ERRONEA O FORMATO NO ACEPTADO', context);
+                      return;
+                    }
+                  }
+                  if (wineForm.wine.logoBodega != null && wineForm.wine.logoBodega != '') {
+                    final urlChecked = await winesService.isValidImage(wineForm.wine.logoBodega);
+                    if (!urlChecked && context.mounted) {
+                      NotificationServices.showSnackbar('LOGO BODEGA ERRONEO O FORMATO NO ACEPTADO', context);
+                      return;
+                    }
+                  }
+                  if (wineForm.isValidForm()) {
+                    wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
+                    if (wineForm.wine.imagenVino == '') wineForm.wine.imagenVino = null;
+                    if (wineForm.wine.logoBodega == '') wineForm.wine.logoBodega = null;
+                    final String wineId = await winesService.createWine(wineForm.wine);
+                    wineForm.setWineId(wineId);
+                    if (context.mounted) saveEndAction();
+                    wineForm.autovalidateMode = AutovalidateMode.disabled;
+                  }
                 }
-              }
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -167,165 +167,167 @@ class CreateEditWineForm extends StatelessWidget {
     final winesService = Provider.of<WineServices>(context, listen: true);
     final Wines wine = wineFormProvider.wine;
     final Size size = MediaQuery.of(context).size;
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     return Form(
       key: wineFormProvider.formKey,
       autovalidateMode: wineFormProvider.autovalidateMode,
-      child: SingleChildScrollView(
-        padding: EdgeInsets.only(left: 10, right: 10, bottom: 58 + bottomPadding),
-        child: Column(
-          children: [
-            const SizedBox(height: 5),
-        
-            const Text('Ficha técnica del vino', style: TextStyle(fontSize: 16, overflow: TextOverflow.ellipsis)),
-            
-            TextFormFieldText(
-              label: 'Vino', 
-              initialValue: wine.vino, 
-              onChanged: (value) => wine.vino = value, 
-              validator: (value) {
-                if(value!.isEmpty) return 'Este campo es obligatorio';
+      child: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: Column(
+            children: [
+              const SizedBox(height: 5),
           
-                final String wineCheckname = '${removeDiacritics(wine.vino.replaceAll(' ', '').toLowerCase())}${wine.anada}${wine.tipo}${wine.region}';
-                final bool isWineCreated = winesService.winesByIndex.any((element) {
-                  return '${removeDiacritics(element.vino.replaceAll(' ', '').toLowerCase())}${element.anada}${element.tipo}${element.region}' == wineCheckname;
-                },);
-        
-                if (isWineCreated) return 'El vino ya se encuentra en nuestra base de datos';
-          
-                return null;
-              },
-            ),
-            
-            TextFormFieldText(
-              label: 'Bodega', 
-              initialValue: wine.bodega, 
-              onChanged: (value) => wine.bodega = value, 
-              validator: defaultValidator
-            ),
+              const Text('Ficha técnica del vino', style: TextStyle(fontSize: 16, overflow: TextOverflow.ellipsis)),
               
-            TextFormFieldSearch(
-              label: 'Region', 
-              wine: wine, 
-              autocompleteWidth: size.width - 20
-            ),
+              TextFormFieldText(
+                label: 'Vino', 
+                initialValue: wine.vino, 
+                onChanged: (value) => wine.vino = value, 
+                validator: (value) {
+                  if(value!.isEmpty) return 'Este campo es obligatorio';
             
-            TextFormFieldSearch(
-              label: 'Tipo', 
-              wine: wine, 
-              autocompleteWidth: size.width - 20
-            ),
-            
-            TextFormFieldText(
-              label: 'Añada',
-              initialValue: wine.anada == -1 ? '' : wine.anada.toString(), 
-              onChanged: (value) {
-                if (value != '') wine.anada = int.parse(value);
-              }, 
-              validator: (value) {
-                if (value!.isEmpty) return 'Este campo es obligatorio';
+                  final String wineCheckname = '${removeDiacritics(wine.vino.replaceAll(' ', '').toLowerCase())}${wine.anada}${wine.tipo}${wine.region}';
+                  final bool isWineCreated = winesService.winesByIndex.any((element) {
+                    return '${removeDiacritics(element.vino.replaceAll(' ', '').toLowerCase())}${element.anada}${element.tipo}${element.region}' == wineCheckname;
+                  },);
           
-                final int anada = int.parse(value);
-                final year = DateTime.now().toUtc().year;
-                    
-                if (anada < 1950 || anada > year ) return 'Añada no válida';
-          
-                return null;                 
-              }, 
-              textInputFormatter: [
-                FilteringTextInputFormatter.deny(RegExp(r'\D')),
-                FilteringTextInputFormatter.allow(RegExp(r'^[0-9]{1,4}')),
-              ], 
-              textInputType: const TextInputType.numberWithOptions(decimal: false, signed: true),
-              textInputAction: TextInputAction.done,
-            ),
+                  if (isWineCreated) return 'El vino ya se encuentra en nuestra base de datos';
             
-            const SizedBox(height: 20),
-            
-            const Text('Información opcional', style: TextStyle(fontSize: 16, overflow: TextOverflow.ellipsis)),
-            
-            TextFormFieldText(
-              label: 'Variedades', 
-              initialValue: wine.variedades, 
-              onChanged: (value) => wine.variedades = value, 
-              maxLines: 2, 
-              validator: null
-            ),
-        
-            TextFormFieldText(
-              label: 'Graduación', 
-              initialValue: wine.graduacion, 
-              onChanged: (value) => wine.graduacion = value.replaceAll(',', '.'), 
-              validator: (value) {
-                if (value == '') {
                   return null;
-                }
-                double graduation = double.parse(value!.replaceAll(',', '.'));
+                },
+              ),
+              
+              TextFormFieldText(
+                label: 'Bodega', 
+                initialValue: wine.bodega, 
+                onChanged: (value) => wine.bodega = value, 
+                validator: defaultValidator
+              ),
+                
+              TextFormFieldSearch(
+                label: 'Region', 
+                wine: wine, 
+                autocompleteWidth: size.width - 20
+              ),
+              
+              TextFormFieldSearch(
+                label: 'Tipo', 
+                wine: wine, 
+                autocompleteWidth: size.width - 20
+              ),
+              
+              TextFormFieldText(
+                label: 'Añada',
+                initialValue: wine.anada == -1 ? '' : wine.anada.toString(), 
+                onChanged: (value) {
+                  if (value != '') wine.anada = int.parse(value);
+                }, 
+                validator: (value) {
+                  if (value!.isEmpty) return 'Este campo es obligatorio';
             
-                if (graduation > 28 || graduation < 1) {
-                  return 'Valor alcohólico incorrecto';
-                }
-                return null;
-              },
-              textInputType: const TextInputType.numberWithOptions(decimal: true, signed: true),
-              textInputFormatter: [FilteringTextInputFormatter.allow(RegExp(r'^([0-9]{1,2})([\,\.]{0,1})([0-9]{0,1})'))],
-            ),
+                  final int anada = int.parse(value);
+                  final year = DateTime.now().toUtc().year;
+                      
+                  if (anada < 1950 || anada > year ) return 'Añada no válida';
+            
+                  return null;                 
+                }, 
+                textInputFormatter: [
+                  FilteringTextInputFormatter.deny(RegExp(r'\D')),
+                  FilteringTextInputFormatter.allow(RegExp(r'^[0-9]{1,4}')),
+                ], 
+                textInputType: const TextInputType.numberWithOptions(decimal: false, signed: true),
+                textInputAction: TextInputAction.done,
+              ),
+              
+              const SizedBox(height: 20),
+              
+              const Text('Información opcional', style: TextStyle(fontSize: 16, overflow: TextOverflow.ellipsis)),
+              
+              TextFormFieldText(
+                label: 'Variedades', 
+                initialValue: wine.variedades, 
+                onChanged: (value) => wine.variedades = value, 
+                maxLines: 2, 
+                validator: null
+              ),
           
-            TextFormFieldText(
-              label: 'Notas de cata Vista oficial', 
-              initialValue: wine.notaVista, 
-              onChanged: (value) => wine.notaVista = value, 
-              maxLines: 3, 
-              validator: null
-            ),
+              TextFormFieldText(
+                label: 'Graduación', 
+                initialValue: wine.graduacion, 
+                onChanged: (value) => wine.graduacion = value.replaceAll(',', '.'), 
+                validator: (value) {
+                  if (value == '') {
+                    return null;
+                  }
+                  double graduation = double.parse(value!.replaceAll(',', '.'));
+              
+                  if (graduation > 28 || graduation < 1) {
+                    return 'Valor alcohólico incorrecto';
+                  }
+                  return null;
+                },
+                textInputType: const TextInputType.numberWithOptions(decimal: true, signed: true),
+                textInputFormatter: [FilteringTextInputFormatter.allow(RegExp(r'^([0-9]{1,2})([\,\.]{0,1})([0-9]{0,1})'))],
+              ),
+            
+              TextFormFieldText(
+                label: 'Notas de cata Vista oficial', 
+                initialValue: wine.notaVista, 
+                onChanged: (value) => wine.notaVista = value, 
+                maxLines: 3, 
+                validator: null
+              ),
+            
+              TextFormFieldText(
+                label: 'Notas de cata Nariz oficial', 
+                initialValue: wine.notaNariz, 
+                onChanged: (value) => wine.notaNariz = value, 
+                maxLines: 3, 
+                validator: null
+              ),
+            
+              TextFormFieldText(
+                label: 'Notas de cata Boca oficial', 
+                initialValue: wine.notaBoca, 
+                onChanged: (value) => wine.notaBoca = value, 
+                maxLines: 3, 
+                validator: null
+              ),
+            
           
-            TextFormFieldText(
-              label: 'Notas de cata Nariz oficial', 
-              initialValue: wine.notaNariz, 
-              onChanged: (value) => wine.notaNariz = value, 
-              maxLines: 3, 
-              validator: null
-            ),
+              TextFormFieldText(
+                label: 'Descripción oficial', 
+                initialValue: wine.descripcion, 
+                onChanged: (value) => wine.descripcion = value,
+                maxLines: 3, 
+                validator: null
+              ),
           
-            TextFormFieldText(
-              label: 'Notas de cata Boca oficial', 
-              initialValue: wine.notaBoca, 
-              onChanged: (value) => wine.notaBoca = value, 
-              maxLines: 3, 
-              validator: null
-            ),
+              TextFormFieldText(
+                label: 'Imagen del vino (url)', 
+                initialValue: wine.imagenVino ?? '', 
+                onChanged: (value) => wine.imagenVino = value,
+                maxLines: 1, 
+                validator: null,
+                textInputType: TextInputType.url,
+              ),
           
+              TextFormFieldText(
+                label: 'Logo de la bodega (url)', 
+                initialValue: wine.logoBodega ?? '', 
+                onChanged: (value) => wine.logoBodega = value,
+                maxLines: 1, 
+                validator: null,
+                textInputType: TextInputType.url,
+                textInputAction: TextInputAction.done,
+              ),
         
-            TextFormFieldText(
-              label: 'Descripción oficial', 
-              initialValue: wine.descripcion, 
-              onChanged: (value) => wine.descripcion = value,
-              maxLines: 3, 
-              validator: null
-            ),
-        
-            TextFormFieldText(
-              label: 'Imagen del vino (url)', 
-              initialValue: wine.imagenVino ?? '', 
-              onChanged: (value) => wine.imagenVino = value,
-              maxLines: 1, 
-              validator: null,
-              textInputType: TextInputType.url,
-            ),
-        
-            TextFormFieldText(
-              label: 'Logo de la bodega (url)', 
-              initialValue: wine.logoBodega ?? '', 
-              onChanged: (value) => wine.logoBodega = value,
-              maxLines: 1, 
-              validator: null,
-              textInputType: TextInputType.url,
-              textInputAction: TextInputAction.done,
-            ),
-
-            const SizedBox(height: 10),
-          ],
+              const SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
     );

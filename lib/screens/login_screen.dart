@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import 'package:provider/provider.dart';
 
@@ -27,7 +26,6 @@ class LoginForm extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final colors = Theme.of(context).colorScheme;
-    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +38,11 @@ class LoginForm extends StatelessWidget {
       ),
       backgroundColor: Colors.transparent,
       body: Stack(
+        alignment: Alignment.bottomCenter,
         children: [
+          // For the stack has all space
+          const SizedBox.expand(),
+
           Positioned(
             right: 38,
             top: 10,
@@ -59,10 +61,9 @@ class LoginForm extends StatelessWidget {
             ),
           ),
 
-          Positioned(
-            bottom: (size.width * 0.15) / 2,
-            right: (size.width * 0.15) / 2,
-            child: const ContainerLoginForm()
+          const SafeArea(
+            top: false,
+            child: ContainerLoginForm()
           ),
         ],
       )
@@ -76,24 +77,19 @@ class ContainerLoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
     final colors = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
 
-    return  KeyboardVisibilityBuilder(
-      builder: (BuildContext context, isKeyboardVisible) {
-        return Container(
-          height: 310,
-          width: size.width * 0.85,
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
-          margin: EdgeInsets.only(bottom: isKeyboardVisible ? 0 : bottomPadding),
-          decoration: BoxDecoration(
-            color: colors.onPrimaryFixedVariant.withAlpha((255 * 0.8).toInt()),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: const LoginRegisterForm(),
-        );
-      }
+    return Container(
+      height: 310,
+      width: size.width * 0.85,
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
+      margin: EdgeInsets.only(bottom: (size.width * 0.15) / 2),
+      decoration: BoxDecoration(
+        color: colors.onPrimaryFixedVariant.withAlpha((255 * 0.8).toInt()),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: const LoginRegisterForm(),
     );
   }
 }
@@ -150,13 +146,13 @@ class LoginRegisterForm extends StatelessWidget {
             validator: (value) {
               String pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
               RegExp regExp  = RegExp(pattern);
-
+      
               return regExp.hasMatch(value!)
                 ? null
                 : 'Formato de correo electrónico no válido';
             },
           ),
-
+      
           LoginTextFormField(
             obscureText: loginForm.passwordObscure,
             textInputType: TextInputType.visiblePassword,
@@ -185,9 +181,9 @@ class LoginRegisterForm extends StatelessWidget {
               }
             },
           ),
-
+      
           const SizedBox(height: 10),
-
+      
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 1250),
             layoutBuilder: (currentChild, previousChildren) {
@@ -197,9 +193,9 @@ class LoginRegisterForm extends StatelessWidget {
               ? SendLoginForm(key: const ValueKey('register_button'), onPressed: () async => sendLoginForm())
               : SendLoginForm(key: const ValueKey('login_button'), onPressed: () async => sendLoginForm()),
           ),
-
+      
           const SizedBox(height: 10),
-
+      
           TextButton(
             onPressed: () => loginForm.isRegister = !loginForm.isRegister,
             style: const ButtonStyle(

@@ -77,7 +77,6 @@ class UserMultipleTasteDetails extends StatelessWidget {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleServices>(context);
     final wineTasteList = multipleTaste.userMultipleTaste;
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     return SizedBox(
       width: double.infinity,
@@ -125,7 +124,10 @@ class UserMultipleTasteDetails extends StatelessWidget {
             ),
           ),             
           // Height of BottomSHeet
-          SizedBox(height: 58 + 10 + bottomPadding),
+          const SafeArea(
+            top: false,
+            child: SizedBox(height: 58 + 10)
+          ),
         ]
       ),
     );
@@ -283,7 +285,6 @@ class _CustomListItem extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final styles = Theme.of(context).textTheme;
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,7 +357,10 @@ class _CustomListItem extends StatelessWidget {
           child: Divider(),
         ),
 
-        if (addEndSizedBox != null) SizedBox(height: bottomPadding + 10),
+        if (addEndSizedBox != null) const SafeArea(
+          top: false,
+          child: SizedBox(height: 10)
+        ),
       ],
     );
   }

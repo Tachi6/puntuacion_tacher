@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
-import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
@@ -27,10 +26,6 @@ class ChangeDisplayName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final size = MediaQuery.of(context).size;
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -41,12 +36,15 @@ class ChangeDisplayName extends StatelessWidget {
         ),
       ),
       backgroundColor: Colors.transparent,
-      body: Stack(
+      body: const Stack(
+        alignment: Alignment.bottomCenter,
         children: [
-          Positioned(
-            bottom: (size.width * 0.15) / 2 + bottomPadding,
-            right: (size.width * 0.15) / 2,
-            child: const ChangeDisplayNameBody()
+          // For get all space
+          SizedBox.expand(),
+
+          SafeArea(
+            top: false,
+            child: ChangeDisplayNameBody()
           ),
         ],
       ),
@@ -71,6 +69,7 @@ class ChangeDisplayNameBody extends StatelessWidget {
       width: size.width * 0.85,
       height: 240,
       padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 30),
+      margin: EdgeInsets.only(bottom: (size.width * 0.15) / 2),
       decoration: BoxDecoration(
         color: colors.onPrimaryFixedVariant.withAlpha((255 * 0.8).toInt()),
         borderRadius: BorderRadius.circular(16),

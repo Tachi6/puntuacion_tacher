@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import 'package:puntuacion_tacher/providers/providers.dart';
 
 class CustomBottomSheet extends StatelessWidget {
   const CustomBottomSheet({
@@ -18,35 +15,45 @@ class CustomBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final double bottomPadding = context.read<ScreenElementsSizeProvider>().bottomElementHeight;
+    final colors = Theme.of(context).colorScheme;
     
-    return Container(
-      height: 58 + bottomPadding,
-      alignment: Alignment.center,
-      width: double.infinity,
-      padding: EdgeInsets.only(bottom: bottomPadding, right: 16, left: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          leading != null || trailing != null 
-            ? SizedBox(
-              height: 58, 
-              width: 58, 
-              child: leading
-            )
-            : const SizedBox(),
-
-          widgetButton,
-
-          leading != null || trailing != null
-            ? SizedBox(
-              height: 58, 
-              width: 58, 
-              child: trailing
-            )
-            : const SizedBox(),
-        ],
+    return SafeArea(
+      top: false,
+      child: Material(
+        elevation: 1,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(28),
+          topRight: Radius.circular(28),
+        ),
+        color: colors.surfaceContainerLow,
+        child: Container(
+          height: 58,
+          width: double.infinity,
+          padding: const EdgeInsets.only(right: 16, left: 16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              leading != null || trailing != null 
+                ? SizedBox(
+                  height: 58, 
+                  width: 58, 
+                  child: leading
+                )
+                : const SizedBox(),
+        
+              widgetButton,
+        
+              leading != null || trailing != null
+                ? SizedBox(
+                  height: 58, 
+                  width: 58, 
+                  child: trailing
+                )
+                : const SizedBox(),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -43,7 +43,7 @@ class CustomMultipleBottomSheet extends StatelessWidget {
           ? 'Salir'
           : 'Valorando',
       ),
-
+    
       leading: screenProvider.multiplePage == 0 
         ? null
         : TextButton(
@@ -75,7 +75,7 @@ class CustomMultipleBottomSheet extends StatelessWidget {
             ],
           ),
         ),
-
+    
       trailing: screenProvider.multiplePage == (totalPages - 1) 
         ? null
         : TextButton(
