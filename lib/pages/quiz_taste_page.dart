@@ -141,7 +141,7 @@ class SimpleTasteQuiz extends StatelessWidget {
           Container(
             // height: 1760, //TODO: hacer height mas dinamico
             height: textMaxHeight(wineList, multipleTaste) + padding + 44 + 2 + 110 + (multipleService.isMultipleTasted ? (30 + 55) : 0), // top padding + 44 _CustomDropDownButton + 2 Border + 108 of container padding + rows checkWine
-            padding: EdgeInsets.only(top: 40 + (multipleService.isMultipleTasted ? 55 : 0), bottom: 68),
+            padding: EdgeInsets.only(top: 40 + (multipleService.isMultipleTasted ? 55 : 0)),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: wineList.length,
@@ -300,7 +300,7 @@ class AdvancedTasteQuiz extends StatelessWidget {
           ),
       
           Padding(
-            padding: EdgeInsets.only(top: 40 + (multipleService.isMultipleTasted ? 55 : 0), bottom: 68),
+            padding: EdgeInsets.only(top: 40 + (multipleService.isMultipleTasted ? 55 : 0)),
             child: Column(
               children: [
                 if (multipleTaste.multipleTaste.hidden) AdvancedQuizRowSpecs(

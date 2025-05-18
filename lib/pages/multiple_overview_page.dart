@@ -23,11 +23,8 @@ class _MultipleOverviewPageState extends State<MultipleOverviewPage> with Automa
     final multipleService = Provider.of<MultipleServices>(context);
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final size = MediaQuery.of(context).size;
-    final statusBarHeight = View.of(context).padding.top / View.of(context).devicePixelRatio;
     // 20 of lateral padding
     final newWidth = size.width - 20;
-    // Height of StatusBar, AppBar, BottomSheet, 4 x Normal Row, 2 x Thin Row, 1 SizedBox 5px 
-    final newHeight = size.height - statusBarHeight - 48 - 58 - 160 - 40 - 5;
 
     return Scaffold(
       appBar: CustomMultipleAppBar(
@@ -53,7 +50,7 @@ class _MultipleOverviewPageState extends State<MultipleOverviewPage> with Automa
           return currentChild!;
         },
         child: multipleTaste.overview
-          ? OverviewMultipleTaste(key: const ValueKey<String>('overviewMultiple'), newWidth: newWidth, newHeight: newHeight)
+          ? OverviewMultipleTaste(key: const ValueKey<String>('overviewMultiple'), newWidth: newWidth)
           : UserMultipleTasteDetails(key: const ValueKey<String>('userDetails'), newWidth: newWidth),
       ),
     );
@@ -119,14 +116,10 @@ class UserMultipleTasteDetails extends StatelessWidget {
                   itemsDetailsComments: (wineTasteList[index].comentarios != '')
                     ? _ItemDetailsComments(comments: wineTasteList[index].comentarios!)
                     : null,
+                  addEndSizedBox: wineTasteList.length - 1 == index ? true : null,
                 );
               },
             ),
-          ),             
-          // Height of BottomSHeet
-          const SafeArea(
-            top: false,
-            child: SizedBox(height: 58 + 10)
           ),
         ]
       ),
@@ -138,11 +131,9 @@ class OverviewMultipleTaste extends StatelessWidget {
   const OverviewMultipleTaste({
     super.key,
     required this.newWidth,
-    required this.newHeight,
   });
 
   final double newWidth;
-  final double newHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -164,8 +155,8 @@ class OverviewMultipleTaste extends StatelessWidget {
 
           _TasteHeader(newWidth: newWidth, lastLabel: 'Puntos'),
 
-          SizedBox(
-            height: newHeight / 2,
+          Expanded(
+            flex: 1,
             child: ListView.builder(
               padding: const EdgeInsets.all(0),
               itemCount: wineTasteList.length,
@@ -183,19 +174,17 @@ class OverviewMultipleTaste extends StatelessWidget {
             ),
           ),
 
-          const Spacer(), 
-
           const _OutsideTitle(label: 'Valoraciones medias de cata'),  
 
           _TasteHeader(newWidth: newWidth, lastLabel: 'Puntos'),
           
-          SizedBox(
-            height: newHeight / 2,
+          Expanded(
+            flex: 1,
             child: ListView.builder(
               padding: const EdgeInsets.all(0),
               itemCount: wineTasteList.length,
               itemBuilder: (context, index) {
-      
+                  
                 final List<AverageRatings> averageRatings = multipleTaste.sortAverageRatings();
                 
                 return _CustomListItem(
@@ -211,8 +200,6 @@ class OverviewMultipleTaste extends StatelessWidget {
               },
             ),
           ),
-          // Height of BottomSHeet
-          const SizedBox(height: 58),
         ],
       ),
     );
