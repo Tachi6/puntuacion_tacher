@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/presentation/providers/multiple_list_provider.dart';
 
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
@@ -15,7 +16,6 @@ class CheckAuthScreen extends StatelessWidget {
 
     final authService = Provider.of<AuthServices>(context, listen: false);
     final winesService = Provider.of<WineServices>(context, listen: false);
-    final multipleService = Provider.of<MultipleServices>(context, listen: false);
     final userService = Provider.of<UserServices>(context, listen: false);
     final colors = Theme.of(context).colorScheme;
 
@@ -24,7 +24,7 @@ class CheckAuthScreen extends StatelessWidget {
         userService.loadUsers(),
         winesService.loadWines(),
         winesService.loadWinesTaste(),
-        multipleService.loadMultiples(),
+        MultipleListProvider().loadMultiple(),
       ]);
     }
 

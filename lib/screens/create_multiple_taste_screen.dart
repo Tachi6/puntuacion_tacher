@@ -5,6 +5,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/pages/multiple_taste_page.dart';
+import 'package:puntuacion_tacher/presentation/providers/multiple_form_provider.dart';
+import 'package:puntuacion_tacher/presentation/providers/multiple_list_provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import 'package:puntuacion_tacher/helpers/helpers.dart';
@@ -14,65 +17,48 @@ import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/search/search.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
-import '../apptheme/apptheme.dart';
 
-PersistentBottomSheetController viewBottomMenu(BuildContext context) {
-  return showBottomSheet(
-    // clipBehavior: Clip.antiAliasWithSaveLayer,
-    builder: (context) {
-      return const SafeArea(child: MultipleActionsButtons());
-    },
-    context: context,
-  );
-}
-
-class CreateMultipleTasteScreen extends StatelessWidget{
+class CreateMultipleTasteScreen extends StatelessWidget {
   const CreateMultipleTasteScreen({super.key});
-    
+
   @override
   Widget build(BuildContext context) {
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        //TODO: alert dialog de confirmacion
+      },
+      child: ChangeNotifierProvider(
+        create: (context) => MultipleFormProvider(),
+        child: const CreateMultipleTaste(),
+      ),
+    );
+  }
+}
 
-    final themeColor = Provider.of<ChangeThemeProvider>(context, listen: true);
-    final colors = Theme.of(context).colorScheme;
+class CreateMultipleTaste extends StatelessWidget{
+  const CreateMultipleTaste({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+  
     final double opacity = 0.8;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: 48,
-        titleSpacing: 0,
-        title: const _CustomAppBar(),
-        // scrolledUnderElevation: 0,
-        // forceMaterialTransparency: true,
-      ),
-      body: Stack(
-        children: [
-          SafeArea(
-            top: false,
-            child: BottomImageBackground(image: 'assets/initial-multiple-background.jpg', opacity: opacity, bottomPadding: 0)
-          ),
+    return Stack(
+      children: [
+        BottomImageBackground(image: 'assets/initial-multiple-background.jpg', opacity: opacity, bottomFlex: 1),
 
-          if (!themeColor.isDarkMode) Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 58,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.white.withAlpha((255 * opacity.toInt())),
-                    colors.surface,
-                  ],
-                )
-              ),
-            ),
+        Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            toolbarHeight: 48,
+            titleSpacing: 0,
+            title: const _CustomAppBar(),
           ),
-
-          const _CustomBody(),
-        ],
-      ),
+          body: const _CustomBody(),
+        ),
+      ],
     );
   }
 }
@@ -83,7 +69,6 @@ class _CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final colors = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
 
@@ -91,32 +76,47 @@ class _CustomAppBar extends StatelessWidget {
       children: [
         IconButton(
           onPressed: () {
-            // To close bottomsheet
-            if (multipleTaste.winesMultipleTaste.length > 1) Navigator.pop(context);
-            multipleTaste.resetSettings();
-            multipleTaste.autovalidateMode = AutovalidateMode.disabled;
+            if (context.read<MultipleFormProvider>().isBottomSheetOpen) {
+              Navigator.pop(context);
+            }
             Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back_rounded, color: colors.onSurface)
         ),
-          
-        Container(
-          height: 48,
-          alignment: Alignment.center,
+        
+
+        SizedBox(
           width: size.width - 96,
-          child: Text(
-            multipleTaste.multipleName,
-            textAlign: TextAlign.center,
+          height: 48,
+          child: TextField(
+            minLines: 1,
             maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 20, height: 1.1)),
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 20, height: 1.1),
+            decoration: InputDecoration(
+              hintText: context.watch<MultipleFormProvider>().hintName,
+              border: const UnderlineInputBorder(borderSide: BorderSide.none)
+            ),
+            onChanged: (value) => context.read<MultipleFormProvider>().name = value,
+            onTap: () => context.read<MultipleFormProvider>().hintName = '',
+          ),
         ),
+        // Container(
+        //   height: 48,
+        //   alignment: Alignment.center,
+        //   width: size.width - 96,
+        //   child: Text(
+        //     context.read<MultipleFormProvider>().name,
+        //     textAlign: TextAlign.center,
+        //     maxLines: 2,
+        //     overflow: TextOverflow.ellipsis,
+        //     style: const TextStyle(fontSize: 20, height: 1.1)
+        //   ),
+        // ),
               
         IconButton(
           onPressed: () {
-            // To close bottomsheet
-            if (multipleTaste.winesMultipleTaste.length > 1) Navigator.pop(context);
-            multipleTaste.clearWines();
+            context.read<MultipleFormProvider>().clearMultipleWines(context);
           },
           icon: Icon(Icons.clear_all_rounded, color: colors.onSurface)
         ),
@@ -131,9 +131,6 @@ class _CustomBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final styles = Theme.of(context).textTheme;
-
     Timer? timer;
 
     return Container(
@@ -146,50 +143,26 @@ class _CustomBody extends StatelessWidget {
           children: [
             const SizedBox(height: 10),
         
-            TextFormField(
+            _CustomTextFormField(
               maxLines: null,
-              style: styles.bodySmall,
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.fromLTRB(16, 16, 12, 10),
-                labelText: 'Descripcion de la cata a realizar',
-                labelStyle: styles.bodySmall,
-                floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(width: 1)
-                ),
-              ),
+              label: 'Descripcion de la cata a realizar',
               onChanged: (value) {
                 timer?.cancel();
                 timer = Timer(const Duration(milliseconds: 500), () {
-                  multipleTaste.multipleTaste.description = value;
-                },);
+                  context.read<MultipleFormProvider>().description = value;
+                });
               },
-              onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
             ),
-        
+
             const SizedBox(height: 20),
-        
-            TextFormField(    
-              style: styles.bodySmall,
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.fromLTRB(16, 16, 12, 10),
-                labelText: 'Contraseña de la cata (opcional)',
-                labelStyle: styles.bodySmall,
-                floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(width: 1)
-                ),
-              ),
+
+            _CustomTextFormField(
+              maxLines: 1,
+              label: 'Contraseña de la cata (opcional)',
               onChanged: (value) {
                 final String encryptedPassword = EncryptionService().encryptData(value);
-                
-                multipleTaste.multipleTaste.password = encryptedPassword;
+                context.read<MultipleFormProvider>().password = encryptedPassword;
               },
-              onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
             ),
         
             const SizedBox(height: 20),
@@ -207,13 +180,65 @@ class _CustomBody extends StatelessWidget {
             SafeArea(
               top: false,
               child: SizedBox(
-                height: multipleTaste.winesMultipleTaste.length * 52 + 58 + 5,
-                child: const ListViewMultipleWines()
+                height: context.watch<MultipleFormProvider>().wineSequence.length * 52 + 58 + 5,
+                child: const ListViewMultipleWines(),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _CustomTextFormField extends StatelessWidget {
+  const _CustomTextFormField({
+    required this.maxLines,
+    required this.label,
+    this.controller,
+    this.onChanged,
+    this.suffixIcon,
+    this.onTap,
+    this.readOnly,
+    this.canRequestFocus,
+  });
+
+  final int? maxLines;
+  final String label;
+  final TextEditingController? controller;
+  final void Function(String)? onChanged;
+  final Widget? suffixIcon;
+  final void Function()? onTap;
+  final bool? readOnly;
+  final bool? canRequestFocus;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final styles = Theme.of(context).textTheme;
+
+    return TextFormField(
+      minLines: 1,   
+      maxLines: maxLines,
+      readOnly: readOnly ?? false,
+      canRequestFocus: canRequestFocus ?? true,
+      controller: controller,
+      style: styles.bodySmall,
+      decoration: InputDecoration(
+        contentPadding: const EdgeInsets.fromLTRB(16, 16, 12, 10),
+        labelText: label,
+        labelStyle: styles.bodySmall,
+        floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(width: 1)
+        ),
+        suffixIcon: suffixIcon,
+      ),
+      onChanged: onChanged,
+      onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+      onTap: onTap,
     );
   }
 }
@@ -233,6 +258,12 @@ class _DateTextFormFieldState extends State<DateTextFormField> {
   void initState() {
     super.initState();
     dateController = TextEditingController();
+    dateController.addListener(() {
+      if (dateController.value.text == '' || dateController.value.text.contains('de')) return;
+      final String dateLimit = dateController.value.text; 
+      context.read<MultipleFormProvider>().dateLimit = dateLimit;
+      dateController.text = CustomDatetime().toPlainText(dateController.value.text);
+    });
   }
 
   @override
@@ -243,8 +274,6 @@ class _DateTextFormFieldState extends State<DateTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-
-    final styles = Theme.of(context).textTheme;
 
     void showCustomDialog() {
       showGeneralDialog(
@@ -266,26 +295,14 @@ class _DateTextFormFieldState extends State<DateTextFormField> {
       );
     }
 
-    return TextFormField(
-      controller: dateController,  
-      minLines: 1,
+    return _CustomTextFormField(
+      maxLines: 1, 
+      label: 'Fecha límite de cata (opcional)',
+      controller: dateController,
+      suffixIcon: const Icon(Icons.calendar_month_rounded),
+      onTap: showCustomDialog,
       readOnly: true,
       canRequestFocus: false,
-      autofocus: false,
-      style: styles.bodySmall,
-      decoration: InputDecoration(
-        contentPadding: const EdgeInsets.fromLTRB(16, 16, 12, 10),
-        labelText: 'Fecha límite de cata (opcional)',
-        labelStyle: styles.bodySmall,
-        floatingLabelStyle: styles.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(width: 1)
-        ),
-        suffixIcon: const Icon(Icons.calendar_month_rounded),
-      ),
-      onTap: showCustomDialog,
     );
   }
 }
@@ -300,9 +317,6 @@ class CalendarDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-
     return CustomAlertDialog(
       title: 'Fecha limite de cata',
       cancelText: 'Cancelar',
@@ -333,8 +347,7 @@ class CalendarDialog extends StatelessWidget {
           onSelectionChanged: (dateRangePickerSelectionChangedArgs) {
             final DateTime date = dateRangePickerSelectionChangedArgs.value;
             final String dateEndDay = CustomDatetime().toTextToEndOfDay(date);
-            multipleTaste.multipleTaste.dateLimit = dateEndDay;
-            dateController.text = CustomDatetime().toPlainText(dateEndDay);
+            dateController.text = dateEndDay;
             Navigator.pop(context);
           },
         )
@@ -357,8 +370,9 @@ class _ListViewMultipleWinesState extends State<ListViewMultipleWines> {
   @override
   Widget build(BuildContext context) {
 
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final multipleFormProvider = context.watch<MultipleFormProvider>();
     final colors = Theme.of(context).colorScheme;
+    final List<Wines> wines = context.watch<WineServices>().winesByIndex;
 
     return Column(
       children: [
@@ -368,18 +382,20 @@ class _ListViewMultipleWinesState extends State<ListViewMultipleWines> {
             proxyDecorator: (child, index, animation) {
               return CustomMultipleWinesRow(
                 key: Key('move_$index'),
+                wine: wines.firstWhere((wine) => wine.id == multipleFormProvider.wineSequence[index]),
                 index: index,
-                maxIndex: multipleTaste.winesMultipleTaste.length - 1,
                 color: colors.surfaceContainerLow,
+                hiddenTaste: multipleFormProvider.hidden,
               );
             },  
-            itemCount: multipleTaste.winesMultipleTaste.length, 
+            itemCount: multipleFormProvider.wineSequence.length, 
             itemBuilder: (context, index) {
               return CustomMultipleWinesRow(
                 key: Key('main_$index'),
+                wine: wines.firstWhere((wine) => wine.id == multipleFormProvider.wineSequence[index]),
                 index: index,
-                maxIndex: multipleTaste.winesMultipleTaste.length - 1,
                 color: colors.surfaceContainerHigh,
+                hiddenTaste: multipleFormProvider.hidden,
               );  
             }, 
             onReorder: (int oldIndex, int newIndex) {
@@ -387,8 +403,7 @@ class _ListViewMultipleWinesState extends State<ListViewMultipleWines> {
                 if (oldIndex < newIndex) {
                   newIndex -= 1;
                 }
-                final Wines item = multipleTaste.winesMultipleTaste.removeAt(oldIndex);
-                multipleTaste.winesMultipleTaste.insert(newIndex, item);
+                context.read<MultipleFormProvider>().moveMultipleWine(oldIndex, newIndex);
               });
             },
           ),
@@ -401,19 +416,20 @@ class _ListViewMultipleWinesState extends State<ListViewMultipleWines> {
 class CustomMultipleWinesRow extends StatelessWidget {
   const CustomMultipleWinesRow({
     super.key,
-    required this.index,
-    required this.maxIndex,
     required this.color,
+    required this.wine,
+    required this.index,
+    required this.hiddenTaste,
   });
 
-  final int index;
-  final int maxIndex;
   final Color color;
+  final Wines wine;
+  final int index;
+  final bool hiddenTaste;
 
   @override
   Widget build(BuildContext context) {
 
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final styles = Theme.of(context).textTheme;
 
     return Card(
@@ -429,13 +445,12 @@ class CustomMultipleWinesRow extends StatelessWidget {
           const SizedBox(width: 16),
       
           Expanded(
-            child: multipleTaste.multipleTaste.hidden
+            child: hiddenTaste
               ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    // 'Vino a catar a ciegas $hideIndex', 
                     'Vino a catar a ciegas ${index + 1}', 
                     maxLines: 1, 
                     overflow: TextOverflow.ellipsis, 
@@ -443,7 +458,7 @@ class CustomMultipleWinesRow extends StatelessWidget {
                   ),
     
                   Text(
-                    '${multipleTaste.winesMultipleTaste[index].vino} ${multipleTaste.winesMultipleTaste[index].anada}', 
+                    '${wine.vino} ${wine.anada}', 
                     maxLines: 1,
                     textAlign: TextAlign.right,
                     overflow: TextOverflow.ellipsis, 
@@ -452,7 +467,7 @@ class CustomMultipleWinesRow extends StatelessWidget {
                 ],
               )
               : Text(
-                multipleTaste.winesMultipleTaste[index].nombre, 
+                wine.nombre, 
                 maxLines: 2, 
                 overflow: TextOverflow.ellipsis, 
                 style: styles.bodySmall!.copyWith(fontWeight: FontWeight.bold),
@@ -462,8 +477,7 @@ class CustomMultipleWinesRow extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.remove),
             onPressed: () {
-              multipleTaste.removeWine(multipleTaste.winesMultipleTaste[index]);
-              if (multipleTaste.winesMultipleTaste.length == 1) Navigator.pop(context);
+              context.read<MultipleFormProvider>().removeMultipleWine(wine.id!, context);
             },
           ),
         ],
@@ -480,9 +494,6 @@ class MultipleActionsButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final multipleService = Provider.of<MultipleServices>(context);
-    final authService = Provider.of<AuthServices>(context);
     final taste = Provider.of<TasteOptionsProvider>(context);
 
     return Container(
@@ -497,32 +508,26 @@ class MultipleActionsButtons extends StatelessWidget {
             label: 'Guardar',
             isSendingLabel: 'Guardando',
             onPressed: () async {
-              // Valido campo descripcion
-              if (multipleTaste.multipleTaste.description.isEmpty || multipleTaste.multipleTaste.description.trim().isEmpty) {
-                NotificationServices.showSnackbar('La descripcion de la cata es obligatoria', context);
+              // Valido que el multiple es correcto
+              final String? isValidMultiple = context.read<MultipleFormProvider>().isValidMultiple();
+              if (isValidMultiple != null) {
+                NotificationServices.showSnackbar(isValidMultiple, context);
                 return;
+              } 
+              // Creo nuevo multiple y lo subo al server
+              final newMultipleTaste = await context.read<MultipleFormProvider>().createMultipleTaste();
+              // Añado mi el nuevo multiple al listado
+              if (context.mounted) context.read<MultipleListProvider>().addMultipleToList(newMultipleTaste);
+              // Subir TasteQuiz si es necesario
+              if (context.mounted && context.read<MultipleFormProvider>().tasteQuiz != null) {
+                await context.read<QuizServices>().createQuiz(multipleId: newMultipleTaste.id!, wineIdList: newMultipleTaste.wineSequence);
               }
-              if (multipleTaste.multipleTaste.description.trim().length < 10) {
-                NotificationServices.showSnackbar('La descripcion de la cata muy corta', context);
-                return;
+              if (context.mounted && context.read<MultipleFormProvider>().isBottomSheetOpen) {
+                Navigator.pop(context);
               }
-              if (multipleTaste.multipleTaste.tasteQuiz != null && multipleTaste.isNotReadyForQuiz()) {
-                NotificationServices.showSnackbar('La informacion opcional de los vinos es obligatoria para el quiz', context);
-                return;
-              }
-              // Asigno nombre de cata definitivamente
-              multipleTaste.multipleTaste.name = multipleTaste.multipleName;
-              // Subo a Firebase la cata multiple
-              await multipleService.createMultipleTaste(multipleTaste.initMultiple());
-              // Compruebo si esta activado el quiz y lo subo si es true
-              if (multipleTaste.tasteQuiz.values.contains(true) && context.mounted) {
-                await context.read<QuizServices>().createQuiz(multipleName: multipleTaste.multipleName, wineList: multipleTaste.winesMultipleTaste);
-              }
-              // Cierro bottomsheet
-              if (multipleTaste.winesMultipleTaste.length > 1 && context.mounted) Navigator.pop(context);
-              multipleTaste.resetSettings();
-              multipleTaste.autovalidateMode = AutovalidateMode.disabled;
               if (context.mounted) Navigator.pop(context);
+              // Limpiar las opciones de TasteScreen
+              taste.clearOptions();
             },
           ),
 
@@ -531,42 +536,29 @@ class MultipleActionsButtons extends StatelessWidget {
             label: 'Acceder',
             isSendingLabel: 'Accediendo',
             onPressed: () async {
-              // Valido campo descripcion
-              if (multipleTaste.multipleTaste.description.isEmpty || multipleTaste.multipleTaste.description.trim().isEmpty) {
-                NotificationServices.showSnackbar('La descripcion de la cata es obligatoria', context);
+              // Valido que el multiple es correcto
+              final String? isValidMultiple = context.read<MultipleFormProvider>().isValidMultiple();
+              if (isValidMultiple != null) {
+                NotificationServices.showSnackbar(isValidMultiple, context);
                 return;
+              } 
+              // Creo nuevo multiple y lo subo al server
+              final newMultipleTaste = await context.read<MultipleFormProvider>().createMultipleTaste();
+              // Añado mi el nuevo multiple al listado
+              if (context.mounted) context.read<MultipleListProvider>().addMultipleToList(newMultipleTaste);
+              // Subir TasteQuiz si es necesario
+              if (context.mounted && context.read<MultipleFormProvider>().tasteQuiz != null) {
+                await context.read<QuizServices>().createQuiz(multipleId: newMultipleTaste.id!, wineIdList: newMultipleTaste.wineSequence);
               }
-              if (multipleTaste.multipleTaste.description.trim().length < 10) {
-                NotificationServices.showSnackbar('La descripcion de la cata muy corta', context);
-                return;
-              }
-              if (multipleTaste.multipleTaste.tasteQuiz != null && multipleTaste.isNotReadyForQuiz()) {
-                NotificationServices.showSnackbar('El quiz necesita la informacion opcional de los vinos', context);
-                return;
-              }
-              // Asigno nombre de cata definitivamente
-              multipleTaste.multipleTaste.name = multipleTaste.multipleName;
-
-              // Subo a Firebase la cata multiple
-              await multipleService.createMultipleTaste(multipleTaste.initMultiple());
-              // Compruebo si hay quiz activado y lo subo si es true
-              if (multipleTaste.tasteQuiz.values.contains(true) && context.mounted) {
-                await context.read<QuizServices>().createQuiz(multipleName: multipleTaste.multipleName, wineList: multipleTaste.winesMultipleTaste);
-              }
-              // Lo comprueblo por si se ha quedado la variable en true antes
-              multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userUuid);
-              multipleTaste.initUserTaste(multipleService.isMultipleTasted);
-              // Como creo la cata es imposible que esta catada, por eso no pongo el overview global en true
-              multipleTaste.autovalidateMode = AutovalidateMode.disabled;
-
+              // Navego a la siguiente pantalla
               final routeList = MaterialPageRoute(
-                builder: (context) => const MultipleTasteScreen()
+                builder: (context) => MultipleTasteScreen(multipleTaste: newMultipleTaste)
               );
               if (context.mounted) Navigator.pushReplacement(context, routeList);
+              // Limpiar las opciones de TasteScreen
               taste.clearOptions();
             },
           ),
-
         ],
       ),
     );
@@ -581,10 +573,11 @@ class AddHideWines extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final winesService = Provider.of<WineServices>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: false);
     final styles = Theme.of(context).textTheme;
+
+    final multipleFormProvider = context.watch<MultipleFormProvider>();
 
     return Container(
       alignment: Alignment.centerLeft,
@@ -601,49 +594,43 @@ class AddHideWines extends StatelessWidget {
               children: [
                 CustomIconButton(
                   onPressed: () async {
-                    if (multipleTaste.winesMultipleTaste.length >= 12) {
+                    // No permito mas de 12 vinos en la cata
+                    if (multipleFormProvider.wineSequence.length >= 12) {
                       NotificationServices.showSnackbar('No se permiten mas de 12 vinos', context);
                       return;
                     }
-
-                    winesService.loadWines();
-
+                    // Abro la ventana de busqueda
+                    final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
+                      winesList: winesService.winesByName,
+                      onPressed: () async {
+                        // Cerrar ventana de creacion
+                        Navigator.pop(context);
+                        // Resetear wineFormProvider
+                        wineForm.resetSettings();
+                        // Navegar a la pagina de creacion
+                        final newRoute = MaterialPageRoute(
+                          builder: (context) => CreateEditWineScreen(
+                            saveEndAction: () {
+                              // Retorno true si he añadido el vino al wineForm
+                              Navigator.pop(context, true);
+                            },
+                          ),
+                        );
+                        // Capturo true o false para ver si he añadido vino
+                        final bool isSavedWine = await Navigator.push(context, newRoute);
+                        // Agrego nuevo vino a la secuencia de vinos si se ha creado
+                        if (context.mounted && isSavedWine) context.read<MultipleFormProvider>().addMultipleWine(wineForm.wine, context);
+                      },  
+                    ));
+                    // Si no hay vino, salgo de la funcion
+                    if (wineSearched == null) return;
+                    // Compruebo si el vino ya esta añadido al listado y sino se añade
                     if (context.mounted) {
-                      final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(
-                        winesList: winesService.winesByName,
-                        onPressed: () async {
-                          // Cerrar ventana de creacion
-                          Navigator.pop(context);
-                          // Resetear wineFormProvider
-                          wineForm.resetSettings();
-                          // Navegar a la pagina de creacion
-                          final newRoute = MaterialPageRoute(
-                            builder: (context) => CreateEditWineScreen(
-                              saveEndAction: () {
-                                multipleTaste.addWine(wineForm.wine.copy());
-                                Navigator.pop(context, true);
-                              },
-                            ),
-                          );
-                          final bool isSavedWine = await Navigator.push(context, newRoute);
-                          // Capturo true o false para ver si he añadido vino
-                          // final bool isSavedWine = await Navigator.push(context, newRoute);
-                          // if (!isSavedWine) return;
-                          // // Si hay vino mando verificar si es necesario el BottomSheet
-                          if (isSavedWine && context.mounted && multipleTaste.winesMultipleTaste.length == 2) viewBottomMenu(context);
-                        },  
-                      ));
-                      // Sino hay vino, salgo de la funcion
-                      if (wineSearched == null) return;
-                      // Compruebo si el vino ya esta añadido al listado
-                      if (context.mounted && multipleTaste.winesMultipleTaste.any((element) => element.id == wineSearched.id)) {
+                      final bool isValidWine = context.read<MultipleFormProvider>().addMultipleWine(wineSearched, context);
+                      if (!isValidWine) {
                         NotificationServices.showSnackbar('Vino duplicado', context);
                         return;
                       }
-                      // Añado vino al multipleTaste
-                      multipleTaste.addWine(wineSearched);
-                      // Miro si es necesario el bottomsheet
-                      if (multipleTaste.winesMultipleTaste.length == 2 && context.mounted) viewBottomMenu(context);
                     }
                   },
                   icon: Icons.search,
@@ -651,11 +638,12 @@ class AddHideWines extends StatelessWidget {
 
                 CustomIconButton(
                   onPressed: () async {
-                    if (multipleTaste.winesMultipleTaste.length >= 12) {
+                    // No permito mas de 12 vinos en la cata
+                    if (multipleFormProvider.wineSequence.length >= 12) {
                       NotificationServices.showSnackbar('No se permiten mas de 12 vinos', context);
                       return;
                     }
-
+                    // Resetear wineFormProvider
                     wineForm.resetSettings();
 
                     final newRoute = MaterialPageRoute(
@@ -663,24 +651,23 @@ class AddHideWines extends StatelessWidget {
                         canPop: false,
                         child: CreateEditWineScreen(
                           saveEndAction: () {
-                            multipleTaste.addWine(wineForm.wine.copy());
-                            // Recibo true para saber que he añadido vino
+                            // Retorno true si he añadido el vino al wineForm
                             Navigator.pop(context, true);
                           },
                         ),
                       ),
                     );
-                    // Capturo true o false para ver si he añadido vino
+                    // Capturo true o false si el vino se ha creado
                     final bool isSavedWine = await Navigator.push(context, newRoute);
-                    // Si hay vino mando verificar si es necesario el BottomSheet
-                    if (isSavedWine && context.mounted && multipleTaste.winesMultipleTaste.length == 2) viewBottomMenu(context);
+                    // Agrego nuevo vino a la secuencia de vinos si se ha creado
+                    if (context.mounted && isSavedWine) context.read<MultipleFormProvider>().addMultipleWine(wineForm.wine, context);
                   },
                   icon: Icons.add, 
                 ),
            
                 CustomIconButton(
-                  onPressed: () => multipleTaste.hideAllWines(),
-                  icon: multipleTaste.multipleTaste.hidden
+                  onPressed: () => context.read<MultipleFormProvider>().hideTasteWines(),
+                  icon: multipleFormProvider.hidden
                     ? Icons.visibility_off_rounded
                     : Icons.visibility_rounded,
                 ),
@@ -701,9 +688,6 @@ class EnableTasteQuiz extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.only(left: 5, right: 5),
@@ -715,16 +699,20 @@ class EnableTasteQuiz extends StatelessWidget {
           const Spacer(),
 
           Checkbox(
-            value: multipleTaste.tasteQuiz['simple'],
-            onChanged: multipleTaste.isSimpleQuiz,
+            value: context.watch<MultipleFormProvider>().tasteQuiz == 'simple',
+            onChanged: (value) {
+              context.read<MultipleFormProvider>().editTasteQuiz(simpleQuiz: value);
+            },
           ),
 
           const Text('Sencilla', style: TextStyle(fontSize: 14)),
 
           Checkbox(
-            value: multipleTaste.tasteQuiz['advanced'],
-            onChanged: multipleTaste.isAdvancedQuiz,
-          ),      
+            value: context.watch<MultipleFormProvider>().tasteQuiz == 'advanced',
+            onChanged: (value) {
+              context.read<MultipleFormProvider>().editTasteQuiz(advancedQuiz: value);
+            },
+          ),
           
           const Text('Avanzada', style: TextStyle(fontSize: 14)),
         ],

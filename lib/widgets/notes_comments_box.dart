@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/domain/entities/entities.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
@@ -10,8 +11,9 @@ import 'package:puntuacion_tacher/widgets/widgets.dart';
 class NotesCommentsBox extends StatelessWidget {
 
   final String titulo;
+  final WineTaste? selectedWineTaste;
 
-  const NotesCommentsBox({super.key, required this.titulo});
+  const NotesCommentsBox({super.key, required this.titulo, this.selectedWineTaste});
 
   void showBox(BuildContext context, CreateEditWineFormProvider wineForm) {
     showGeneralDialog(
@@ -21,8 +23,8 @@ class NotesCommentsBox extends StatelessWidget {
         return PopScope(
           canPop: false,
           child: titulo == 'Notas de Cata'
-            ? NotasCataBox(wineForm)
-            : ComentariosBox(wineForm),
+            ? NotasCataBox(wineForm, selectedWineTaste)
+            : ComentariosBox(wineForm, selectedWineTaste),
         );
       },
       transitionDuration: const Duration(milliseconds: 300),
@@ -63,8 +65,9 @@ class NotesCommentsBox extends StatelessWidget {
 class NotasCataBox extends StatelessWidget {
 
   final CreateEditWineFormProvider wineForm;
+  final WineTaste? selectedWineTaste;
   
-  const NotasCataBox(this.wineForm,{super.key});
+  const NotasCataBox(this.wineForm, this.selectedWineTaste, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -89,9 +92,11 @@ class NotasCataBox extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 _CustomTextFormField(
-                  wineForm: wineForm, 
+                  wineForm: wineForm,
+                  initialValue: selectedWineTaste?.notasVista,
                   maxLines: 3, 
                   label: 'Vista',
+                  readOnly: selectedWineTaste != null ? true : false,
                   onChanged: (value) {
                     timerVista?.cancel();
                     timerVista = Timer(const Duration(milliseconds: 500), () {
@@ -105,9 +110,11 @@ class NotasCataBox extends StatelessWidget {
                 ),
 
                 _CustomTextFormField(
-                  wineForm: wineForm, 
+                  wineForm: wineForm,
+                  initialValue: selectedWineTaste?.notasNariz,
                   maxLines: 3, 
                   label: 'Nariz',
+                  readOnly: selectedWineTaste != null ? true : false,
                   onChanged: (value) {
                     timerNariz?.cancel();
                     timerNariz = Timer(const Duration(milliseconds: 500), () {
@@ -121,9 +128,11 @@ class NotasCataBox extends StatelessWidget {
                 ),
 
                 _CustomTextFormField(
-                  wineForm: wineForm, 
+                  wineForm: wineForm,
+                  initialValue: selectedWineTaste?.notasBoca,
                   maxLines: 3, 
                   label: 'Boca',
+                  readOnly: selectedWineTaste != null ? true : false,
                   onChanged: (value) {
                     timerBoca?.cancel();
                     timerBoca = Timer(const Duration(milliseconds: 500), () {
@@ -154,9 +163,10 @@ class NotasCataBox extends StatelessWidget {
 }
 
 class ComentariosBox extends StatelessWidget {
-  const ComentariosBox(this.wineForm,{super.key});
+  const ComentariosBox(this.wineForm, this.selectedWineTaste, {super.key});
 
   final CreateEditWineFormProvider wineForm;
+  final WineTaste? selectedWineTaste;
   
   @override
   Widget build(BuildContext context) {
@@ -175,9 +185,11 @@ class ComentariosBox extends StatelessWidget {
         width: size.width * 0.8,
         child: Form(
           child: _CustomTextFormField(
-            wineForm: wineForm, 
+            wineForm: wineForm,
+            initialValue: selectedWineTaste?.comentarios,
             maxLines: 5,
             label: 'Comentarios',
+            readOnly: selectedWineTaste != null ? true : false,
             onChanged: (value) {
               timer?.cancel();
               timer = Timer(const Duration(milliseconds: 500), () {
@@ -209,19 +221,25 @@ class _CustomTextFormField extends StatelessWidget {
     required this.wineForm,
     required this.maxLines, 
     required this.label,
-    this.onChanged
+    this.onChanged,
+    this.initialValue,
+    required this.readOnly,
   });
 
   final CreateEditWineFormProvider wineForm;
   final int maxLines;
   final String label;
   final Function(String)? onChanged;
+  final String? initialValue;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: readOnly,
+      canRequestFocus: !readOnly,
       textCapitalization: TextCapitalization.sentences,
-      initialValue: wineForm.comentarios,
+      initialValue: initialValue ?? wineForm.comentarios,
       minLines: 1,
       maxLines: maxLines,
       decoration: InputDecoration(

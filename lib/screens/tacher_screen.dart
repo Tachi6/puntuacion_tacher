@@ -16,12 +16,14 @@ class TacherScreen extends StatefulWidget {
   final String? appBarTitle;
   final Widget? bottomSheet;
   final void Function()? onPressedBackButon;
+  final WineTaste? selectedWineTaste;
 
   const TacherScreen({
     super.key, 
     this.appBarTitle, 
     this.bottomSheet, 
-    this.onPressedBackButon, 
+    this.onPressedBackButon,
+    this.selectedWineTaste,
   });
 
   @override
@@ -49,8 +51,8 @@ class _TacherScreenState extends State<TacherScreen> with AutomaticKeepAliveClie
             ),
           backgroundColor: Colors.transparent,
           body: screenHeight < 600
-            ? const SingleChildScrollView(child: _CustomTacherBody(isLittleScreen: true))
-            : const _CustomTacherBody(isLittleScreen: false),
+            ? SingleChildScrollView(child: _CustomTacherBody(isLittleScreen: true, selectedWineTaste: widget.selectedWineTaste))
+            : _CustomTacherBody(isLittleScreen: false, selectedWineTaste: widget.selectedWineTaste),
           bottomSheet: widget.bottomSheet,
           resizeToAvoidBottomInset: false,
         ),
@@ -62,16 +64,11 @@ class _TacherScreenState extends State<TacherScreen> with AutomaticKeepAliveClie
   bool get wantKeepAlive => true;
 }
 
-class _CustomTacherBody extends StatefulWidget {
-  const _CustomTacherBody({required this.isLittleScreen});
+class _CustomTacherBody extends StatelessWidget {
+  const _CustomTacherBody({required this.isLittleScreen, this.selectedWineTaste});
 
   final bool isLittleScreen;
-
-  @override
-  State<_CustomTacherBody> createState() => _CustomTacherBodyState();
-}
-
-class _CustomTacherBodyState extends State<_CustomTacherBody> {
+  final WineTaste? selectedWineTaste;
 
   @override
   Widget build(BuildContext context) {
@@ -87,66 +84,70 @@ class _CustomTacherBodyState extends State<_CustomTacherBody> {
         RatingBox(
           titleText: textos.vistaTitulo,
           bodyText: textos.vistaDescripcion,
-          initialRating: 0,
+          initialRating: selectedWineTaste?.ratingVista ?? 0,
           titleGroup: titleGroup,
           bodyGroup: bodyGroup,
           itemCount: 7,
           minRating: 1,
           name: 'vista',
+          ignoreGestures: selectedWineTaste != null ? true : false,
         ),
     
-        if (!widget.isLittleScreen) const Spacer(flex: 1),
+        if (!isLittleScreen) const Spacer(flex: 1),
         
         RatingBox(
           titleText: textos.narizTitulo,
           bodyText: textos.narizDescripcion,
-          initialRating: 0,
+          initialRating: selectedWineTaste?.ratingNariz ?? 0,
           titleGroup: titleGroup,
           bodyGroup: bodyGroup,
           itemCount: 9,
           minRating: 1,
           name: 'nariz',
+          ignoreGestures: selectedWineTaste != null ? true : false,
         ),
     
-        if (!widget.isLittleScreen) const Spacer(flex: 1),
+        if (!isLittleScreen) const Spacer(flex: 1),
         
         RatingBox(
           titleText: textos.bocaTitulo,
           bodyText: textos.bocaDescripcion,
-          initialRating: 0,
+          initialRating: selectedWineTaste?.ratingBoca ?? 0,
           titleGroup: titleGroup,
           bodyGroup: bodyGroup,
           itemCount: 9,
           minRating: 1,
           name: 'boca',
+          ignoreGestures: selectedWineTaste != null ? true : false,
         ),
     
-        if (!widget.isLittleScreen) const Spacer(flex: 1),
+        if (!isLittleScreen) const Spacer(flex: 1),
         
         RatingBox(
           titleText: textos.puntosTitulo,
           bodyText: textos.puntosDescripcion,
-          initialRating: 0,
+          initialRating: selectedWineTaste?.ratingPuntos ?? 0,
           titleGroup: titleGroup,
           bodyGroup: bodyGroup,
           itemCount: 11,
           minRating: 1,
           name: 'puntos',
+          ignoreGestures: selectedWineTaste != null ? true : false,
         ),
     
-        if (!widget.isLittleScreen) const Spacer(flex: 2),
+        if (!isLittleScreen) const Spacer(flex: 2),
         
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            NotesCommentsBox(titulo: 'Notas de Cata'),
+            NotesCommentsBox(titulo: 'Notas de Cata', selectedWineTaste: selectedWineTaste),
         
-            NotesCommentsBox(titulo: 'Comentarios')
+            NotesCommentsBox(titulo: 'Comentarios', selectedWineTaste: selectedWineTaste)
           ]
         ),
     
-        if (!widget.isLittleScreen) const Spacer(flex: 2),
+        if (!isLittleScreen) const Spacer(flex: 2),
         // Height of BottomSheet + Rating Box Bottom Padding + BottomElement Height
         const SafeArea(
           top: false,

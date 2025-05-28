@@ -18,6 +18,7 @@ class RatingBox extends StatelessWidget {
   final double? minRating;
   final int? itemCount;
   final String? name;
+  final bool ignoreGestures;
 
   const RatingBox({
     super.key, 
@@ -28,7 +29,8 @@ class RatingBox extends StatelessWidget {
     this.initialRating, 
     this.minRating, 
     this.itemCount, 
-    this.name, 
+    this.name,
+    required this.ignoreGestures,
   });
 
   @override
@@ -83,6 +85,7 @@ class RatingBox extends StatelessWidget {
                 minRating: minRating!, 
                 itemCount: itemCount!, 
                 name: name!,
+                ignoreGestures: ignoreGestures,
               ),
             ],
           ),
@@ -98,12 +101,14 @@ class _RatingCustomWidget extends StatelessWidget{
   final double minRating;
   final int itemCount;
   final String name;
+  final bool ignoreGestures;
 
   const _RatingCustomWidget({
     required this.initialRating, 
     required this.minRating, 
     required this.itemCount, 
-    required this.name, 
+    required this.name,
+    required this.ignoreGestures,
   });
 
   @override
@@ -119,6 +124,7 @@ class _RatingCustomWidget extends StatelessWidget{
     final double itemSize = ((size.width * 0.90) / 11).truncateToDouble();
 
     return RatingBar.builder(
+      ignoreGestures: ignoreGestures,
       updateOnDrag: true,
       wrapAlignment: WrapAlignment.center,
       initialRating: initialRating,

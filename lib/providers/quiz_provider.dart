@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/pages/pages.dart';
 
 class QuizProvider extends ChangeNotifier {
 
@@ -9,10 +10,6 @@ class QuizProvider extends ChangeNotifier {
   final String defaultUser;
   final String? quizType;
   final bool hidden;
-
-  late String _selectedUser;
-
-  List<Question> editingQuestionList = [];
 
   QuizProvider({
     required this.wineSequence, 
@@ -45,7 +42,14 @@ class QuizProvider extends ChangeNotifier {
     }
   }
 
+  late String _selectedUser;
+  List<Question> editingQuestionList = [];
+  bool _isBottomSheetOpen = false;
+  bool _isReorderQuizNedeed = true;
+
   String get selectedUser => _selectedUser;
+  bool get isBottomSheetOpen => _isBottomSheetOpen;
+  bool get isReorderQuizNedeed => _isReorderQuizNedeed;
 
   set selectedUser(String value) {
     _selectedUser = value;
@@ -53,6 +57,7 @@ class QuizProvider extends ChangeNotifier {
   }
 
   void reloadQuestions(List<Question> questionsReloaded) {
+    _isReorderQuizNedeed = false;
     defaultQuestionList = [...questionsReloaded];
     notifyListeners();
   }
@@ -68,8 +73,18 @@ class QuizProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Answer? obtainUserAnswer(String wineId) {
-    return defaultQuestionList.firstWhere((element) => element.wineId == wineId).answer?[selectedUser] ?? Answer(user: selectedUser);
+  int? obtainUserAnswer(String wineId, QuizTypes quizTypes) {
+    final Answer answer = defaultQuestionList.firstWhere((element) => element.wineId == wineId).answer?[selectedUser] ?? Answer(user: selectedUser);
+    switch (quizTypes) {
+      case QuizTypes.vino:
+        return answer.answerWine;
+      case QuizTypes.vista:
+        return answer.answerEyes;
+      case QuizTypes.nariz:
+        return answer.answerNose;
+      case QuizTypes.boca:
+        return answer.answerMouth;
+    }
   }
 
   int obtainCorrectAnswer(String wineId) {
@@ -167,5 +182,25 @@ class QuizProvider extends ChangeNotifier {
 
     if (answers.contains(-1)) return false;
     return true;
+  }
+
+  bool isValidatedQuiz() {
+    return defaultQuestionList.first.answer?[selectedUser] != null;
+  }
+
+  void openBottomSheet(BuildContext context) {
+    if (isValidQuiz() && !isBottomSheetOpen) {
+      Scaffold.of(context).showBottomSheet((BuildContext context) => const SafeArea(child: ValidateButton()));
+      _isBottomSheetOpen = true;
+      notifyListeners();
+    }
+  }
+
+  void closeBottomSheet(BuildContext context) {
+    if (isBottomSheetOpen) {
+      Navigator.pop(context);
+      _isBottomSheetOpen = false;
+      notifyListeners();
+    }
   }
 }

@@ -14,21 +14,20 @@ class QuizServices extends ChangeNotifier {
 
   final storage = const FlutterSecureStorage();
 
-  Future<void> createQuiz({required String multipleName, required List<Wines> wineList}) async {
+  Future<void> createQuiz({required String multipleId, required List<String> wineIdList}) async {
 
-    final String jsonType = 'quiz/$multipleName.json';
+    final String jsonType = 'quiz/$multipleId.json';
     Map<String, Question> bodyMap = {};
     List<Question> tempQuestions = [];
 
-    for (int i = 0; i < wineList.length; i++) {
-      final Wines wine = wineList[i];
+    for (int i = 0; i < wineIdList.length; i++) {
       final Question question = Question(
         correctAnswer: i + 1, 
-        wineId: wine.id!,
+        wineId: wineIdList[i],
         answer: {},
       );
       final Map<String, Question> tempBodyMap = {
-        wine.id!: question
+        wineIdList[i]: question
       };
       bodyMap = {...bodyMap, ...tempBodyMap};
       tempQuestions = [...tempQuestions, question];
@@ -43,8 +42,8 @@ class QuizServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<Question>> loadQuiz(String multipleName) async {
-    final String jsonType = 'quiz/$multipleName.json';
+  Future<List<Question>> loadQuiz(String multipleId) async {
+    final String jsonType = 'quiz/$multipleId.json';
     
     final url = Uri.https(_baseUrl, jsonType, {
       'auth': await storage.read(key: 'idToken') ?? ''
@@ -68,11 +67,11 @@ class QuizServices extends ChangeNotifier {
     return selectedQuestionsList;
   }
 
-  Future<void> uploadUserQuiz({required String multipleName, required List<Question> questionList}) async { 
+  Future<void> uploadUserQuiz({required String multipleId, required List<Question> questionList}) async { 
 
     for (Question question in questionList) {
 
-      final String jsonType = 'quiz/$multipleName/${question.wineId}/answer.json';
+      final String jsonType = 'quiz/$multipleId/${question.wineId}/answer.json';
 
       final url = Uri.https(_baseUrl, jsonType, {
         'auth': await storage.read(key: 'idToken') ?? ''

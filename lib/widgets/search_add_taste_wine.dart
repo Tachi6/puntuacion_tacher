@@ -54,9 +54,11 @@ class _SearchAddTasteWineState extends State<SearchAddTasteWine> {
               builder: (context) => CreateEditWineScreen(
                 saveEndAction: () {
                   final newRoute = MaterialPageRoute(
-                    builder: (context) => const PopScope(
+                    builder: (context) => PopScope(
                       canPop: false,
-                      child: SingleTacherScreen()
+                      child: SingleTacherScreen(
+                        appBarTitle: wineForm.wine.nombre,
+                      )
                     ),
                   );
                   Navigator.pushReplacement(context, newRoute);
@@ -119,9 +121,11 @@ class _SearchAddTasteWineState extends State<SearchAddTasteWine> {
                         builder: (context) => CreateEditWineScreen(
                           saveEndAction: () {
                             final newRoute = MaterialPageRoute(
-                              builder: (context) => const PopScope(
+                              builder: (context) => PopScope(
                                 canPop: false,
-                                child: SingleTacherScreen()
+                                child: SingleTacherScreen(
+                                  appBarTitle: wineForm.wine.nombre,
+                                )
                               ),
                             );
                             Navigator.pushReplacement(context, newRoute);

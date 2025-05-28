@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/domain/entities/entities.dart';
 
 import 'package:puntuacion_tacher/helpers/helpers.dart';
-import 'package:puntuacion_tacher/models/models.dart';
-import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/presentation/providers/multiple_provider.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -20,38 +20,29 @@ class _MultipleOverviewPageState extends State<MultipleOverviewPage> with Automa
   Widget build(BuildContext context) {
     super.build(context);
 
-    final multipleService = Provider.of<MultipleServices>(context);
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final multipleProvider = context.watch<MultipleProvider>();
     final size = MediaQuery.of(context).size;
     // 20 of lateral padding
     final newWidth = size.width - 20;
 
     return Scaffold(
       appBar: CustomMultipleAppBar(
-        actionButton1: multipleService.isMultipleTasted && multipleTaste.overview 
-          ? IconButton(
-            onPressed: () async {
-              final Multiple multipleUpdated = await multipleService.loadMultipleToUpdate(multipleTaste.multipleName);
-              multipleTaste.initLoadedMultipleTaste(multipleUpdated);
-            },
-            icon: const Icon(Icons.refresh_rounded),
-          )
-          : null,
-        actionButton2: multipleService.isMultipleTasted 
-          ? IconButton(
-            onPressed: () => multipleTaste.overview = !multipleTaste.overview,
-            icon: const Icon(Icons.autorenew_rounded)
-          )
-          : null,
+        onPressedBackButton: () => multipleProvider.setandMoveToPage(null),
+        onPressedActionButton: () async {
+          context.read<MultipleProvider>().reloadMultiple();
+          // final Multiple multipleUpdated = await multipleService.loadMultipleToUpdate(multipleTaste.multipleName);
+          // multipleTaste.initLoadedMultipleTaste(multipleUpdated);
+        },
       ),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 250),
         layoutBuilder: (currentChild, previousChildren) {
           return currentChild!;
         },
-        child: multipleTaste.overview
-          ? OverviewMultipleTaste(key: const ValueKey<String>('overviewMultiple'), newWidth: newWidth)
-          : UserMultipleTasteDetails(key: const ValueKey<String>('userDetails'), newWidth: newWidth),
+        child: OverviewMultipleTaste(newWidth: newWidth),
+        // multipleTaste.overview
+          // ? OverviewMultipleTaste(key: const ValueKey<String>('overviewMultiple'), newWidth: newWidth)
+          // : UserMultipleTasteDetails(key: const ValueKey<String>('userDetails'), newWidth: newWidth),
       ),
     );
   }
@@ -60,8 +51,8 @@ class _MultipleOverviewPageState extends State<MultipleOverviewPage> with Automa
   bool get wantKeepAlive => true;
 }
 
-class UserMultipleTasteDetails extends StatelessWidget {
-  const UserMultipleTasteDetails({
+class UsersMultipleTasteDetails extends StatelessWidget {
+  const UsersMultipleTasteDetails({
     super.key, 
     required this.newWidth
   });
@@ -71,58 +62,76 @@ class UserMultipleTasteDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final multipleService = Provider.of<MultipleServices>(context);
-    final wineTasteList = multipleTaste.userMultipleTaste;
+    final multipleProvider = context.watch<MultipleProvider>();
+    final wineTasteList = multipleProvider.anotherUserMultipleTaste(multipleProvider.userView);
 
-    return SizedBox(
-      width: double.infinity,
-      height: double.infinity,
-      child: Column(
-        children: [
-          const _OutsideTitle(label: 'Resumen de mi cata'),
+    return ListView.builder(
+      padding: const EdgeInsets.all(0),
+      itemCount: multipleProvider.multipleWines.length,
+      itemBuilder: (context, index) {
 
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(0),
-              itemCount: multipleTaste.winesMultipleTaste.length,
-              itemBuilder: (context, index) {
+        final Formulas formulas = Formulas(
+          ratingVista: wineTasteList[index].ratingVista,
+          ratingNariz: wineTasteList[index].ratingNariz,
+          ratingBoca: wineTasteList[index].ratingBoca,
+          ratingPuntos: wineTasteList[index].ratingPuntos,
+        );
 
-                final Formulas formulas = Formulas(
-                  ratingVista: wineTasteList[index].ratingVista,
-                  ratingNariz: wineTasteList[index].ratingNariz,
-                  ratingBoca: wineTasteList[index].ratingBoca,
-                  ratingPuntos: wineTasteList[index].ratingPuntos,
-                );
+        return _CustomListItem(
+          index: index,
+          wineName: (multipleProvider.multipleSelected.hidden && !multipleProvider.isMultipleTasted) 
+            ? 'Vino a catar a ciegas ${index + 1}' 
+            : wineTasteList[index].nombre, 
+          vista: formulas.puntosVista,
+          nariz: formulas.puntosNariz,
+          boca: formulas.puntosBoca,
+          puntosOrFinal: wineTasteList[index].ratingPuntos == -1 ? 0 : wineTasteList[index].ratingPuntos.toInt(),
+          newWidth: newWidth,
+          itemsDetailsNotes: (wineTasteList[index].notasVista != '' || wineTasteList[index].notasNariz != '' || wineTasteList[index].notasBoca != '')
+            ? _ItemDetailsNotes(
+              notesVista: wineTasteList[index].notasVista!,
+              notesNariz: wineTasteList[index].notasNariz!,
+              notesBoca: wineTasteList[index].notasBoca!,
+            )
+            : null,
+          itemsDetailsComments: (wineTasteList[index].comentarios != '')
+            ? _ItemDetailsComments(comments: wineTasteList[index].comentarios!)
+            : null,
+          addEndSizedBox: wineTasteList.length - 1 == index ? true : null,
+        );
+      },
+    );
+  }
+}
 
-                return _CustomListItem(
-                  index: index,
-                  wineName: (multipleTaste.multipleTaste.hidden && !multipleService.isMultipleTasted) 
-                    ? 'Vino a catar a ciegas ${index + 1}' 
-                    : wineTasteList[index].nombre, 
-                  vista: formulas.puntosVista,
-                  nariz: formulas.puntosNariz,
-                  boca: formulas.puntosBoca,
-                  puntosOrFinal: wineTasteList[index].ratingPuntos == -1 ? 0 : wineTasteList[index].ratingPuntos.toInt(),
-                  newWidth: newWidth,
-                  tasteHeader: _TasteHeader(newWidth: newWidth, lastLabel: 'Final'),
-                  itemsDetailsNotes: (wineTasteList[index].notasVista != '' || wineTasteList[index].notasNariz != '' || wineTasteList[index].notasBoca != '')
-                    ? _ItemDetailsNotes(
-                      notesVista: wineTasteList[index].notasVista!,
-                      notesNariz: wineTasteList[index].notasNariz!,
-                      notesBoca: wineTasteList[index].notasBoca!,
-                    )
-                    : null,
-                  itemsDetailsComments: (wineTasteList[index].comentarios != '')
-                    ? _ItemDetailsComments(comments: wineTasteList[index].comentarios!)
-                    : null,
-                  addEndSizedBox: wineTasteList.length - 1 == index ? true : null,
-                );
-              },
-            ),
-          ),
-        ]
-      ),
+class MultipleTasteAverageRatings extends StatelessWidget {
+  const MultipleTasteAverageRatings({super.key, required this.newWidth});
+
+  final double newWidth;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final multipleProvider = context.watch<MultipleProvider>();
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(0),
+      itemCount: multipleProvider.multipleWines.length,
+      itemBuilder: (context, index) {
+          
+        final List<AverageRatings> averageRatings = multipleProvider.sortAverageRatings();
+        
+        return _CustomListItem(
+          index: index,
+          wineName: multipleProvider.multipleWines[index].nombre, 
+          vista: averageRatings[index].vista,
+          nariz: averageRatings[index].nariz,
+          boca: averageRatings[index].boca,
+          puntosOrFinal: averageRatings[index].puntos,
+          newWidth: newWidth,
+          addEndSizedBox: multipleProvider.multipleWines.length - 1 == index ? true : null,
+        );
+      },
     );
   }
 }
@@ -138,9 +147,8 @@ class OverviewMultipleTaste extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final multipleProvider = context.watch<MultipleProvider>();
     final userService = Provider.of<UserServices>(context);
-    final wineTasteList = multipleTaste.anotherUserMultipleTaste(multipleTaste.userView);
 
     return SizedBox(
       height: double.infinity,
@@ -151,27 +159,13 @@ class OverviewMultipleTaste extends StatelessWidget {
 
           const SizedBox(height: 5),
 
-          _OutsideTitle(label: 'Cata de ${userService.obtainDisplayName(multipleTaste.userView)}'),
+          _OutsideTitle(label: 'Cata de ${userService.obtainDisplayName(multipleProvider.userView)}'),
 
-          _TasteHeader(newWidth: newWidth, lastLabel: 'Puntos'),
+          _TasteHeader(newWidth: newWidth, lastLabel: 'Final'),
 
           Expanded(
             flex: 1,
-            child: ListView.builder(
-              padding: const EdgeInsets.all(0),
-              itemCount: wineTasteList.length,
-              itemBuilder: (context, index) {
-                return _CustomListItem(
-                  index: index,
-                  wineName: wineTasteList[index].nombre, 
-                  vista: wineTasteList[index].puntosVista,
-                  nariz: wineTasteList[index].puntosNariz,
-                  boca: wineTasteList[index].puntosBoca,
-                  puntosOrFinal: wineTasteList[index].puntosFinal,
-                  newWidth: newWidth,
-                );
-              },
-            ),
+            child: UsersMultipleTasteDetails(newWidth: newWidth),
           ),
 
           const _OutsideTitle(label: 'Valoraciones medias de cata'),  
@@ -180,25 +174,7 @@ class OverviewMultipleTaste extends StatelessWidget {
           
           Expanded(
             flex: 1,
-            child: ListView.builder(
-              padding: const EdgeInsets.all(0),
-              itemCount: wineTasteList.length,
-              itemBuilder: (context, index) {
-                  
-                final List<AverageRatings> averageRatings = multipleTaste.sortAverageRatings();
-                
-                return _CustomListItem(
-                  index: index,
-                  wineName: wineTasteList[index].nombre, 
-                  vista: averageRatings[index].vista,
-                  nariz: averageRatings[index].nariz,
-                  boca: averageRatings[index].boca,
-                  puntosOrFinal: averageRatings[index].puntos,
-                  newWidth: newWidth,
-                  addEndSizedBox: wineTasteList.length - 1 == index ? true : null,
-                );
-              },
-            ),
+            child: MultipleTasteAverageRatings(newWidth: newWidth)
           ),
         ],
       ),
@@ -213,26 +189,27 @@ class _OtherUsersTaste extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final styles = Theme.of(context).textTheme;
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
+    final multipleProvider = context.watch<MultipleProvider>();
+    final List<String> usersList = multipleProvider.allUsersTaste();
 
     return SizedBox(
       height: 40,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: multipleTaste.otherUsersTaste().length,
+        itemCount: usersList.length,
         itemBuilder: (context, index) {
 
           final userService = Provider.of<UserServices>(context);
-          final String displayName = userService.obtainDisplayName(multipleTaste.otherUsersTaste()[index]);
+          final String displayName = userService.obtainDisplayName(usersList[index]);
 
           return Container(
-            margin: EdgeInsets.only(left: 10, right: index + 1 == multipleTaste.otherUsersTaste().length ? 10 : 0),
+            margin: EdgeInsets.only(left: 10, right: index + 1 == usersList.length ? 10 : 0),
             child: FilterChip.elevated(
               showCheckmark: false,
               label: Text(displayName),
               labelStyle: styles.bodySmall,
-              selected: multipleTaste.userView == multipleTaste.otherUsersTaste()[index],
-              onSelected: (value) => multipleTaste.userView = multipleTaste.otherUsersTaste()[index],
+              selected: multipleProvider.userView == usersList[index],
+              onSelected: (value) => multipleProvider.userView = usersList[index],
             ),
           );
         },
@@ -250,7 +227,6 @@ class _CustomListItem extends StatelessWidget {
     required this.boca, 
     required this.puntosOrFinal,
     required this.newWidth,
-    this.tasteHeader,
     this.itemsDetailsNotes,
     this.itemsDetailsComments,
     this.addEndSizedBox,
@@ -263,7 +239,6 @@ class _CustomListItem extends StatelessWidget {
   final double boca;
   final int puntosOrFinal;
   final double newWidth;
-  final Widget? tasteHeader;
   final Widget? itemsDetailsNotes;
   final Widget? itemsDetailsComments;
   final bool? addEndSizedBox;
@@ -291,8 +266,6 @@ class _CustomListItem extends StatelessWidget {
             style: styles.bodyMedium
           ),
         ),
-
-        if (tasteHeader != null) tasteHeader!,
                 
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

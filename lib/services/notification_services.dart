@@ -12,7 +12,7 @@ class NotificationServices {
       padding: const EdgeInsets.symmetric(vertical: 19),
       duration: const Duration(milliseconds: 2500),
       elevation: 1,
-      backgroundColor: colors.error,
+      backgroundColor: colors.onErrorContainer,
       content: Text(
         message.toUpperCase(), 
         textAlign: TextAlign.center,
@@ -32,7 +32,7 @@ class NotificationServices {
       child: Flushbar(
         padding: const EdgeInsets.symmetric(vertical: 19),
         duration:  const Duration(milliseconds: 2500),
-        backgroundColor: colors.error,
+        backgroundColor: colors.onErrorContainer,
         messageText: Text(
           message.toUpperCase(), 
           textAlign: TextAlign.center,

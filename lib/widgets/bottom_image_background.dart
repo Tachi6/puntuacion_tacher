@@ -13,12 +13,12 @@ class BottomImageBackground extends StatelessWidget {
     super.key, 
     required this.image, 
     required this.opacity,
-    this.bottomPadding,
+    required this.bottomFlex,
   });
 
   final String image;
   final double opacity;
-  final double? bottomPadding;
+  final int bottomFlex;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,9 @@ class BottomImageBackground extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Spacer(),
+          const Spacer(
+            flex: 4,
+          ),
       
           Container(
             height: 120,
@@ -69,21 +71,22 @@ class BottomImageBackground extends StatelessWidget {
               ),
             ),
           ),
-
-           if (bottomPadding != null) Container(
-            height: 58 + bottomPadding!, // 58 of bottomSheet
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.white.withAlpha((255 * opacity).toInt()),
-                  colors.surface,
-                ],
-              )
+   
+          Expanded(
+            flex: bottomFlex,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white.withAlpha((255 * opacity).toInt()),
+                    colors.surface,
+                  ],
+                )
+              ),
             ),
-          ),
-
+          ),   
         ],
       ),
     );

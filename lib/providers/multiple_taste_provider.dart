@@ -35,8 +35,6 @@ class MultipleTasteProvider extends ChangeNotifier {
     averageRatings: {}
   );
 
-  int pageIndex = 0;
-
   GlobalKey<FormState> formNameKey = GlobalKey<FormState>();
 
   bool get isLoading => _isLoading;
@@ -125,20 +123,20 @@ class MultipleTasteProvider extends ChangeNotifier {
 
       final Map<String, Map<String, WineTaste>> winesEntry = {
         wineId: {
-          'notStarted': WineTaste(
-            fecha: '',
-            user: 'not', 
-            nombre: '',
-            id: wineId,
-            ratingVista: -1, 
-            ratingNariz: -1, 
-            ratingBoca: -1, 
-            ratingPuntos: -1, 
-            puntosFinal: -1,
-            puntosVista: -1, 
-            puntosNariz: -1, 
-            puntosBoca: -1, 
-          ),
+          // 'notStarted': WineTaste(
+          //   fecha: '',
+          //   user: 'not', 
+          //   nombre: '',
+          //   id: wineId,
+          //   ratingVista: -1, 
+          //   ratingNariz: -1, 
+          //   ratingBoca: -1, 
+          //   ratingPuntos: -1, 
+          //   puntosFinal: -1,
+          //   puntosVista: -1, 
+          //   puntosNariz: -1, 
+          //   puntosBoca: -1, 
+          // ),
         }
       };
 

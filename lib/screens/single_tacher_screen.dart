@@ -11,7 +11,12 @@ import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class SingleTacherScreen extends StatelessWidget {
-  const SingleTacherScreen({super.key});
+  const SingleTacherScreen({
+    super.key,
+    required this.appBarTitle
+  });
+
+  final String appBarTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +24,7 @@ class SingleTacherScreen extends StatelessWidget {
     final wineForm = Provider.of<CreateEditWineFormProvider>(context, listen: true);
 
     return TacherScreen(
-      appBarTitle: wineForm.wine.nombre == '' ? 'Vino catado a ciegas' : wineForm.wine.nombre,
+      appBarTitle: appBarTitle,
       onPressedBackButon: () {
         wineForm.resetSettings();
         Navigator.pop(context);

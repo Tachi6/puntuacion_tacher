@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import 'package:puntuacion_tacher/presentation/providers/multiple_list_provider.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/search/search.dart';
-import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class SelectMultipleTaste extends StatefulWidget {
@@ -33,21 +33,21 @@ class _SelectMultipleTasteState extends State<SelectMultipleTaste> {
   Widget build(BuildContext context) {
 
     final taste = Provider.of<TasteOptionsProvider>(context);
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final multipleService = Provider.of<MultipleServices>(context);
+    final multipleListProvider = context.watch<MultipleListProvider>();
 
     void onPressed() async {
-      multipleService.loadMultiples();
+      multipleListProvider.loadMultiple();
       if (context.mounted) {
-        final multipleSearched = await showSearch(context: context, delegate: SearchDelegateMultiple(multipleList: multipleService.multipleTasteList));
+        final multipleSearched = await showSearch(context: context, delegate: SearchDelegateMultiple(
+          multipleList: multipleListProvider.multipleList
+        ));
 
         if (multipleSearched != null) {
-          multipleTaste.multipleName = multipleSearched.name;
+          multipleListProvider.selectedMultiple = multipleSearched;
           textEditingController.text= multipleSearched.name;
           taste.showContinueButton = true;
         }
         else {
-          multipleTaste.multipleName = '';
           textEditingController.clear();
           taste.showContinueButton = false;
         }

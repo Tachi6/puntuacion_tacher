@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/pages/multiple_taste_page.dart';
+import 'package:puntuacion_tacher/presentation/providers/multiple_list_provider.dart';
 
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
+import 'package:puntuacion_tacher/widgets/create_multiple_widget.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class TasteScreen extends StatefulWidget {
@@ -52,7 +55,7 @@ class _TasteScreenState extends State<TasteScreen> with AutomaticKeepAliveClient
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-           if (screenHeight > 600) const BottomImageBackground(image: 'assets/taste-background.jpg', opacity: 0.8),
+           if (screenHeight > 600) const BottomImageBackground(image: 'assets/taste-background.jpg', opacity: 0.8, bottomFlex: 0),
       
           Form(
             child: Column(
@@ -117,7 +120,7 @@ class _ThirdFormWidget extends StatelessWidget {
     Widget thirdRowWidget() {
       if (taste.showThirdWidget && taste.tasteNormal == TasteOptionsNormal.vino) return const SearchAddTasteWine();
       if (taste.showThirdWidget && taste.tasteNormal == TasteOptionsNormal.ciega) return const HiddenTaste();
-      if (taste.showThirdWidget && taste.tasteMultiple == TasteOptionsMultiple.organizar) return const MultipleTasteName();
+      if (taste.showThirdWidget && taste.tasteMultiple == TasteOptionsMultiple.organizar) return const CreateMultipleWidget();
       if(taste.showThirdWidget && taste.tasteMultiple == TasteOptionsMultiple.acceder) return const SelectMultipleTaste();
       return const SizedBox();
     }
@@ -171,7 +174,8 @@ class _ContinueButton extends StatelessWidget {
     final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     final multipleService = Provider.of<MultipleServices>(context);
     final wineService = Provider.of<WineServices>(context);
-    final screenProvider = Provider.of<ScreensProvider>(context, listen: true);
+    final screenProvider = Provider.of<ScreensProvider>(context);
+    final wineForm = Provider.of<CreateEditWineFormProvider>(context);
 
     Widget showContinueButton() {
       if (taste.showContinueButton) {
@@ -181,25 +185,35 @@ class _ContinueButton extends StatelessWidget {
           onPressed: () async {
             if (taste.tasteMultiple == TasteOptionsMultiple.acceder) {
               final routeList = MaterialPageRoute(
-                builder: (context) => const PopScope(
-                  canPop: false,
-                  child: MultipleTasteScreen()
-                ),
+                builder: (context) => MultipleTasteScreen(multipleTaste: context.read<MultipleListProvider>().selectedMultiple!),
               );
 
-              multipleTaste.initLoadedMultipleTaste(multipleService.loadMultipleTaste(multipleTaste.multipleName).copy());
-              List<Wines> winesMultipleTaste = [];
-              multipleTaste.multipleTaste.wines.forEach((key, value) {
-                winesMultipleTaste.add(wineService.winesByIndex[int.parse(key)].copy());
-              },);
-              multipleTaste.addMultipleTasteWines(winesMultipleTaste);
+              // multipleTaste.initLoadedMultipleTaste(multipleService.loadMultipleTaste(multipleTaste.multipleName).copy());
+              // List<Wines> winesMultipleTaste = [];
+              // multipleTaste.multipleTaste.wines.forEach((key, value) {
+              //   winesMultipleTaste.add(wineService.winesByIndex[int.parse(key)].copy());
+              // },);
+              // multipleTaste.addMultipleTasteWines(winesMultipleTaste);
               
-              multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userUuid);
-              multipleTaste.initUserTaste(multipleService.isMultipleTasted);
-              // Activo vista global en el overview si esta catada
-              if (multipleService.isMultipleTasted) {
-                multipleTaste.overview = true;
-              }
+              // multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userUuid);
+              // multipleTaste.initUserTaste(multipleService.isMultipleTasted);
+              // // Activo vista global en el overview si esta catada
+              // if (multipleService.isMultipleTasted) {
+              //   multipleTaste.overview = true;
+              // }
+              // Navego a siguiente pantalla
+              Navigator.push(context, routeList);
+              // Limpio pagina del tastescreen
+              taste.clearOptions();
+            }
+
+            if (taste.tasteMultiple == TasteOptionsMultiple.organizar) {
+              final routeList = MaterialPageRoute(
+                builder: (context) => const PopScope(
+                  canPop: false,
+                  child: CreateMultipleTasteScreen()
+                ),
+              );
               // Navego a siguiente pantalla
               Navigator.push(context, routeList);
               // Limpio pagina del tastescreen
@@ -211,9 +225,11 @@ class _ContinueButton extends StatelessWidget {
               screenProvider.multiplePage = 0; // TODO: poner provider mas abajo
 
               final newRoute = MaterialPageRoute(
-                builder: (context) => const PopScope(
+                builder: (context) => PopScope(
                   canPop: false,
-                  child: SingleTacherScreen()
+                  child: SingleTacherScreen(
+                    appBarTitle: wineForm.wine.nombre == '' ? 'Vino a catar a ciegas' : wineForm.wine.nombre,
+                  )
                 ),
               );
               // Navego a siguiente pantalla

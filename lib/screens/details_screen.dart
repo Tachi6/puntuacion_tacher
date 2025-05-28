@@ -41,7 +41,7 @@ class DetailsScreen extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
-            const BottomImageBackground(image: 'assets/details-background.jpg', opacity: 0.4),
+            const BottomImageBackground(image: 'assets/details-background.jpg', opacity: 0.4, bottomFlex: 0),
       
             CustomScrollView(
               slivers: [

@@ -15,7 +15,6 @@ class RadioTaste extends StatelessWidget {
 
     final taste = Provider.of<TasteOptionsProvider>(context);
     final colors = Theme.of(context).colorScheme;
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
         
     return Row(
       children: [
@@ -38,7 +37,6 @@ class RadioTaste extends StatelessWidget {
                   groupValue: taste.taste, 
                   onChanged: (TasteOptions? value) {
                     taste.taste = value!;
-                    multipleTaste.multipleName = '';
                   },
                 ),
               ),

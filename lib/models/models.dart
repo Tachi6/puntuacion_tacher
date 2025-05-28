@@ -7,6 +7,6 @@ export 'package:puntuacion_tacher/models/text.dart';
 export 'package:puntuacion_tacher/models/wine_type.dart';
 export 'package:puntuacion_tacher/models/wines.dart';
 export 'package:puntuacion_tacher/models/multiple.dart';
-export 'package:puntuacion_tacher/models/wine_taste.dart';
+export 'package:puntuacion_tacher/domain/entities/wine_taste.dart'; // TODO: arreglar
 export 'package:puntuacion_tacher/models/wine_ratings.dart';
 export 'package:puntuacion_tacher/models/quiz.dart';

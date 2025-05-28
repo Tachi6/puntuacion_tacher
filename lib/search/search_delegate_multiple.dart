@@ -2,22 +2,24 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:puntuacion_tacher/helpers/helpers.dart';
 import 'package:diacritic/diacritic.dart';
 
-import 'package:puntuacion_tacher/models/models.dart';
-import 'package:puntuacion_tacher/screens/screens.dart';
+import 'package:puntuacion_tacher/domain/entities/entities.dart';
+import 'package:puntuacion_tacher/helpers/helpers.dart';
+import 'package:puntuacion_tacher/presentation/providers/multiple_list_provider.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class SearchDelegateMultiple extends SearchDelegate{
-  SearchDelegateMultiple({required this.multipleList});
+  SearchDelegateMultiple({required this.multipleList}) {
+    _filtro = [...multipleList];
+  }
 
-  final List<Multiple> multipleList;
+  final List<MultipleNew> multipleList;
 
-  List<Multiple> _filtro = [];
+  late List<MultipleNew> _filtro;
 
-  Future<bool?> enterPasswordBox(BuildContext context, Multiple multiple) {
+  Future<bool?> enterPasswordBox(BuildContext context, MultipleNew multiple) {
     return showGeneralDialog(
       context: context,
       barrierDismissible: false, 
@@ -149,13 +151,13 @@ class SearchDelegateMultiple extends SearchDelegate{
   @override
   Widget buildSuggestions(BuildContext context) {
 
-    final multipleService = Provider.of<MultipleServices>(context);
+    final multipleListProvider = context.watch<MultipleListProvider>();
 
     if (query.isEmpty) {
       _filtro = multipleList;
     }
  
-    _filtro = multipleService.multipleTasteList.where((multiple) {
+    _filtro = multipleListProvider.multipleList.where((multiple) {
       return removeDiacritics(multiple.name.toLowerCase()).contains(removeDiacritics(query.trim().toLowerCase()));
     }).toList();
 
@@ -178,7 +180,7 @@ class SearchDelegateMultiple extends SearchDelegate{
               if (isCorrectPassword == null) return;
           
               if (isCorrectPassword && context.mounted) {
-                if (_filtro[index].tasteQuiz != null) await context.read<QuizServices>().loadQuiz(_filtro[index].name);
+                if (_filtro[index].tasteQuiz != null) await context.read<QuizServices>().loadQuiz(_filtro[index].id!);
                 if (context.mounted) close(context, _filtro[index].copy());
                 return;
               }
@@ -189,7 +191,7 @@ class SearchDelegateMultiple extends SearchDelegate{
               return;
             }
             // Para cata sin contraseña
-            if (_filtro[index].tasteQuiz != null) await context.read<QuizServices>().loadQuiz(_filtro[index].name);
+            if (_filtro[index].tasteQuiz != null) await context.read<QuizServices>().loadQuiz(_filtro[index].id!);
             if (context.mounted) close(context, _filtro[index].copy());
           },
         );
@@ -289,42 +291,44 @@ class NoResultsMultiple extends StatelessWidget {
   @override
   Widget build(BuildContext context) {   
     return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 10),
-      
-          Container(
-            alignment: Alignment.center,
-            height: 40,
-            child: const Text(
-              'Cata múltiple no encontrada', 
-              textAlign: TextAlign.center, 
-              style: TextStyle(fontSize: 16)
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              height: 40,
+              child: const Text(
+                'Cata múltiple no encontrada', 
+                textAlign: TextAlign.center, 
+                style: TextStyle(fontSize: 16)
+              ),
             ),
-          ),
-          
-          const SizedBox(height: 20),
-      
-          const MultipleWineImage(),
-      
-          const SizedBox(height: 20),
-          
-          CustomElevatedButton(
-            width: 160,
-            height: 40, 
-            onPressed: () async {
-              Navigator.pop(context);
-
-              final routeDetails = MaterialPageRoute(
-                builder: (context) => const CreateMultipleTasteScreen(),
-              );
-              Navigator.push(context, routeDetails);
-            },
-            label: 'Crear cata múltiple',
-          ),
-        ],
+            
+            const SizedBox(height: 20),
+        
+            const MultipleWineImage(),
+        
+            const SizedBox(height: 20),
+            
+            //TODO: ver si se puede pedir nombre antes de entrar a crear cata
+            // CustomElevatedButton(
+            //   width: 160,
+            //   height: 40, 
+            //   onPressed: () async {
+            //     Navigator.pop(context);
+        
+            //     final routeDetails = MaterialPageRoute(
+            //       builder: (context) => const CreateMultipleTasteScreen(),
+            //     );
+            //     Navigator.push(context, routeDetails);
+            //   },
+            //   label: 'Crear cata múltiple',
+            // ),
+          ],
+        ),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/constants/environment.dart';
+import 'package:puntuacion_tacher/presentation/providers/multiple_list_provider.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
@@ -57,6 +58,7 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: ( _ ) => ChangeThemeProvider()),
         ChangeNotifierProvider(create: ( _ ) => MultipleTasteProvider()),
         ChangeNotifierProvider(create: ( _ ) => OtherTasteProvider()),
+        ChangeNotifierProvider(create: ( _ ) => MultipleListProvider()),
       ],
       child: const MyApp(),
     );
@@ -85,7 +87,6 @@ class MyApp extends StatelessWidget{
         'checkingAuth':(context) => const CheckAuthScreen(),
         'login':(context) => MediaQuery.withNoTextScaling(child: const LoginScreen()),
         'displayName':(context) => MediaQuery.withNoTextScaling(child: const EnterDisplayNameScreen()),
-        // 'home':(context) => MediaQuery.withNoTextScaling(child: const HomeScreen()), 
       },
       initialRoute: 'checkingAuth',
       builder: (context, child) {

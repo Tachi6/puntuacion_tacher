@@ -141,38 +141,39 @@ class NoResultsWine extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 10),
-        
-            Container(
-              alignment: Alignment.center,
-              height: 40,
-              child: const Text(
-                'Vino no encontrado', 
-                textAlign: TextAlign.center, 
-                style: TextStyle(fontSize: 16)
+        child: SafeArea(
+          top: false,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                alignment: Alignment.center,
+                height: 40,
+                child: const Text(
+                  'Vino no encontrado', 
+                  textAlign: TextAlign.center, 
+                  style: TextStyle(fontSize: 16)
+                ),
               ),
-            ),
-            
-            const SizedBox(height: 20),
-        
-            const SingleWineImage(),
-        
-            const SizedBox(height: 20),
-
-            Visibility(
-              visible: onPressed != null,
-              child: CustomElevatedButton(
-                width: 160,
-                height: 40, 
-                onPressed: onPressed,
-                label: 'Crear nuevo vino',
+              
+              const SizedBox(height: 20),
+          
+              const SingleWineImage(),
+          
+              const SizedBox(height: 20),
+          
+              Visibility(
+                visible: onPressed != null,
+                child: CustomElevatedButton(
+                  width: 160,
+                  height: 40, 
+                  onPressed: onPressed,
+                  label: 'Crear nuevo vino',
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

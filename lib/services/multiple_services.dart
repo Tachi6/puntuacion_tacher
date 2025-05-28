@@ -83,6 +83,48 @@ class MultipleServices extends ChangeNotifier {
     return newMultiple;
   }
 
+  Future<void> createMultipleTaste2(Multiple multipleTaste) async {
+    // // Creo nueva cata multiple
+    // final String jsonCreateType = 'multiple.json';
+    // final url = Uri.https(_baseUrl, jsonCreateType, {
+    //   'auth': await storage.read(key: 'idToken') ?? ''
+    // });
+    // final resp = await http.post(url, body: multipleTaste.toRawJson());
+    // // retorna algo asi:  {"name":"-OQgtwB62DSZX9f2Rh9N"}, de aqui sacare el id y se lo asigno al multiple
+    // final Map<String, dynamic> decodedRespBody = jsonDecode(resp.body);
+    // final String id = decodedRespBody["name"];
+    // final String encodedIdMap = jsonEncode({"id": id});
+
+
+    final Map<String, AverageRatings> averageRatings = {
+      '1': AverageRatings(boca: 5, nariz: 4, puntos: 8, vista: 5),
+      '2': AverageRatings(boca: 0, nariz: 0, puntos: 10, vista: 0),
+    };
+
+    final String jsonUpdateType = '/multiple/-OQh5lkcg0Bsrr_qltgv/averageRatings.json';
+    final url2 = Uri.https(_baseUrl, jsonUpdateType, {
+      'auth': await storage.read(key: 'idToken') ?? ''
+    });
+
+    Map<String, Map<String, dynamic>> newMap = {};
+    averageRatings.forEach((key, value) {
+      Map<String, Map<String, dynamic>> tempMap = {key: value.toJson()};
+      newMap = {...newMap, ...tempMap};
+    });
+
+    final resp = await http.patch(url2, body: jsonEncode(newMap));
+
+    print(resp.body);
+
+
+    // final Multiple newMultiple = Multiple.fromRawJson(resp.body);
+
+    // multipleTasteList = [...multipleTasteList, newMultiple];
+    // notifyListeners();
+
+    // return newMultiple;
+  }
+
   Future<void> updateAverageRatings({required String multipleName, required Map<String, AverageRatings> averageRatings}) async {
     // Actualizo resultados de cata multiple
     averageRatings.forEach((key, value) async {

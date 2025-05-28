@@ -13,7 +13,6 @@ export 'package:puntuacion_tacher/widgets/list_best.dart';
 export 'package:puntuacion_tacher/widgets/list_top10.dart';
 export 'package:puntuacion_tacher/widgets/load_wine_image.dart';
 export 'package:puntuacion_tacher/widgets/login_background.dart';
-export 'package:puntuacion_tacher/widgets/multiple_taste_name.dart';
 export 'package:puntuacion_tacher/widgets/notes_comments_box.dart';
 export 'package:puntuacion_tacher/widgets/points_box.dart';
 export 'package:puntuacion_tacher/widgets/radio_taste_multiple.dart';

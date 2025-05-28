@@ -16,7 +16,6 @@ class RadioTasteMultiple extends StatelessWidget {
     final taste = Provider.of<TasteOptionsProvider>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
     final colors = Theme.of(context).colorScheme;
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
     
     return SizedBox(
       width: Platform.isAndroid ? 265 : 280,
@@ -37,8 +36,7 @@ class RadioTasteMultiple extends StatelessWidget {
               onChanged: (TasteOptionsMultiple? value) {
                 wineForm.resetSettings();
                 taste.tasteMultiple = value!;
-                multipleTaste.multipleName = '';
-                taste.showContinueButton = false;
+                taste.showContinueButton = true;
               },
             ),
           ),
