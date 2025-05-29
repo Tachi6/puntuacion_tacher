@@ -100,7 +100,7 @@ class SendTasteButton extends StatelessWidget {
         await winesService.updateWine(wineForm.wine);
         await winesService.saveTastedWine(wineTaste);
         // Lanzo la confirmacion
-        if (context.mounted) showCustomDialog(context, child: PointsBox(wine: wineForm.wine, puntuacionFinal: wineForm.puntosFinal, isCloseNedeed: true));
+        if (context.mounted) showCustomDialog(context, child: PointsBox(wine: wineForm.wine, puntuacionFinal: wineForm.puntosFinal));
       },
     );
   }

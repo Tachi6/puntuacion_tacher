@@ -213,7 +213,7 @@ class _WinesListView extends StatelessWidget {
         return CustomMultipleWineRow(
           index: index,
           checkedIcon: multipleProvider.isWineTasted(wine.id!),
-          title: multipleProvider.multipleSelected.hidden 
+          title: multipleProvider.multipleSelected.hidden && !multipleProvider.isMultipleTasted
             ? 'Vino a catar a ciegas ${index + 1}'
             : wine.nombre,
           primaryColor: colors.surfaceContainerHigh,

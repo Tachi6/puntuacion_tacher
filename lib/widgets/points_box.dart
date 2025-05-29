@@ -10,9 +10,9 @@ class PointsBox extends StatelessWidget {
   
   final Wines? wine;
   final int puntuacionFinal;
-  final bool isCloseNedeed;
+  final void Function()? closeAction;
   
-  const PointsBox({this.wine, required this.puntuacionFinal, required this.isCloseNedeed, super.key});
+  const PointsBox({this.wine, required this.puntuacionFinal, this.closeAction, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +53,15 @@ class PointsBox extends StatelessWidget {
           Navigator.pop(context);
           // Limpio el taste_screen
           taste.clearOptions();
-          // Cierro y elimino ventana de Tacher del context y elimino registros para poder valorar de nuevo
-          if (context.mounted && isCloseNedeed) {
+          // Limpio el wineform y elimino registros para poder valorar de nuevo
+          wineForm.resetSettings();
+          // Cierro y elimino ventana de Tacher del context o mando la accion predeterminada si la hay
+          if (closeAction != null) {
+            closeAction!();
+            return;
+          }
+          if (context.mounted) {
             Navigator.pop(context);
-            wineForm.resetSettings();
           } 
         },
       )

@@ -66,7 +66,7 @@ class _TacherScreenState extends State<TacherScreen> with AutomaticKeepAliveClie
 }
 
 class _CustomTacherBody extends StatelessWidget {
-  _CustomTacherBody({required this.isLittleScreen, this.selectedWineTaste});
+  const _CustomTacherBody({required this.isLittleScreen, this.selectedWineTaste});
 
   final bool isLittleScreen;
   final WineTaste? selectedWineTaste;
@@ -77,8 +77,8 @@ class _CustomTacherBody extends StatelessWidget {
     final wineForm = context.watch<CreateEditWineFormProvider>();
     final Textos textos = Textos();
 
-    final double titleSize = isLittleScreen ? 15 : 16;
-    final double bodySize = isLittleScreen ? 11 : 12;
+    final double titleSize = isLittleScreen ? 15 : 16.5;
+    final double bodySize = isLittleScreen ? 11 : 12.5;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

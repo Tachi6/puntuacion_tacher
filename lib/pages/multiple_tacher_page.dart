@@ -113,7 +113,16 @@ class SendTasteButton extends StatelessWidget {
         // Actualizo Multiple y AverageRatings
         await multipleProvider.validateWineTaste(wineTaste);
         // Lanzo la confirmacion
-        if (context.mounted) showCustomDialog(context, child: PointsBox(wine: wineForm.wine, puntuacionFinal: wineForm.puntosFinal, isCloseNedeed: false,));
+        if (context.mounted) {
+
+        showCustomDialog(context, child: PointsBox(
+          wine: wineForm.wine,
+          puntuacionFinal: wineForm.puntosFinal,
+          closeAction: () {
+            multipleProvider.setandMoveToPage(null);
+          }
+        ));
+        }
       },
     );
   }
