@@ -28,16 +28,15 @@ class AppState extends StatelessWidget {
   Widget build(BuildContext context) {
 
     const List<String> precacheImages = [
+      'assets/bottle_noimage.jpg',
       'assets/details-background.jpg',
+      'assets/enter_display_name_background.jpg',
+      'assets/initial-multiple-background.jpg',
       'assets/list-all-background.jpg',
-      'assets/login-background.jpg',
       'assets/login-background.jpg',
       'assets/settings_background.jpg',
       'assets/tacher-background.jpg',
       'assets/taste-background.jpg',
-      'assets/bottle_noimage.jpg',
-      'assets/no_image.jpg',
-      'assets/valenciso.jpg',
     ];
 
     for (var image in precacheImages) {
