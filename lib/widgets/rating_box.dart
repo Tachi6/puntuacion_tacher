@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -11,9 +10,9 @@ import 'package:puntuacion_tacher/providers/providers.dart';
 class RatingBox extends StatelessWidget {
 
   final String titleText;
+  final double titleSize;
   final String bodyText;
-  final AutoSizeGroup titleGroup;
-  final AutoSizeGroup bodyGroup;
+  final double bodySize;
   final double? initialRating;
   final double? minRating;
   final int? itemCount;
@@ -23,9 +22,9 @@ class RatingBox extends StatelessWidget {
   const RatingBox({
     super.key, 
     required this.titleText, 
+    required this.titleSize, 
     required this.bodyText,
-    required this.titleGroup,
-    required this.bodyGroup,
+    required this.bodySize,
     this.initialRating, 
     this.minRating, 
     this.itemCount, 
@@ -56,12 +55,11 @@ class RatingBox extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: AutoSizeText(
+                child: Text(
                   titleText,
-                  group: titleGroup,
-                  minFontSize: 15,
                   maxLines: 1,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: titleSize),
                 ),
               ),
 
@@ -69,12 +67,11 @@ class RatingBox extends StatelessWidget {
         
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: AutoSizeText(
+                child: Text(
                   bodyText,
-                  minFontSize: 11,
-                  group: bodyGroup,
                   maxLines: 3,
                   textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: bodySize),
                 ),
               ),
 

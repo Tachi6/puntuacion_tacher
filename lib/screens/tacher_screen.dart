@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/domain/entities/entities.dart';
@@ -67,7 +66,7 @@ class _TacherScreenState extends State<TacherScreen> with AutomaticKeepAliveClie
 }
 
 class _CustomTacherBody extends StatelessWidget {
-  const _CustomTacherBody({required this.isLittleScreen, this.selectedWineTaste});
+  _CustomTacherBody({required this.isLittleScreen, this.selectedWineTaste});
 
   final bool isLittleScreen;
   final WineTaste? selectedWineTaste;
@@ -77,8 +76,9 @@ class _CustomTacherBody extends StatelessWidget {
 
     final wineForm = context.watch<CreateEditWineFormProvider>();
     final Textos textos = Textos();
-    var titleGroup = AutoSizeGroup();
-    var bodyGroup = AutoSizeGroup();
+
+    final double titleSize = isLittleScreen ? 15 : 16;
+    final double bodySize = isLittleScreen ? 11 : 12;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,9 +87,9 @@ class _CustomTacherBody extends StatelessWidget {
         RatingBox(
           titleText: textos.vistaTitulo,
           bodyText: textos.vistaDescripcion,
+          titleSize: titleSize,
+          bodySize: bodySize,
           initialRating: selectedWineTaste?.ratingVista ?? wineForm.ratingVista,
-          titleGroup: titleGroup,
-          bodyGroup: bodyGroup,
           itemCount: 7,
           minRating: 1,
           name: 'vista',
@@ -101,9 +101,9 @@ class _CustomTacherBody extends StatelessWidget {
         RatingBox(
           titleText: textos.narizTitulo,
           bodyText: textos.narizDescripcion,
+          titleSize: titleSize,
+          bodySize: bodySize,
           initialRating: selectedWineTaste?.ratingNariz ?? wineForm.ratingNariz,
-          titleGroup: titleGroup,
-          bodyGroup: bodyGroup,
           itemCount: 9,
           minRating: 1,
           name: 'nariz',
@@ -116,8 +116,8 @@ class _CustomTacherBody extends StatelessWidget {
           titleText: textos.bocaTitulo,
           bodyText: textos.bocaDescripcion,
           initialRating: selectedWineTaste?.ratingBoca ?? wineForm.ratingBoca,
-          titleGroup: titleGroup,
-          bodyGroup: bodyGroup,
+          titleSize: titleSize,
+          bodySize: bodySize,
           itemCount: 9,
           minRating: 1,
           name: 'boca',
@@ -129,10 +129,10 @@ class _CustomTacherBody extends StatelessWidget {
         RatingBox(
           titleText: textos.puntosTitulo,
           bodyText: textos.puntosDescripcion,
+          titleSize: titleSize,
+          bodySize: bodySize,
           // +1 porque visualmente el 1 del rating corresponde al 0 de puntuacion
           initialRating: selectedWineTaste != null ? selectedWineTaste!.ratingPuntos + 1 : wineForm.ratingPuntos,
-          titleGroup: titleGroup,
-          bodyGroup: bodyGroup,
           itemCount: 11,
           minRating: 1,
           name: 'puntos',
