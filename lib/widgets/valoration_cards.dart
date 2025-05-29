@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/domain/entities/entities.dart';
@@ -46,15 +45,15 @@ class ValorationCards extends StatelessWidget {
             elevation: 2,
             child: Stack(
               children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top:20, right: 20),
-                    child: SvgPicture.asset(
-                      'assets/wine_bar_full.svg',
-                      height: 135,
-                
-                      colorFilter: ColorFilter.mode(colors.surfaceContainerHigh, BlendMode.srcIn),
+                Positioned(
+                  right: -50,
+                  top: -25,
+                  child: Transform.rotate(
+                    angle: -0.33,
+                    child: Icon(
+                      Icons.wine_bar,
+                      color: colors.surface.withAlpha(128),
+                      size: 250,
                     ),
                   ),
                 ),
