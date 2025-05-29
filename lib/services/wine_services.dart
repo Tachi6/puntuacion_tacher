@@ -3,17 +3,17 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:puntuacion_tacher/mappers/mappers.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'package:puntuacion_tacher/domain/entities/entities.dart';
+import 'package:puntuacion_tacher/mappers/mappers.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 
 
 //TODO repasar que no pase objetos por referencia
 
 class WineServices extends ChangeNotifier {
-  WineServices();
 
   final String _baseUrl = 'puntos-tacher-default-rtdb.europe-west1.firebasedatabase.app';
   final String _jsonType = 'wines.json';

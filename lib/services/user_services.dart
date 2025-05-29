@@ -5,7 +5,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class UserServices extends ChangeNotifier  {
-  UserServices();
   
   final String _baseUrl = 'puntos-tacher-default-rtdb.europe-west1.firebasedatabase.app';
   final String _jsonUuidType = 'uuid.json';

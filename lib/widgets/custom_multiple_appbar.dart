@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:puntuacion_tacher/presentation/providers/multiple_provider.dart';
+import 'package:puntuacion_tacher/presentation/providers/providers.dart';
 
 class CustomMultipleAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomMultipleAppBar({

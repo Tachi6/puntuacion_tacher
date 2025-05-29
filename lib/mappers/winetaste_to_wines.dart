@@ -1,3 +1,4 @@
+import 'package:puntuacion_tacher/domain/entities/entities.dart';
 import 'package:puntuacion_tacher/helpers/helpers.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 

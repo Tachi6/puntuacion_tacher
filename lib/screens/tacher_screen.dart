@@ -8,7 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
+import 'package:puntuacion_tacher/domain/entities/entities.dart';
 import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class TacherScreen extends StatefulWidget {
@@ -73,6 +75,7 @@ class _CustomTacherBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final wineForm = context.watch<CreateEditWineFormProvider>();
     final Textos textos = Textos();
     var titleGroup = AutoSizeGroup();
     var bodyGroup = AutoSizeGroup();
@@ -84,7 +87,7 @@ class _CustomTacherBody extends StatelessWidget {
         RatingBox(
           titleText: textos.vistaTitulo,
           bodyText: textos.vistaDescripcion,
-          initialRating: selectedWineTaste?.ratingVista ?? 0,
+          initialRating: selectedWineTaste?.ratingVista ?? wineForm.ratingVista,
           titleGroup: titleGroup,
           bodyGroup: bodyGroup,
           itemCount: 7,
@@ -98,7 +101,7 @@ class _CustomTacherBody extends StatelessWidget {
         RatingBox(
           titleText: textos.narizTitulo,
           bodyText: textos.narizDescripcion,
-          initialRating: selectedWineTaste?.ratingNariz ?? 0,
+          initialRating: selectedWineTaste?.ratingNariz ?? wineForm.ratingNariz,
           titleGroup: titleGroup,
           bodyGroup: bodyGroup,
           itemCount: 9,
@@ -112,7 +115,7 @@ class _CustomTacherBody extends StatelessWidget {
         RatingBox(
           titleText: textos.bocaTitulo,
           bodyText: textos.bocaDescripcion,
-          initialRating: selectedWineTaste?.ratingBoca ?? 0,
+          initialRating: selectedWineTaste?.ratingBoca ?? wineForm.ratingBoca,
           titleGroup: titleGroup,
           bodyGroup: bodyGroup,
           itemCount: 9,
@@ -126,7 +129,8 @@ class _CustomTacherBody extends StatelessWidget {
         RatingBox(
           titleText: textos.puntosTitulo,
           bodyText: textos.puntosDescripcion,
-          initialRating: selectedWineTaste?.ratingPuntos ?? 0,
+          // +1 porque visualmente el 1 del rating corresponde al 0 de puntuacion
+          initialRating: selectedWineTaste != null ? selectedWineTaste!.ratingPuntos + 1 : wineForm.ratingPuntos,
           titleGroup: titleGroup,
           bodyGroup: bodyGroup,
           itemCount: 11,

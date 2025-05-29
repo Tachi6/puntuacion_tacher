@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/domain/entities/entities.dart';
 
 class OtherTasteProvider extends ChangeNotifier {
 

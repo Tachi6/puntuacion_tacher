@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/domain/entities/entities.dart';
 
-class MultipleNew {
+class Multiple {
     String? id;
     String name;
     String description;
@@ -14,7 +14,7 @@ class MultipleNew {
     Map<String, Map<String, WineTaste>>? wines;
     Map<String, AverageRatings> averageRatings;
 
-    MultipleNew({
+    Multiple({
         this.id,
         required this.name,
         required this.description,
@@ -27,11 +27,11 @@ class MultipleNew {
         required this.averageRatings,
     });
 
-    factory MultipleNew.fromRawJson(String str) => MultipleNew.fromJson(json.decode(str));
+    factory Multiple.fromRawJson(String str) => Multiple.fromJson(json.decode(str));
 
     String toRawJson() => json.encode(toJson());
 
-    factory MultipleNew.fromJson(Map<String, dynamic> json) => MultipleNew(
+    factory Multiple.fromJson(Map<String, dynamic> json) => Multiple(
         id: json["id"],
         name: json["name"],
         description: json["description"],
@@ -57,7 +57,7 @@ class MultipleNew {
         "averageRatings": Map.from(averageRatings).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
     };
 
-  MultipleNew copy() => MultipleNew(
+  Multiple copy() => Multiple(
     id: id,
     name: name, 
     description: description,

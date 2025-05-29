@@ -18,8 +18,8 @@ class QuizProvider extends ChangeNotifier {
     required this.quizType, 
     required this.hidden, 
   }){
+    _selectedUser = defaultUser;
     if (quizType != null) {
-      _selectedUser = defaultUser;
       if (defaultQuestionList.first.answer != null && !defaultQuestionList.first.answer!.containsKey(defaultUser)) {
         for (int i = 0; i < wineSequence.length; i++) {
           final String wineId = wineSequence[i];
@@ -185,6 +185,7 @@ class QuizProvider extends ChangeNotifier {
   }
 
   bool isValidatedQuiz() {
+    if (defaultQuestionList.isEmpty) return false;
     return defaultQuestionList.first.answer?[selectedUser] != null;
   }
 

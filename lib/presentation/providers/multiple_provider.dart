@@ -4,7 +4,7 @@ import 'package:puntuacion_tacher/domain/entities/entities.dart';
 import 'package:puntuacion_tacher/helpers/formulas.dart';
 import 'package:puntuacion_tacher/infrastructure/datasources/multiple_firebase_datasource.dart';
 import 'package:puntuacion_tacher/infrastructure/repositories/multiple_repository_impl.dart';
-import 'package:puntuacion_tacher/models/wines.dart';
+import 'package:puntuacion_tacher/models/models.dart';
 
 class MultipleProvider extends ChangeNotifier {
   MultipleProvider(this._multipleSelected, this.winesByIndex, this.userUuid) {
@@ -23,7 +23,7 @@ class MultipleProvider extends ChangeNotifier {
   }
 
   final List<Wines> winesByIndex;
-  MultipleNew _multipleSelected;
+  Multiple _multipleSelected;
   final String userUuid;
   late String _userView;
 
@@ -39,7 +39,7 @@ class MultipleProvider extends ChangeNotifier {
   late PageController pageController;
   Widget _pageDestination = const SizedBox();
 
-  MultipleNew get multipleSelected => _multipleSelected;
+  Multiple get multipleSelected => _multipleSelected;
   Widget get pageDestination => _pageDestination;
   String get userView => _userView;
 
@@ -192,5 +192,14 @@ class MultipleProvider extends ChangeNotifier {
     }
     // Añado en primera posicion al usuario principal, porque sino puede acceder al overview, es porque tiene las catas realizadas
     return [userUuid, ...allUsers.toSet()];
+  }
+
+  bool isMultipleInTime() {
+    final DateTime datelimit = multipleSelected.dateLimit == null
+      ? CustomDatetime().toDateTime('3000-01-01T00:00:00.000')
+      : CustomDatetime().toDateTime(multipleSelected.dateLimit!);
+
+    if (datelimit.isBefore(DateTime.now().toUtc())) return false;
+    return true;
   }
 }

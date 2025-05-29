@@ -6,15 +6,15 @@ import 'package:puntuacion_tacher/infrastructure/repositories/multiple_repositor
 
 class MultipleListProvider extends ChangeNotifier {
 
-  List<MultipleNew> _multipleList = [];
-  MultipleNew? _selectedMultiple;
+  List<Multiple> _multipleList = [];
+  Multiple? _selectedMultiple;
 
   final MultipleRepositoryImpl multipleRepositoryImpl = MultipleRepositoryImpl(MultipleFirebaseDatasource());
   
-  List<MultipleNew> get multipleList => _multipleList;
-  MultipleNew? get selectedMultiple => _selectedMultiple;
+  List<Multiple> get multipleList => _multipleList;
+  Multiple? get selectedMultiple => _selectedMultiple;
 
-  set selectedMultiple(MultipleNew? multiple) {
+  set selectedMultiple(Multiple? multiple) {
     _selectedMultiple = multiple;
     notifyListeners();
   }  
@@ -24,7 +24,7 @@ class MultipleListProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addMultipleToList(MultipleNew multiple) {
+  void addMultipleToList(Multiple multiple) {
     _multipleList = [..._multipleList, multiple]; // TODO: no se si pasarlo por referencia o no...
     notifyListeners();
   }

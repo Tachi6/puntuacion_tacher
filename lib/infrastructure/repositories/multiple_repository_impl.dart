@@ -1,6 +1,5 @@
 import 'package:puntuacion_tacher/domain/datasources/multiple_datasource.dart';
-import 'package:puntuacion_tacher/domain/entities/multiple_new.dart';
-import 'package:puntuacion_tacher/domain/entities/wine_taste.dart';
+import 'package:puntuacion_tacher/domain/entities/entities.dart';
 import 'package:puntuacion_tacher/domain/repositories/multiple_repository.dart';
 
 class MultipleRepositoryImpl extends MultipleRepository {
@@ -9,17 +8,17 @@ class MultipleRepositoryImpl extends MultipleRepository {
   final MultipleDatasource multipleDatasource;
 
   @override
-  Future<MultipleNew> createMultipleTaste(MultipleNew multipleTaste) {
+  Future<Multiple> createMultipleTaste(Multiple multipleTaste) {
     return multipleDatasource.createMultipleTaste(multipleTaste);
   }
 
   @override
-  Future<List<MultipleNew>> loadAllMultipleTaste() {
+  Future<List<Multiple>> loadAllMultipleTaste() {
     return multipleDatasource.loadAllMultipleTaste();
   }
 
   @override
-  Future<MultipleNew> loadSingleMultipleTaste(String id) {
+  Future<Multiple> loadSingleMultipleTaste(String id) {
     return multipleDatasource.loadSingleMultipleTaste(id);
   }
 

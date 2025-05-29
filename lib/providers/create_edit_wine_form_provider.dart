@@ -22,10 +22,10 @@ class CreateEditWineFormProvider extends ChangeNotifier {
   double ratingVista = 0;
   double ratingNariz = 0;
   double ratingBoca = 0;
-  double ratingPuntos = 0.1;
+  double ratingPuntos = 0;
   
   int puntosFinal = 0;
-
+  
   String user = '';
 
   CreateEditWineFormProvider() {
@@ -106,12 +106,12 @@ class CreateEditWineFormProvider extends ChangeNotifier {
     ratingVista = 0;
     ratingNariz = 0;
     ratingBoca = 0;
-    ratingPuntos = 0.1;
+    ratingPuntos = 0;
     notifyListeners();
   }
 
   bool isValidRating() {
-    if (ratingVista == 0 || ratingNariz == 0 || ratingBoca == 0 || ratingPuntos == 0.1) {
+    if (ratingVista == 0 || ratingNariz == 0 || ratingBoca == 0 || ratingPuntos == 0) {
       return false;
     }
     return true;

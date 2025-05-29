@@ -58,7 +58,7 @@ class MultipleFormProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<MultipleNew> createMultipleTaste() async {
+  Future<Multiple> createMultipleTaste() async {
 
     for (String wineId in _wineSequence) {
       _averageRatings[wineId] = AverageRatings(
@@ -70,7 +70,7 @@ class MultipleFormProvider extends ChangeNotifier {
     }
     notifyListeners();
 
-    final newMultipleTaste = MultipleNew(
+    final newMultipleTaste = Multiple(
       name: _name,
       description: _description,
       password: _password,

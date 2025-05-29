@@ -1,13 +1,12 @@
-import 'package:puntuacion_tacher/domain/entities/multiple_new.dart';
-import 'package:puntuacion_tacher/domain/entities/wine_taste.dart';
+import 'package:puntuacion_tacher/domain/entities/entities.dart';
 
 abstract class MultipleDatasource {
 
-  Future<List<MultipleNew>> loadAllMultipleTaste();
+  Future<List<Multiple>> loadAllMultipleTaste();
 
-  Future<MultipleNew> loadSingleMultipleTaste(String id);
+  Future<Multiple> loadSingleMultipleTaste(String id);
 
-  Future<MultipleNew> createMultipleTaste(MultipleNew multipleTaste);
+  Future<Multiple> createMultipleTaste(Multiple multipleTaste);
 
   Future<void> updateMultipleTaste(String multipleId, WineTaste wineTaste);
   

@@ -24,6 +24,7 @@ export 'package:puntuacion_tacher/widgets/search_add_taste_wine.dart';
 export 'package:puntuacion_tacher/widgets/select_multiple_taste.dart';
 export 'package:puntuacion_tacher/widgets/valoration_cards.dart';
 export 'package:puntuacion_tacher/widgets/custom_icon_button.dart';
+export 'package:puntuacion_tacher/widgets/create_multiple_widget.dart';
 
 
 

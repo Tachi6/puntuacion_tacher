@@ -1,10 +1,10 @@
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/domain/entities/entities.dart';
 
+import 'package:provider/provider.dart';
+
+import 'package:puntuacion_tacher/domain/entities/entities.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -73,10 +73,6 @@ class NotasCataBox extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final Size size = MediaQuery.of(context).size;
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final screenProvider = Provider.of<ScreensProvider>(context);
-    // Resto 1 porque el listado de userMultipleWineTaste empieza en 0, y las paginas tienen la pagina de inicio en el 0
-    final multiplePage = screenProvider.multiplePage - 1;
 
     Timer? timerVista;
     Timer? timerNariz;
@@ -99,13 +95,7 @@ class NotasCataBox extends StatelessWidget {
                   readOnly: selectedWineTaste != null ? true : false,
                   onChanged: (value) {
                     timerVista?.cancel();
-                    timerVista = Timer(const Duration(milliseconds: 500), () {
-                      if (multiplePage != -1) {
-                        multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].notasVista = value); 
-                        return;
-                      }
-                      wineForm.editNotasVista = value;
-                    },);
+                    timerVista = Timer(const Duration(milliseconds: 500), () => wineForm.editNotasVista = value);
                   },
                 ),
 
@@ -117,13 +107,7 @@ class NotasCataBox extends StatelessWidget {
                   readOnly: selectedWineTaste != null ? true : false,
                   onChanged: (value) {
                     timerNariz?.cancel();
-                    timerNariz = Timer(const Duration(milliseconds: 500), () {
-                      if (multiplePage != -1) {
-                        multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].notasNariz = value); 
-                        return;
-                      }
-                      wineForm.editNotasNariz = value;
-                    },);
+                    timerNariz = Timer(const Duration(milliseconds: 500), () =>wineForm.editNotasNariz = value);
                   },
                 ),
 
@@ -135,13 +119,7 @@ class NotasCataBox extends StatelessWidget {
                   readOnly: selectedWineTaste != null ? true : false,
                   onChanged: (value) {
                     timerBoca?.cancel();
-                    timerBoca = Timer(const Duration(milliseconds: 500), () {
-                      if (multiplePage != -1) {
-                        multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].notasBoca = value); 
-                        return;
-                      }
-                      wineForm.editNotasBoca = value;
-                    },);
+                    timerBoca = Timer(const Duration(milliseconds: 500), () => wineForm.editNotasBoca = value);
                   },
                 ),
               ]
@@ -172,10 +150,6 @@ class ComentariosBox extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final Size size = MediaQuery.of(context).size;
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final screenProvider = Provider.of<ScreensProvider>(context);
-    // Resto 1 porque el listado de userMultipleWineTaste empieza en 0, y las paginas tienen la pagina de inicio en el 0
-    final multiplePage = screenProvider.multiplePage - 1;
    
     Timer? timer;
 
@@ -192,13 +166,7 @@ class ComentariosBox extends StatelessWidget {
             readOnly: selectedWineTaste != null ? true : false,
             onChanged: (value) {
               timer?.cancel();
-              timer = Timer(const Duration(milliseconds: 500), () {
-                if (multiplePage != -1) {
-                  multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].comentarios = value); 
-                  return;
-                }
-                wineForm.editComentarios = value;               
-              },);
+              timer = Timer(const Duration(milliseconds: 500), () => wineForm.editComentarios = value);
             },
           ),
         ),

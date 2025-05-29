@@ -1,6 +1,6 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -115,10 +115,6 @@ class _RatingCustomWidget extends StatelessWidget{
   Widget build(BuildContext context) {
 
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final screenProvider = Provider.of<ScreensProvider>(context);
-    // Resto 1 porque el listado de userMultipleWineTaste empieza en 0, y las paginas tienen la pagina de inicio en el 0
-    final multiplePage = screenProvider.multiplePage - 1;
     final colors = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
     final double itemSize = ((size.width * 0.90) / 11).truncateToDouble();
@@ -161,36 +157,10 @@ class _RatingCustomWidget extends StatelessWidget{
         }
       },
       onRatingUpdate: (value) {
-        if (name == 'vista') {
-          if (multiplePage != -1) {
-            multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].ratingVista = value); 
-            return;
-          }
-          wineForm.editRatingVista(value);
-        }
-        if (name == 'nariz') {
-          if (multiplePage != -1) {
-            multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].ratingNariz = value);
-            return;
-          }
-          wineForm.editRatingNariz(value);
-        }
-        if (name == 'boca') {
-          if (multiplePage != -1) {
-            multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].ratingBoca = value);
-            return;
-          }
-          wineForm.editRatingBoca(value);
-        }
-        if (name == 'puntos') {
-          if (multiplePage != -1) {
-            // Resto 1 porque quiero valores del 0 al 10 y el rating da valores del 1 al 11
-            multipleTaste.updateWineTaste(() => multipleTaste.userMultipleTaste[multiplePage].ratingPuntos = value - 1);
-            return;
-          }
-          // Resto 1 porque quiero valores del 0 al 10 y el rating da valores del 1 al 11
-          wineForm.editRatingPuntos(value - 1);
-        }
+        if (name == 'vista') wineForm.editRatingVista(value);
+        if (name == 'nariz') wineForm.editRatingNariz(value);
+        if (name == 'boca') wineForm.editRatingBoca(value);
+        if (name == 'puntos') wineForm.editRatingPuntos(value);
       },
     );
   }

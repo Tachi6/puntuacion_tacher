@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:collection/collection.dart';
 
+import 'package:collection/collection.dart';
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
-import 'package:puntuacion_tacher/presentation/providers/multiple_provider.dart';
+import 'package:puntuacion_tacher/presentation/providers/providers.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 
@@ -12,14 +12,14 @@ import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 enum QuizTypes {vino, vista, nariz, boca}
 
-class QuizTastePage extends StatefulWidget {
-  const QuizTastePage({super.key});
+class MultipleQuizPage extends StatefulWidget {
+  const MultipleQuizPage({super.key});
 
   @override
-  State<QuizTastePage> createState() => _QuizTastePageState();
+  State<MultipleQuizPage> createState() => _MultipleQuizPageState();
 }
 
-class _QuizTastePageState extends State<QuizTastePage> with AutomaticKeepAliveClientMixin {
+class _MultipleQuizPageState extends State<MultipleQuizPage> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
@@ -455,7 +455,6 @@ class AdvancedQuizRowSpecs extends StatelessWidget {
             ),
           );
         },
-      
       ),
     );
   }

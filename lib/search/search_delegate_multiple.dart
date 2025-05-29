@@ -6,7 +6,7 @@ import 'package:diacritic/diacritic.dart';
 
 import 'package:puntuacion_tacher/domain/entities/entities.dart';
 import 'package:puntuacion_tacher/helpers/helpers.dart';
-import 'package:puntuacion_tacher/presentation/providers/multiple_list_provider.dart';
+import 'package:puntuacion_tacher/presentation/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -15,11 +15,11 @@ class SearchDelegateMultiple extends SearchDelegate{
     _filtro = [...multipleList];
   }
 
-  final List<MultipleNew> multipleList;
+  final List<Multiple> multipleList;
 
-  late List<MultipleNew> _filtro;
+  late List<Multiple> _filtro;
 
-  Future<bool?> enterPasswordBox(BuildContext context, MultipleNew multiple) {
+  Future<bool?> enterPasswordBox(BuildContext context, Multiple multiple) {
     return showGeneralDialog(
       context: context,
       barrierDismissible: false, 

@@ -4,18 +4,18 @@ import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/domain/entities/entities.dart';
 
 import 'package:puntuacion_tacher/helpers/helpers.dart';
-import 'package:puntuacion_tacher/presentation/providers/multiple_provider.dart';
+import 'package:puntuacion_tacher/presentation/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-class MultipleOverviewPage extends StatefulWidget {
-  const MultipleOverviewPage({super.key});
+class MultipleResultsPage extends StatefulWidget {
+  const MultipleResultsPage({super.key});
 
   @override
-  State<MultipleOverviewPage> createState() => _MultipleOverviewPageState();
+  State<MultipleResultsPage> createState() => _MultipleResultsPageState();
 }
 
-class _MultipleOverviewPageState extends State<MultipleOverviewPage> with AutomaticKeepAliveClientMixin {
+class _MultipleResultsPageState extends State<MultipleResultsPage> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);

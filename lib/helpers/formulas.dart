@@ -99,7 +99,7 @@ class Formulas {
   }
 
   double get calculosPuntos {
-    return ratingPuntos;
+    return ratingPuntos - 1;
   }
 
   int get calculosFinal { 
@@ -165,26 +165,3 @@ class Formulas {
     return double.parse((puntuacionesMedia).toStringAsFixed(2));
   }
 }
-
-// Llamo funcion obtainRatingPuntos, para actualizar DB anueva DB;
-// double obtainRatingPuntospuntos({required double ratingVista, required double ratingNariz, required double ratingBoca, required int puntosFinal}) {
-
-//   const List<double> ratings = [10, 9, 8, 7, 6, 5, 4, 3, 2, 4, 0];
-
-//   for (double rating in ratings) {
-//     final formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: rating);
-//     if (formulas.calculosFinal == puntosFinal) return rating;
-//   }
-
-//   for (double rating in ratings) {
-//     final formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: rating);
-//     if (formulas.calculosFinal + 1 == puntosFinal) return rating;
-//   }
-
-//   for (double rating in ratings) {
-//     final formulas = Formulas(ratingVista: ratingVista, ratingNariz: ratingNariz, ratingBoca: ratingBoca, ratingPuntos: rating);
-//     if (formulas.calculosFinal - 1 == puntosFinal) return rating;
-//   }
-
-//   return (puntosFinal/10).truncateToDouble();
-// }

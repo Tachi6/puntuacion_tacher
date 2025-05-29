@@ -336,7 +336,6 @@ class SettingsEndButtons extends StatelessWidget {
       ),
       onPressed: () async {
         screenProvider.currentScreen = 0;
-        screenProvider.multiplePage = 0;
         themeColor.setDefaultTheme();
         Navigator.pushReplacementNamed(context, 'login');
         authService.logout();

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:puntuacion_tacher/models/models.dart';
+import 'package:puntuacion_tacher/domain/entities/entities.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';

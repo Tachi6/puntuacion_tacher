@@ -13,7 +13,7 @@ class MultipleFirebaseDatasource extends MultipleDatasource {
   final storage = const FlutterSecureStorage(); //TODO: hacer variable global
 
   @override
-  Future<MultipleNew> createMultipleTaste(MultipleNew multipleTaste) async {
+  Future<Multiple> createMultipleTaste(Multiple multipleTaste) async {
     // Creo nueva cata multiple, firebase me crea su id de la entrada
     final postUrl = Uri.https(_baseUrl, _jsonMultipleBaseType, {
       'auth': await storage.read(key: 'idToken') ?? ''
@@ -38,8 +38,8 @@ class MultipleFirebaseDatasource extends MultipleDatasource {
   }
 
   @override
-  Future<List<MultipleNew>> loadAllMultipleTaste() async {
-    List<MultipleNew> multipleTasteList = [];
+  Future<List<Multiple>> loadAllMultipleTaste() async {
+    List<Multiple> multipleTasteList = [];
     // Obtengo las catas multiples de bdd
     final url = Uri.https(_baseUrl, _jsonMultipleBaseType, {
       'auth': await storage.read(key: 'idToken') ?? ''
@@ -50,7 +50,7 @@ class MultipleFirebaseDatasource extends MultipleDatasource {
     final Map<String, dynamic> multipleResponse = json.decode(resp.body);
     // Añado al listado cada una de las catas multiples
     multipleResponse.forEach((key, value) {
-      final MultipleNew tempMultipleTaste = MultipleNew.fromJson(value);
+      final Multiple tempMultipleTaste = Multiple.fromJson(value);
       multipleTasteList.add(tempMultipleTaste);
     });
 
@@ -58,7 +58,7 @@ class MultipleFirebaseDatasource extends MultipleDatasource {
   }
 
   @override
-  Future<MultipleNew> loadSingleMultipleTaste(String id) async {
+  Future<Multiple> loadSingleMultipleTaste(String id) async {
     // Obtengo solo la cata multiple que quiero
     final String jsonGetMultiple = 'multiple/$id.json';
     final url = Uri.https(_baseUrl, jsonGetMultiple, {
@@ -67,7 +67,7 @@ class MultipleFirebaseDatasource extends MultipleDatasource {
 
     final resp = await http.get(url);
     // Decodifico la respuesta
-    final MultipleNew multipleUpdated = MultipleNew.fromRawJson(resp.body);
+    final Multiple multipleUpdated = Multiple.fromRawJson(resp.body);
     
     return multipleUpdated;
   }

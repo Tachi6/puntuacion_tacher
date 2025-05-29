@@ -1,3 +1,4 @@
+import 'package:puntuacion_tacher/domain/entities/entities.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 
 class WineTasteMapper {
@@ -15,7 +16,7 @@ class WineTasteMapper {
     ratingVista: ratingVista,
     ratingNariz: ratingNariz, 
     ratingBoca: ratingBoca,
-    ratingPuntos: ratingPuntos,
+    ratingPuntos: ratingPuntos - 1,
     puntosVista: wine.puntuacionesVista!.last, 
     puntosNariz: wine.puntuacionesNariz!.last, 
     puntosBoca: wine.puntuacionesBoca!.last, 

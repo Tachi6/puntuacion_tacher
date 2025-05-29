@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/models/models.dart';
-import 'package:puntuacion_tacher/pages/multiple_taste_page.dart';
-import 'package:puntuacion_tacher/presentation/providers/multiple_list_provider.dart';
 
+import 'package:puntuacion_tacher/presentation/providers/providers.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
-import 'package:puntuacion_tacher/services/services.dart';
-import 'package:puntuacion_tacher/widgets/create_multiple_widget.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class TasteScreen extends StatefulWidget {
@@ -170,11 +166,6 @@ class _ContinueButton extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final taste = Provider.of<TasteOptionsProvider>(context);
-    final authService = Provider.of<AuthServices>(context);
-    final multipleTaste = Provider.of<MultipleTasteProvider>(context);
-    final multipleService = Provider.of<MultipleServices>(context);
-    final wineService = Provider.of<WineServices>(context);
-    final screenProvider = Provider.of<ScreensProvider>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
 
     Widget showContinueButton() {
@@ -185,22 +176,8 @@ class _ContinueButton extends StatelessWidget {
           onPressed: () async {
             if (taste.tasteMultiple == TasteOptionsMultiple.acceder) {
               final routeList = MaterialPageRoute(
-                builder: (context) => MultipleTasteScreen(multipleTaste: context.read<MultipleListProvider>().selectedMultiple!),
+                builder: (context) => MultipleScreen(multipleTaste: context.read<MultipleListProvider>().selectedMultiple!),
               );
-
-              // multipleTaste.initLoadedMultipleTaste(multipleService.loadMultipleTaste(multipleTaste.multipleName).copy());
-              // List<Wines> winesMultipleTaste = [];
-              // multipleTaste.multipleTaste.wines.forEach((key, value) {
-              //   winesMultipleTaste.add(wineService.winesByIndex[int.parse(key)].copy());
-              // },);
-              // multipleTaste.addMultipleTasteWines(winesMultipleTaste);
-              
-              // multipleService.checkIsMultipleTasted(multipleName: multipleTaste.multipleTaste.name, user: authService.userUuid);
-              // multipleTaste.initUserTaste(multipleService.isMultipleTasted);
-              // // Activo vista global en el overview si esta catada
-              // if (multipleService.isMultipleTasted) {
-              //   multipleTaste.overview = true;
-              // }
               // Navego a siguiente pantalla
               Navigator.push(context, routeList);
               // Limpio pagina del tastescreen
@@ -211,7 +188,7 @@ class _ContinueButton extends StatelessWidget {
               final routeList = MaterialPageRoute(
                 builder: (context) => const PopScope(
                   canPop: false,
-                  child: CreateMultipleTasteScreen()
+                  child: CreateMultipleScreen()
                 ),
               );
               // Navego a siguiente pantalla
@@ -221,9 +198,6 @@ class _ContinueButton extends StatelessWidget {
             }
 
             if (taste.showThirdWidget) {
-              // To reset RatingBox if multiple taste is used
-              screenProvider.multiplePage = 0; // TODO: poner provider mas abajo
-
               final newRoute = MaterialPageRoute(
                 builder: (context) => PopScope(
                   canPop: false,

@@ -9,6 +9,7 @@ import 'package:image_pixels/image_pixels.dart';
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
+import 'package:puntuacion_tacher/domain/entities/entities.dart';
 import 'package:puntuacion_tacher/mappers/mappers.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';

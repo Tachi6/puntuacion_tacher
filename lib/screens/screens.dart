@@ -1,5 +1,5 @@
 
-export 'package:puntuacion_tacher/screens/create_multiple_taste_screen.dart';
+export 'package:puntuacion_tacher/screens/create_multiple_screen.dart';
 export 'package:puntuacion_tacher/screens/check_auth_screen.dart';
 export 'package:puntuacion_tacher/screens/details_screen.dart';
 export 'package:puntuacion_tacher/screens/enter_display_name_screen.dart';
@@ -8,7 +8,6 @@ export 'package:puntuacion_tacher/screens/list_all_screen.dart';
 export 'package:puntuacion_tacher/screens/list_screen.dart';
 export 'package:puntuacion_tacher/screens/loading_screen.dart';
 export 'package:puntuacion_tacher/screens/login_screen.dart';
-export 'package:puntuacion_tacher/screens/multiple_taste_screen.dart';
 export 'package:puntuacion_tacher/screens/myuser_screen.dart';
 export 'package:puntuacion_tacher/screens/tacher_screen.dart';
 export 'package:puntuacion_tacher/screens/taste_screen.dart';
@@ -16,6 +15,8 @@ export 'package:puntuacion_tacher/screens/user_settings_screen.dart';
 export 'package:puntuacion_tacher/screens/valorations_screen.dart';
 export 'package:puntuacion_tacher/screens/create_edit_wine_screen.dart';
 export 'package:puntuacion_tacher/screens/single_tacher_screen.dart';
+export 'package:puntuacion_tacher/screens/multiple_screen.dart';
+
 
 
 

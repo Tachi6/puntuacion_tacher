@@ -5,19 +5,19 @@ import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/domain/entities/entities.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/pages/pages.dart';
-import 'package:puntuacion_tacher/presentation/providers/multiple_provider.dart';
+import 'package:puntuacion_tacher/presentation/providers/providers.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 
-class MultipleTasteScreen extends StatelessWidget {
-  const MultipleTasteScreen({super.key, required this.multipleTaste});
+class MultipleScreen extends StatelessWidget {
+  const MultipleScreen({super.key, required this.multipleTaste});
 
-  final MultipleNew multipleTaste;
+  final Multiple multipleTaste;
 
   @override
   Widget build(BuildContext context) {
 
-    final String userUuid = context.read<AuthServices>().userUuid;
+    final String userUuid = context.watch<AuthServices>().userUuid;
     final List<Wines> winesByIndex = context.watch<WineServices>().winesByIndex;
 
     return MultiProvider(
@@ -26,7 +26,7 @@ class MultipleTasteScreen extends StatelessWidget {
           create: (_) => QuizProvider(
             wineSequence: multipleTaste.wineSequence,
             defaultQuestionList: context.read<QuizServices>().selectedQuestionsList,
-            defaultUser: context.read<AuthServices>().userUuid,
+            defaultUser: userUuid,
             quizType: multipleTaste.tasteQuiz,
             hidden: multipleTaste.hidden,
           ),
@@ -75,7 +75,7 @@ class _MultipleTasteScreenBodyState extends State<MultipleTasteScreenBody> with 
       controller: pageController,
       physics: const NeverScrollableScrollPhysics(),
       children: [
-        const MultipleInitialPage(),
+        const MultipleMainPage(),
 
         multipleTaste.pageDestination,
       ],

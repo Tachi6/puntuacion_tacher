@@ -5,11 +5,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/pages/multiple_taste_page.dart';
-import 'package:puntuacion_tacher/presentation/providers/multiple_form_provider.dart';
-import 'package:puntuacion_tacher/presentation/providers/multiple_list_provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
+import 'package:puntuacion_tacher/presentation/providers/providers.dart';
 import 'package:puntuacion_tacher/helpers/helpers.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
@@ -18,8 +16,8 @@ import 'package:puntuacion_tacher/search/search.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-class CreateMultipleTasteScreen extends StatelessWidget {
-  const CreateMultipleTasteScreen({super.key});
+class CreateMultipleScreen extends StatelessWidget {
+  const CreateMultipleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -552,7 +550,7 @@ class MultipleActionsButtons extends StatelessWidget {
               }
               // Navego a la siguiente pantalla
               final routeList = MaterialPageRoute(
-                builder: (context) => MultipleTasteScreen(multipleTaste: newMultipleTaste)
+                builder: (context) => MultipleScreen(multipleTaste: newMultipleTaste)
               );
               if (context.mounted) Navigator.pushReplacement(context, routeList);
               // Limpiar las opciones de TasteScreen
