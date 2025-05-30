@@ -156,7 +156,8 @@ class _WinesListView extends StatelessWidget {
     final multipleProvider = context.watch<MultipleProvider>();
     final colors = Theme.of(context).colorScheme;
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
-    final bool isQuizValidated = context.watch<QuizProvider>().isValidatedQuiz();
+    final quizProvider = context.watch<QuizProvider>();
+    final bool isQuizValidated = quizProvider.isValidatedQuiz();
 
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
@@ -179,6 +180,7 @@ class _WinesListView extends StatelessWidget {
                 NotificationServices.showSnackbar('La cata esta finalizada', context);
                 return;
               }
+              if (quizProvider.isValidQuiz()) quizProvider.openBottomSheet(context); // TODO!!!
               multipleProvider.setandMoveToPage(const MultipleQuizPage());
             } 
           );

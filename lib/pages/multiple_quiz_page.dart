@@ -662,7 +662,6 @@ class _CustomDropDownButtonState extends State<_CustomDropDownButton> {
       }
     }
 
-
     final List<Map<int, String>> wineNumberNameList = List.generate(
       widget.wineList.length, 
       (index) => {
@@ -671,12 +670,30 @@ class _CustomDropDownButtonState extends State<_CustomDropDownButton> {
       growable: false,
     );
 
+    Map<int, String>? initialSelected() {
+      final Question question = quizProvider.editingQuestionList.firstWhere((question) => question.wineId == widget.wineId);
+      int? number;
+      switch (widget.quizTypes) {
+        case QuizTypes.vino:
+          number = question.answer?.values.first.answerWine;
+        case QuizTypes.vista:
+          number = question.answer?.values.first.answerEyes;
+        case QuizTypes.nariz:
+          number = question.answer?.values.first.answerNose;
+        case QuizTypes.boca:
+          number = question.answer?.values.first.answerMouth;
+      }
+      if (number != null && number != -1) return wineNumberNameList[number - 1];
+      return null;
+    }
+
     return Transform.translate(
       offset: Offset(multipleTaste.multipleSelected.hidden ? 0 : 14, 0),
       child: Container(
         width: double.infinity,
         alignment: Alignment.center,
         child: DropdownMenu<Map<int, String>>(
+          initialSelection: initialSelected(),
           hintText: quizProvider.isValidatedQuiz() 
             ? multipleTaste.multipleSelected.hidden
               ? 'Vino ${userAnswer.toString()}'
