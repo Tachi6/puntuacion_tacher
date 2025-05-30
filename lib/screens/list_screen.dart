@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/router/slide_transition_route.dart';
 
 import 'package:puntuacion_tacher/search/search.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
@@ -41,17 +42,14 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
             actions: [
               IconButton(
                 onPressed: () async {
-                    if (context.mounted) {
-                    // Limpio el selected WineTaste
-                    if (otherTasteProvider.selectedWineTaste != null) {
-                      otherTasteProvider.selectedWineTaste = null;
-                    }
-
-                    final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
-                    final routeDetails = MaterialPageRoute(
-                      builder: (context) => DetailsScreen(wine:wineSearched.copy(), source: 'search')
-                    );
-                    if (wineSearched != null && context.mounted) Navigator.push(context, routeDetails);
+                  // Limpio el selected WineTaste
+                  if (otherTasteProvider.selectedWineTaste != null) {
+                    otherTasteProvider.selectedWineTaste = null;
+                  }
+                  final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
+                  if (wineSearched != null && context.mounted) {
+                    final newRoute = slidetransitionRoute(context, DetailsScreen(wine:wineSearched.copy(), source: 'search'));
+                    Navigator.push(context, newRoute);
                   }
                 },
                 icon: const Icon(Icons.search)

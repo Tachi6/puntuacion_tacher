@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/router/slide_transition_route.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/search/search.dart';
 import 'package:puntuacion_tacher/services/services.dart';
@@ -65,13 +66,10 @@ class ListAllScreen extends StatelessWidget {
                   if (otherTasteProvider.selectedWineTaste != null) {
                     otherTasteProvider.selectedWineTaste = null;
                   }
-                  if (context.mounted) {
-                    final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
-                    final routeDetails = MaterialPageRoute(
-                      builder: (context) => DetailsScreen(wine:wineSearched.copy(), source: 'search')
-                    );
-                    
-                    if (wineSearched != null && context.mounted) Navigator.push(context, routeDetails);
+                  final wineSearched = await showSearch(context: context, delegate: SearchDelegateWines(winesList: winesService.winesByName));
+                  if (wineSearched != null && context.mounted) {
+                    final newRoute = slidetransitionRoute(context, DetailsScreen(wine:wineSearched.copy(), source: 'search'));  
+                    Navigator.push(context, newRoute);
                   }
                 },
                 icon: const Icon(Icons.search)
@@ -137,10 +135,8 @@ class _ListAllBody extends StatelessWidget {
             if (otherTasteProvider.selectedWineTaste != null) {
               otherTasteProvider.selectedWineTaste = null;
             }
-
-            final routeDetails = MaterialPageRoute(
-              builder: (context) => DetailsScreen(wine: wines[index].copy(), source: 'list'));
-            Navigator.push(context, routeDetails);
+            final newRoute = slidetransitionRoute(context, DetailsScreen(wine: wines[index].copy(), source: 'list'));  
+            Navigator.push(context, newRoute);
           },
         );
       },

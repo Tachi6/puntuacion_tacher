@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/presentation/providers/providers.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/router/slide_transition_route.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -175,37 +176,25 @@ class _ContinueButton extends StatelessWidget {
           label: 'Continuar',
           onPressed: () async {
             if (taste.tasteMultiple == TasteOptionsMultiple.acceder) {
-              final routeList = MaterialPageRoute(
-                builder: (context) => MultipleScreen(multipleTaste: context.read<MultipleListProvider>().selectedMultiple!),
-              );
+              final newRoute = slidetransitionRoute(context, MultipleScreen(multipleTaste: context.read<MultipleListProvider>().selectedMultiple!));
               // Navego a siguiente pantalla
-              Navigator.push(context, routeList);
+              Navigator.push(context, newRoute);
               // Limpio pagina del tastescreen
               taste.clearOptions();
             }
 
             if (taste.tasteMultiple == TasteOptionsMultiple.organizar) {
-              final routeList = MaterialPageRoute(
-                builder: (context) => const PopScope(
-                  canPop: false,
-                  child: CreateMultipleScreen()
-                ),
-              );
+              final newRoute = slidetransitionRoute(context, const CreateMultipleScreen());
               // Navego a siguiente pantalla
-              Navigator.push(context, routeList);
+              Navigator.push(context, newRoute);
               // Limpio pagina del tastescreen
               taste.clearOptions();
             }
 
             if (taste.showThirdWidget) {
-              final newRoute = MaterialPageRoute(
-                builder: (context) => PopScope(
-                  canPop: false,
-                  child: SingleTacherScreen(
-                    appBarTitle: wineForm.wine.nombre == '' ? 'Vino a catar a ciegas' : wineForm.wine.nombre,
-                  )
-                ),
-              );
+              final newRoute = slidetransitionRoute(context, SingleTacherScreen(
+                appBarTitle: wineForm.wine.nombre == '' ? 'Vino a catar a ciegas' : wineForm.wine.nombre,
+              ));
               // Navego a siguiente pantalla
               Navigator.push(context, newRoute);
               // Limpio pagina del tastescreen

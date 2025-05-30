@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/domain/entities/entities.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/router/slide_transition_route.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
@@ -66,9 +67,8 @@ class MyUserBody extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: IconButton(
                       onPressed: () {
-                        final routeDetails = MaterialPageRoute(
-                          builder: (context) => const UserSettingsScreen());
-                        Navigator.push(context, routeDetails);
+                        final newRoute = slidetransitionRoute(context, const UserSettingsScreen());
+                        Navigator.push(context, newRoute);
                       }, 
                       icon: Icon(Icons.settings, color: colors.onSurface)
                     ),
@@ -180,9 +180,8 @@ class MyUserBody extends StatelessWidget {
                   // Permito ordenar los otherTaste
                   otherTasteProvider.isChangingSelectedWineTaste = false;
 
-                  final routeDetails = MaterialPageRoute(
-                    builder: (context) => DetailsScreen(wine: wine.copy(), email: authService.userUuid, source: 'email-$index'));
-                  Navigator.push(context, routeDetails);
+                  final newRoute = slidetransitionRoute(context, DetailsScreen(wine: wine.copy(), email: authService.userUuid, source: 'email-$index'));
+                  Navigator.push(context, newRoute);
                 },
               );
             },

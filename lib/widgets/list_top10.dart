@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/router/slide_transition_route.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/widgets/load_wine_image.dart';
 
@@ -38,10 +39,8 @@ class ListTop10 extends StatelessWidget {
               if (otherTasteProvider.selectedWineTaste != null) {
                 otherTasteProvider.selectedWineTaste = null;
               }
-    
-              final routeDetails = MaterialPageRoute(
-                builder: (context) => DetailsScreen(wine: wines[index].copy(), source: 'top10-$index'));
-              Navigator.push(context, routeDetails);
+              final newRoute = slidetransitionRoute(context, DetailsScreen(wine: wines[index].copy(), source: 'top10-$index'));
+              Navigator.push(context, newRoute);
             },
             child: _WinePosterTop10(wine: wines[index], index: index),
           );

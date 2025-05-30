@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/domain/entities/entities.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/router/slide_transition_route.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
@@ -36,9 +37,8 @@ class ValorationCards extends StatelessWidget {
             // Permito ordenar los otherTaste
             otherTasteProvider.isChangingSelectedWineTaste = false;
             
-            final routeDetails = MaterialPageRoute(
-              builder: (context) => DetailsScreen(wine: wine.copy(), email: 'latest', source:'latest-$index'));
-            Navigator.push(context, routeDetails);
+            final newRoute = slidetransitionRoute(context, DetailsScreen(wine: wine.copy(), email: 'latest', source:'latest-$index'));
+            Navigator.push(context, newRoute);
           },
           child: Card.filled(
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
