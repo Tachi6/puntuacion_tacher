@@ -10,7 +10,7 @@ class NotificationServices {
     
     final snackBar = SnackBar(
       padding: const EdgeInsets.symmetric(vertical: 19),
-      duration: const Duration(milliseconds: 2500),
+      duration: const Duration(milliseconds: 1500),
       elevation: 1,
       backgroundColor: colors.onErrorContainer,
       content: Text(
@@ -31,7 +31,7 @@ class NotificationServices {
       elevation: 1,
       child: Flushbar(
         padding: const EdgeInsets.symmetric(vertical: 19),
-        duration:  const Duration(milliseconds: 2500),
+        duration:  const Duration(milliseconds: 1500),
         backgroundColor: colors.onErrorContainer,
         messageText: Text(
           message.toUpperCase(), 
