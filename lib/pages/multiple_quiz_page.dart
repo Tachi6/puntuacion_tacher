@@ -627,6 +627,14 @@ class _CustomDropDownButton extends StatefulWidget {
 class _CustomDropDownButtonState extends State<_CustomDropDownButton> {
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<QuizProvider>().openBottomSheet(context);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     final multipleTaste = context.watch<MultipleProvider>();

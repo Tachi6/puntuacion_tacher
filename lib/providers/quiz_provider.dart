@@ -56,6 +56,11 @@ class QuizProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  set isBottomSheetOpen(bool value) {
+    _isBottomSheetOpen = value;
+    notifyListeners();
+  }
+
   void reloadQuestions(List<Question> questionsReloaded) {
     _isReorderQuizNedeed = false;
     defaultQuestionList = [...questionsReloaded];
@@ -194,6 +199,13 @@ class QuizProvider extends ChangeNotifier {
       Scaffold.of(context).showBottomSheet((BuildContext context) => const SafeArea(child: ValidateButton()));
       _isBottomSheetOpen = true;
       notifyListeners();
+      return;
+    }
+    if (isValidQuiz() && !isValidatedQuiz()) {
+      Scaffold.of(context).showBottomSheet((BuildContext context) => const SafeArea(child: ValidateButton()));
+      _isBottomSheetOpen = true;
+      notifyListeners();
+      return;
     }
   }
 

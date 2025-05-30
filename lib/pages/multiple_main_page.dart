@@ -180,7 +180,6 @@ class _WinesListView extends StatelessWidget {
                 NotificationServices.showSnackbar('La cata esta finalizada', context);
                 return;
               }
-              if (quizProvider.isValidQuiz()) quizProvider.openBottomSheet(context); // TODO!!!
               multipleProvider.setandMoveToPage(const MultipleQuizPage());
             } 
           );
