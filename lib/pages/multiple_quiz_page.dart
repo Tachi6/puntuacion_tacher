@@ -44,6 +44,15 @@ class _MultipleQuizPageState extends State<MultipleQuizPage> with AutomaticKeepA
         ? SimpleTasteQuiz(width: width, style: style, padding: padding)
         : AdvancedTasteQuiz(width: width, style: style, padding: padding),
       resizeToAvoidBottomInset: false,
+      bottomSheet: CustomBottomSheet(
+        widgetButton: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 250),
+          layoutBuilder: (currentChild, previousChildren) {
+            return currentChild!;
+          },
+          child: const ValidateButton(), 
+        ),
+      ),
     );
   }
   
@@ -139,35 +148,37 @@ class SimpleTasteQuiz extends StatelessWidget {
 
           const SizedBox(height: 10),
             
-          SafeArea(
-            top: false,
-            child: Container(
-              alignment: Alignment.topCenter,
-              height: containerMaxHeight,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: wineList.length,
-                itemBuilder: (context, index) {
-              
-                  final Wines wine = wineList[index];
-              
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: colors.surfaceContainerHigh,
-                      borderRadius: BorderRadius.circular(12)          
-                    ),
-                    padding: const EdgeInsets.only(top: 10, bottom: 2, left: 10, right: 10),
-                    margin: EdgeInsets.only(
-                      left: index == 0 ? padding : (padding / 2), 
-                      right: index == (wineList.length -1) ? padding : (padding / 2),
-                      bottom: containerMaxHeight - textMaxHeight(wine),
-                    ),
-                    width: width,
-                    child: SimpleQuizRow(style: style, wine: wine, index: index, wineList: wineList),
-                  );
-                },
-              ),
+          Container(
+            alignment: Alignment.topCenter,
+            height: containerMaxHeight,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: wineList.length,
+              itemBuilder: (context, index) {
+            
+                final Wines wine = wineList[index];
+            
+                return Container(
+                  decoration: BoxDecoration(
+                    color: colors.surfaceContainerHigh,
+                    borderRadius: BorderRadius.circular(12)          
+                  ),
+                  padding: const EdgeInsets.only(top: 10, bottom: 2, left: 10, right: 10),
+                  margin: EdgeInsets.only(
+                    left: index == 0 ? padding : (padding / 2), 
+                    right: index == (wineList.length -1) ? padding : (padding / 2),
+                    bottom: containerMaxHeight - textMaxHeight(wine),
+                  ),
+                  width: width,
+                  child: SimpleQuizRow(style: style, wine: wine, index: index, wineList: wineList),
+                );
+              },
             ),
+          ),
+
+          const SafeArea(
+            top: false,
+            child: SizedBox(height: 58)
           ),
         ],
       ),
@@ -284,56 +295,58 @@ class AdvancedTasteQuiz extends StatelessWidget {
 
           const SizedBox(height: 10),
       
-          SafeArea(
-            top: false,
-            child: Column(
-              children: [
-                if (multipleProvider.multipleSelected.hidden) AdvancedQuizRowSpecs(
-                  padding: padding, 
-                  width: width, 
-                  style: style,
-                  wineList: multipleProvider.isMultipleTasted && quizProvider.isReorderQuizNedeed
-                    ? multipleProvider.multipleWines
-                    : multipleProvider.multipleWinesShuffled1,
-                ),
-                
-                if (multipleProvider.multipleSelected.hidden) const SizedBox(height: 10),
-                        
-                AdvancedQuizRowNotes(
-                  quizType: QuizTypes.vista,
-                  padding: padding, 
-                  width: width, 
-                  style: style,
-                  wineList: multipleProvider.isMultipleTasted && quizProvider.isReorderQuizNedeed
-                    ? multipleProvider.multipleWines
-                    : multipleProvider.multipleWinesShuffled2,
-                ),
-                
-                const SizedBox(height: 10),
-                
-                AdvancedQuizRowNotes(
-                  quizType: QuizTypes.nariz,
-                  padding: padding, 
-                  width: width, 
-                  style: style,
-                  wineList: multipleProvider.isMultipleTasted && quizProvider.isReorderQuizNedeed 
-                    ? multipleProvider.multipleWines
-                    : multipleProvider.multipleWinesShuffled3,
-                ),
-                
-                const SizedBox(height: 10),
-                
-                AdvancedQuizRowNotes(
-                  quizType: QuizTypes.boca, 
-                  padding: padding, 
-                  width: width, 
-                  style: style,
-                  wineList: multipleProvider.isMultipleTasted && quizProvider.isReorderQuizNedeed 
-                    ? multipleProvider.multipleWines
-                    : multipleProvider.multipleWinesShuffled4,
-                ),
-              ],
-            ),
+          Column(
+            children: [
+              if (multipleProvider.multipleSelected.hidden) AdvancedQuizRowSpecs(
+                padding: padding, 
+                width: width, 
+                style: style,
+                wineList: multipleProvider.isMultipleTasted && quizProvider.isReorderQuizNedeed
+                  ? multipleProvider.multipleWines
+                  : multipleProvider.multipleWinesShuffled1,
+              ),
+              
+              if (multipleProvider.multipleSelected.hidden) const SizedBox(height: 10),
+                      
+              AdvancedQuizRowNotes(
+                quizType: QuizTypes.vista,
+                padding: padding, 
+                width: width, 
+                style: style,
+                wineList: multipleProvider.isMultipleTasted && quizProvider.isReorderQuizNedeed
+                  ? multipleProvider.multipleWines
+                  : multipleProvider.multipleWinesShuffled2,
+              ),
+              
+              const SizedBox(height: 10),
+              
+              AdvancedQuizRowNotes(
+                quizType: QuizTypes.nariz,
+                padding: padding, 
+                width: width, 
+                style: style,
+                wineList: multipleProvider.isMultipleTasted && quizProvider.isReorderQuizNedeed 
+                  ? multipleProvider.multipleWines
+                  : multipleProvider.multipleWinesShuffled3,
+              ),
+              
+              const SizedBox(height: 10),
+              
+              AdvancedQuizRowNotes(
+                quizType: QuizTypes.boca, 
+                padding: padding, 
+                width: width, 
+                style: style,
+                wineList: multipleProvider.isMultipleTasted && quizProvider.isReorderQuizNedeed 
+                  ? multipleProvider.multipleWines
+                  : multipleProvider.multipleWinesShuffled4,
+              ),
+          
+              const SafeArea(
+                top: false,
+                child: SizedBox(height: 58)
+              ),
+            ],
           ),
         ],
       ),
@@ -626,13 +639,13 @@ class _CustomDropDownButton extends StatefulWidget {
 
 class _CustomDropDownButtonState extends State<_CustomDropDownButton> {
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<QuizProvider>().openBottomSheet(context);
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     context.read<QuizProvider>().openBottomSheet(context);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -653,19 +666,19 @@ class _CustomDropDownButtonState extends State<_CustomDropDownButton> {
       switch (widget.quizTypes) {
         case QuizTypes.vino:
           quizProvider.completeAnswers(wineId: widget.wineId, answerWine: value);
-          quizProvider.openBottomSheet(context);
+          // quizProvider.openBottomSheet(context);
           break;
         case QuizTypes.vista:
           quizProvider.completeAnswers(wineId: widget.wineId, answerEyes: value);
-          quizProvider.openBottomSheet(context);
+          // quizProvider.openBottomSheet(context);
           break;
         case QuizTypes.nariz:
           quizProvider.completeAnswers(wineId: widget.wineId, answerNose: value);
-          quizProvider.openBottomSheet(context);
+          // quizProvider.openBottomSheet(context);
           break;
         case QuizTypes.boca:
           quizProvider.completeAnswers(wineId: widget.wineId, answerMouth: value);
-          quizProvider.openBottomSheet(context);               
+          // quizProvider.openBottomSheet(context);               
           break;
       }
     }
@@ -844,18 +857,21 @@ class ValidateButton extends StatelessWidget {
     return Container(
       height: 58,
       alignment: Alignment.center,
-      width: double.infinity,
       child: CustomElevatedButton(
         width: 120,
-        label: 'Validar',
+        label: quizProvider.isValidatedQuiz() ? 'Salir' : 'Validar',
         isSendingLabel: 'Validando',
         onPressed: () async {
+          if (quizProvider.isValidatedQuiz()) {
+            multipleProvider.setandMoveToPage(null);
+            return;
+          }
           await quizServices.uploadUserQuiz(
             multipleId: multipleProvider.multipleSelected.id!,
             questionList: quizProvider.editingQuestionList,
           );
           quizProvider.reloadQuestions(quizServices.selectedQuestionsList);
-          if (context.mounted) quizProvider.closeBottomSheet(context);
+          // if (context.mounted) quizProvider.closeBottomSheet(context);
         },
       ),
     );

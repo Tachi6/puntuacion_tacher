@@ -201,7 +201,7 @@ class QuizProvider extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    if (isValidQuiz() && !isValidatedQuiz()) {
+    if (isValidQuiz() && !isValidatedQuiz() && isBottomSheetOpen) {
       Scaffold.of(context).showBottomSheet((BuildContext context) => const SafeArea(child: ValidateButton()));
       _isBottomSheetOpen = true;
       notifyListeners();

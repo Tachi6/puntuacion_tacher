@@ -34,7 +34,6 @@ class _MultipleMainPageState extends State<MultipleMainPage> with AutomaticKeepA
     return Scaffold(
       appBar: CustomMultipleAppBar(
         onPressedBackButton: () {
-          if (context.read<QuizProvider>().isBottomSheetOpen) Navigator.pop(context);
           Navigator.pop(context);
           wineForm.resetSettings();
         }
