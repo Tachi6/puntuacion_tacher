@@ -52,6 +52,7 @@ class RadioTasteMultiple extends StatelessWidget {
               onChanged: (TasteOptionsMultiple? value) {
                 wineForm.resetSettings();
                 taste.tasteMultiple = value!;
+                taste.showContinueButton = false;
               },
             ),
           ),
