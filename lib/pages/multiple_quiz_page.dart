@@ -671,6 +671,7 @@ class _CustomDropDownButtonState extends State<_CustomDropDownButton> {
     );
 
     Map<int, String>? initialSelected() {
+      if (quizProvider.editingQuestionList.isEmpty) return null;
       final Question question = quizProvider.editingQuestionList.firstWhere((question) => question.wineId == widget.wineId);
       int? number;
       switch (widget.quizTypes) {
