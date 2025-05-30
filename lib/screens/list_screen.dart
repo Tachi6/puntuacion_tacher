@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:puntuacion_tacher/router/slide_transition_route.dart';
+import 'package:puntuacion_tacher/router/transitions_route.dart';
 
 import 'package:puntuacion_tacher/search/search.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
@@ -66,10 +66,8 @@ class _ListScreenState extends State<ListScreen> with AutomaticKeepAliveClientMi
               
               TextButton(
                 onPressed: () {
-                  final routeList = MaterialPageRoute(
-                    builder: (context) => ListAllScreen(winesService.winesByRate)
-                  );
-                  Navigator.push(context, routeList);
+                  final newRoute = slidetransitionRoute(context, ListAllScreen(winesService.winesByRate));
+                  Navigator.push(context, newRoute);
                 }, 
                 child: Text('Todo el listado >', style: TextStyle(fontSize: 16, color: colors.onSurface))
               )

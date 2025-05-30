@@ -6,6 +6,7 @@ import 'package:puntuacion_tacher/domain/entities/entities.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/mappers/mappers.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/router/transitions_route.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/search/search.dart';
 import 'package:puntuacion_tacher/services/services.dart';
@@ -140,12 +141,10 @@ class HiddenTasteButtons extends StatelessWidget {
                   // Cerrar ventana de creacion
                   Navigator.pop(context);
                   // Navegar a la pagina de creacion
-                  final newRoute = MaterialPageRoute(
-                    builder: (context) => CreateEditWineScreen(
-                      saveEndAction: () {
-                        Navigator.pop(context);
-                      },
-                    ),
+                  final newRoute = slidetransitionRoute(context, CreateEditWineScreen(
+                    saveEndAction: () {
+                      Navigator.pop(context);
+                    }),
                   );
                   Navigator.push(context, newRoute);
                 },  
@@ -174,13 +173,11 @@ class HiddenTasteButtons extends StatelessWidget {
           onPressed: () async {
             wineForm.setCreateNewWine();
 
-            final newRoute = MaterialPageRoute(
-              builder: (context) => CreateEditWineScreen(
-                saveEndAction: () {
-                  Navigator.pop(context);
-                }
-              ),
-            );
+            final newRoute = slidetransitionRoute(context, CreateEditWineScreen(
+              saveEndAction: () {
+                Navigator.pop(context);
+              },
+            ));
             Navigator.push(context, newRoute);
           },
         ),

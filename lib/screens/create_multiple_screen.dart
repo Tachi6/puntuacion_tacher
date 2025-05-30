@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/router/transitions_route.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import 'package:puntuacion_tacher/presentation/providers/providers.dart';
@@ -549,10 +550,10 @@ class MultipleActionsButtons extends StatelessWidget {
                 await context.read<QuizServices>().createQuiz(multipleId: newMultipleTaste.id!, wineIdList: newMultipleTaste.wineSequence);
               }
               // Navego a la siguiente pantalla
-              final routeList = MaterialPageRoute(
-                builder: (context) => MultipleScreen(multipleTaste: newMultipleTaste)
-              );
-              if (context.mounted) Navigator.pushReplacement(context, routeList);
+              if (context.mounted) {
+                final newRoute = slidetransitionRoute(context, MultipleScreen(multipleTaste: newMultipleTaste));
+                Navigator.pushReplacement(context, newRoute);
+              }
               // Limpiar las opciones de TasteScreen
               taste.clearOptions();
             },
@@ -606,13 +607,11 @@ class AddHideWines extends StatelessWidget {
                         // Resetear wineFormProvider
                         wineForm.resetSettings();
                         // Navegar a la pagina de creacion
-                        final newRoute = MaterialPageRoute(
-                          builder: (context) => CreateEditWineScreen(
-                            saveEndAction: () {
-                              // Retorno true si he añadido el vino al wineForm
-                              Navigator.pop(context, true);
-                            },
-                          ),
+                        final newRoute = slidetransitionRoute(context, CreateEditWineScreen(
+                          saveEndAction: () {
+                            // Retorno true si he añadido el vino al wineForm
+                            Navigator.pop(context, true);
+                          }),
                         );
                         // Capturo true o false para ver si he añadido vino
                         final bool isSavedWine = await Navigator.push(context, newRoute);
@@ -644,17 +643,12 @@ class AddHideWines extends StatelessWidget {
                     // Resetear wineFormProvider
                     wineForm.resetSettings();
 
-                    final newRoute = MaterialPageRoute(
-                      builder: (context) => PopScope(
-                        canPop: false,
-                        child: CreateEditWineScreen(
-                          saveEndAction: () {
-                            // Retorno true si he añadido el vino al wineForm
-                            Navigator.pop(context, true);
-                          },
-                        ),
-                      ),
-                    );
+                    final newRoute = slidetransitionRoute(context, CreateEditWineScreen(
+                      saveEndAction: () {
+                        // Retorno true si he añadido el vino al wineForm
+                        Navigator.pop(context, true);
+                      },
+                    ));
                     // Capturo true o false si el vino se ha creado
                     final bool isSavedWine = await Navigator.push(context, newRoute);
                     // Agrego nuevo vino a la secuencia de vinos si se ha creado

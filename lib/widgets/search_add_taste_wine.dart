@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:puntuacion_tacher/router/transitions_route.dart';
 
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/search/search_delegate_wines.dart';
@@ -50,22 +51,15 @@ class _SearchAddTasteWineState extends State<SearchAddTasteWine> {
             // Resetear wineFormProvider
             wineForm.resetSettings();
             // Navegar a la pagina de creacion
-            final newRoute = MaterialPageRoute(
-              builder: (context) => CreateEditWineScreen(
-                saveEndAction: () {
-                  final newRoute = MaterialPageRoute(
-                    builder: (context) => PopScope(
-                      canPop: false,
-                      child: SingleTacherScreen(
-                        appBarTitle: wineForm.wine.nombre,
-                      )
-                    ),
-                  );
-                  Navigator.pushReplacement(context, newRoute);
-                  taste.clearOptions();
-                },
-              ),
-            );
+            final newRoute = slidetransitionRoute(context, CreateEditWineScreen(
+              saveEndAction: () {
+                final newRoute = slidetransitionRoute(context, SingleTacherScreen(
+                  appBarTitle: wineForm.wine.nombre,
+                ));
+                Navigator.pushReplacement(context, newRoute);
+                taste.clearOptions();
+              },
+            ));
             Navigator.push(context, newRoute);
           },  
         ));
@@ -117,19 +111,13 @@ class _SearchAddTasteWineState extends State<SearchAddTasteWine> {
 
                       wineForm.resetSettings();
 
-                      final newRoute = MaterialPageRoute(
-                        builder: (context) => CreateEditWineScreen(
-                          saveEndAction: () {
-                            final newRoute = MaterialPageRoute(
-                              builder: (context) => PopScope(
-                                canPop: false,
-                                child: SingleTacherScreen(
-                                  appBarTitle: wineForm.wine.nombre,
-                                )
-                              ),
-                            );
-                            Navigator.pushReplacement(context, newRoute);
-                            taste.clearOptions();
+                      final newRoute = slidetransitionRoute(context, CreateEditWineScreen(
+                        saveEndAction: () {
+                          final newRoute = slidetransitionRoute(context, SingleTacherScreen(
+                            appBarTitle: wineForm.wine.nombre,
+                          ));
+                          Navigator.pushReplacement(context, newRoute);
+                          taste.clearOptions();
                           },
                         ),
                       );

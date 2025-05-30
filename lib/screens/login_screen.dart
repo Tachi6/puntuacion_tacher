@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/router/transitions_route.dart';
+import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
@@ -118,7 +120,8 @@ class LoginRegisterForm extends StatelessWidget {
         : errorMessage = await authService.loginUser(loginForm.email, loginForm.password);
 
       if (errorMessage == null) {
-        if (context.mounted) Navigator.popAndPushNamed(context, 'checkingAuth');
+        if (context.mounted) Navigator.pushAndRemoveUntil(context, fadeTransistionRoute(context, const CheckAuthScreen()), (route) => false);
+        // Navigator.popAndPushNamed(context, 'checkingAuth');
         // FOR NOT VIEW 'ingresar' MESSAGE IF THERE ARE A LOGOUT
         await Future.delayed(const Duration(milliseconds: 250), () {
           loginForm.isRegister = false;

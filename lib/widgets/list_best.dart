@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
-import 'package:puntuacion_tacher/router/slide_transition_route.dart';
+import 'package:puntuacion_tacher/router/transitions_route.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 

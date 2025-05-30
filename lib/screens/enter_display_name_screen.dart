@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
+import 'package:puntuacion_tacher/router/transitions_route.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
@@ -120,10 +121,9 @@ class ChangeDisplayNameBody extends StatelessWidget {
                 await authService.changeDisplayName(authService.tempDisplayName);
                 await userService.updateUuidDisplayName(authService.tempDisplayName);
                 
-                final newRoute = MaterialPageRoute(
-                  builder: (context) => const CheckAuthScreen()
-                );
-                if (context.mounted) Navigator.pushReplacement(context, newRoute);
+                if (context.mounted) Navigator.pushAndRemoveUntil(context, fadeTransistionRoute(context, const CheckAuthScreen()), (route) => false);
+                // Navigator.popAndPushNamed(context, 'checkingAuth');
+                // Navigator.pushReplacement(context, newRoute);
                 return;
               }
               else {

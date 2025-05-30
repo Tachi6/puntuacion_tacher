@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
 import 'package:puntuacion_tacher/presentation/providers/providers.dart';
+import 'package:puntuacion_tacher/router/transitions_route.dart';
 
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/services/services.dart';
@@ -26,23 +27,6 @@ class CheckAuthScreen extends StatelessWidget {
       ]);
     }
 
-    Route createRoute(Widget newPage) {
-      return PageRouteBuilder(
-        pageBuilder: (_, __, ___) {
-          return newPage;
-        },
-        transitionDuration: const Duration(seconds: 1),
-        transitionsBuilder: (_, animation, __, child) {
-          final curvedAnimation = CurvedAnimation(parent: animation, curve: Curves.easeInOut);
-
-          return FadeTransition(
-            opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation),
-            child: child,
-          );
-        },
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -58,20 +42,17 @@ class CheckAuthScreen extends StatelessWidget {
           builder: (BuildContext context, AsyncSnapshot<UserLoginStatus> snapshot) {
             if (snapshot.hasData && snapshot.data! == UserLoginStatus.registering) {
               Future.microtask(() async {
-                if (context.mounted) Navigator.pushAndRemoveUntil(context, createRoute(const EnterDisplayNameScreen()), (route) => false);
-                // if (context.mounted) Navigator.popAndPushNamed(context, 'displayName');
+                if (context.mounted) Navigator.pushAndRemoveUntil(context, fadeTransistionRoute(context, const EnterDisplayNameScreen()), (route) => false);
               });
             }
             if (snapshot.hasData && snapshot.data! == UserLoginStatus.logged) {
               Future.microtask(() async {
-                if (context.mounted) Navigator.pushAndRemoveUntil(context, createRoute(const HomeScreen()), (route) => false);
-                // if (context.mounted) Navigator.popAndPushNamed(context, 'home');
+                if (context.mounted) Navigator.pushAndRemoveUntil(context, fadeTransistionRoute(context, const HomeScreen()), (route) => false);
               });
             }
             if (snapshot.hasData && snapshot.data! == UserLoginStatus.notLogged) {
               Future.microtask(() async {
-                if (context.mounted) Navigator.pushAndRemoveUntil(context, createRoute(const LoginScreen()), (route) => false);
-                // if (context.mounted) Navigator.popAndPushNamed(context, 'login');
+                if (context.mounted) Navigator.pushAndRemoveUntil(context, fadeTransistionRoute(context, const LoginScreen()), (route) => false);
               });
             }
             return CircularProgressIndicator(
