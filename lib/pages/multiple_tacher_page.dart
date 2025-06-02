@@ -39,7 +39,10 @@ class MultipleTacherPage extends StatelessWidget {
           layoutBuilder: (currentChild, previousChildren) {
             return currentChild!;
           },
-          child: SendTasteButton(isWineTasted: multipleProvider.isWineTasted(selectedWineTaste?.id ?? wineForm.wine.id!)), 
+          child: SendTasteButton(
+            isWineTasted: multipleProvider.isWineTasted(selectedWineTaste?.id ?? wineForm.wine.id!),
+            customLabel: multipleProvider.multipleSelected.hidden ? appBarTitle : null,
+          ), 
         ),
       ),
       selectedWineTaste: selectedWineTaste,
@@ -48,9 +51,10 @@ class MultipleTacherPage extends StatelessWidget {
 }
 
 class SendTasteButton extends StatelessWidget {
-  const SendTasteButton({super.key, required this.isWineTasted});
+  const SendTasteButton({super.key, required this.isWineTasted, this.customLabel});
 
   final bool isWineTasted;
+  final String? customLabel;
 
   void showCustomDialog(BuildContext context, {required Widget child}) {
     showGeneralDialog(
@@ -120,7 +124,8 @@ class SendTasteButton extends StatelessWidget {
           puntuacionFinal: wineForm.puntosFinal,
           closeAction: () {
             multipleProvider.setandMoveToPage(null);
-          }
+          },
+          customLabel: customLabel,
         ));
         }
       },

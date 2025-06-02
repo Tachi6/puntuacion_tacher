@@ -11,8 +11,9 @@ class PointsBox extends StatelessWidget {
   final Wines? wine;
   final int puntuacionFinal;
   final void Function()? closeAction;
+  final String? customLabel;
   
-  const PointsBox({this.wine, required this.puntuacionFinal, this.closeAction, super.key});
+  const PointsBox({this.wine, required this.puntuacionFinal, this.closeAction, this.customLabel, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +37,8 @@ class PointsBox extends StatelessWidget {
                 
               const SizedBox(height: 16),
                 
-              Text(wine!.nombre, style: styles.headlineSmall, textAlign: TextAlign.center),
-              Text(wine!.tipo, style: styles.bodyLarge, textAlign: TextAlign.center),
+              Text(customLabel ?? wine!.nombre, style: styles.headlineSmall, textAlign: TextAlign.center),
+              if (customLabel == null) Text(wine!.tipo, style: styles.bodyLarge, textAlign: TextAlign.center),
                 
               const SizedBox(height: 16),
                 
