@@ -273,7 +273,7 @@ class AdvancedTasteQuiz extends StatelessWidget {
     final quizProvider = context.watch<QuizProvider>();
 
     String customLabel() {
-      if (multipleProvider.isMultipleTasted) {
+      if (quizProvider.isValidatedQuiz()) {
         return 'Cata Quiz - ${context.read<QuizProvider>().obtainPuntuation()}';
       }
       return 'Cata Quiz';
@@ -291,7 +291,7 @@ class AdvancedTasteQuiz extends StatelessWidget {
             ),
           ),
       
-          if (multipleProvider.isMultipleTasted) const _OtherUsersQuiz(),
+          if (quizProvider.isValidatedQuiz()) const _OtherUsersQuiz(),
 
           const SizedBox(height: 10),
       
@@ -301,7 +301,7 @@ class AdvancedTasteQuiz extends StatelessWidget {
                 padding: padding, 
                 width: width, 
                 style: style,
-                wineList: multipleProvider.isMultipleTasted && quizProvider.isReorderQuizNedeed
+                wineList: quizProvider.isValidatedQuiz() && quizProvider.isReorderQuizNedeed
                   ? multipleProvider.multipleWines
                   : multipleProvider.multipleWinesShuffled1,
               ),
@@ -313,7 +313,7 @@ class AdvancedTasteQuiz extends StatelessWidget {
                 padding: padding, 
                 width: width, 
                 style: style,
-                wineList: multipleProvider.isMultipleTasted && quizProvider.isReorderQuizNedeed
+                wineList: quizProvider.isValidatedQuiz() && quizProvider.isReorderQuizNedeed
                   ? multipleProvider.multipleWines
                   : multipleProvider.multipleWinesShuffled2,
               ),
@@ -325,7 +325,7 @@ class AdvancedTasteQuiz extends StatelessWidget {
                 padding: padding, 
                 width: width, 
                 style: style,
-                wineList: multipleProvider.isMultipleTasted && quizProvider.isReorderQuizNedeed 
+                wineList: quizProvider.isValidatedQuiz() && quizProvider.isReorderQuizNedeed 
                   ? multipleProvider.multipleWines
                   : multipleProvider.multipleWinesShuffled3,
               ),
@@ -337,7 +337,7 @@ class AdvancedTasteQuiz extends StatelessWidget {
                 padding: padding, 
                 width: width, 
                 style: style,
-                wineList: multipleProvider.isMultipleTasted && quizProvider.isReorderQuizNedeed 
+                wineList: quizProvider.isValidatedQuiz() && quizProvider.isReorderQuizNedeed 
                   ? multipleProvider.multipleWines
                   : multipleProvider.multipleWinesShuffled4,
               ),
@@ -384,7 +384,6 @@ class AdvancedQuizRowSpecs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final multipleProvider = context.watch<MultipleProvider>();
     final bool isQuizValidated = context.watch<QuizProvider>().isValidatedQuiz();
     final colors = Theme.of(context).colorScheme;
 
@@ -449,9 +448,9 @@ class AdvancedQuizRowSpecs extends StatelessWidget {
                 Text('Graduacion', style: style!.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                 Text('${wine.graduacion}% vol.', style: style, textAlign: TextAlign.center),
                   
-                if (multipleProvider.isMultipleTasted) const SizedBox(height: 10),
+                if (isQuizValidated) const SizedBox(height: 10),
 
-                if (multipleProvider.isMultipleTasted) Text(
+                if (isQuizValidated) Text(
                   'Vino correcto: ${context.read<QuizProvider>().obtainCorrectAnswer(wine.id!)}',
                   style: style!.copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center
@@ -532,7 +531,6 @@ class AdvancedQuizRowNotes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final multipleProvider = context.watch<MultipleProvider>();
     final quizProvider = context.watch<QuizProvider>();
     final bool isQuizValidated = quizProvider.isValidatedQuiz();
     final colors = Theme.of(context).colorScheme;
@@ -594,9 +592,9 @@ class AdvancedQuizRowNotes extends StatelessWidget {
                   
                 const Spacer(),
 
-                if (multipleProvider.isMultipleTasted) const SizedBox(height: 10),
+                if (isQuizValidated) const SizedBox(height: 10),
 
-                if (multipleProvider.isMultipleTasted) Text(
+                if (isQuizValidated) Text(
                   'Vino correcto: ${context.read<QuizProvider>().obtainCorrectAnswer(wineId)}',
                   style: style!.copyWith(fontWeight: FontWeight.bold), 
                   textAlign: TextAlign.center

@@ -177,21 +177,22 @@ class MultipleProvider extends ChangeNotifier {
 
   List<String> allUsersTaste() {
     // Añado Todos los usuarios para cada una de sus catas
-    List<String> allUsers = [];
+    List<String> tempUsers = [];
     multipleSelected.wines!.forEach((key, value) {
       value.forEach((key, value) {
-        if (value.user != userUuid) allUsers.add(value.user);
+        if (value.user != userUuid) tempUsers.add(value.user);
       });
     });
-    // Compruebo que todos los vinos estan catados, sino lo elimino la lista
-    for (String user in allUsers) {
-      final int userCount = allUsers.where((element) => element == user).length;
-      if (userCount != multipleWines.length) {
-        allUsers.removeWhere((element) => element == user);
+    // Compruebo que todos los vinos estan catados, sino y lo añado a la lista de retorno
+    List<String> usersCompletedMultiple = [];
+    for (String user in tempUsers) {
+      final int userCount = tempUsers.where((element) => element == user).length;
+      if (userCount == multipleWines.length) {
+        usersCompletedMultiple.add(user);
       }
     }
     // Añado en primera posicion al usuario principal, porque sino puede acceder al overview, es porque tiene las catas realizadas
-    return [userUuid, ...allUsers.toSet()];
+    return [userUuid, ...usersCompletedMultiple.toSet()];
   }
 
   bool isMultipleInTime() {
