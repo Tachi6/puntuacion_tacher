@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
+import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class RatingBox extends StatelessWidget {
 
@@ -112,7 +112,6 @@ class _RatingCustomWidget extends StatelessWidget{
   Widget build(BuildContext context) {
 
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
-    final colors = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
     final double itemSize = ((size.width * 0.90) / 11).truncateToDouble();
 
@@ -134,10 +133,7 @@ class _RatingCustomWidget extends StatelessWidget{
             color: Colors.transparent,
             width: itemSize,
             height: itemSize,
-            child: SvgPicture.asset(
-              'assets/wine_bar_$index.svg',
-              colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
-            ),
+            child: AssetSvgPicture(assetBytesRoute: 'assets/wine_bar_$index.svg.vec'),
           );
         } 
         else {
@@ -145,11 +141,7 @@ class _RatingCustomWidget extends StatelessWidget{
             color: Colors.transparent,
             width: itemSize,
             height: itemSize,
-            child: SvgPicture.asset(
-              'assets/wine_bar_full.svg',
-              fit: BoxFit.fitHeight,
-              colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
-            ),
+            child: const AssetSvgPicture(assetBytesRoute: 'assets/wine_bar_full.svg.vec'),
           );
         }
       },

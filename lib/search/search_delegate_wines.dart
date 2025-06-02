@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:diacritic/diacritic.dart';
 
 import 'package:puntuacion_tacher/models/models.dart';
@@ -16,16 +15,6 @@ class SearchDelegateWines extends SearchDelegate{
   final String titleLabel = 'Vino no encontrado en base de datos';
 
   List<Wines> _filtro = [];
-
-  SvgPicture wineIcon(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
-    return SvgPicture.asset(
-      'assets/wine_bar_full.svg',
-      height: 120,
-      colorFilter: ColorFilter.mode(colors.onPrimaryFixedVariant, BlendMode.srcIn),
-    );
-  }
 
   @override
   String? get searchFieldLabel => 'Buscar vino';
@@ -116,22 +105,6 @@ class SearchDelegateWines extends SearchDelegate{
    }
 }
 
-class SingleWineImage extends StatelessWidget {
-  const SingleWineImage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-
-    final colors = Theme.of(context).colorScheme;
-
-    return SvgPicture.asset(
-      'assets/wine_bar_full.svg',
-      height: 120,
-      colorFilter: ColorFilter.mode(colors.onPrimaryFixedVariant, BlendMode.srcIn),
-    );
-  }
-}
-
 class NoResultsWine extends StatelessWidget {
   const NoResultsWine({super.key, this.onPressed});
 
@@ -139,6 +112,9 @@ class NoResultsWine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final colors = Theme.of(context).colorScheme;
+
     return Center(
       child: SingleChildScrollView(
         child: SafeArea(
@@ -159,7 +135,11 @@ class NoResultsWine extends StatelessWidget {
               
               const SizedBox(height: 20),
           
-              const SingleWineImage(),
+              AssetSvgPicture(
+                assetBytesRoute: 'assets/wine_bar_full.svg.vec',
+                height: 120,
+                color: colors.onPrimaryFixedVariant,
+              ),
           
               const SizedBox(height: 20),
           

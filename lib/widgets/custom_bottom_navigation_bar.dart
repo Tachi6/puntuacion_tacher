@@ -36,8 +36,8 @@ class CustomNavigationBar extends StatelessWidget {
           screenProvider.currentScreen = index;
           pageController.animateToPage(
             index, 
-            duration: Duration(milliseconds: pageSteps * 200), 
-            curve: Curves.linear,
+            duration: Duration(milliseconds: pageSteps * 250), 
+            curve: Easing.standard,
           );
         },
       ),

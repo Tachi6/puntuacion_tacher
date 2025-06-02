@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:puntuacion_tacher/widgets/widgets.dart';
 
 class RatingDetailsCategory extends StatelessWidget {
 
@@ -19,34 +19,15 @@ class RatingDetailsCategory extends StatelessWidget {
 
     final colors = Theme.of(context).colorScheme;
 
-    final Widget full = SvgPicture.asset(
-      'assets/wine_bar_full.svg',
-      colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
-    );
-
-    final Widget half = SvgPicture.asset(
-      'assets/wine_bar_half.svg',
-      colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
-    );
-
-    final Widget empty = SvgPicture.asset(
-      'assets/wine_bar_empty.svg',
-      colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
-    );
-
-    return RatingBar(
-      itemSize: itemSize,
-      ratingWidget: RatingWidget(
-        full: full,// const Icon(customicon.FontAwesome5.wine_glass, color: Colors.black,), 
-        half: half, // const Icon(customicon.FontAwesome5.wine_glass_alt, color: Colors.black,), 
-        empty: empty, //const Icon(null, color: Colors.black,),
-      ),
-      onRatingUpdate: ( _ ) {},
-      allowHalfRating: true,
+    return RatingBarIndicator(
       itemCount: 5,
-      initialRating: ratingCategory,
-      ignoreGestures: true,
-      glow: false,
+      itemSize: itemSize,
+      unratedColor: colors.onSurface,
+      itemBuilder: (context, index) {
+        if (index + 1 <= ratingCategory.truncate()) return const AssetSvgPicture(assetBytesRoute: 'assets/wine_bar_full.svg.vec');
+        if (index + 1 == ratingCategory.round()) return const AssetSvgPicture(assetBytesRoute: 'assets/wine_bar_half.svg.vec');
+        return const AssetSvgPicture(assetBytesRoute: 'assets/wine_bar_empty.svg.vec');
+      },
     );
   }
 }

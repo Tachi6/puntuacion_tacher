@@ -120,7 +120,7 @@ class AppTheme {
         iconTheme: IconThemeData(color: themeColor.isDarkMode ? colors.onInverseSurface : colors.onSurface),
         actionsIconTheme: IconThemeData(color: themeColor.isDarkMode ? colors.onInverseSurface : colors.onSurface),
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(15)),
         elevation: 2,
       ),

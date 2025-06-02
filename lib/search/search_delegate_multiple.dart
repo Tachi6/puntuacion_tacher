@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:diacritic/diacritic.dart';
 
 import 'package:puntuacion_tacher/domain/entities/entities.dart';
@@ -203,18 +202,20 @@ class SearchDelegateMultiple extends SearchDelegate{
 class MultipleWineImage extends StatelessWidget {
   const MultipleWineImage({super.key});
 
-  SvgPicture wineIcon(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
-    return SvgPicture.asset(
-      'assets/wine_bar_full.svg',
-      height: 60,
-      colorFilter: ColorFilter.mode(colors.onPrimaryFixedVariant, BlendMode.srcIn),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
+
+    final colors = Theme.of(context).colorScheme;
+
+    Widget wineIcon() {
+      return AssetSvgPicture(
+        assetBytesRoute: 'assets/wine_bar_full.svg.vec',
+        height: 60,
+        color: colors.onPrimaryFixedVariant,
+      );
+    }
+
     return SizedBox(
       width: 240,
       height: 210,
@@ -223,61 +224,61 @@ class MultipleWineImage extends StatelessWidget {
           Positioned(
             top: 0,
             left: 0,
-            child: wineIcon(context)
+            child: wineIcon()
           ),
 
           Positioned(
             top: 20,
             left: 50,
-            child: wineIcon(context)
+            child: wineIcon()
           ),
 
           Positioned(
             top: 40,
             left: 100,
-            child: wineIcon(context)
+            child: wineIcon()
           ),
 
           Positioned(
             top: 60,
             left: 150,
-            child: wineIcon(context)
+            child: wineIcon()
           ),
 
           Positioned(
             top: 80,
             left: 200,
-            child: wineIcon(context)
+            child: wineIcon()
           ),
 
           Positioned(
             top: 70,
             left: 0,
-            child: wineIcon(context)
+            child: wineIcon()
           ),
 
           Positioned(
             top: 90,
             left: 50,
-            child: wineIcon(context)
+            child: wineIcon()
           ),
 
           Positioned(
             top: 110,
             left: 100,
-            child: wineIcon(context)
+            child: wineIcon()
           ),
 
           Positioned(
             top: 130,
             left: 150,
-            child: wineIcon(context)
+            child: wineIcon()
           ),
 
           Positioned(
             top: 150,
             left: 200,
-            child: wineIcon(context)
+            child: wineIcon()
           ),
         ],
       ),

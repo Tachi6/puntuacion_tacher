@@ -56,8 +56,8 @@ class MultipleProvider extends ChangeNotifier {
 
     pageController.animateToPage(
       newPage != null ? 1 : 0,
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.linear,
+      duration: const Duration(milliseconds: 250),
+      curve: Easing.linear,
     );
   }
 
