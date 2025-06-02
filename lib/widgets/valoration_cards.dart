@@ -30,78 +30,73 @@ class ValorationCards extends StatelessWidget {
         final WineTaste wineTaste = winesTasteLatest[index];
         final wine = winesService.obtainWine(wineTaste.id);
     
-        return GestureDetector(
-          onTap: () {
-            // Asigno el selected WineTaste
-            otherTasteProvider.selectedWineTaste = wineTaste;
-            // Permito ordenar los otherTaste
-            otherTasteProvider.isChangingSelectedWineTaste = false;
-            
-            final newRoute = slidetransitionRoute(context, DetailsScreen(wine: wine.copy(), email: 'latest', source:'latest-$index'));
-            Navigator.push(context, newRoute);
-          },
-          child: Card.filled(
-            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: Material(
             elevation: 2,
-            child: Stack(
-              children: [
-                Positioned(
-                  right: -50,
-                  top: -25,
-                  child: Transform.rotate(
-                    angle: -0.33,
-                    child: Icon(
-                      Icons.wine_bar,
-                      color: colors.surface.withAlpha(128),
-                      size: 250,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    colors.secondaryContainer,
+                    colors.primaryContainer,
+                  ]
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    right: -40,
+                    top: -27,
+                    child: Transform.rotate(
+                      angle: -0.33,
+                      child: Icon(
+                        Icons.wine_bar,
+                        color: colors.surface.withAlpha(128),
+                        size: 225,
+                      ),
                     ),
                   ),
-                ),
-
-                Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        CustomLeadingTile(wine: wine, index: index),
-                                
-                        CustomBodyTile(wine: wine, wineTaste: wineTaste)
-                      ],
-                    ),
-                          
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                      height: 26,
-                      decoration: BoxDecoration(
-                        border: Border(top: BorderSide(width: 1, color: colors.outlineVariant))
-                      ),
-                      child: Row(
+            
+                  Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Text(
-                              'Catado por ${userServices.obtainDisplayName(wineTaste.user)} hace ${CustomDatetime().timeToNow(wineTaste.fecha)}', 
-                              style: const TextStyle(fontSize: 11)
-                            ),
-                          ),
-                
-                          const Spacer(),
-                
-                          IconButton(
-                            iconSize: 16,
-                            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                            onPressed: () {}, // TODO: implement
-                            icon: const Icon(Icons.favorite_border)
-                          )
-                
+                          CustomLeadingTile(wine: wine, index: index),
+                                  
+                          CustomBodyTile(wine: wine, wineTaste: wineTaste)
                         ],
                       ),
+                    ],
+                  ),
+        
+                  TextButton(
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(12)))
+                    ),
+                    onPressed: () {
+                      // Asigno el selected WineTaste
+                      otherTasteProvider.selectedWineTaste = wineTaste;
+                      // Permito ordenar los otherTaste
+                      otherTasteProvider.isChangingSelectedWineTaste = false;
+                      
+                      final newRoute = slidetransitionRoute(context, DetailsScreen(wine: wine.copy(), email: 'latest', source:'latest-$index'));
+                      Navigator.push(context, newRoute);
+                    },
+                    child: const SizedBox(
+                    height: 3/6 * 300,
+                    width: double.infinity,
                     )
-                  ],
-                ),
-              ],
-            )
+                  ),
+                ],
+              )
+            ),
           ),
         );
       },
@@ -148,11 +143,12 @@ class CustomBodyTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final userServices = Provider.of<UserServices>(context);
     final size = MediaQuery.of(context).size;
 
     final double fontSize = 12;
 
-    String wineNameTwoLines() { // TODO entender esta funcion
+    String wineNameTwoLines() {
 
       final text = wineTaste.nombre;
       final TextStyle style = TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold);
@@ -174,7 +170,8 @@ class CustomBodyTile extends StatelessWidget {
     return Container(
       alignment: Alignment.topLeft,
       width: size.width * 0.75 - 40,
-      padding: const EdgeInsets.only(left: 8, top: 5.5, right: 8),
+      height: 3/6 * 300,
+      padding: const EdgeInsets.only(left: 8, right: 8),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,48 +188,24 @@ class CustomBodyTile extends StatelessWidget {
           Text(wine.region, style: TextStyle(fontSize: fontSize), overflow: TextOverflow.ellipsis),
           
           Text(wine.tipo, style: TextStyle(fontSize: fontSize), overflow: TextOverflow.ellipsis),
-        
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      SizedBox(width: 44 ,child: Text('Vista', style: TextStyle(fontSize: fontSize),)),
-                      RatingDetailsCategory(ratingCategory: wine.puntuacionesVista!.last)
-                    ],
-                  ),
-                              
-                  Row(
-                    children: [
-                      SizedBox(width: 44 ,child: Text('Nariz', style: TextStyle(fontSize: fontSize),)),
-                      RatingDetailsCategory(ratingCategory: wine.puntuacionesNariz!.last)
-                    ],
-                  ),
-                              
-                  Row(
-                    children: [
-                      SizedBox(width: 44 ,child: Text('Boca', style: TextStyle(fontSize: fontSize),)),
-                      RatingDetailsCategory(ratingCategory: wine.puntuacionesBoca!.last)
-                    ],
-                  ),
-                ],
-              ),
-          
-              const Expanded(
-                child: SizedBox(
-                ),
-              ),
-            ],
-          ),
-          
+                 
           Row(
             children: [
               Text('${wineTaste.puntosFinal}', style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold)),
               Text(' puntos', style: TextStyle(fontSize: fontSize)),
             ],
-          ),  
+          ),
+
+          const Spacer(),
+
+          const Divider(
+            height: 6,
+          ),
+
+          Text(
+            'Catado por ${userServices.obtainDisplayName(wineTaste.user)} hace ${CustomDatetime().timeToNow(wineTaste.fecha)}', 
+            style: const TextStyle(fontSize: 10),
+          ),
         ],
       ),
     );
