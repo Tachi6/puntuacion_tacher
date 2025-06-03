@@ -50,7 +50,7 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: ( _ ) => WineServices()),
         ChangeNotifierProvider(create: ( _ ) => UserServices()),
         ChangeNotifierProvider(create: ( _ ) => QuizServices()),
-        ChangeNotifierProvider(create: ( _ ) => ScreensProvider()),
+        ChangeNotifierProvider(create: ( _ ) => ScreenProvider()),
         ChangeNotifierProvider(create: ( _ ) => TasteOptionsProvider()),
         ChangeNotifierProvider(create: ( _ ) => CreateEditWineFormProvider()),
         ChangeNotifierProvider(create: ( _ ) => ChangeThemeProvider()),

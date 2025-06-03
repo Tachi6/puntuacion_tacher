@@ -4,9 +4,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
-
-import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/screens/screens.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
  
@@ -26,7 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     pageController = PageController(
       initialPage: 0,
-      keepPage: true,
     );
   }
 
@@ -45,16 +41,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
-    final screenProvider = Provider.of<ScreensProvider>(context, listen: true);
-   
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: PageView(
-        physics: const ClampingScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
         children: screensList,
-        onPageChanged: (value) => screenProvider.currentScreen = value,
       ),
       bottomNavigationBar: CustomNavigationBar(pageController: pageController)
     );

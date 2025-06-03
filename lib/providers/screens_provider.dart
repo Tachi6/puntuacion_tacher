@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ScreensProvider extends ChangeNotifier {
+class ScreenProvider extends ChangeNotifier {
 
   int _currentScreen = 0;
   

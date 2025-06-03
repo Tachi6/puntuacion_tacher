@@ -4,6 +4,26 @@ import 'package:provider/provider.dart';
 
 import 'package:puntuacion_tacher/apptheme/apptheme.dart';
 
+void showCustomDialog(BuildContext context, {required Widget child}) {
+  showGeneralDialog(
+    context: context,
+    barrierDismissible: false, 
+    pageBuilder: (context, animation, secondaryAnimation) {
+      return PopScope(
+        canPop: false,
+        child: child,
+      );
+    },
+    transitionDuration: const Duration(milliseconds: 300),
+    transitionBuilder: (context, animation, secondaryAnimation, child) {
+      return ScaleTransition(
+        scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
+        child: child
+      );
+    },
+  );
+}
+
 class CustomAlertDialog extends StatelessWidget {
   const CustomAlertDialog({
     super.key, 
