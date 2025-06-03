@@ -274,32 +274,12 @@ class _DateTextFormFieldState extends State<DateTextFormField> {
   @override
   Widget build(BuildContext context) {
 
-    void showCustomDialog() {
-      showGeneralDialog(
-        context: context,
-        barrierDismissible: false, 
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return PopScope(
-            canPop: false,
-            child: CalendarDialog(dateController: dateController),
-          );
-        },
-        transitionDuration: const Duration(milliseconds: 300),
-        transitionBuilder: (context, animation, secondaryAnimation, child) {
-          return ScaleTransition(
-            scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
-            child: child
-          );
-        },
-      );
-    }
-
     return _CustomTextFormField(
       maxLines: 1, 
       label: 'Fecha límite de cata (opcional)',
       controller: dateController,
       suffixIcon: const Icon(Icons.calendar_month_rounded),
-      onTap: showCustomDialog,
+      onTap: () => showCustomDialog(context, child: CalendarDialog(dateController: dateController)),
       readOnly: true,
       canRequestFocus: false,
     );

@@ -15,28 +15,6 @@ class NotesCommentsBox extends StatelessWidget {
 
   const NotesCommentsBox({super.key, required this.titulo, this.selectedWineTaste});
 
-  void showBox(BuildContext context, CreateEditWineFormProvider wineForm) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: false, 
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return PopScope(
-          canPop: false,
-          child: titulo == 'Notas de Cata'
-            ? NotasCataBox(wineForm, selectedWineTaste)
-            : ComentariosBox(wineForm, selectedWineTaste),
-        );
-      },
-      transitionDuration: const Duration(milliseconds: 300),
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return ScaleTransition(
-          scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
-          child: child
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -53,7 +31,10 @@ class NotesCommentsBox extends StatelessWidget {
           color: colors.surfaceContainerHighest,
           label: titulo,
           onPressed: () async {
-            showBox(context, wineForm);
+            showCustomDialog(context, child: titulo == 'Notas de Cata'
+              ? NotasCataBox(wineForm, selectedWineTaste)
+              : ComentariosBox(wineForm, selectedWineTaste),
+            );
           },
           style: TextStyle(color: colors.onSurface),
         ),

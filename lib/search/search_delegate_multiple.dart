@@ -18,7 +18,7 @@ class SearchDelegateMultiple extends SearchDelegate{
 
   late List<Multiple> _filtro;
 
-  Future<bool?> enterPasswordBox(BuildContext context, Multiple multiple) {
+  Future<bool?> enterPasswordBox(BuildContext context, Multiple multiple) { //TODO: refactor
     return showGeneralDialog(
       context: context,
       barrierDismissible: false, 

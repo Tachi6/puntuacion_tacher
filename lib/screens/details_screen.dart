@@ -253,26 +253,6 @@ class _SliverAppBarButtons extends StatelessWidget {
   final Wines wine;
   final Color? frontColor;
 
-  void showCustomDialog(BuildContext context, {required Widget child}) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: false, 
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return PopScope(
-          canPop: false,
-          child: child,
-        );
-      },
-      transitionDuration: const Duration(milliseconds: 300),
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return ScaleTransition(
-          scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
-          child: child
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
 

@@ -49,26 +49,6 @@ class SingleTacherScreen extends StatelessWidget {
 class SendTasteButton extends StatelessWidget {
   const SendTasteButton({super.key});
 
-  void showCustomDialog(BuildContext context, {required Widget child}) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: false, 
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return PopScope(
-          canPop: false,
-          child: child,
-        );
-      },
-      transitionDuration: const Duration(milliseconds: 300),
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return ScaleTransition(
-          scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
-          child: child
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -101,7 +81,7 @@ class SendTasteButton extends StatelessWidget {
         await winesService.updateWine(wineForm.wine);
         await winesService.saveTastedWine(wineTaste);
         // Lanzo la confirmacion
-        if (context.mounted) showCustomDialog(context, child: PointsBox(wine: wineForm.wine, puntuacionFinal: wineForm.puntosFinal));
+        if (context.mounted) showCustomDialog(context, child: PointsDialog(wine: wineForm.wine, puntuacionFinal: wineForm.puntosFinal));
       },
     );
   }

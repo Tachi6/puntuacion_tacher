@@ -6,14 +6,14 @@ import 'package:puntuacion_tacher/models/models.dart';
 import 'package:puntuacion_tacher/providers/providers.dart';
 import 'package:puntuacion_tacher/widgets/widgets.dart';
 
-class PointsBox extends StatelessWidget {
+class PointsDialog extends StatelessWidget {
   
   final Wines? wine;
   final int puntuacionFinal;
   final void Function()? closeAction;
   final String? customLabel;
   
-  const PointsBox({this.wine, required this.puntuacionFinal, this.closeAction, this.customLabel, super.key});
+  const PointsDialog({this.wine, required this.puntuacionFinal, this.closeAction, this.customLabel, super.key});
 
   @override
   Widget build(BuildContext context) {
