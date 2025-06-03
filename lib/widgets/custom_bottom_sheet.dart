@@ -17,15 +17,15 @@ class CustomBottomSheet extends StatelessWidget {
 
     final colors = Theme.of(context).colorScheme;
     
-    return SafeArea(
-      top: false,
-      child: Material(
-        elevation: 1,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(28),
-          topRight: Radius.circular(28),
-        ),
-        color: colors.primaryContainer,
+    return Material(
+      elevation: 2,
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(28),
+        topRight: Radius.circular(28),
+      ),
+      color: colors.primaryContainer,
+      child: SafeArea(
+        top: false,
         child: Container(
           height: 58,
           width: double.infinity,

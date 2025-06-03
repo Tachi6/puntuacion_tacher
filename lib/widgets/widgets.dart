@@ -1,5 +1,4 @@
 
-export 'package:puntuacion_tacher/widgets/custom_multiple_bottom_sheet.dart';
 export 'package:puntuacion_tacher/widgets/custom_multiple_appbar.dart';
 export 'package:puntuacion_tacher/widgets/bottom_image_background.dart';
 export 'package:puntuacion_tacher/widgets/custom_alert_dialog.dart';
