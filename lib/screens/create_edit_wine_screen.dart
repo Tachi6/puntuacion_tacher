@@ -23,8 +23,8 @@ class CreateEditWineScreen extends StatelessWidget {
       child: Scaffold(
         appBar: _CustomAppBar(),
         body: const CreateEditWineForm(),
-        extendBody: true,
-        bottomNavigationBar: _FixedBottomSheet(saveEndAction),
+        resizeToAvoidBottomInset: false,
+        bottomSheet: CustomBottomSheet(widgetButton: _CreateButtons(saveEndAction)),
       ),
     );
   }
@@ -58,8 +58,8 @@ class _CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(48);
 }
 
-class _FixedBottomSheet extends StatelessWidget {
-  const _FixedBottomSheet(this.saveEndAction);
+class _CreateButtons extends StatelessWidget {
+  const _CreateButtons(this.saveEndAction);
 
   final void Function() saveEndAction;
 
@@ -68,71 +68,57 @@ class _FixedBottomSheet extends StatelessWidget {
 
     final winesService = Provider.of<WineServices>(context);
     final wineForm = Provider.of<CreateEditWineFormProvider>(context);
-    final colors = Theme.of(context).colorScheme;
 
-    return SafeArea(
-      top: false,
-      child: Material(
-        elevation: 1,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(28),
-          topRight: Radius.circular(28),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        CustomElevatedButton(
+          width: 120,
+          label: 'Cancelar',
+          onPressed: () async {
+            FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
+            wineForm.resetSettings();
+            Navigator.pop(context, false);
+            wineForm.autovalidateMode = AutovalidateMode.disabled;
+          },
         ),
-        color: colors.surfaceContainerLow,
-        child: SizedBox(
-          height: 58,
-          width: double.infinity,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              CustomElevatedButton(
-                width: 120,
-                label: 'Cancelar',
-                onPressed: () async {
-                  FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
-                  wineForm.resetSettings();
-                  Navigator.pop(context, false);
-                  wineForm.autovalidateMode = AutovalidateMode.disabled;
-                },
-              ),
-        
-              CustomElevatedButton(
-                width: 120,
-                label: 'Guardar',
-                isSendingLabel: 'Guardando',
-                onPressed: () async {
-                  FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
-                  wineForm.autovalidateMode = AutovalidateMode.always;
-                  
-                  if (wineForm.wine.imagenVino != null && wineForm.wine.imagenVino != '') {
-                    final urlChecked = await winesService.isValidImage(wineForm.wine.imagenVino);
-                    if (!urlChecked && context.mounted) {
-                      NotificationServices.showSnackbar('IMAGEN DE VINO ERRONEA O FORMATO NO ACEPTADO', context);
-                      return;
-                    }
-                  }
-                  if (wineForm.wine.logoBodega != null && wineForm.wine.logoBodega != '') {
-                    final urlChecked = await winesService.isValidImage(wineForm.wine.logoBodega);
-                    if (!urlChecked && context.mounted) {
-                      NotificationServices.showSnackbar('LOGO BODEGA ERRONEO O FORMATO NO ACEPTADO', context);
-                      return;
-                    }
-                  }
-                  if (wineForm.isValidForm()) {
-                    wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
-                    if (wineForm.wine.imagenVino == '') wineForm.wine.imagenVino = null;
-                    if (wineForm.wine.logoBodega == '') wineForm.wine.logoBodega = null;
-                    final String wineId = await winesService.createWine(wineForm.wine);
-                    wineForm.setWineId(wineId);
-                    if (context.mounted) saveEndAction();
-                    wineForm.autovalidateMode = AutovalidateMode.disabled;
-                  }
-                }
-              ),
-            ],
-          ),
+    
+        const SizedBox(width: 20),
+          
+        CustomElevatedButton(
+          width: 120,
+          label: 'Guardar',
+          isSendingLabel: 'Guardando',
+          onPressed: () async {
+            FocusManager.instance.primaryFocus?.unfocus(); // Quitar teclado
+            wineForm.autovalidateMode = AutovalidateMode.always;
+            
+            if (wineForm.wine.imagenVino != null && wineForm.wine.imagenVino != '') {
+              final urlChecked = await winesService.isValidImage(wineForm.wine.imagenVino);
+              if (!urlChecked && context.mounted) {
+                NotificationServices.showSnackbar('IMAGEN DE VINO ERRONEA O FORMATO NO ACEPTADO', context);
+                return;
+              }
+            }
+            if (wineForm.wine.logoBodega != null && wineForm.wine.logoBodega != '') {
+              final urlChecked = await winesService.isValidImage(wineForm.wine.logoBodega);
+              if (!urlChecked && context.mounted) {
+                NotificationServices.showSnackbar('LOGO BODEGA ERRONEO O FORMATO NO ACEPTADO', context);
+                return;
+              }
+            }
+            if (wineForm.isValidForm()) {
+              wineForm.wine.nombre = '${wineForm.wine.vino} ${wineForm.wine.anada.toString()}';
+              if (wineForm.wine.imagenVino == '') wineForm.wine.imagenVino = null;
+              if (wineForm.wine.logoBodega == '') wineForm.wine.logoBodega = null;
+              final String wineId = await winesService.createWine(wineForm.wine);
+              wineForm.setWineId(wineId);
+              if (context.mounted) saveEndAction();
+              wineForm.autovalidateMode = AutovalidateMode.disabled;
+            }
+          }
         ),
-      ),
+      ],
     );
   }
 }
@@ -325,7 +311,10 @@ class CreateEditWineForm extends StatelessWidget {
                 textInputAction: TextInputAction.done,
               ),
         
-              const SizedBox(height: 10),
+              const SafeArea(
+                top: false,
+                child: SizedBox(height: 68)
+              ),
             ],
           ),
         ),

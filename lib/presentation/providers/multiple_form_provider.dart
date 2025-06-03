@@ -122,7 +122,13 @@ class MultipleFormProvider extends ChangeNotifier {
 
   void needBottomSheet(BuildContext context) {
     if (wineSequence.length > 1 && !isBottomSheetOpen) {
-      Scaffold.of(context).showBottomSheet((BuildContext context) => const SafeArea(child: MultipleActionsButtons()));
+
+      final colors = Theme.of(context).colorScheme;
+      
+      Scaffold.of(context).showBottomSheet(
+        (BuildContext context) => const SafeArea(child: MultipleActionsButtons()),
+        backgroundColor: colors.primaryContainer,
+      );
       _isBottomSheetOpen = true;
       notifyListeners();
     }

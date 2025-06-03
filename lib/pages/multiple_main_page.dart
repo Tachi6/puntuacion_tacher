@@ -308,8 +308,8 @@ class CustomMultipleWineRow extends StatelessWidget {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: [
-                colors.secondaryFixedDim,
-                colors.primaryFixedDim,
+                colors.primaryContainer,
+                colors.inversePrimary,
               ]
             ),
             borderRadius: BorderRadius.circular(20)
@@ -371,15 +371,16 @@ class CustomMultipleWineRow extends StatelessWidget {
           ),
         ),
 
-        MaterialButton(
-          padding: const EdgeInsets.only(top: 10),
-          height: 80,
-          minWidth: double.infinity,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20)
+        TextButton(
+          style: ButtonStyle(
+            shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(20)))
           ),
-          onPressed: onPressed
-        )
+          onPressed: onPressed,
+          child: const SizedBox(
+          height: 65,
+          width: double.infinity,
+          )
+        ),
       ],
     );
   }

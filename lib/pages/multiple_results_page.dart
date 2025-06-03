@@ -34,16 +34,7 @@ class _MultipleResultsPageState extends State<MultipleResultsPage> with Automati
           // multipleTaste.initLoadedMultipleTaste(multipleUpdated);
         },
       ),
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 250),
-        layoutBuilder: (currentChild, previousChildren) {
-          return currentChild!;
-        },
-        child: OverviewMultipleTaste(newWidth: newWidth),
-        // multipleTaste.overview
-          // ? OverviewMultipleTaste(key: const ValueKey<String>('overviewMultiple'), newWidth: newWidth)
-          // : UserMultipleTasteDetails(key: const ValueKey<String>('userDetails'), newWidth: newWidth),
-      ),
+      body: OverviewMultipleTaste(newWidth: newWidth),
     );
   }
   

@@ -16,9 +16,14 @@ class CustomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final screenProvider = Provider.of<ScreensProvider>(context, listen: true);
+    final colors = Theme.of(context).colorScheme;
     
     return SizedBox(
       child: NavigationBar(
+        backgroundColor: colors.primaryContainer,
+        indicatorColor: colors.inversePrimary,
+        overlayColor: WidgetStatePropertyAll(colors.inversePrimary.withAlpha(128)),
+        elevation: 2,     
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.trending_up_outlined), label: 'Novedades'),

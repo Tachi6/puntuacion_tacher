@@ -25,7 +25,7 @@ class CustomBottomSheet extends StatelessWidget {
           topLeft: Radius.circular(28),
           topRight: Radius.circular(28),
         ),
-        color: colors.surfaceContainerLow,
+        color: colors.primaryContainer,
         child: Container(
           height: 58,
           width: double.infinity,

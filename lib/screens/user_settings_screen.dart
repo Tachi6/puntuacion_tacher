@@ -147,7 +147,7 @@ class _UserSettingsBody extends StatelessWidget {
                   child: Material(
                     type: MaterialType.transparency,
                     child: CircleAvatar(
-                      backgroundColor: colors.onPrimaryFixedVariant,
+                      backgroundColor: colors.primary,
                       radius: 80,
                       child: Text(
                         authService.userInitial,

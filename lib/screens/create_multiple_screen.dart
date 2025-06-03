@@ -370,7 +370,6 @@ class _ListViewMultipleWinesState extends State<ListViewMultipleWines> {
   Widget build(BuildContext context) {
 
     final multipleFormProvider = context.watch<MultipleFormProvider>();
-    final colors = Theme.of(context).colorScheme;
     final List<Wines> wines = context.watch<WineServices>().winesByIndex;
 
     return Column(
@@ -383,7 +382,7 @@ class _ListViewMultipleWinesState extends State<ListViewMultipleWines> {
                 key: Key('move_$index'),
                 wine: wines.firstWhere((wine) => wine.id == multipleFormProvider.wineSequence[index]),
                 index: index,
-                color: colors.surfaceContainerLow,
+                alpha: 128,
                 hiddenTaste: multipleFormProvider.hidden,
               );
             },  
@@ -393,7 +392,6 @@ class _ListViewMultipleWinesState extends State<ListViewMultipleWines> {
                 key: Key('main_$index'),
                 wine: wines.firstWhere((wine) => wine.id == multipleFormProvider.wineSequence[index]),
                 index: index,
-                color: colors.surfaceContainerHigh,
                 hiddenTaste: multipleFormProvider.hidden,
               );  
             }, 
@@ -415,13 +413,13 @@ class _ListViewMultipleWinesState extends State<ListViewMultipleWines> {
 class CustomMultipleWinesRow extends StatelessWidget {
   const CustomMultipleWinesRow({
     super.key,
-    required this.color,
+    this.alpha,
     required this.wine,
     required this.index,
     required this.hiddenTaste,
   });
 
-  final Color color;
+  final int? alpha;
   final Wines wine;
   final int index;
   final bool hiddenTaste;
@@ -430,11 +428,21 @@ class CustomMultipleWinesRow extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final styles = Theme.of(context).textTheme;
+    final colors = Theme.of(context).colorScheme;
 
-    return Card(
+    return Container(
       key: key,
-      color: color,
+      // color: color,
       margin: const EdgeInsets.symmetric(vertical: 2),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        gradient: LinearGradient(
+          colors: [
+            colors.primaryContainer.withAlpha(alpha ?? 255),
+            colors.inversePrimary.withAlpha(alpha ?? 255),
+          ]
+        ),
+      ),
       child: Row(
         children: [
           const SizedBox(width: 16),

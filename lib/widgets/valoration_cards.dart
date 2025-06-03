@@ -21,7 +21,6 @@ class ValorationCards extends StatelessWidget {
     final otherTasteProvider = Provider.of<OtherTasteProvider>(context);
     final List<WineTaste> winesTasteLatest = winesService.winesTaste;
     final colors = Theme.of(context).colorScheme;
-    final userServices = Provider.of<UserServices>(context);
 
     return ListView.builder(
       itemCount: 30,
@@ -41,8 +40,8 @@ class ValorationCards extends StatelessWidget {
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                    colors.secondaryContainer,
                     colors.primaryContainer,
+                    colors.inversePrimary,
                   ]
                 ),
                 borderRadius: BorderRadius.circular(12),
@@ -198,6 +197,8 @@ class CustomBodyTile extends StatelessWidget {
 
           const Spacer(),
 
+          // RatingCategory(rating: wineTaste.puntosVista),
+
           const Divider(
             height: 6,
           ),
@@ -209,5 +210,37 @@ class CustomBodyTile extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class RatingCategory extends StatelessWidget {
+  const RatingCategory({super.key, required this.rating});
+
+  final double rating;
+
+  final Icon icon = const Icon(Icons.wine_bar);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text('Vista'),
+        icon,
+        Text(rating.toStringAsFixed(1))
+      ],
+    );
+    // return SizedBox(
+    //   height: 20,
+    //   child: ListView.builder(
+    //     physics: const NeverScrollableScrollPhysics(),
+    //     scrollDirection: Axis.horizontal,
+    //     itemCount: 5,
+    //     itemBuilder: (context, index) {
+    //       if (index + 1 <= rating.truncate()) return icon;
+    //       if (index + 1 == rating.round()) return icon;
+    //       return icon;        
+    //     },
+    //   ),
+    // );
   }
 }

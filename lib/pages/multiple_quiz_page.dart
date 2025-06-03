@@ -44,14 +44,8 @@ class _MultipleQuizPageState extends State<MultipleQuizPage> with AutomaticKeepA
         ? SimpleTasteQuiz(width: width, style: style, padding: padding)
         : AdvancedTasteQuiz(width: width, style: style, padding: padding),
       resizeToAvoidBottomInset: false,
-      bottomSheet: CustomBottomSheet(
-        widgetButton: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          layoutBuilder: (currentChild, previousChildren) {
-            return currentChild!;
-          },
-          child: const ValidateButton(), 
-        ),
+      bottomSheet: const CustomBottomSheet(
+        widgetButton: ValidateButton(), 
       ),
     );
   }

@@ -216,7 +216,7 @@ class _CustomTop10Label extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.only(topLeft: Radius.circular(borderRadius), bottomRight: Radius.circular(borderRadius)),
         child: Container(
-          color: colors.onPrimaryFixedVariant,
+          color: colors.primary,
           height: 48,
           width: 36,
           padding: const EdgeInsets.only(left: 2),

@@ -34,15 +34,9 @@ class MultipleTacherPage extends StatelessWidget {
         multipleProvider.setandMoveToPage(null);
       },
       bottomSheet: CustomBottomSheet(
-        widgetButton: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          layoutBuilder: (currentChild, previousChildren) {
-            return currentChild!;
-          },
-          child: SendTasteButton(
-            isWineTasted: multipleProvider.isWineTasted(selectedWineTaste?.id ?? wineForm.wine.id!),
-            customLabel: multipleProvider.multipleSelected.hidden ? appBarTitle : null,
-          ), 
+        widgetButton: SendTasteButton(
+          isWineTasted: multipleProvider.isWineTasted(selectedWineTaste?.id ?? wineForm.wine.id!),
+          customLabel: multipleProvider.multipleSelected.hidden ? appBarTitle : null,
         ),
       ),
       selectedWineTaste: selectedWineTaste,
