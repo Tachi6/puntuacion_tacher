@@ -412,14 +412,13 @@ class CustomMultipleWinesRow extends StatelessWidget {
 
     return Container(
       key: key,
-      // color: color,
       margin: const EdgeInsets.symmetric(vertical: 2),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         gradient: LinearGradient(
           colors: [
             colors.primaryContainer.withAlpha(alpha ?? 255),
-            colors.inversePrimary.withAlpha(alpha ?? 255),
+            colors.secondaryContainer.withAlpha(alpha ?? 255),
           ]
         ),
       ),
