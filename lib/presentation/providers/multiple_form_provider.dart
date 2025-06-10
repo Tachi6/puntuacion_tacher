@@ -127,7 +127,7 @@ class MultipleFormProvider extends ChangeNotifier {
       
       Scaffold.of(context).showBottomSheet(
         (BuildContext context) => const SafeArea(child: MultipleActionsButtons()),
-        backgroundColor: colors.primaryContainer,
+        backgroundColor: colors.surfaceDim,
       );
       _isBottomSheetOpen = true;
       notifyListeners();
