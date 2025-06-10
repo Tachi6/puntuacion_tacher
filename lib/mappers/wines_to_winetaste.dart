@@ -2,7 +2,7 @@ import 'package:puntuacion_tacher/domain/entities/entities.dart';
 import 'package:puntuacion_tacher/models/models.dart';
 
 class WineTasteMapper {
-  static tastedWineToWinesTaste({
+  static WineTaste tastedWineToWinesTaste({
     required Wines wine,
     required double ratingVista,
     required double ratingNariz,
@@ -27,7 +27,7 @@ class WineTasteMapper {
     comentarios: wine.comentarios!.last,
   );
 
-  static wineSpecsToWinesTaste({
+  static WineTaste wineSpecsToWinesTaste({
     required Wines wine,
   }) => WineTaste(
     fecha: 'ficha_tecnica', 

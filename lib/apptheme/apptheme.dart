@@ -50,13 +50,13 @@ class ChangeThemeProvider extends ChangeNotifier {
     obtainUserTheme();
   }
 
-  setDefaultTheme() {
+  void setDefaultTheme() {
     _themeColor = const Color.fromRGBO(149, 4, 43, 1);
     _isDarkMode = false;
     notifyListeners();
   }
 
-  obtainUserTheme() async {
+  void obtainUserTheme() async {
     final SharedPreferences themePrefs = await SharedPreferences.getInstance();
 
     final String? userThemeColor = themePrefs.getString('themeColor');
@@ -81,7 +81,7 @@ class ChangeThemeProvider extends ChangeNotifier {
 
   bool get isDarkMode => _isDarkMode;
 
-  setIsDarkMode() async {
+  void setIsDarkMode() async {
     final SharedPreferences themePrefs = await SharedPreferences.getInstance();
     await themePrefs.setBool('darkMode', !_isDarkMode);
 
@@ -91,7 +91,7 @@ class ChangeThemeProvider extends ChangeNotifier {
 
   Color get themeColor => _themeColor;
 
-  setThemeColor(Color color) async {
+  void setThemeColor(Color color) async {
     final SharedPreferences themePrefs = await SharedPreferences.getInstance();
     final colorName = themeColors[color];
 

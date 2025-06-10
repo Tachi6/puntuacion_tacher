@@ -67,7 +67,7 @@ class CreateEditWineFormProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  loadUser() async {
+  Future<void> loadUser() async {
     String? localId = await storage.read(key: 'localId');
     user = localId!;
   }
@@ -82,27 +82,27 @@ class CreateEditWineFormProvider extends ChangeNotifier {
     notifyListeners();
   }
   
-  editRatingVista(double value) {
+  void editRatingVista(double value) {
     ratingVista = value;
     notifyListeners();
   }
 
-  editRatingNariz(double value) {
+  void editRatingNariz(double value) {
     ratingNariz = value;
     notifyListeners();
   }
 
-  editRatingBoca(double value) {
+  void editRatingBoca(double value) {
     ratingBoca = value;
     notifyListeners();
   }
 
-  editRatingPuntos(double value){
+  void editRatingPuntos(double value){
     ratingPuntos = value;
     notifyListeners();
   }
 
-  setDefaultRatings() {
+  void setDefaultRatings() {
     ratingVista = 0;
     ratingNariz = 0;
     ratingBoca = 0;

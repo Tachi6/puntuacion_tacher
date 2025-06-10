@@ -309,7 +309,7 @@ class CustomMultipleWineRow extends StatelessWidget {
               end: Alignment.centerRight,
               colors: [
                 colors.primaryContainer,
-                colors.inversePrimary,
+                colors.secondaryContainer,
               ]
             ),
             borderRadius: BorderRadius.circular(20)

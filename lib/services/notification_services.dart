@@ -4,7 +4,7 @@ import 'package:another_flushbar/flushbar.dart';
 
 class NotificationServices {
 
-  static showSnackbar(String message, BuildContext context) {
+  static void showSnackbar(String message, BuildContext context) {
     
     final colors = Theme.of(context).colorScheme;
     
@@ -23,7 +23,7 @@ class NotificationServices {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  static showFlushBar(String message, BuildContext context) {
+  static Widget showFlushBar(String message, BuildContext context) {
 
     final colors = Theme.of(context).colorScheme;
 
