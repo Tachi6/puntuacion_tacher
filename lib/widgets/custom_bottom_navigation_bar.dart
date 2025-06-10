@@ -19,19 +19,23 @@ class CustomNavigationBar extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     
     return NavigationBar(
-      backgroundColor: colors.primaryContainer,
-      indicatorColor: colors.inversePrimary,
-      overlayColor: WidgetStatePropertyAll(colors.inversePrimary.withAlpha(128)),
+      backgroundColor: colors.surfaceDim,
+      indicatorColor: colors.surfaceContainerHigh,
+      overlayColor: WidgetStatePropertyAll(colors.surfaceContainerHighest),
+      labelTextStyle: WidgetStateProperty.fromMap({
+        WidgetState.selected: TextStyle(color: colors.onSurface, fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 0.5, height: 1.3),
+        WidgetState.any: TextStyle(color: colors.inverseSurface, fontSize: 12, fontWeight: FontWeight.normal, letterSpacing: 0.5, height: 1.3),
+      }),
       elevation: 2,     
-      destinations: const [
+      destinations: [
         NavigationDestination(
-          icon: Icon(Icons.trending_up_outlined), label: 'Novedades'),
+          icon: Icon(Icons.trending_up_outlined, color: colors.inverseSurface), label: 'Novedades', selectedIcon: Icon(Icons.trending_up_outlined, color: colors.onSurface)),
         NavigationDestination(
-          icon: Icon(Icons.wine_bar), label: 'Catas'),
+          icon: Icon(Icons.wine_bar, color: colors.inverseSurface), label: 'Catas', selectedIcon: Icon(Icons.wine_bar, color: colors.onSurface)),
         NavigationDestination(
-          icon: Icon(Icons.list), label: 'Listados'),
+          icon: Icon(Icons.list, color: colors.inverseSurface), label: 'Listados', selectedIcon: Icon(Icons.list, color: colors.onSurface)),
         NavigationDestination(
-          icon: Icon(Icons.person), label: 'Usuario'),
+          icon: Icon(Icons.person, color: colors.inverseSurface), label: 'Usuario', selectedIcon: Icon(Icons.person, color: colors.onSurface)),
       ],
       selectedIndex: screenProvider.currentScreen,
       onDestinationSelected: (index) {
